@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<system>
+    <!-- This is a 4KB, page-aligned memory region at the physical address of
+    0x3f215000, which is where the UART device registers are mapped to. Note, we
+    are mapping in the Rpi3B's "Mini" UART device registers and NOT its "PL011"
+    UART device registers. An important aspect to note that the base of the Mini
+    UART device registers are actually mapped to 0x3f215040 in physical memory.
+    Unfortunately, 0x3f215040 is not a 4K page-aligned address, so we can't map
+    a page at that physical address. As such in our `serial_driver.c` code, we
+    must remember to obtain the real base address of the Mini UART device by
+    adding 0x40 to 0x3f215000. -->
+    <memory_region
+            name="uart"
+            size="0x10_000"
+            phys_addr="0x3f215000"/>
+    <!-- In the SDDF's design-documentation, `shared_dma` is referred to as the
+    "Data Region". `shared_dma` is an array of I/O buffers that will be used to
+    pass/transport data from `serial_client` to `serial_driver` and vice-versa.
+    The `shared_dma` memory region MUST be mapped at the exact same virtual
+    memory address in all the PDs that use the `shared_dma`. If they aren't
+    mapped to the same address, the SDDF's ring buffer mechanism of transporting
+    data across PDs will NOT work. This is because the SDDF's ring buffer
+    mechanism passes the virtual address of a `shared_dma` buffer from PD to PD,
+    which enables the SDDF's transport mechanism to be zero-copy. Theoretically,
+    the requirement to map the `shared_dma` to the same virtual address in
+    various PDs could be alleviated if there existed a mechanism to translate
+    virtual addresses across PDs (VSpaces); however, such a mechanism does NOT
+    currently exist. -->
+    <memory_region
+            name="shared_dma"
+            size="0x200_000"
+            page_size="0x200_000"/>
+    <!-- This is a 2MB memory region with a 2MB page size. An explanation of the
+    purpose of this memory region is provided in `serial_client.c`. The SDDF
+    does not require this memory region to be mapped to a specific virtual
+    address. -->
+    <memory_region
+            name="tx_avail_ring_buf"
+            size="0x200_000"
+            page_size="0x200_000"/>
+    <!-- This is a 2MB memory region with a 2MB page size. An explanation of the
+    purpose of this memory region is provided in `serial_client.c`. The SDDF
+    does not require this memory region to be mapped to a specific virtual
+    address. -->
+    <memory_region
+            name="tx_used_ring_buf"
+            size="0x200_000"
+            page_size="0x200_000"/>
+    <!-- This is a 2MB memory region with a 2MB page size. An explanation of the
+    purpose of this memory region is provided in `serial_client.c`. The SDDF
+    does not require this memory region to be mapped to a specific virtual
+    address. -->
+    <memory_region
+            name="rx_avail_ring_buf"
+            size="0x200_000"
+            page_size="0x200_000"/>
+    <!-- This is a 2MB memory region with a 2MB page size. An explanation of the
+    purpose of this memory region is provided in `serial_client.c`. The SDDF
+    does not require this memory region to be mapped to a specific virtual
+    address. -->
+    <memory_region
+            name="rx_used_ring_buf"
+            size="0x200_000"
+            page_size="0x200_000"/>
+    <!-- The `serial_driver` PD must have a higher priority than the
+    `serial_client` PD so that it doesn't get preempted by `serial_client` when
+    it is busy writing to the UART device. -->
+    <protection_domain
+            name="serial_driver"
+            priority="101"
+            pp="true">
+        <program_image path="serial_driver.elf"/>
+        <!-- We map our physical memory to the virtual address at 0x5_000_000 -->
+        <map
+                mr="uart"
+                vaddr="0x5_000_000"
+                perms="rw"
+                cached="false"
+                setvar_vaddr="uart_base_vaddr"/>
+        <!--
+        BCM2835/2837 TRM
+        Section 7.5
+        The mini-UART from the AUX peripheral triggers IRQ 29 ("Aux int")
+        on the VideoCore, which then signals pending GPU interrupts
+        to the ARM core.
+
+        The PL011 triggers IRQ 57 ("uart_int").
+
+        The seL4 kernel's interrupt controller driver creates a linear mapping
+        of all interrupts in the system (see
+        include/drivers/bcm2836-armctrl-ic.h) with 32 ARM PPIs, 32 basic
+        interrupts and 64 GPU interrupts.
+
+        Thus, the actual interrupts to be used in userland are: 93 (=32+32+29).
+        mini-UART 32+32+29 = 93
+        PL011 UART 32+32+57 = 121
+        -->
+        <irq irq="93" id="2" />
+        <!-- As per our earlier comment on `shared_dma`, `shared_dma` is always
+        mapped to the same virtual address of 0x2_400_000 for ALL PDs (which is
+        a requirement and assumption of the SDDF's transport mechanism). -->
+        <map
+                mr="shared_dma"
+                vaddr="0x2_400_000"
+                perms="rw"
+                cached="true"
+                setvar_vaddr="shared_dma" />
+        <!-- Unlike `shared_dma`, there is no limitation to where this memory
+        region is mapped to in this PD's virtual address space. -->
+        <map
+                mr="tx_avail_ring_buf"
+                vaddr="0x7_000_000"
+                perms="rw"
+                cached="true"
+                setvar_vaddr="tx_avail_ring_buf"/>
+        <!-- Unlike `shared_dma`, there is no limitation to where this memory
+        region is mapped to in this PD's virtual address space. -->
+        <map
+                mr="tx_used_ring_buf"
+                vaddr="0x7_200_000"
+                perms="rw"
+                cached="true"
+                setvar_vaddr="tx_used_ring_buf"/>
+        <!-- Unlike `shared_dma`, there is no limitation to where this memory
+        region is mapped to in this PD's virtual address space. -->
+        <map
+                mr="rx_avail_ring_buf"
+                vaddr="0x7_400_000"
+                perms="rw"
+                cached="true"
+                setvar_vaddr="rx_avail_ring_buf"/>
+        <!-- Unlike `shared_dma`, there is no limitation to where this memory
+        region is mapped to in this PD's virtual address space. -->
+        <map
+                mr="rx_used_ring_buf"
+                vaddr="0x7_600_000"
+                perms="rw"
+                cached="true"
+                setvar_vaddr="rx_used_ring_buf"/>
+    </protection_domain>
+    <!-- The `serial_client` PD must have a lower priority than the
+    `serial_driver` PD so that it doesn't preempt `serial_client` when it is
+    busy writing to the UART device. -->
+    <protection_domain
+            name="serial_client"
+            priority="100"
+            pp="true">
+        <program_image path="serial_client.elf"/>
+        <!-- As per our earlier comment on `shared_dma`, `shared_dma` is always
+        mapped to the same virtual address of 0x2_400_000 for ALL PDs (which is
+        a requirement and assumption of the SDDF's transport mechanism). -->
+        <map
+                mr="shared_dma"
+                vaddr="0x2_400_000"
+                perms="rw"
+                cached="true"
+                setvar_vaddr="shared_dma" />
+        <!-- Unlike `shared_dma`, there is no limitation to where this memory
+        region is mapped to in this PD's virtual address space. -->
+        <map
+                mr="tx_avail_ring_buf"
+                vaddr="0x6_000_000"
+                perms="rw"
+                cached="true"
+                setvar_vaddr="tx_avail_ring_buf"/>
+        <!-- Unlike `shared_dma`, there is no limitation to where this memory
+        region is mapped to in this PD's virtual address space. -->
+        <map
+                mr="tx_used_ring_buf"
+                vaddr="0x6_200_000"
+                perms="rw"
+                cached="true"
+                setvar_vaddr="tx_used_ring_buf"/>
+        <!-- Unlike `shared_dma`, there is no limitation to where this memory
+        region is mapped to in this PD's virtual address space. -->
+        <map
+                mr="rx_avail_ring_buf"
+                vaddr="0x6_400_000"
+                perms="rw"
+                cached="true"
+                setvar_vaddr="rx_avail_ring_buf"/>
+        <!-- Unlike `shared_dma`, there is no limitation to where this memory
+        region is mapped to in this PD's virtual address space. -->
+        <map
+                mr="rx_used_ring_buf"
+                vaddr="0x6_600_000"
+                perms="rw"
+                cached="true"
+                setvar_vaddr="rx_used_ring_buf"/>
+    </protection_domain>
+    <!-- Channel between `serial_client` and `serial_driver` for printf() calls
+    by `serial_client`. -->
+    <channel>
+        <end pd="serial_client" id="3" />
+        <end pd="serial_driver" id="4" />
+    </channel>
+    <!-- Channel between `serial_client` and `serial_driver` for getchar() calls
+    by `serial_client`. -->
+    <channel>
+        <end pd="serial_client" id="5" />
+        <end pd="serial_driver" id="6" />
+    </channel>
+</system>
+
