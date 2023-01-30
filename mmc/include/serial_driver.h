@@ -4,7 +4,7 @@
 #include <sel4/sel4.h>
 #include <stdbool.h>
 
-#include "bcm_uart.h"
+#include "bcm_mmc.h"
 #include "shared_ringbuffer.h"
 #include "shared_dma.h"
 

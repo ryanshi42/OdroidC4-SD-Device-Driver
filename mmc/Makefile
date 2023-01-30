@@ -99,9 +99,9 @@ $(BUILD_DIR)/serial_client.elf: $(addprefix $(BUILD_DIR)/, $(SERIAL_CLIENT_OBJS)
 # Step 3: Generate our $(BUILD_DIR)/loader.img using the $(SEL4CP_TOOL).
 # ======================================
 
-$(IMAGE_FILE) $(REPORT_FILE): $(addprefix $(BUILD_DIR)/, $(IMAGES)) serial.system
+$(IMAGE_FILE) $(REPORT_FILE): $(addprefix $(BUILD_DIR)/, $(IMAGES)) mmc.system
 	$(SEL4CP_TOOL) \
-		  serial.system \
+		  mmc.system \
 		  --search-path $(BUILD_DIR) \
 		  --board $(SEL4CP_BOARD) \
 		  --config $(SEL4CP_CONFIG) \
