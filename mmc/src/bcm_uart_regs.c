@@ -1,4 +1,4 @@
-#include "bcm_mmc_regs.h"
+#include "bcm_uart_regs.h"
 
 bcm_uart_regs_t *bcm_uart_regs_get(uintptr_t base_vaddr) {
     return (bcm_uart_regs_t *) base_vaddr;

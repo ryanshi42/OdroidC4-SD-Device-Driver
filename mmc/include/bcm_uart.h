@@ -2,7 +2,7 @@
 
 #include <stdbool.h>
 
-#include "bcm_mmc_regs.h"
+#include "bcm_uart_regs.h"
 
 typedef struct bcm_uart bcm_uart_t;
 volatile struct bcm_uart {

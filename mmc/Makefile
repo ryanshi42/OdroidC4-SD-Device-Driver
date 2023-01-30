@@ -53,8 +53,8 @@ CFLAGS += \
 # Specifies which Object files in $(BUILD_DIR) should be linked.
 SERIAL_DRIVER_OBJS := \
 	serial_driver.o \
-	bcm_mmc_regs.o \
-	bcm_mmc.o \
+	bcm_uart_regs.o \
+	bcm_uart.o \
 	serial_parity.o \
 	arith.o \
 	libsharedringbuffer/shared_ringbuffer.o \
