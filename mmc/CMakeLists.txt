@@ -75,6 +75,7 @@ add_library(mmc_rpi3b_lib_uart src/uart.c)
 target_include_directories(mmc_rpi3b_lib_uart PUBLIC include/)
 target_link_libraries(
         mmc_rpi3b_lib_uart
+        lib_sel4cp_rpi3b
 )
 
 add_library(mmc_rpi3b_lib_sd src/sd.c)

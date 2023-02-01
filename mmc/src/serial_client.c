@@ -34,6 +34,9 @@ uintptr_t rx_used_ring_buf;
 /* Global serial client. */
 serial_client_t global_serial_client = {0};
 
+/* Buffer for receiving characters from the `mmc` Protection Domain. */
+uintptr_t mmc_to_serial_client_putchar_buf;
+
 /**
  * Initialises the `serial_client` struct and sets up the serial client.
  * @param serial_client
@@ -319,5 +322,21 @@ seL4_MessageInfo_t protected(sel4cp_channel ch, sel4cp_msginfo msginfo) {
 }
 
 void notified(sel4cp_channel channel) {
-
+    serial_client_t *serial_client = &global_serial_client; /* Local reference to global serial driver for our convenience. */
+    (void) serial_client; /* Suppress unused variable warning. */
+    switch(channel) {
+        /* If MMC has asked the serial client to `putchar`, then print out a character. */
+        case SERIAL_CLIENT_TO_MMC_PUTCHAR_CHANNEL: {
+            /* Create a temporary zero-ed string to be passed into `serial_client_printf()`. */
+            char str_tmp[2] = {0};
+            /* Obtain the character to print from the `mmc_to_serial_client_putchar_buf`. */
+            str_tmp[0] = ((char *) mmc_to_serial_client_putchar_buf)[0];
+            /* Print out the character. */
+            serial_client_printf(str_tmp);
+            break;
+        }
+        default:
+            sel4cp_dbg_puts("Serial client: received notification on unexpected channel\n");
+            break;
+    }
 }

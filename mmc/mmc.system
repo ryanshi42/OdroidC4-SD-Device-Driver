@@ -62,6 +62,11 @@
             name="rx_used_ring_buf"
             size="0x200_000"
             page_size="0x200_000"/>
+    <!-- A shared buffer to pass chars from `uart.c` to `serial_client.c`. -->
+    <memory_region
+            name="mmc_to_serial_client_putchar_buf"
+            size="0x1_000"
+            page_size="0x1_000"/>
     <!-- The `serial_driver` PD must have a higher priority than the
     `serial_client` PD so that it doesn't get preempted by `serial_client` when
     it is busy writing to the UART device. -->
@@ -187,6 +192,12 @@
                 perms="rw"
                 cached="true"
                 setvar_vaddr="rx_used_ring_buf"/>
+        <map
+                mr="mmc_to_serial_client_putchar_buf"
+                vaddr="0x6_800_000"
+                perms="rw"
+                cached="true"
+                setvar_vaddr="mmc_to_serial_client_putchar_buf"/>
     </protection_domain>
     <!-- Channel between `serial_client` and `serial_driver` for printf() calls
     by `serial_client`. -->
@@ -206,7 +217,19 @@
             priority="99"
             pp="true">
         <program_image path="mmc.elf"/>
+        <map
+                mr="mmc_to_serial_client_putchar_buf"
+                vaddr="0x2_400_000"
+                perms="rw"
+                cached="true"
+                setvar_vaddr="mmc_to_serial_client_putchar_buf"/>
     </protection_domain>
+    <!-- Channel between `mmc` and `serial_client` for printf()
+    calls by `mmc`. -->
+    <channel>
+        <end pd="mmc" id="7" />
+        <end pd="serial_client" id="8" />
+    </channel>
 
 </system>
 

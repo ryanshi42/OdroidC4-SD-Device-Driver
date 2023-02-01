@@ -13,6 +13,7 @@
 
 #define SERIAL_CLIENT_TO_SERIAL_DRIVER_PRINTF_CHANNEL (3)
 #define SERIAL_CLIENT_TO_SERIAL_DRIVER_GETCHAR_CHANNEL (5)
+#define SERIAL_CLIENT_TO_MMC_PUTCHAR_CHANNEL (8)
 
 typedef struct serial_client serial_client_t;
 struct serial_client {
