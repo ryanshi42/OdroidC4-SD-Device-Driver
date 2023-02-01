@@ -16,6 +16,11 @@ uintptr_t gpio_base_vaddr;
  * registers are actually mapped to. */
 uintptr_t timer_base_vaddr;
 
+/* Base virtual address for the EMMC registers. We've deliberately set this
+ * value to 0x3f300000 in `mmc.system`, which is the Physical Address the EMMC
+ * registers are actually mapped to. */
+uintptr_t emmc_base_vaddr;
+
 void init(void) {
     /* Initialise the UART. */
     uart_init(
