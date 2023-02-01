@@ -17,7 +17,7 @@
     adding 0x40 to 0x3f215000. -->
     <memory_region
             name="uart"
-            size="0x10_000"
+            size="0x1_000"
             phys_addr="0x3f215000"/>
     <!-- In the SDDF's design-documentation, `shared_dma` is referred to as the
     "Data Region". `shared_dma` is an array of I/O buffers that will be used to
