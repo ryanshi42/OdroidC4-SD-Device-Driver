@@ -4,7 +4,6 @@
     0x3f200000, which is where the GPIO registers are mapped to. -->
     <memory_region
             name="gpio"
-            size="0x10_000"
             size="0x1_000"
             phys_addr="0x3f200000"/>
     <!-- This is a 4KB, page-aligned memory region at the physical address of
