@@ -58,4 +58,29 @@ target_link_libraries(
         mmc_rpi3b_lib_shared_dma
 )
 
+add_library(mmc_rpi3b_lib_gpio src/gpio.c)
+target_include_directories(mmc_rpi3b_lib_gpio PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_gpio
+)
+
+add_library(mmc_rpi3b_lib_delays src/delays.c)
+target_include_directories(mmc_rpi3b_lib_delays PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_delays
+        mmc_rpi3b_lib_gpio
+)
+
+add_library(mmc_rpi3b_lib_uart src/uart.c)
+target_include_directories(mmc_rpi3b_lib_uart PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_uart
+)
+
+add_library(mmc_rpi3b_lib_sd src/sd.c)
+target_include_directories(mmc_rpi3b_lib_sd PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_sd
+        mmc_pri3b_lib_gpio
+)
 
