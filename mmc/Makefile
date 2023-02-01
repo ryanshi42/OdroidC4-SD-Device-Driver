@@ -66,6 +66,7 @@ SERIAL_CLIENT_OBJS := \
 MMC_OBJS := \
 	mmc.o \
 	uart.o \
+	gpio.o \
 
 IMAGES := serial_driver.elf \
 			serial_client.elf \

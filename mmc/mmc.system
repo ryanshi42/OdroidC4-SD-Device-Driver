@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <system>
     <!-- This is a 4KB, page-aligned memory region at the physical address of
+    0x3f200000, which is where the GPIO registers are mapped to. -->
+    <memory_region
+            name="gpio"
+            size="0x10_000"
+            phys_addr="0x3f200000"/>
+    <!-- This is a 4KB, page-aligned memory region at the physical address of
     0x3f215000, which is where the UART device registers are mapped to. Note, we
     are mapping in the Rpi3B's "Mini" UART device registers and NOT its "PL011"
     UART device registers. An important aspect to note that the base of the Mini
@@ -217,12 +223,25 @@
             priority="99"
             pp="true">
         <program_image path="mmc.elf"/>
+        <!-- Shared memory region for `mmc` PD to pass characters to
+        `serial_client` to print. -->
         <map
                 mr="mmc_to_serial_client_putchar_buf"
                 vaddr="0x2_400_000"
                 perms="rw"
                 cached="true"
                 setvar_vaddr="mmc_to_serial_client_putchar_buf"/>
+        <!-- Memory region mapped to GPIO registers. Notice that the virtual
+        address we've mapped them to is identical to the physical address these
+        registers are actually mapped to. We did this so that we wouldn't have
+        to make dramatic changes to the SD card code we're porting to the Core
+        Platform. -->
+        <map
+                mr="gpio"
+                vaddr="0x3f_200_000"
+                perms="rw"
+                cached="false"
+                setvar_vaddr="gpio_base_vaddr"/>
     </protection_domain>
     <!-- Channel between `mmc` and `serial_client` for printf()
     calls by `mmc`. -->
