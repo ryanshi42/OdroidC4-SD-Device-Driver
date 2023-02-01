@@ -84,3 +84,10 @@ target_link_libraries(
         mmc_pri3b_lib_gpio
 )
 
+add_library(mmc_rpi3b_lib_mmc src/mmc.c)
+target_include_directories(mmc_rpi3b_lib_mmc PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_mmc
+        lib_sel4cp_rpi3b
+)
+

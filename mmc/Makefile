@@ -36,8 +36,6 @@ SHARED_RING_BUFFER_DIR := $(SRC_DIR)/libsharedringbuffer
 
 BOARD_DIR := $(SEL4CP_SDK)/board/$(SEL4CP_BOARD)/$(SEL4CP_CONFIG)
 
-IMAGES := serial_driver.elf \
-			serial_client.elf
 CFLAGS := -mcpu=$(CPU) -mstrict-align -ffreestanding -g3 -O3 -Wall  -Wno-unused-function
 LDFLAGS := -L$(BOARD_DIR)/lib
 LIBS := -lsel4cp -Tsel4cp.ld -lc
@@ -64,6 +62,13 @@ SERIAL_CLIENT_OBJS := \
 	serial_client.o \
 	libsharedringbuffer/shared_ringbuffer.o \
 	shared_dma.o \
+
+MMC_OBJS := \
+	mmc.o \
+
+IMAGES := serial_driver.elf \
+			serial_client.elf \
+			mmc.elf \
 
 .PHONY: all
 all: directories $(IMAGE_FILE)
@@ -93,6 +98,9 @@ $(BUILD_DIR)/serial_driver.elf: $(addprefix $(BUILD_DIR)/, $(SERIAL_DRIVER_OBJS)
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
 $(BUILD_DIR)/serial_client.elf: $(addprefix $(BUILD_DIR)/, $(SERIAL_CLIENT_OBJS))
+	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
+
+$(BUILD_DIR)/mmc.elf: $(addprefix $(BUILD_DIR)/, $(MMC_OBJS))
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
 # ======================================

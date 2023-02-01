@@ -305,13 +305,13 @@ void init(void) {
     serial_client_printf("Ending UART test...\n");
     serial_client_printf("=== END ===\n");
 
-    for (int i = 0; i < 2; i++) {
-        char ch_as_str[2] = {0};
-        ch_as_str[0] = (char) serial_client_getchar(serial_client);
-        serial_client_printf("Serial Client received the character: ");
-        serial_client_printf(ch_as_str);
-        serial_client_printf("\n");
-    }
+//    for (int i = 0; i < 2; i++) {
+//        char ch_as_str[2] = {0};
+//        ch_as_str[0] = (char) serial_client_getchar(serial_client);
+//        serial_client_printf("Serial Client received the character: ");
+//        serial_client_printf(ch_as_str);
+//        serial_client_printf("\n");
+//    }
 }
 
 seL4_MessageInfo_t protected(sel4cp_channel ch, sel4cp_msginfo msginfo) {

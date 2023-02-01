@@ -200,5 +200,13 @@
         <end pd="serial_client" id="5" />
         <end pd="serial_driver" id="6" />
     </channel>
+    <!-- Protection Domain for MultiMediaCard driver. -->
+    <protection_domain
+            name="mmc"
+            priority="99"
+            pp="true">
+        <program_image path="mmc.elf"/>
+    </protection_domain>
+
 </system>
 
