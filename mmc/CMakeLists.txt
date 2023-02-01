@@ -90,5 +90,7 @@ target_include_directories(mmc_rpi3b_lib_mmc PUBLIC include/)
 target_link_libraries(
         mmc_rpi3b_lib_mmc
         lib_sel4cp_rpi3b
+        mmc_rpi3b_lib_uart
+        mmc_rpi3b_lib_sd
 )
 

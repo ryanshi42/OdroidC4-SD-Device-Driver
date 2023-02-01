@@ -2,6 +2,7 @@
 #include <sel4cp.h>
 #include "mmc.h"
 #include "uart.h"
+#include "sd.h"
 
 /* Used for transporting chars from `uart` to `serial_client`. */
 uintptr_t mmc_to_serial_client_putchar_buf;
@@ -28,6 +29,12 @@ void init(void) {
             MMC_TO_SERIAL_CLIENT_PUTCHAR_CHANNEL
     );
     uart_puts("Successfully initialised UART in MMC PD.\n");
+
+    if (sd_init() == SD_OK) {
+        uart_puts("Successfully initialised SD card.\n");
+    } else {
+        uart_puts("Failed to initialise SD card.\n");
+    }
 }
 
 void notified(sel4cp_channel ch) {
