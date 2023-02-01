@@ -7,6 +7,12 @@
             size="0x1_000"
             phys_addr="0x3f200000"/>
     <!-- This is a 4KB, page-aligned memory region at the physical address of
+    0x3f_003_000, which is where the Timer registers are mapped to. -->
+    <memory_region
+            name="timer"
+            size="0x1_000"
+            phys_addr="0x3f_003_000"/>
+    <!-- This is a 4KB, page-aligned memory region at the physical address of
     0x3f215000, which is where the UART device registers are mapped to. Note, we
     are mapping in the Rpi3B's "Mini" UART device registers and NOT its "PL011"
     UART device registers. An important aspect to note that the base of the Mini
@@ -235,13 +241,26 @@
         address we've mapped them to is identical to the physical address these
         registers are actually mapped to. We did this so that we wouldn't have
         to make dramatic changes to the SD card code we're porting to the Core
-        Platform. -->
+        Platform. Since this region of memory is memory-mapped, we turn caching
+        off. -->
         <map
                 mr="gpio"
                 vaddr="0x3f_200_000"
                 perms="rw"
                 cached="false"
                 setvar_vaddr="gpio_base_vaddr"/>
+        <!-- Memory region mapped to Timer registers. Notice that the virtual
+        address we've mapped them to is identical to the physical address these
+        registers are actually mapped to. We did this so that we wouldn't have
+        to make dramatic changes to the SD card code we're porting to the Core
+        Platform. Since this region of memory is memory-mapped, we turn caching
+        off. -->
+        <map
+                mr="timer"
+                vaddr="0x3f_003_000"
+                perms="rw"
+                cached="false"
+                setvar_vaddr="timer_base_vaddr"/>
     </protection_domain>
     <!-- Channel between `mmc` and `serial_client` for printf()
     calls by `mmc`. -->

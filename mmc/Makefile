@@ -67,6 +67,7 @@ MMC_OBJS := \
 	mmc.o \
 	uart.o \
 	gpio.o \
+	delays.o \
 
 IMAGES := serial_driver.elf \
 			serial_client.elf \

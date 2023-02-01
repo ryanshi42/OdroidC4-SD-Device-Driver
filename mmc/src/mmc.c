@@ -11,6 +11,11 @@ uintptr_t mmc_to_serial_client_putchar_buf;
  * registers are actually mapped to. */
 uintptr_t gpio_base_vaddr;
 
+/* Base virtual address for the Timer registers. We've deliberately set this
+ * value to 0x3f003000 in `mmc.system`, which is the Physical Address the Timer
+ * registers are actually mapped to. */
+uintptr_t timer_base_vaddr;
+
 void init(void) {
     /* Initialise the UART. */
     uart_init(

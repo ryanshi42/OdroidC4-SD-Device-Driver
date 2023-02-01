@@ -23,10 +23,17 @@
  *
  */
 
-#include "gpio.h"
+//#include "gpio.h"
+//
+//#define SYSTMR_LO        ((volatile unsigned int*)(MMIO_BASE+0x00003004))
+//#define SYSTMR_HI        ((volatile unsigned int*)(MMIO_BASE+0x00003008))
 
-#define SYSTMR_LO        ((volatile unsigned int*)(MMIO_BASE+0x00003004))
-#define SYSTMR_HI        ((volatile unsigned int*)(MMIO_BASE+0x00003008))
+#include "delays.h"
+
+#define TIMER_BASE 0x3f003000
+
+#define SYSTMR_LO        ((volatile unsigned int*)(TIMER_BASE+0x4))
+#define SYSTMR_HI        ((volatile unsigned int*)(TIMER_BASE+0x8))
 
 /**
  * Wait N CPU cycles (ARM CPU only)
