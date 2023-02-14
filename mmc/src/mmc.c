@@ -22,7 +22,18 @@ uintptr_t timer_base_vaddr;
  * registers are actually mapped to. */
 uintptr_t emmc_base_vaddr;
 
+//// get the end of bss segment from linker
+//extern unsigned char _end;
+
+// do not use the first sector (lba 0), could render your card unbootable
+// choose a sector which is unused by your partitions
+#define COUNTER_SECTOR 1
+
 void init(void) {
+    char buf[512] = {0};
+    // use the last 4 bytes on the second sector as a boot counter
+    unsigned int *counter = (unsigned int*)(buf + 508);
+//    unsigned int *counter = (unsigned int*)(&_end + 508);
     /* Initialise the UART. */
     uart_init(
             mmc_to_serial_client_putchar_buf,
@@ -32,6 +43,17 @@ void init(void) {
 
     if (sd_init() == SD_OK) {
         uart_puts("Successfully initialised SD card.\n");
+        // read the second sector after our bss segment
+        if (sd_readblock(COUNTER_SECTOR, buf, 1)) {
+            // increase boot counter
+            (*counter)++;
+            // save the sector
+            if (sd_writeblock(buf, COUNTER_SECTOR, 1)) {
+                uart_puts("Boot counter ");
+                uart_hex(*counter);
+                uart_puts(" written to SD card.\n");
+            }
+        }
     } else {
         uart_puts("Failed to initialise SD card.\n");
     }
