@@ -60,6 +60,7 @@
 #define EMMC_STATUS         ((volatile unsigned int*)(EMMC_BASE+0x24))
 #define EMMC_CONTROL0       ((volatile unsigned int*)(EMMC_BASE+0x28))
 #define EMMC_CONTROL1       ((volatile unsigned int*)(EMMC_BASE+0x2C))
+#define EMMC_SOFT_RESET     ((volatile unsigned int*)(EMMC_BASE+0x2F))
 #define EMMC_INTERRUPT      ((volatile unsigned int*)(EMMC_BASE+0x30))
 #define EMMC_INT_MASK       ((volatile unsigned int*)(EMMC_BASE+0x34))
 #define EMMC_INT_EN         ((volatile unsigned int*)(EMMC_BASE+0x38))
