@@ -1,50 +1,7 @@
-/*
- * Copyright (C) 2018 bzt (bztsrc@github)
- *
- * Permission is hereby granted, free of charge, to any person
- * obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without
- * restriction, including without limitation the rights to use, copy,
- * modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
- * DEALINGS IN THE SOFTWARE.
- *
- */
-
 #include "gpio.h"
 #include "uart.h"
 #include "delays.h"
 #include "sd.h"
-
-//#define EMMC_ARG2           ((volatile unsigned int*)(MMIO_BASE+0x00300000))
-//#define EMMC_BLKSIZECNT     ((volatile unsigned int*)(MMIO_BASE+0x00300004))
-//#define EMMC_ARG1           ((volatile unsigned int*)(MMIO_BASE+0x00300008))
-//#define EMMC_CMDTM          ((volatile unsigned int*)(MMIO_BASE+0x0030000C))
-//#define EMMC_RESP0          ((volatile unsigned int*)(MMIO_BASE+0x00300010))
-//#define EMMC_RESP1          ((volatile unsigned int*)(MMIO_BASE+0x00300014))
-//#define EMMC_RESP2          ((volatile unsigned int*)(MMIO_BASE+0x00300018))
-//#define EMMC_RESP3          ((volatile unsigned int*)(MMIO_BASE+0x0030001C))
-//#define EMMC_DATA           ((volatile unsigned int*)(MMIO_BASE+0x00300020))
-//#define EMMC_STATUS         ((volatile unsigned int*)(MMIO_BASE+0x00300024))
-//#define EMMC_CONTROL0       ((volatile unsigned int*)(MMIO_BASE+0x00300028))
-//#define EMMC_CONTROL1       ((volatile unsigned int*)(MMIO_BASE+0x0030002C))
-//#define EMMC_INTERRUPT      ((volatile unsigned int*)(MMIO_BASE+0x00300030))
-//#define EMMC_INT_MASK       ((volatile unsigned int*)(MMIO_BASE+0x00300034))
-//#define EMMC_INT_EN         ((volatile unsigned int*)(MMIO_BASE+0x00300038))
-//#define EMMC_CONTROL2       ((volatile unsigned int*)(MMIO_BASE+0x0030003C))
-//#define EMMC_SLOTISR_VER    ((volatile unsigned int*)(MMIO_BASE+0x003000FC))
 
 #define EMMC_BASE           0x3f300000
 
