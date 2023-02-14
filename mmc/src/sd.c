@@ -229,7 +229,7 @@ int sd_cmd(unsigned int code, unsigned int arg) {
  * read a block from sd card and return the number of bytes read
  * returns 0 on error.
  */
-int sd_readblock(unsigned int lba, unsigned char *buffer, unsigned int num) {
+bool sd_readblock(unsigned int lba, unsigned char *buffer, unsigned int num) {
     int r, c = 0, d;
     if (num < 1) num = 1;
     uart_puts("sd_readblock lba ");
@@ -275,7 +275,7 @@ int sd_readblock(unsigned int lba, unsigned char *buffer, unsigned int num) {
  * write a block to the sd card and return the number of bytes written
  * returns 0 on error.
  */
-int sd_writeblock(unsigned char *buffer, unsigned int lba, unsigned int num) {
+bool sd_writeblock(unsigned char *buffer, unsigned int lba, unsigned int num) {
     int r, c = 0, d;
     if (num < 1) num = 1;
     uart_puts("sd_writeblock lba ");

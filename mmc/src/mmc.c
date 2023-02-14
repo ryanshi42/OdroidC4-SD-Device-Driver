@@ -44,16 +44,22 @@ void init(void) {
     if (sd_init() == SD_OK) {
         uart_puts("Successfully initialised SD card.\n");
         // read the second sector after our bss segment
-        if (sd_readblock(COUNTER_SECTOR, buf, 1)) {
-            // increase boot counter
-            (*counter)++;
-            // save the sector
-            if (sd_writeblock(buf, COUNTER_SECTOR, 1)) {
-                uart_puts("Boot counter ");
-                uart_hex(*counter);
-                uart_puts(" written to SD card.\n");
-            }
+        bool is_read_success = sd_readblock(COUNTER_SECTOR, buf, 1);
+        if (!is_read_success) {
+            uart_puts("Failed to read SD card.\n");
+            return;
         }
+        // increase boot counter
+        (*counter)++;
+        // save the sector
+        bool is_write_success = sd_writeblock(buf, COUNTER_SECTOR, 1);
+        if (!is_write_success) {
+            uart_puts("Failed to write to SD card.\n");
+            return;
+        }
+        uart_puts("Boot counter ");
+        uart_hex(*counter);
+        uart_puts(" written to SD card.\n");
     } else {
         uart_puts("Failed to initialise SD card.\n");
     }
