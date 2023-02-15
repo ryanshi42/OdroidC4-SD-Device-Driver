@@ -39,7 +39,7 @@ TEST(test_bcm_emmc_regs, registers_should_have_the_correct_offset) {
     ASSERT_EQ(base + 0xfc, (uintptr_t) &regs.slot_isr_ver);
 }
 
-/* bcm_emmc_regs_control0_zero */
+/* control0_zero */
 
 TEST(test_bcm_emmc_regs, zero_control0_should_zero_control0) {
     bcm_emmc_regs_t regs = {};
@@ -53,6 +53,15 @@ TEST(test_bcm_emmc_regs, zero_control0_should_zero_control0) {
     ASSERT_TRUE(result_is_ok(res));
     /* Assert the setting was successful. */
     ASSERT_EQ(0, regs.control0.raw32);
+}
+
+/* regs_get */
+
+TEST(test_bcm_emmc_regs, get_should_return_the_correct_value) {
+    bcm_emmc_regs_t regs = {};
+
+    bcm_emmc_regs_t *regs_ptr = bcm_emmc_regs_get((uintptr_t) &regs);
+    ASSERT_EQ((uintptr_t) &regs, (uintptr_t) regs_ptr);
 }
 
 
