@@ -78,6 +78,32 @@ target_link_libraries(
         lib_sel4cp_rpi3b
 )
 
+add_library(mmc_rpi3b_lib_result src/common/result.c)
+target_include_directories(mmc_rpi3b_lib_result PUBLIC include/)
+
+add_library(mmc_rpi3b_lib_control0 src/mmc/bcm_emmc_regs/control0.c)
+target_include_directories(mmc_rpi3b_lib_control0 PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_control0
+        mmc_rpi3b_lib_result
+)
+
+add_library(mmc_rpi3b_lib_bcm_emmc_regs src/mmc/bcm_emmc_regs.c)
+target_include_directories(mmc_rpi3b_lib_bcm_emmc_regs PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_bcm_emmc_regs
+        mmc_rpi3b_lib_control0
+        mmc_rpi3b_lib_result
+)
+
+add_library(mmc_rpi3b_lib_bcm_emmc src/mmc/bcm_emmc.c)
+target_include_directories(mmc_rpi3b_lib_bcm_emmc PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_bcm_emmc
+        mmc_rpi3b_lib_result
+        mmc_rpi3b_lib_bcm_emmc_regs
+)
+
 add_library(mmc_rpi3b_lib_sd src/sd.c)
 target_include_directories(mmc_rpi3b_lib_sd PUBLIC include/)
 target_link_libraries(
