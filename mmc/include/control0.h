@@ -1,3 +1,7 @@
+/**
+ * Represents the `control0` register.
+ */
+
 #pragma once
 
 #include <stdlib.h>
@@ -29,6 +33,18 @@ struct __attribute__((__packed__, aligned(4))) control0 {
     };
 };
 
+/**
+ * Set `control0` register to a `uint32`.
+ * @param control0
+ * @param val
+ * @return
+ */
 result_t control0_set_raw32(control0_t *control0, uint32_t val);
 
+/**
+ * Obtains the `control0` register as a `uint32`.
+ * @param control0
+ * @param ret_val
+ * @return
+ */
 result_t control0_get_raw32(control0_t *control0, uint32_t *ret_val);
