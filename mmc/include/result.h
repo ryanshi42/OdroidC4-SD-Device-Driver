@@ -3,12 +3,12 @@
 #include <stdbool.h>
 #include <string.h>
 
-#define ERR_MSG_MAX_LEN (1 << 8)
+#define MAX_NUM_ERR_MSGS (1 << 8)
 
 typedef struct result result_t;
 struct result {
     bool is_err;
-    char err_msg[ERR_MSG_MAX_LEN];
+    char *err_msgs[MAX_NUM_ERR_MSGS];
 };
 
 /**
@@ -43,4 +43,4 @@ bool result_is_err(result_t result);
  * @param result
  * @return
  */
-char *result_get_err_msg(result_t *result);
+char *result_get_err_msg(result_t result);
