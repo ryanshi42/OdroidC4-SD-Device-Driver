@@ -22,6 +22,9 @@ uintptr_t timer_base_vaddr;
  * registers are actually mapped to. */
 uintptr_t emmc_base_vaddr;
 
+/* Global `bcm_emmc`. */
+bcm_emmc_t bcm_emmc = {0};
+
 //// get the end of bss segment from linker
 //extern unsigned char _end;
 

@@ -118,5 +118,9 @@ target_link_libraries(
         lib_sel4cp_rpi3b
         mmc_rpi3b_lib_uart
         mmc_rpi3b_lib_sd
+        mmc_rpi3b_lib_bcm_emmc
+        mmc_rpi3b_lib_result
 )
+
+
 

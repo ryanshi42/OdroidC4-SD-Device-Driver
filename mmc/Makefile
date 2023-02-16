@@ -69,6 +69,10 @@ MMC_OBJS := \
 	gpio.o \
 	delays.o \
 	sd.o \
+	common/result.o \
+	mmc/bcm_emmc.o \
+	mmc/bcm_emmc_regs.o \
+	mmc/bcm_emmc_regs/control0.o \
 
 IMAGES := serial_driver.elf \
 			serial_client.elf \
@@ -81,6 +85,9 @@ all: directories $(IMAGE_FILE)
 directories:
 	mkdir -p $(BUILD_DIR)
 	mkdir -p $(BUILD_DIR)/libsharedringbuffer
+	mkdir -p $(BUILD_DIR)/common
+	mkdir -p $(BUILD_DIR)/mmc
+	mkdir -p $(BUILD_DIR)/mmc/bcm_emmc_regs
 
 # ======================================
 # Step 1: Generate $(BUILD_DIR)/%.o object files from $(SRC_DIR)/%.c source

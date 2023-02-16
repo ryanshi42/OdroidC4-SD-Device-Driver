@@ -290,6 +290,7 @@ int sd_init() {
 
     sd_hv = (*EMMC_SLOTISR_VER & HOST_SPEC_NUM) >> HOST_SPEC_NUM_SHIFT;
     uart_puts("EMMC: GPIO set up\n");
+
     // Reset the card.
     *EMMC_CONTROL0 = 0;
     *EMMC_CONTROL1 |= C1_SRST_HC;
