@@ -231,7 +231,7 @@
     </channel>
     <!-- Protection Domain for MultiMediaCard driver. -->
     <protection_domain
-            name="mmc"
+            name="mmc_driver"
             priority="99"
             pp="true">
         <program_image path="mmc_driver.elf"/>
@@ -280,10 +280,10 @@
                 cached="false"
                 setvar_vaddr="emmc_base_vaddr"/>
     </protection_domain>
-    <!-- Channel between `mmc` and `serial_client` for printf()
-    calls by `mmc`. -->
+    <!-- Channel between `mmc_driver` and `serial_client` for printf()
+    calls by `mmc_driver`. -->
     <channel>
-        <end pd="mmc" id="7" />
+        <end pd="mmc_driver" id="7" />
         <end pd="serial_client" id="8" />
     </channel>
 
