@@ -17,7 +17,7 @@ target_link_libraries(
         mmc_rpi3b_lib_fence
 )
 
-add_library(mmc_rpi3b_lib_arith src/arith.c)
+add_library(mmc_rpi3b_lib_arith src/common/arith.c)
 target_include_directories(mmc_rpi3b_lib_arith PUBLIC include/)
 
 add_library(mmc_rpi3b_lib_serial_parity src/serial_driver/serial_parity.c)
