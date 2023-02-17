@@ -20,7 +20,7 @@ target_link_libraries(
 add_library(mmc_rpi3b_lib_arith src/arith.c)
 target_include_directories(mmc_rpi3b_lib_arith PUBLIC include/)
 
-add_library(mmc_rpi3b_lib_serial_parity src/serial_parity.c)
+add_library(mmc_rpi3b_lib_serial_parity src/serial_driver/serial_parity.c)
 target_include_directories(mmc_rpi3b_lib_serial_parity PUBLIC include/)
 
 add_library(mmc_rpi3b_lib_bcm_uart_regs src/serial_driver/bcm_uart_regs.c)
