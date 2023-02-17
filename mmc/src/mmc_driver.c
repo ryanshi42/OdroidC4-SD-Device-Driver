@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include <sel4cp.h>
-#include "mmc.h"
+#include "mmc_driver.h"
 #include "uart.h"
 #include "sd.h"
 

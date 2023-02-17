@@ -234,7 +234,7 @@
             name="mmc"
             priority="99"
             pp="true">
-        <program_image path="mmc.elf"/>
+        <program_image path="mmc_driver.elf"/>
         <!-- Shared memory region for `mmc` PD to pass characters to
         `serial_client` to print. -->
         <map

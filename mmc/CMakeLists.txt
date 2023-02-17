@@ -81,14 +81,14 @@ target_link_libraries(
 add_library(mmc_rpi3b_lib_result src/common/result.c)
 target_include_directories(mmc_rpi3b_lib_result PUBLIC include/)
 
-add_library(mmc_rpi3b_lib_control0 src/mmc/bcm_emmc_regs/control0.c)
+add_library(mmc_rpi3b_lib_control0 src/mmc_driver/bcm_emmc_regs/control0.c)
 target_include_directories(mmc_rpi3b_lib_control0 PUBLIC include/)
 target_link_libraries(
         mmc_rpi3b_lib_control0
         mmc_rpi3b_lib_result
 )
 
-add_library(mmc_rpi3b_lib_bcm_emmc_regs src/mmc/bcm_emmc_regs.c)
+add_library(mmc_rpi3b_lib_bcm_emmc_regs src/mmc_driver/bcm_emmc_regs.c)
 target_include_directories(mmc_rpi3b_lib_bcm_emmc_regs PUBLIC include/)
 target_link_libraries(
         mmc_rpi3b_lib_bcm_emmc_regs
@@ -96,7 +96,7 @@ target_link_libraries(
         mmc_rpi3b_lib_result
 )
 
-add_library(mmc_rpi3b_lib_bcm_emmc src/mmc/bcm_emmc.c)
+add_library(mmc_rpi3b_lib_bcm_emmc src/mmc_driver/bcm_emmc.c)
 target_include_directories(mmc_rpi3b_lib_bcm_emmc PUBLIC include/)
 target_link_libraries(
         mmc_rpi3b_lib_bcm_emmc
@@ -111,10 +111,10 @@ target_link_libraries(
         mmc_rpi3b_lib_gpio
 )
 
-add_library(mmc_rpi3b_lib_mmc src/mmc.c)
-target_include_directories(mmc_rpi3b_lib_mmc PUBLIC include/)
+add_library(mmc_rpi3b_lib_mmc_driver src/mmc_driver.c)
+target_include_directories(mmc_rpi3b_lib_mmc_driver PUBLIC include/)
 target_link_libraries(
-        mmc_rpi3b_lib_mmc
+        mmc_rpi3b_lib_mmc_driver
         lib_sel4cp_rpi3b
         mmc_rpi3b_lib_uart
         mmc_rpi3b_lib_sd

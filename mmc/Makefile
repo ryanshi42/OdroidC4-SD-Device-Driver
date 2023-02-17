@@ -63,21 +63,21 @@ SERIAL_CLIENT_OBJS := \
 	libsharedringbuffer/shared_ringbuffer.o \
 	shared_dma.o \
 
-MMC_OBJS := \
-	mmc.o \
+MMC_DRIVER_OBJS := \
+	mmc_driver.o \
 	uart.o \
 	gpio.o \
 	delays.o \
 	sd.o \
 	common/result.o \
-	mmc/bcm_emmc.o \
-	mmc/bcm_emmc_regs.o \
-	mmc/bcm_emmc_regs/control0.o \
+	mmc_driver/bcm_emmc.o \
+	mmc_driver/bcm_emmc_regs.o \
+	mmc_driver/bcm_emmc_regs/control0.o \
 
 IMAGES := \
 	serial_driver.elf \
 	serial_client.elf \
-	mmc.elf \
+	mmc_driver.elf \
 
 .PHONY: all
 all: directories $(IMAGE_FILE)
@@ -87,8 +87,8 @@ directories:
 	mkdir -p $(BUILD_DIR)
 	mkdir -p $(BUILD_DIR)/libsharedringbuffer
 	mkdir -p $(BUILD_DIR)/common
-	mkdir -p $(BUILD_DIR)/mmc
-	mkdir -p $(BUILD_DIR)/mmc/bcm_emmc_regs
+	mkdir -p $(BUILD_DIR)/mmc_driver
+	mkdir -p $(BUILD_DIR)/mmc_driver/bcm_emmc_regs
 	mkdir -p $(BUILD_DIR)/serial_driver
 
 # ======================================
@@ -113,7 +113,7 @@ $(BUILD_DIR)/serial_driver.elf: $(addprefix $(BUILD_DIR)/, $(SERIAL_DRIVER_OBJS)
 $(BUILD_DIR)/serial_client.elf: $(addprefix $(BUILD_DIR)/, $(SERIAL_CLIENT_OBJS))
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
-$(BUILD_DIR)/mmc.elf: $(addprefix $(BUILD_DIR)/, $(MMC_OBJS))
+$(BUILD_DIR)/mmc_driver.elf: $(addprefix $(BUILD_DIR)/, $(MMC_DRIVER_OBJS))
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
 # ======================================
