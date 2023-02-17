@@ -23,7 +23,7 @@ target_include_directories(mmc_rpi3b_lib_arith PUBLIC include/)
 add_library(mmc_rpi3b_lib_serial_parity src/serial_parity.c)
 target_include_directories(mmc_rpi3b_lib_serial_parity PUBLIC include/)
 
-add_library(mmc_rpi3b_lib_bcm_uart_regs src/bcm_uart_regs.c)
+add_library(mmc_rpi3b_lib_bcm_uart_regs src/serial_driver/bcm_uart_regs.c)
 target_include_directories(mmc_rpi3b_lib_bcm_uart_regs PUBLIC include/)
 target_link_libraries(
         mmc_rpi3b_lib_bcm_uart_regs
@@ -32,7 +32,7 @@ target_link_libraries(
         mmc_rpi3b_lib_arith
 )
 
-add_library(mmc_rpi3b_lib_bcm_uart src/bcm_uart.c)
+add_library(mmc_rpi3b_lib_bcm_uart src/serial_driver/bcm_uart.c)
 target_include_directories(mmc_rpi3b_lib_bcm_uart PUBLIC include/)
 target_link_libraries(
         mmc_rpi3b_lib_bcm_uart

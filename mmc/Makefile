@@ -51,8 +51,8 @@ CFLAGS += \
 # Specifies which Object files in $(BUILD_DIR) should be linked.
 SERIAL_DRIVER_OBJS := \
 	serial_driver.o \
-	bcm_uart_regs.o \
-	bcm_uart.o \
+	serial_driver/bcm_uart_regs.o \
+	serial_driver/bcm_uart.o \
 	serial_parity.o \
 	arith.o \
 	libsharedringbuffer/shared_ringbuffer.o \
@@ -74,9 +74,10 @@ MMC_OBJS := \
 	mmc/bcm_emmc_regs.o \
 	mmc/bcm_emmc_regs/control0.o \
 
-IMAGES := serial_driver.elf \
-			serial_client.elf \
-			mmc.elf \
+IMAGES := \
+	serial_driver.elf \
+	serial_client.elf \
+	mmc.elf \
 
 .PHONY: all
 all: directories $(IMAGE_FILE)
@@ -88,6 +89,7 @@ directories:
 	mkdir -p $(BUILD_DIR)/common
 	mkdir -p $(BUILD_DIR)/mmc
 	mkdir -p $(BUILD_DIR)/mmc/bcm_emmc_regs
+	mkdir -p $(BUILD_DIR)/serial_driver
 
 # ======================================
 # Step 1: Generate $(BUILD_DIR)/%.o object files from $(SRC_DIR)/%.c source
