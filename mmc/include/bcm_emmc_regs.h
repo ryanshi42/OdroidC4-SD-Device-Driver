@@ -63,3 +63,8 @@ result_t bcm_emmc_regs_zero_control0(bcm_emmc_regs_t *bcm_emmc_regs);
  * @param bcm_emmc_regs
  */
 result_t bcm_emmc_regs_zero_control1(bcm_emmc_regs_t *bcm_emmc_regs);
+
+/**
+ * Resets the complete host circuit.
+ */
+result_t bcm_emmc_regs_reset_host_circuit(bcm_emmc_regs_t *bcm_emmc_regs);

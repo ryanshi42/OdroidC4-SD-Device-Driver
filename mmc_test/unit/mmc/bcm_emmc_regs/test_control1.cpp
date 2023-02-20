@@ -41,3 +41,32 @@ TEST(test_control1, get_raw32_should_not_accept_NULL_retval_ptr) {
     /* Should fail. */
     ASSERT_TRUE(result_is_err(res));
 }
+
+/* set_srst_hc */
+
+TEST(test_control1, set_srst_hc_should_set_srst_hc_only) {
+    control1_t control1 = {};
+    /* Initialise every bit to 1. */
+    memset(&control1, 0xFF, sizeof(control1));
+    bool actual_val;
+    /* SRST_CMD should be initialised to 1. */
+    control1_get_srst_cmd(&control1, &actual_val);
+    ASSERT_EQ(true, actual_val);
+    /* SRST_DATA should be initialised to 1. */
+    control1_get_srst_data(&control1, &actual_val);
+    ASSERT_EQ(true, actual_val);
+    /* Set `SRST_HC` to false. */
+    result_t res = control1_set_srst_hc(&control1, false);
+    /* Should succeed. */
+    ASSERT_TRUE(result_is_ok(res));
+    /* Assert value is actually now false. */
+    control1_get_srst_hc(&control1, &actual_val);
+    ASSERT_EQ(false, actual_val);
+    /* SRST_CMD should still be 1. */
+    control1_get_srst_cmd(&control1, &actual_val);
+    ASSERT_EQ(true, actual_val);
+    /* SRST_DATA should still be 1. */
+    control1_get_srst_data(&control1, &actual_val);
+    ASSERT_EQ(true, actual_val);
+}
+

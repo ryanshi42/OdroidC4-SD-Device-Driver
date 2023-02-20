@@ -293,7 +293,7 @@ int sd_init() {
 
     // Reset the card.
 //    *EMMC_CONTROL0 = 0;
-    *EMMC_CONTROL1 |= C1_SRST_HC;
+//    *EMMC_CONTROL1 |= C1_SRST_HC;
     cnt = 10000;
     do { wait_msec(10); } while ((*EMMC_CONTROL1 & C1_SRST_HC) && cnt--);
     if (cnt <= 0) {

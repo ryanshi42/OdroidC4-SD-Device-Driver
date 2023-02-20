@@ -21,6 +21,11 @@ result_t bcm_emmc_init(
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to zero `control1` in bcm_emmc_init().");
     }
+    /* Reset the complete host circuit */
+    res = bcm_emmc_regs_reset_host_circuit(bcm_emmc->regs);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to reset host circuit in bcm_emmc_init().");
+    }
 
 
     return result_ok();

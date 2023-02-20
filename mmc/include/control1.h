@@ -41,3 +41,35 @@ result_t control1_set_raw32(control1_t *control1, uint32_t val);
  * @return
  */
 result_t control1_get_raw32(control1_t *control1, uint32_t *ret_val);
+
+/**
+ * Set the `SRST_HC` field of the `control1` register.
+ * @param control1
+ * @param val
+ * @return
+ */
+result_t control1_set_srst_hc(control1_t *control1, bool val);
+
+/**
+ * Obtains the `SRST_HC` field of the `control1` register.
+ * @param control1
+ * @param ret_val
+ * @return
+ */
+result_t control1_get_srst_hc(control1_t *control1, bool *ret_val);
+
+/**
+ * Obtains the `SRST_CMD` field of the `control1` register.
+ * @param control1
+ * @param ret_val
+ * @return
+ */
+result_t control1_get_srst_cmd(control1_t *control1, bool *ret_val);
+
+/**
+ * Obtains the `SRST_DATA` field of the `control1` register.
+ * @param control1
+ * @param ret_val
+ * @return
+ */
+result_t control1_get_srst_data(control1_t *control1, bool *ret_val);
