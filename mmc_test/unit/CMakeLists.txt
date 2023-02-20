@@ -28,11 +28,13 @@ function(add_google_test test_target target)
 endfunction(add_google_test)
 
 add_executable(test_mmc_rpi3b_lib_control0 mmc/bcm_emmc_regs/test_control0.cpp)
+add_executable(test_mmc_rpi3b_lib_control1 mmc/bcm_emmc_regs/test_control1.cpp)
 add_executable(test_mmc_rpi3b_lib_bcm_emmc_regs mmc/test_bcm_emmc_regs.cpp)
 add_executable(test_mmc_rpi3b_lib_bcm_emmc mmc/test_bcm_emmc.cpp)
 add_executable(test_mmc_rpi3b_lib_result mmc/common/test_result.cpp)
 
 add_google_test(test_mmc_rpi3b_lib_control0 mmc_rpi3b_lib_control0)
+add_google_test(test_mmc_rpi3b_lib_control1 mmc_rpi3b_lib_control1)
 add_google_test(test_mmc_rpi3b_lib_bcm_emmc_regs mmc_rpi3b_lib_bcm_emmc_regs)
 add_google_test(test_mmc_rpi3b_lib_bcm_emmc mmc_rpi3b_lib_bcm_emmc)
 add_google_test(test_mmc_rpi3b_lib_result mmc_rpi3b_lib_result)

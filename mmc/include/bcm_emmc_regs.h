@@ -8,6 +8,7 @@
 
 #include "result.h"
 #include "control0.h"
+#include "control1.h"
 
 typedef struct bcm_emmc_regs bcm_emmc_regs_t;
 struct __attribute__((__packed__, aligned(4))) bcm_emmc_regs {
@@ -22,7 +23,7 @@ struct __attribute__((__packed__, aligned(4))) bcm_emmc_regs {
     uint32_t data; /* Data. */
     uint32_t status; /* Status. */
     control0_t control0; /* Control 0. */
-    uint32_t control1; /* Control 1. */
+    control1_t control1; /* Control 1. */
     uint32_t interrupt; /* Interrupt. */
     uint32_t irpt_mask; /* Interrupt Mask. */
     uint32_t irpt_en; /* Interrupt Enable. */
@@ -56,3 +57,9 @@ bcm_emmc_regs_t *bcm_emmc_regs_get(uintptr_t base_vaddr);
  * @param bcm_emmc_regs
  */
 result_t bcm_emmc_regs_zero_control0(bcm_emmc_regs_t *bcm_emmc_regs);
+
+/**
+ * Zeros out the `control1` register.
+ * @param bcm_emmc_regs
+ */
+result_t bcm_emmc_regs_zero_control1(bcm_emmc_regs_t *bcm_emmc_regs);

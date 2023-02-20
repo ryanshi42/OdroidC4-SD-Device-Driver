@@ -73,6 +73,7 @@ MMC_DRIVER_OBJS := \
 	mmc_driver/bcm_emmc.o \
 	mmc_driver/bcm_emmc_regs.o \
 	mmc_driver/bcm_emmc_regs/control0.o \
+	mmc_driver/bcm_emmc_regs/control1.o \
 
 IMAGES := \
 	serial_driver.elf \

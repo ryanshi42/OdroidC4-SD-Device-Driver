@@ -16,6 +16,12 @@ result_t bcm_emmc_init(
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to zero `control0` in bcm_emmc_init().");
     }
+    /* Set control1 to zero. */
+    res = bcm_emmc_regs_zero_control1(bcm_emmc->regs);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to zero `control1` in bcm_emmc_init().");
+    }
+
 
     return result_ok();
 }
