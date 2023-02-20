@@ -4,7 +4,8 @@
 #include <string.h>
 #include <stdint.h>
 
-#define MAX_NUM_ERR_MSGS (1 << 8)
+/* Max number of error messages `result.h` can hold is 16. */
+#define MAX_NUM_ERR_MSGS (2 << 3)
 
 typedef struct result result_t;
 struct result {
