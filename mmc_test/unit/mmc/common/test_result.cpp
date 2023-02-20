@@ -28,6 +28,26 @@ TEST(test_result, err_should_create_new_error) {
     ASSERT_EQ(1, result_get_num_err_msgs(result));
 }
 
+/* is_err() */
+
+TEST(test_result, is_err_should_return_false_for_non_errors) {
+    ASSERT_FALSE(result_is_err(result_ok()));
+}
+
+TEST(test_result, is_err_should_return_true_for_errors) {
+    ASSERT_TRUE(result_is_err(result_err("This is an error.")));
+}
+
+/* is_ok() */
+
+TEST(test_result, is_ok_should_return_true_for_ok) {
+    ASSERT_TRUE(result_is_ok(result_ok()));
+}
+
+TEST(test_result, is_ok_should_return_false_for_errors) {
+    ASSERT_FALSE(result_is_ok(result_err("This is an error.")));
+}
+
 /* ok_or() */
 
 TEST(test_result, ok_or_should_append_new_errors) {
