@@ -1,11 +1,9 @@
 #include "result.h"
 
 result_t result_ok() {
-    return (result_t) {
-            .is_err = false,
-            .err_msgs = {0},
-            .num_err_msgs = 0,
-    };
+    result_t res = {};
+    memset(&res, 0, sizeof(res));
+    return res;
 }
 
 result_t result_err(const char *err_msg) {
@@ -14,6 +12,7 @@ result_t result_err(const char *err_msg) {
             .err_msgs = {0},
             .num_err_msgs = 1,
     };
+    memset(result.err_msgs, 0, sizeof(result.err_msgs));
     result.err_msgs[0] = err_msg;
     return result;
 }
