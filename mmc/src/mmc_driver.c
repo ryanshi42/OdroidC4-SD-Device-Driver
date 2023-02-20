@@ -23,7 +23,7 @@ uintptr_t timer_base_vaddr;
 uintptr_t emmc_base_vaddr;
 
 /* Global `bcm_emmc`. */
-bcm_emmc_t bcm_emmc = {0};
+bcm_emmc_t global_bcm_emmc = {0};
 
 //// get the end of bss segment from linker
 //extern unsigned char _end;
@@ -43,6 +43,49 @@ void init(void) {
             MMC_TO_SERIAL_CLIENT_PUTCHAR_CHANNEL
     );
     uart_puts("Successfully initialised UART in MMC PD.\n");
+
+    long r, cnt, ccs = 0;
+    // GPIO_CD
+    r = *GPFSEL4;
+    r &= ~(7 << (7 * 3));
+    *GPFSEL4 = r;
+    *GPPUD = 2;
+    wait_cycles(150);
+    *GPPUDCLK1 = (1 << 15);
+    wait_cycles(150);
+    *GPPUD = 0;
+    *GPPUDCLK1 = 0;
+    r = *GPHEN1;
+    r |= 1 << 15;
+    *GPHEN1 = r;
+
+    // GPIO_CLK, GPIO_CMD
+    r = *GPFSEL4;
+    r |= (7 << (8 * 3)) | (7 << (9 * 3));
+    *GPFSEL4 = r;
+    *GPPUD = 2;
+    wait_cycles(150);
+    *GPPUDCLK1 = (1 << 16) | (1 << 17);
+    wait_cycles(150);
+    *GPPUD = 0;
+    *GPPUDCLK1 = 0;
+
+    // GPIO_DAT0, GPIO_DAT1, GPIO_DAT2, GPIO_DAT3
+    r = *GPFSEL5;
+    r |= (7 << (0 * 3)) | (7 << (1 * 3)) | (7 << (2 * 3)) | (7 << (3 * 3));
+    *GPFSEL5 = r;
+    *GPPUD = 2;
+    wait_cycles(150);
+    *GPPUDCLK1 = (1 << 18) | (1 << 19) | (1 << 20) | (1 << 21);
+    wait_cycles(150);
+    *GPPUD = 0;
+    *GPPUDCLK1 = 0;
+
+    result_t res = bcm_emmc_init(&global_bcm_emmc, emmc_base_vaddr);
+    if (result_is_err(res)) {
+        uart_puts("ERROR: failed to initialize EMMC\n");
+        return;
+    }
 
     if (sd_init() != SD_OK) {
         uart_puts("Failed to initialise SD card.\n");

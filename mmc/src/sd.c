@@ -252,47 +252,47 @@ int sd_clk(unsigned int f) {
  */
 int sd_init() {
     long r, cnt, ccs = 0;
-    // GPIO_CD
-    r = *GPFSEL4;
-    r &= ~(7 << (7 * 3));
-    *GPFSEL4 = r;
-    *GPPUD = 2;
-    wait_cycles(150);
-    *GPPUDCLK1 = (1 << 15);
-    wait_cycles(150);
-    *GPPUD = 0;
-    *GPPUDCLK1 = 0;
-    r = *GPHEN1;
-    r |= 1 << 15;
-    *GPHEN1 = r;
-
-    // GPIO_CLK, GPIO_CMD
-    r = *GPFSEL4;
-    r |= (7 << (8 * 3)) | (7 << (9 * 3));
-    *GPFSEL4 = r;
-    *GPPUD = 2;
-    wait_cycles(150);
-    *GPPUDCLK1 = (1 << 16) | (1 << 17);
-    wait_cycles(150);
-    *GPPUD = 0;
-    *GPPUDCLK1 = 0;
-
-    // GPIO_DAT0, GPIO_DAT1, GPIO_DAT2, GPIO_DAT3
-    r = *GPFSEL5;
-    r |= (7 << (0 * 3)) | (7 << (1 * 3)) | (7 << (2 * 3)) | (7 << (3 * 3));
-    *GPFSEL5 = r;
-    *GPPUD = 2;
-    wait_cycles(150);
-    *GPPUDCLK1 = (1 << 18) | (1 << 19) | (1 << 20) | (1 << 21);
-    wait_cycles(150);
-    *GPPUD = 0;
-    *GPPUDCLK1 = 0;
+//    // GPIO_CD
+//    r = *GPFSEL4;
+//    r &= ~(7 << (7 * 3));
+//    *GPFSEL4 = r;
+//    *GPPUD = 2;
+//    wait_cycles(150);
+//    *GPPUDCLK1 = (1 << 15);
+//    wait_cycles(150);
+//    *GPPUD = 0;
+//    *GPPUDCLK1 = 0;
+//    r = *GPHEN1;
+//    r |= 1 << 15;
+//    *GPHEN1 = r;
+//
+//    // GPIO_CLK, GPIO_CMD
+//    r = *GPFSEL4;
+//    r |= (7 << (8 * 3)) | (7 << (9 * 3));
+//    *GPFSEL4 = r;
+//    *GPPUD = 2;
+//    wait_cycles(150);
+//    *GPPUDCLK1 = (1 << 16) | (1 << 17);
+//    wait_cycles(150);
+//    *GPPUD = 0;
+//    *GPPUDCLK1 = 0;
+//
+//    // GPIO_DAT0, GPIO_DAT1, GPIO_DAT2, GPIO_DAT3
+//    r = *GPFSEL5;
+//    r |= (7 << (0 * 3)) | (7 << (1 * 3)) | (7 << (2 * 3)) | (7 << (3 * 3));
+//    *GPFSEL5 = r;
+//    *GPPUD = 2;
+//    wait_cycles(150);
+//    *GPPUDCLK1 = (1 << 18) | (1 << 19) | (1 << 20) | (1 << 21);
+//    wait_cycles(150);
+//    *GPPUD = 0;
+//    *GPPUDCLK1 = 0;
 
     sd_hv = (*EMMC_SLOTISR_VER & HOST_SPEC_NUM) >> HOST_SPEC_NUM_SHIFT;
     uart_puts("EMMC: GPIO set up\n");
 
     // Reset the card.
-    *EMMC_CONTROL0 = 0;
+//    *EMMC_CONTROL0 = 0;
     *EMMC_CONTROL1 |= C1_SRST_HC;
     cnt = 10000;
     do { wait_msec(10); } while ((*EMMC_CONTROL1 & C1_SRST_HC) && cnt--);
