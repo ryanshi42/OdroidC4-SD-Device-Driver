@@ -25,7 +25,7 @@
 
 #include "uart.h"
 
-uart_t global_uart = {0};
+//uart_t global_uart = {0};
 
 //#include "gpio.h"
 //#include "mbox.h"
@@ -81,14 +81,14 @@ uart_t global_uart = {0};
 //    *UART0_CR = 0x301;     // enable Tx, Rx, UART
 //}
 
-void uart_init(
-        uintptr_t shared_putchar_buf,
-        size_t sel4cp_channel_id_putchar
-) {
-    uart_t *uart = &global_uart;
-    uart->shared_putchar_buf = (char *) shared_putchar_buf;
-    uart->sel4cp_channel_id_putchar = sel4cp_channel_id_putchar;
-}
+//void uart_init(
+//        uintptr_t shared_putchar_buf,
+//        size_t sel4cp_channel_id_putchar
+//) {
+//    uart_t *uart = &global_uart;
+//    uart->shared_putchar_buf = (char *) shared_putchar_buf;
+//    uart->sel4cp_channel_id_putchar = sel4cp_channel_id_putchar;
+//}
 
 /**
  * Send a character
@@ -98,11 +98,12 @@ void uart_send(unsigned int c) {
 //    do{asm volatile("nop");}while(*UART0_FR&0x20);
 //    /* write the character to the buffer */
 //    *UART0_DR=c;
-    uart_t *uart = &global_uart;
-    /* Put the character into the buffer. */
-    uart->shared_putchar_buf[0] = (char) c;
-    /* Notify the `serial_client` channel. */
-    sel4cp_notify(uart->sel4cp_channel_id_putchar);
+//    uart_t *uart = &global_uart;
+//    /* Put the character into the buffer. */
+//    uart->shared_putchar_buf[0] = (char) c;
+//    /* Notify the `serial_client` channel. */
+//    sel4cp_notify(uart->sel4cp_channel_id_putchar);
+    printf("%c", c);
 }
 
 /**

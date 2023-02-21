@@ -32,11 +32,20 @@ SEL4CP_TOOL ?= $(SEL4CP_SDK)/bin/sel4cp
 # Specifies where the source files are.
 SRC_DIR := src
 # Specifies where the ring buffer files are.
-SHARED_RING_BUFFER_DIR := $(SRC_DIR)/libsharedringbuffer
+LIB_SHARED_RINGBUFFER_DIR := $(SRC_DIR)/libsharedringbuffer
+# Specifies where printf files are.
+LIB_PRINTF_DIR := $(SRC_DIR)/lib_printf
 
 BOARD_DIR := $(SEL4CP_SDK)/board/$(SEL4CP_BOARD)/$(SEL4CP_CONFIG)
 
-CFLAGS := -mcpu=$(CPU) -mstrict-align -ffreestanding -g3 -O3 -Wall  -Wno-unused-function
+CFLAGS := \
+	-mcpu=$(CPU) \
+	-mstrict-align \
+	-ffreestanding \
+	-g3 \
+	-O3 \
+	-Wall \
+	-Wno-unused-function
 LDFLAGS := -L$(BOARD_DIR)/lib
 LIBS := -lsel4cp -Tsel4cp.ld -lc
 
@@ -46,7 +55,8 @@ REPORT_FILE = $(BUILD_DIR)/report.txt
 CFLAGS += \
 	-I$(BOARD_DIR)/include \
 	-Iinclude \
-	-I$(SHARED_RING_BUFFER_DIR)/include \
+	-I$(LIB_SHARED_RINGBUFFER_DIR)/include \
+	-I$(LIB_PRINTF_DIR) \
 
 # Specifies which Object files in $(BUILD_DIR) should be linked.
 SERIAL_DRIVER_OBJS := \
@@ -74,6 +84,7 @@ MMC_DRIVER_OBJS := \
 	mmc_driver/bcm_emmc_regs.o \
 	mmc_driver/bcm_emmc_regs/control0.o \
 	mmc_driver/bcm_emmc_regs/control1.o \
+	lib_printf/printf.o \
 
 IMAGES := \
 	serial_driver.elf \
@@ -87,6 +98,7 @@ all: directories $(IMAGE_FILE)
 directories:
 	mkdir -p $(BUILD_DIR)
 	mkdir -p $(BUILD_DIR)/libsharedringbuffer
+	mkdir -p $(BUILD_DIR)/lib_printf
 	mkdir -p $(BUILD_DIR)/common
 	mkdir -p $(BUILD_DIR)/mmc_driver
 	mkdir -p $(BUILD_DIR)/mmc_driver/bcm_emmc_regs

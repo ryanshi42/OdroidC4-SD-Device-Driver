@@ -1,8 +1,4 @@
-#include <stdint.h>
-#include <sel4cp.h>
 #include "mmc_driver.h"
-#include "uart.h"
-#include "sd.h"
 
 /* Used for transporting chars from `uart` to `serial_client`. */
 uintptr_t mmc_to_serial_client_putchar_buf;
@@ -37,12 +33,12 @@ void init(void) {
     // use the last 4 bytes on the second sector as a boot counter
     unsigned int *counter = (unsigned int*)(buf + 508);
 //    unsigned int *counter = (unsigned int*)(&_end + 508);
-    /* Initialise the UART. */
-    uart_init(
+
+    /* Initialise printf. */
+    printf_init(
             mmc_to_serial_client_putchar_buf,
             MMC_TO_SERIAL_CLIENT_PUTCHAR_CHANNEL
     );
-    uart_puts("Successfully initialised UART in MMC PD.\n");
 
     long r, cnt, ccs = 0;
     // GPIO_CD
@@ -83,28 +79,28 @@ void init(void) {
 
     result_t res = bcm_emmc_init(&global_bcm_emmc, emmc_base_vaddr);
     if (result_is_err(res)) {
-        uart_puts("ERROR: failed to initialize EMMC\n");
+        printf("ERROR: failed to initialize EMMC\n");
         return;
     }
 
     if (sd_init() != SD_OK) {
-        uart_puts("Failed to initialise SD card.\n");
+        printf("Failed to initialise SD card.\n");
     }
 
-    uart_puts("Successfully initialised SD card.\n");
+    printf("Successfully initialised SD card.\n");
     bool is_write_success = false;
     bool is_read_success = false;
     /* Initialise the block to 0. */
     is_write_success = sd_writeblock(buf, COUNTER_SECTOR, 1);
     if (!is_write_success) {
-        uart_puts("Failed to write 0 to SD card.\n");
+        printf("Failed to write 0 to SD card.\n");
         return;
     }
     for (int i = 0; i < 0x3; i++) {
         /* Read the block. */
         is_read_success = sd_readblock(COUNTER_SECTOR, buf, 1);
         if (!is_read_success) {
-            uart_puts("Failed to read SD card.\n");
+            printf("Failed to read SD card.\n");
             return;
         }
         /* Increment the block. */
@@ -112,21 +108,17 @@ void init(void) {
         /* Write the block to disk. */
         is_write_success = sd_writeblock(buf, COUNTER_SECTOR, 1);
         if (!is_write_success) {
-            uart_puts("Failed to write ");
-            uart_hex(*counter);
-            uart_puts(" to SD card.\n");
+            printf("Failed to write 0x%lx to SD card.\n", (uintptr_t) *counter);
             return;
         }
     }
     /* Finally, read the block and print it out. */
     is_read_success = sd_readblock(COUNTER_SECTOR, buf, 1);
     if (!is_read_success) {
-        uart_puts("Failed to read SD card.\n");
+        printf("Failed to read SD card.\n");
         return;
     }
-    uart_puts("Boot counter ");
-    uart_hex(*counter);
-    uart_puts(" written to SD card.\n");
+    printf("Boot counter 0x%lx written to SD card.\n", (uintptr_t) *counter);
 }
 
 void notified(sel4cp_channel ch) {
