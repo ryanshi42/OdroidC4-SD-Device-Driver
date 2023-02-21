@@ -11,6 +11,7 @@ result_t result_err(const char *err_msg) {
             .is_err = true,
             .err_msgs = {0},
             .num_err_msgs = 1,
+            .total_num_err = 1,
     };
     memset(result.err_msgs, 0, sizeof(result.err_msgs));
     result.err_msgs[0] = err_msg;
@@ -21,13 +22,15 @@ result_t result_err_chain(result_t result, const char *err_msg) {
     if (err_msg == NULL) {
         return result;
     }
+    /* If the result is not an error, return an error. */
+    if (result_is_ok(result)) {
+        return result_err("User tried chaining error message to Ok result!");
+    }
+    /* Increment `total_num_err`. */
+    result.total_num_err++;
     /* Do nothing if we're already at our limit. */
     if (result.num_err_msgs == MAX_NUM_ERR_MSGS) {
         return result;
-    }
-    /* If the result is not an error, return an error. */
-    if (result_is_ok(result)) {
-        return result_err("Chained error message to Ok result!");
     }
     /* Set the next value in `err_msgs` to our new error message string. */
     result.err_msgs[result.num_err_msgs] = err_msg;
@@ -89,4 +92,8 @@ result_t result_ok_or(result_t result, const char *err_msg) {
 
 size_t result_get_num_err_msgs(result_t result) {
     return result.num_err_msgs;
+}
+
+size_t result_get_total_num_err(result_t result) {
+    return result.total_num_err;
 }

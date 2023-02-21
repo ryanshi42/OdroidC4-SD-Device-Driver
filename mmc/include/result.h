@@ -12,6 +12,10 @@ struct result {
     bool is_err;
     const char *err_msgs[MAX_NUM_ERR_MSGS];
     size_t num_err_msgs;
+    /* `total_num_err` represents the total number of errors in this `result`,
+     * which is >= `num_err_msgs`. This is required since `err_msgs` has a fixed
+     * total capacity of `MAX_NUM_ERR_MSGS`. */
+    size_t total_num_err;
 };
 
 /**
@@ -71,3 +75,10 @@ void result_get_err_msg(result_t result, char *ret_buf, size_t buf_len);
  * @return
  */
 size_t result_get_num_err_msgs(result_t result);
+
+/**
+ * Returns the total number of errors represented by `result`.
+ * @param result
+ * @return
+ */
+size_t result_get_total_num_err(result_t result);

@@ -134,11 +134,14 @@ TEST(test_result, err_chain_should_not_overflow_err_msgs) {
     result_t result = result_err("NULL pointer exception");
     for (int i = 0; i < MAX_NUM_ERR_MSGS; i++) {
         ASSERT_EQ(1 + i, result_get_num_err_msgs(result));
+        ASSERT_EQ(1 + i, result_get_total_num_err(result));
         result = result_err_chain(result, "Illegal Argument Exception.");
     }
     ASSERT_EQ(MAX_NUM_ERR_MSGS, result_get_num_err_msgs(result));
+    ASSERT_EQ(MAX_NUM_ERR_MSGS + 1, result_get_total_num_err(result));
     for (int i = 0; i < MAX_NUM_ERR_MSGS; i++) {
         ASSERT_EQ(MAX_NUM_ERR_MSGS, result_get_num_err_msgs(result));
+        ASSERT_EQ(MAX_NUM_ERR_MSGS + 1 + i, result_get_total_num_err(result));
         result = result_err_chain(result, "Illegal Argument Exception.");
     }
 }
