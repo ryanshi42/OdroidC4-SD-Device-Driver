@@ -9,4 +9,4 @@ include (CTest)
 # Enabling tests
 enable_testing()
 # Add our test directory.
-add_subdirectory(mmc_test/unit)
+add_subdirectory(mmc_test/)
