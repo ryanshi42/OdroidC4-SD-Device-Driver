@@ -9,6 +9,9 @@
 #include "sd.h"
 
 #include "printf.h"
+#include "sleep.h"
+#include "assert.h"
+#include "time.h"
 
 #define MMC_TO_SERIAL_CLIENT_PUTCHAR_CHANNEL (7)
 

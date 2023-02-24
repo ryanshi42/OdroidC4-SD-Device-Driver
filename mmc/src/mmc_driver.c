@@ -40,6 +40,21 @@ void init(void) {
             MMC_TO_SERIAL_CLIENT_PUTCHAR_CHANNEL
     );
 
+    uint64_t start_ticks, finish_ticks, delta_ticks;
+    start_ticks = clock_getticks();
+    usleep(1000000);
+    finish_ticks = clock_getticks();
+    delta_ticks = finish_ticks - start_ticks;
+    printf("delta_ticks: %d\n", delta_ticks);
+    assert(delta_ticks - 1000000 <= 2000);
+
+    start_ticks = clock_getticks();
+    sleep_cyc(150);
+    finish_ticks = clock_getticks();
+    delta_ticks = finish_ticks - start_ticks;
+    printf("delta_ticks: %d\n", delta_ticks);
+    assert(delta_ticks <= 1);
+
     long r, cnt, ccs = 0;
     // GPIO_CD
     r = *GPFSEL4;

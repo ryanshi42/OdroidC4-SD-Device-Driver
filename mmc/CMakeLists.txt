@@ -16,6 +16,35 @@ target_link_libraries(
         lib_sel4cp_rpi3b
 )
 
+add_library(mmc_rpi3b_lib_assert src/lib_assert/assert.c)
+target_include_directories(mmc_rpi3b_lib_assert PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_assert
+        lib_sel4cp_rpi3b
+)
+
+
+add_library(mmc_rpi3b_lib_delays src/delays.c)
+target_include_directories(mmc_rpi3b_lib_delays PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_delays
+        mmc_rpi3b_lib_gpio
+)
+
+add_library(mmc_rpi3b_lib_time src/lib_time/time.c)
+target_include_directories(mmc_rpi3b_lib_time PUBLIC src/lib_time/)
+target_link_libraries(
+        mmc_rpi3b_lib_time
+        mmc_rpi3b_lib_delays
+)
+
+add_library(mmc_rpi3b_lib_sleep src/lib_sleep/sleep.c)
+target_include_directories(mmc_rpi3b_lib_sleep PUBLIC src/lib_sleep/)
+target_link_libraries(
+        mmc_rpi3b_lib_sleep
+        mmc_rpi3b_lib_delays
+)
+
 add_library(mmc_rpi3b_lib_shared_ringbuffer src/libsharedringbuffer/shared_ringbuffer.c)
 target_include_directories(mmc_rpi3b_lib_shared_ringbuffer PUBLIC src/libsharedringbuffer/include/)
 target_link_libraries(
@@ -68,13 +97,6 @@ target_link_libraries(
 add_library(mmc_rpi3b_lib_gpio src/gpio.c)
 target_include_directories(mmc_rpi3b_lib_gpio PUBLIC include/)
 target_link_libraries(
-        mmc_rpi3b_lib_gpio
-)
-
-add_library(mmc_rpi3b_lib_delays src/delays.c)
-target_include_directories(mmc_rpi3b_lib_delays PUBLIC include/)
-target_link_libraries(
-        mmc_rpi3b_lib_delays
         mmc_rpi3b_lib_gpio
 )
 
@@ -137,6 +159,9 @@ target_link_libraries(
         mmc_rpi3b_lib_bcm_emmc
         mmc_rpi3b_lib_result
         mmc_rpi3b_lib_printf
+        mmc_rpi3b_lib_sleep
+        mmc_rpi3b_lib_assert
+        mmc_rpi3b_lib_time
 )
 
 

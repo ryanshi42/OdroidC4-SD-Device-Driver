@@ -33,8 +33,10 @@ SEL4CP_TOOL ?= $(SEL4CP_SDK)/bin/sel4cp
 SRC_DIR := src
 # Specifies where the ring buffer files are.
 LIB_SHARED_RINGBUFFER_DIR := $(SRC_DIR)/libsharedringbuffer
-# Specifies where printf files are.
 LIB_PRINTF_DIR := $(SRC_DIR)/lib_printf
+LIB_SLEEP_DIR := $(SRC_DIR)/lib_sleep
+LIB_ASSERT_DIR := $(SRC_DIR)/lib_assert
+LIB_TIME_DIR := $(SRC_DIR)/lib_time
 
 BOARD_DIR := $(SEL4CP_SDK)/board/$(SEL4CP_BOARD)/$(SEL4CP_CONFIG)
 
@@ -57,6 +59,9 @@ CFLAGS += \
 	-Iinclude \
 	-I$(LIB_SHARED_RINGBUFFER_DIR)/include \
 	-I$(LIB_PRINTF_DIR) \
+	-I$(LIB_SLEEP_DIR) \
+	-I$(LIB_ASSERT_DIR) \
+	-I$(LIB_TIME_DIR) \
 
 # Specifies which Object files in $(BUILD_DIR) should be linked.
 SERIAL_DRIVER_OBJS := \
@@ -85,6 +90,9 @@ MMC_DRIVER_OBJS := \
 	mmc_driver/bcm_emmc_regs/control0.o \
 	mmc_driver/bcm_emmc_regs/control1.o \
 	lib_printf/printf.o \
+	lib_sleep/sleep.o \
+	lib_assert/assert.o \
+	lib_time/time.o \
 
 IMAGES := \
 	serial_driver.elf \
@@ -99,6 +107,9 @@ directories:
 	mkdir -p $(BUILD_DIR)
 	mkdir -p $(BUILD_DIR)/libsharedringbuffer
 	mkdir -p $(BUILD_DIR)/lib_printf
+	mkdir -p $(BUILD_DIR)/lib_sleep
+	mkdir -p $(BUILD_DIR)/lib_assert
+	mkdir -p $(BUILD_DIR)/lib_time
 	mkdir -p $(BUILD_DIR)/common
 	mkdir -p $(BUILD_DIR)/mmc_driver
 	mkdir -p $(BUILD_DIR)/mmc_driver/bcm_emmc_regs
