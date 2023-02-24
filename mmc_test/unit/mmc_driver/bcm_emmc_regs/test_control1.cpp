@@ -8,8 +8,8 @@ extern "C" {
 
 TEST(test_control1, set_raw32_should_set_it_correctly) {
     control1_t control1 = {};
-    /* Initialise everything to 1. */
-    memset(&control1, '1', sizeof(control1));
+    /* Initialise bit to 1. */
+    memset((void *) &control1, 0xFF, sizeof(control1));
     /* Set value to 0. */
     result_t res = control1_set_raw32(&control1, 0);
     /* Should succeed. */
@@ -47,7 +47,7 @@ TEST(test_control1, get_raw32_should_not_accept_NULL_retval_ptr) {
 TEST(test_control1, set_srst_hc_should_set_srst_hc_only) {
     control1_t control1 = {};
     /* Initialise every bit to 1. */
-    memset(&control1, 0xFF, sizeof(control1));
+    memset((void *) &control1, 0xFF, sizeof(control1));
     bool actual_val;
     /* SRST_CMD should be initialised to 1. */
     control1_get_srst_cmd(&control1, &actual_val);
