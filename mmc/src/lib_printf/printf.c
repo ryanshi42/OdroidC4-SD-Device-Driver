@@ -353,7 +353,7 @@ static inline void append_termination_with_gadget(output_gadget_t* gadget)
 
 /* Beginning of our changes ====================== */
 
-#include <sel4cp.h>
+#include "sel4cp_facade.h"
 
 typedef struct printf_data printf_data_t;
 struct printf_data {

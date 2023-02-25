@@ -1,8 +1,8 @@
 #pragma once
 
 #include <stdint.h>
-#include <sel4cp.h>
 
+#include "sel4cp_facade.h"
 #include "result.h"
 #include "bcm_emmc.h"
 //#include "uart.h"

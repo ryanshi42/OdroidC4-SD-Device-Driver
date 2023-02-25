@@ -1,7 +1,13 @@
 
-cmake_minimum_required(VERSION 3.7.2)
 
-project(mmc-rpi3b C)
+add_library(mmc_rpi3b_lib_sel4cp_facade src/common/sel4cp_facade.c)
+target_include_directories(mmc_rpi3b_lib_sel4cp_facade PUBLIC include/)
+if (NOT MMC_RPI3B_UNIT_TEST)
+    target_link_libraries(
+            mmc_rpi3b_lib_sel4cp_facade
+            lib_sel4cp_rpi3b
+    )
+endif ()
 
 add_library(mmc_rpi3b_lib_fence INTERFACE)
 target_include_directories(mmc_rpi3b_lib_fence INTERFACE include/)
@@ -13,7 +19,7 @@ add_library(mmc_rpi3b_lib_printf src/lib_printf/printf.c)
 target_include_directories(mmc_rpi3b_lib_printf PUBLIC src/lib_printf/)
 target_link_libraries(
         mmc_rpi3b_lib_printf
-        lib_sel4cp_rpi3b
+        mmc_rpi3b_lib_sel4cp_facade
 )
 
 add_library(mmc_rpi3b_lib_assert src/lib_assert/assert.c)
@@ -49,12 +55,23 @@ add_library(mmc_rpi3b_lib_shared_ringbuffer src/libsharedringbuffer/shared_ringb
 target_include_directories(mmc_rpi3b_lib_shared_ringbuffer PUBLIC src/libsharedringbuffer/include/)
 target_link_libraries(
         mmc_rpi3b_lib_shared_ringbuffer
-        lib_sel4cp_rpi3b
         mmc_rpi3b_lib_fence
 )
 
 add_library(mmc_rpi3b_lib_arith src/common/arith.c)
 target_include_directories(mmc_rpi3b_lib_arith PUBLIC include/)
+
+add_library(mmc_rpi3b_lib_bcm_timer_regs src/timer_driver/bcm_timer_regs.c)
+target_include_directories(mmc_rpi3b_lib_bcm_timer_regs PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_bcm_timer_regs
+)
+
+add_library(mmc_rpi3b_lib_bcm_timer src/timer_driver/bcm_timer.c)
+target_include_directories(mmc_rpi3b_lib_bcm_timer PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_bcm_timer
+)
 
 add_library(mmc_rpi3b_lib_serial_parity src/serial_driver/serial_parity.c)
 target_include_directories(mmc_rpi3b_lib_serial_parity PUBLIC include/)
@@ -80,7 +97,7 @@ add_library(mmc_rpi3b_lib_serial_driver src/serial_driver.c)
 target_include_directories(mmc_rpi3b_lib_serial_driver PUBLIC include/)
 target_link_libraries(
         mmc_rpi3b_lib_serial_driver
-        lib_sel4cp_rpi3b
+        mmc_rpi3b_sel4cp_facade
         mmc_rpi3b_lib_bcm_uart
         mmc_rpi3b_lib_shared_ringbuffer
 )
@@ -89,9 +106,9 @@ add_library(mmc_rpi3b_lib_serial_client src/serial_client.c)
 target_include_directories(mmc_rpi3b_lib_serial_client PUBLIC include/)
 target_link_libraries(
         mmc_rpi3b_lib_serial_client
-        lib_sel4cp_rpi3b
         mmc_rpi3b_lib_shared_ringbuffer
         mmc_rpi3b_lib_shared_dma
+        mmc_rpi3b_lib_sel4cp_facade
 )
 
 add_library(mmc_rpi3b_lib_gpio src/gpio.c)
@@ -104,7 +121,6 @@ add_library(mmc_rpi3b_lib_uart src/uart.c)
 target_include_directories(mmc_rpi3b_lib_uart PUBLIC include/)
 target_link_libraries(
         mmc_rpi3b_lib_uart
-        lib_sel4cp_rpi3b
         mmc_rpi3b_lib_printf
 )
 
@@ -153,7 +169,7 @@ add_library(mmc_rpi3b_lib_mmc_driver src/mmc_driver.c)
 target_include_directories(mmc_rpi3b_lib_mmc_driver PUBLIC include/)
 target_link_libraries(
         mmc_rpi3b_lib_mmc_driver
-        lib_sel4cp_rpi3b
+        mmc_rpi3b_sel4cp_facade
         mmc_rpi3b_lib_uart
         mmc_rpi3b_lib_sd
         mmc_rpi3b_lib_bcm_emmc

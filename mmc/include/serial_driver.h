@@ -1,12 +1,11 @@
 #pragma once
 
-#include <sel4cp.h>
-#include <sel4/sel4.h>
 #include <stdbool.h>
 
 #include "bcm_uart.h"
 #include "shared_ringbuffer.h"
 #include "shared_dma.h"
+#include "sel4cp_facade.h"
 
 #define IRQ_59_CHANNEL (2)
 
