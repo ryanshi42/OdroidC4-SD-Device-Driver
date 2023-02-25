@@ -71,12 +71,12 @@ SERIAL_DRIVER_OBJS := \
 	serial_driver/serial_parity.o \
 	common/arith.o \
 	libsharedringbuffer/shared_ringbuffer.o \
-	shared_dma.o \
+	common/shared_dma.o \
 
 SERIAL_CLIENT_OBJS := \
 	serial_client.o \
 	libsharedringbuffer/shared_ringbuffer.o \
-	shared_dma.o \
+	common/shared_dma.o \
 
 MMC_DRIVER_OBJS := \
 	mmc_driver.o \

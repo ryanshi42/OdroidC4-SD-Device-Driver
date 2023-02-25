@@ -12,7 +12,7 @@ endif ()
 add_library(mmc_rpi3b_lib_fence INTERFACE)
 target_include_directories(mmc_rpi3b_lib_fence INTERFACE include/)
 
-add_library(mmc_rpi3b_lib_shared_dma src/shared_dma.c)
+add_library(mmc_rpi3b_lib_shared_dma src/common/shared_dma.c)
 target_include_directories(mmc_rpi3b_lib_shared_dma PUBLIC include/)
 
 add_library(mmc_rpi3b_lib_printf src/lib_printf/printf.c)
