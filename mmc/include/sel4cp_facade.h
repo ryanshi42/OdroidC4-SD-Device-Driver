@@ -3,7 +3,7 @@
 #if MMC_RPI3B_UNIT_TEST
 
 #include <stdlib.h>
-
+#include <stdint.h>
 
 /**
  * The following is originally defined in:
