@@ -1,5 +1,6 @@
-/*
- * This represents the memory-mapped registers as documented by the BCM2835 Datasheet.
+/**
+ * Represents the BCM2835 EMMC Registers as documented in Section 5 of the
+ * BCM2835 ARM Peripherals manual.
  */
 
 #pragma once
