@@ -19,3 +19,13 @@ result_t bcm_timer_init(
         uintptr_t base_vaddr
 );
 
+/**
+ * Gets the number of ticks since the BCM timer was initialised.
+ * @param bcm_timer
+ * @param ret_val
+ * @return
+ */
+result_t bcm_timer_get_num_ticks(
+        bcm_timer_t *bcm_timer,
+        uint64_t *ret_val
+);
