@@ -7,8 +7,10 @@ extern "C" {
 TEST(test_result, init_should_init_bcm_emmc) {
     /* Initialise `regs` to something non-zero. */
     bcm_emmc_regs_t regs = {};
-    memset(&regs, '1', sizeof(regs));
-    ASSERT_NE(0, regs.control0.raw32);
+    memset((void *) &regs, 0xFF, sizeof(regs));
+    uint32_t control0;
+    control0_get_raw32(&regs.control0, &control0);
+    ASSERT_EQ(0xFFFFFFFF, control0);
 
     /* Initialise bcm_emmc_init. */
     bcm_emmc_t bcm_emmc = {};
@@ -19,7 +21,8 @@ TEST(test_result, init_should_init_bcm_emmc) {
     ASSERT_EQ((uintptr_t) &regs, (uintptr_t) bcm_emmc.regs);
 
     /* The `control0` register should be zeroed. */
-    ASSERT_EQ(0, regs.control0.raw32);
+    control0_get_raw32(&regs.control0, &control0);
+    ASSERT_EQ(0, control0);
 }
 
 

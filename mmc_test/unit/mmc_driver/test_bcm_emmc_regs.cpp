@@ -44,15 +44,18 @@ TEST(test_bcm_emmc_regs, registers_should_have_the_correct_offset) {
 TEST(test_bcm_emmc_regs, zero_control0_should_zero_control0) {
     bcm_emmc_regs_t regs = {};
     /* Set `regs` to 1. */
-    memset(&regs, 1, sizeof(regs));
+    memset((void *) &regs, 0xFF, sizeof(regs));
     /* `control0` is not 0. */
-    ASSERT_NE(0, regs.control0.raw32);
+    uint32_t control0;
+    control0_get_raw32(&regs.control0, &control0);
+    ASSERT_EQ(0xFFFFFFFF, control0);
     /* Zero out `control0`. */
     result_t res = bcm_emmc_regs_zero_control0(&regs);
     /* Should be successful. */
     ASSERT_TRUE(result_is_ok(res));
     /* Assert the setting was successful. */
-    ASSERT_EQ(0, regs.control0.raw32);
+    control0_get_raw32(&regs.control0, &control0);
+    ASSERT_EQ(0, control0);
 }
 
 /* regs_get */
