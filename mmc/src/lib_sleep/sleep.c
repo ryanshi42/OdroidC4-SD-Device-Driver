@@ -34,7 +34,7 @@ int usleep(useconds_t usec) {
 }
 
 int sleep(unsigned int seconds) {
-    wait_msec_st(seconds * 1000000);
+    usleep(seconds * 1000000);
     return 0;
 }
 
