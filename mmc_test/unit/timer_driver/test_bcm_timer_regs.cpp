@@ -18,3 +18,5 @@ TEST(test_bcm_timer_regs, regs_should_have_the_correct_offset) {
     ASSERT_EQ(base + 0x14, (uintptr_t) &regs.compare2);
     ASSERT_EQ(base + 0x18, (uintptr_t) &regs.compare3);
 }
+
+

@@ -7,6 +7,8 @@
 
 #include <stdint.h>
 
+#include "result.h"
+
 typedef struct bcm_timer_regs bcm_timer_regs_t;
 struct __attribute__((__packed__, aligned(4))) bcm_timer_regs {
     uint32_t control_status;  // 0x00
@@ -17,3 +19,32 @@ struct __attribute__((__packed__, aligned(4))) bcm_timer_regs {
     uint32_t compare2;        // 0x14
     uint32_t compare3;        // 0x18
 };
+
+/**
+ * Returns a pointer to the BCM2835 System Timer registers.
+ *
+ * @param base_vaddr The base virtual address of the BCM2835 System Timer
+ * registers.
+ * @return A pointer to the BCM2835 System Timer registers.
+ */
+bcm_timer_regs_t *bcm_timer_regs_get(uintptr_t base_vaddr);
+
+/**
+ * Returns the value of the `control_status` register.
+ *
+ * @param bcm_timer_regs A pointer to the BCM2835 System Timer registers.
+ * @param ret_val Pointer to store return value into.
+ * @return A result.
+ */
+result_t bcm_timer_regs_get_counter_lo(bcm_timer_regs_t *bcm_timer_regs, uint32_t *ret_val);
+
+/**
+ * Returns the value of the `control_status` register.
+ *
+ * @param bcm_timer_regs A pointer to the BCM2835 System Timer registers.
+ * @param ret_val Pointer to store return value into.
+ * @return A result.
+ */
+result_t bcm_timer_regs_get_counter_hi(bcm_timer_regs_t *bcm_timer_regs, uint32_t *ret_val);
+
+

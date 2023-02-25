@@ -65,12 +65,15 @@ add_library(mmc_rpi3b_lib_bcm_timer_regs src/timer_driver/bcm_timer_regs.c)
 target_include_directories(mmc_rpi3b_lib_bcm_timer_regs PUBLIC include/)
 target_link_libraries(
         mmc_rpi3b_lib_bcm_timer_regs
+        mmc_rpi3b_lib_result
 )
 
 add_library(mmc_rpi3b_lib_bcm_timer src/timer_driver/bcm_timer.c)
 target_include_directories(mmc_rpi3b_lib_bcm_timer PUBLIC include/)
 target_link_libraries(
         mmc_rpi3b_lib_bcm_timer
+        mmc_rpi3b_lib_bcm_timer_regs
+        mmc_rpi3b_lib_result
 )
 
 add_library(mmc_rpi3b_lib_serial_parity src/serial_driver/serial_parity.c)
