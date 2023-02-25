@@ -33,5 +33,7 @@ test-build: directories
 test-unit: test-build
 	cmake --build ./$(BUILD_UNIT_TEST_DIR) --parallel "$(nproc)" --target test
 
-
+.PHONY: test-unit-valgrind
+test-unit-valgrind: test-build
+	cd ./$(BUILD_UNIT_TEST_DIR) && ctest -T memcheck
 
