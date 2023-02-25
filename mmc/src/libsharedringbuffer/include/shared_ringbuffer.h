@@ -8,7 +8,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include <sel4cp.h>
+//#include <sel4cp.h>
 #include "fence.h"
 
 #define SIZE 512
@@ -103,7 +103,7 @@ static inline void notify(ring_handle_t *ring)
 static inline int enqueue(ring_buffer_t *ring, uintptr_t buffer, unsigned int len, void *cookie)
 {
     if (ring_full(ring)) {
-        sel4cp_dbg_puts("Ring full");
+//        sel4cp_dbg_puts("Ring full");
         return -1;
     }
 
