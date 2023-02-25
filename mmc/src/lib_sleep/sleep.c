@@ -1,5 +1,16 @@
 #include "sleep.h"
 
+/* Global `bcm_timer`. */
+bcm_timer_t global_bcm_timer = {0};
+
+void sleep_init(uintptr_t timer_base_vaddr) {
+    /* Initialise timer. */
+    bcm_timer_init(
+            &global_bcm_timer,
+            timer_base_vaddr
+    );
+}
+
 int usleep(useconds_t usec) {
     wait_msec_st(usec);
     return 0;

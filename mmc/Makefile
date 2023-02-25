@@ -93,6 +93,8 @@ MMC_DRIVER_OBJS := \
 	lib_sleep/sleep.o \
 	lib_assert/assert.o \
 	lib_time/time.o \
+	timer_driver/bcm_timer.o \
+	timer_driver/bcm_timer_regs.o \
 
 IMAGES := \
 	serial_driver.elf \
@@ -114,6 +116,7 @@ directories:
 	mkdir -p $(BUILD_DIR)/mmc_driver
 	mkdir -p $(BUILD_DIR)/mmc_driver/bcm_emmc_regs
 	mkdir -p $(BUILD_DIR)/serial_driver
+	mkdir -p $(BUILD_DIR)/timer_driver
 
 # ======================================
 # Step 1: Generate $(BUILD_DIR)/%.o object files from $(SRC_DIR)/%.c source

@@ -5,7 +5,6 @@
 #include "sel4cp_facade.h"
 #include "result.h"
 #include "bcm_emmc.h"
-//#include "uart.h"
 #include "sd.h"
 
 #include "printf.h"

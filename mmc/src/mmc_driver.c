@@ -40,6 +40,8 @@ void init(void) {
             MMC_TO_SERIAL_CLIENT_PUTCHAR_CHANNEL
     );
 
+    sleep_init(timer_base_vaddr);
+
     uint64_t start_ticks, finish_ticks, delta_ticks;
     start_ticks = clock_getticks();
     usleep(1000000);
