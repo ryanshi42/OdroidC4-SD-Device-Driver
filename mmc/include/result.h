@@ -7,6 +7,19 @@
 /* Max number of error messages `result.h` can hold is 16. */
 #define MAX_NUM_ERR_MSGS (2 << 3)
 
+#define result_printf(result) \
+        printf("==========================\n"); \
+        printf("ERROR on %s:%d in %s().\n", __FILE__, __LINE__, __FUNCTION__); \
+        printf("Printing %ld out of %ld error messages.\n", result_get_num_err_msgs(result), result_get_total_num_err(result)); \
+        printf("=== Stack trace ===\n"); \
+        char err_msg[2 << 11] = {0}; \
+        result_get_err_msg(result, err_msg, sizeof(err_msg)); \
+        printf("%s", err_msg); \
+        if (result_get_num_err_msgs(result) < result_get_total_num_err(result)) { \
+            printf("...\n"); \
+        } \
+        printf("==========================\n");
+
 typedef struct result result_t;
 struct result {
     bool is_err;

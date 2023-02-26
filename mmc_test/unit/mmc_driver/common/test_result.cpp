@@ -146,6 +146,37 @@ TEST(test_result, err_chain_should_not_overflow_err_msgs) {
     }
 }
 
+/* printf */
 
+TEST(test_result, printf_should_printf_error_message) {
+    result_t result = result_err("NULL pointer exception");
+    result = result_err_chain(result, "Illegal Argument Exception.");
+    result = result_err_chain(result, "Illegal Argument Exception 2.");
+    testing::internal::CaptureStdout();
+    result_printf(result);
+    std::string output = testing::internal::GetCapturedStdout();
+    /* Printing out for myself. */
+    std::cout << output << std::endl;
+    ASSERT_TRUE(output.find("Printing 3 out of 3 error messages.") != std::string::npos);
+    ASSERT_TRUE(output.find("NULL pointer exception") != std::string::npos);
+    ASSERT_TRUE(output.find("Illegal Argument Exception.") != std::string::npos);
+    ASSERT_TRUE(output.find("Illegal Argument Exception 2.") != std::string::npos);
+    ASSERT_TRUE(output.find("...") == std::string::npos);
+}
 
+TEST(test_result, printf_should_acknowledge_there_are_more_messages) {
+    result_t result = result_err("NULL pointer exception");
+    for (int i = 0; i < MAX_NUM_ERR_MSGS * 2; i++) {
+        result = result_err_chain(result, "Illegal Argument Exception.");
+    }
+    testing::internal::CaptureStdout();
+    result_printf(result);
+    std::string output = testing::internal::GetCapturedStdout();
+    /* Printing out for myself. */
+    std::cout << output << std::endl;
+    ASSERT_TRUE(output.find("Printing 16 out of 33 error messages.") != std::string::npos);
+    ASSERT_TRUE(output.find("NULL pointer exception") != std::string::npos);
+    ASSERT_TRUE(output.find("Illegal Argument Exception.") != std::string::npos);
+    ASSERT_TRUE(output.find("...") != std::string::npos);
+}
 
