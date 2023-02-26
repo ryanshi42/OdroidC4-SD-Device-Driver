@@ -75,6 +75,14 @@ bool result_is_ok(result_t result);
 bool result_is_err(result_t result);
 
 /**
+ * Returns the error message stored in `err_msgs` at `index`.
+ * @param result
+ * @param index
+ * @return
+ */
+const char *result_get_err_msg_at(result_t result, size_t index);
+
+/**
  * Returns the error message stored in the error.
  * @param result
  * @param ret_buf The character buffer you wish to store the error message in.

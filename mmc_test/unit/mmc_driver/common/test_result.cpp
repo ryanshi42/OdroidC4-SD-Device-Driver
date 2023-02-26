@@ -72,6 +72,25 @@ TEST(test_result, ok_or_should_not_overflow_max_num_msgs) {
     }
 }
 
+/* get_err_msg_at() */
+
+TEST(test_result, get_err_msg_at_should_return_err_msg_at_index) {
+    result_t result = result_err("Illegal Argument Exception.");
+    for (int i = 0; i < MAX_NUM_ERR_MSGS - 1; i++) {
+        ASSERT_EQ(1 + i, result_get_num_err_msgs(result));
+        ASSERT_EQ(1 + i, result_get_total_num_err(result));
+        result = result_err_chain(result, "Illegal Argument Exception.");
+    }
+    size_t num_err_msgs = result_get_num_err_msgs(result);
+    for (size_t i = 0; i < num_err_msgs; i++) {
+        ASSERT_STREQ("Illegal Argument Exception.", result_get_err_msg_at(result, i));
+    }
+    /* Trying to access an error message greater than result.num_err_msgs returns empty string. */
+    for (size_t i = num_err_msgs; i < 2 * num_err_msgs; i++) {
+        ASSERT_STREQ("", result_get_err_msg_at(result, 1 + i));
+    }
+}
+
 /* get_err_msg() */
 
 TEST(test_result, get_err_msg_should_not_segfault_given_null_char_buf) {

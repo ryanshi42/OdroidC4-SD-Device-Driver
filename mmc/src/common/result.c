@@ -47,6 +47,14 @@ bool result_is_err(result_t result) {
     return !result_is_ok(result);
 }
 
+const char *result_get_err_msg_at(result_t result, size_t index) {
+    if (index >= result.num_err_msgs) {
+        return "";
+    }
+    return result.err_msgs[index];
+}
+
+/* TODO: Figure out I can't run this function on CP. */
 void result_get_err_msg(result_t result, char *ret_buf, size_t buf_len) {
     if (ret_buf == NULL || buf_len == 0) {
         return;
