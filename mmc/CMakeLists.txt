@@ -62,6 +62,15 @@ target_link_libraries(
 add_library(mmc_rpi3b_lib_arith src/common/arith.c)
 target_include_directories(mmc_rpi3b_lib_arith PUBLIC include/)
 
+add_library(mmc_rpi3b_lib_timer_client src/common/timer_client.c)
+target_include_directories(mmc_rpi3b_lib_timer_client PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_timer_client
+        mmc_rpi3b_lib_shared_ringbuffer
+        mmc_rpi3b_lib_shared_dma
+        mmc_rpi3b_lib_result
+)
+
 add_library(mmc_rpi3b_lib_bcm_timer_regs src/timer_driver/bcm_timer_regs.c)
 target_include_directories(mmc_rpi3b_lib_bcm_timer_regs PUBLIC include/)
 target_link_libraries(
@@ -193,6 +202,7 @@ target_link_libraries(
         mmc_rpi3b_lib_sleep
         mmc_rpi3b_lib_assert
         mmc_rpi3b_lib_time
+        mmc_rpi3b_lib_timer_client
 )
 
 

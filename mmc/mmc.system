@@ -306,11 +306,32 @@
             priority="99"
             pp="true">
         <program_image path="mmc_driver.elf"/>
+        <!-- `timer_driver_shared_dma` is always mapped to the same virtual
+        address of 0x2_400_000 for ALL PDs that use this memory region (which is
+        a requirement and assumption of the SDDF's transport mechanism). -->
+        <map
+                mr="timer_driver_shared_dma"
+                vaddr="0x2_400_000"
+                perms="rw"
+                cached="true"
+                setvar_vaddr="shared_dma" />
+        <map
+                mr="timer_driver_rx_avail_ring_buf"
+                vaddr="0x2_600_000"
+                perms="rw"
+                cached="true"
+                setvar_vaddr="rx_avail_ring_buf" />
+        <map
+                mr="timer_driver_rx_used_ring_buf"
+                vaddr="0x2_800_000"
+                perms="rw"
+                cached="true"
+                setvar_vaddr="rx_used_ring_buf" />
         <!-- Shared memory region for `mmc` PD to pass characters to
         `serial_client` to print. -->
         <map
                 mr="mmc_to_serial_client_putchar_buf"
-                vaddr="0x2_400_000"
+                vaddr="0x3_000_000"
                 perms="rw"
                 cached="true"
                 setvar_vaddr="mmc_to_serial_client_putchar_buf"/>

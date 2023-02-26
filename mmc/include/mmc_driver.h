@@ -11,6 +11,7 @@
 #include "sleep.h"
 #include "assert.h"
 #include "time.h"
+#include "timer_client.h"
 
 #define MMC_TO_SERIAL_CLIENT_PUTCHAR_CHANNEL (7)
 

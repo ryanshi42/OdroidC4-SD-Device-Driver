@@ -3,6 +3,24 @@
 /* Used for transporting chars from `mmc_driver` to `serial_client`. */
 uintptr_t mmc_to_serial_client_putchar_buf;
 
+
+uintptr_t shared_dma;
+
+/* `rx_` stands for "Receive". The following two Receive buffers are to assist
+ * with transporting data from `timer_driver` to `mmc_driver`. */
+
+/* In the SDDF's design-documentation, `rx_avail_ring_buf` is referred to as the
+ * "Transmit-Free" (TxF) ring buffer. `rx_avail_ring_buf` holds all the buffers
+ * in the `shared_dma` data region that are ready to be reused for transporting
+ * new data from `timer_driver` to `mmc_driver`. */
+uintptr_t rx_avail_ring_buf;
+
+/* In the SDDF's design-documentation, `rx_used_ring_buf` is referred to as the
+ * "Transmit-Available" (TxA) ring buffer. `rx_used_ring_buf` holds all the
+ * buffers in the `shared_dma` data region that currently hold data sent by
+ * `timer_driver` for the `mmc_driver` PD to process.  */
+uintptr_t rx_used_ring_buf;
+
 /* Base virtual address for the GPIO registers. We've deliberately set this
  * value to 0x3f200000 in `mmc.system`, which is the Physical Address the GPIO
  * registers are actually mapped to. */
@@ -21,6 +39,9 @@ uintptr_t emmc_base_vaddr;
 /* Global `bcm_emmc`. */
 bcm_emmc_t global_bcm_emmc = {0};
 
+/* Global `timer_client`. */
+timer_client_t global_timer_client = {0};
+
 //// get the end of bss segment from linker
 //extern unsigned char _end;
 
@@ -34,11 +55,23 @@ void init(void) {
     unsigned int *counter = (unsigned int*)(buf + 508);
 //    unsigned int *counter = (unsigned int*)(&_end + 508);
 
-    /* Initialise printf. */
+    /* Initialise `printf`. */
     printf_init(
             mmc_to_serial_client_putchar_buf,
             MMC_TO_SERIAL_CLIENT_PUTCHAR_CHANNEL
     );
+
+    /* Initialise `timer_client`. */
+    result_t res_timer_client = timer_client_init(
+            &global_timer_client,
+            shared_dma,
+            rx_avail_ring_buf,
+            rx_used_ring_buf
+    );
+    if (result_is_err(res_timer_client)) {
+        result_printf(res_timer_client);
+        return;
+    }
 
     sleep_init(timer_base_vaddr);
 

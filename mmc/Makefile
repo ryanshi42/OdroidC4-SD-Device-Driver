@@ -84,7 +84,6 @@ MMC_DRIVER_OBJS := \
 	gpio.o \
 	delays.o \
 	sd.o \
-	common/result.o \
 	mmc_driver/bcm_emmc.o \
 	mmc_driver/bcm_emmc_regs.o \
 	mmc_driver/bcm_emmc_regs/control0.o \
@@ -95,6 +94,10 @@ MMC_DRIVER_OBJS := \
 	lib_time/time.o \
 	timer_driver/bcm_timer.o \
 	timer_driver/bcm_timer_regs.o \
+	common/result.o \
+	common/timer_client.o \
+	common/shared_dma.o \
+	libsharedringbuffer/shared_ringbuffer.o \
 
 TIMER_DRIVER_OBJS := \
 	timer_driver.o \
