@@ -77,6 +77,16 @@ target_link_libraries(
         mmc_rpi3b_lib_result
 )
 
+add_library(mmc_rpi3b_lib_timer_driver src/timer_driver.c)
+target_include_directories(mmc_rpi3b_lib_timer_driver PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_timer_driver
+        mmc_rpi3b_lib_sel4cp_facade
+        mmc_rpi3b_lib_result
+        mmc_rpi3b_lib_bcm_timer
+        mmc_rpi3b_lib_shared_ringbuffer
+)
+
 add_library(mmc_rpi3b_lib_serial_parity src/serial_driver/serial_parity.c)
 target_include_directories(mmc_rpi3b_lib_serial_parity PUBLIC include/)
 

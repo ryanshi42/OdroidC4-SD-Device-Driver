@@ -96,10 +96,18 @@ MMC_DRIVER_OBJS := \
 	timer_driver/bcm_timer.o \
 	timer_driver/bcm_timer_regs.o \
 
+TIMER_DRIVER_OBJS := \
+	timer_driver.o \
+	libsharedringbuffer/shared_ringbuffer.o \
+	common/result.o \
+	timer_driver/bcm_timer.o \
+	timer_driver/bcm_timer_regs.o \
+
 IMAGES := \
 	serial_driver.elf \
 	serial_client.elf \
 	mmc_driver.elf \
+	timer_driver.elf \
 
 .PHONY: all
 all: directories $(IMAGE_FILE)
@@ -141,6 +149,9 @@ $(BUILD_DIR)/serial_client.elf: $(addprefix $(BUILD_DIR)/, $(SERIAL_CLIENT_OBJS)
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
 $(BUILD_DIR)/mmc_driver.elf: $(addprefix $(BUILD_DIR)/, $(MMC_DRIVER_OBJS))
+	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
+
+$(BUILD_DIR)/timer_driver.elf: $(addprefix $(BUILD_DIR)/, $(TIMER_DRIVER_OBJS))
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
 # ======================================
