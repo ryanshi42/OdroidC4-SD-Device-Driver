@@ -8,18 +8,18 @@ uintptr_t timer_base_vaddr;
 uintptr_t shared_dma;
 
 /* `rx_` stands for "Receive". The following two Receive buffers are to assist
- * with transporting data from `timer_driver` to `timer_client`. */
+ * with transporting data from `timer_driver` to `mmc_driver`. */
 
 /* In the SDDF's design-documentation, `rx_avail_ring_buf` is referred to as the
  * "Transmit-Free" (TxF) ring buffer. `rx_avail_ring_buf` holds all the buffers
  * in the `shared_dma` data region that are ready to be reused for transporting
- * new data from `timer_client` to `timer_driver`. */
+ * new data from `timer_driver` to `mmc_driver`. */
 uintptr_t rx_avail_ring_buf;
 
 /* In the SDDF's design-documentation, `rx_used_ring_buf` is referred to as the
  * "Transmit-Available" (TxA) ring buffer. `rx_used_ring_buf` holds all the
  * buffers in the `shared_dma` data region that currently hold data sent by
- * `timer_client` for the `timer_driver` PD to process.  */
+ * `timer_driver` for the `mmc_driver` PD to process.  */
 uintptr_t rx_used_ring_buf;
 
 /* Global `timer_driver`. */
