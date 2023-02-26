@@ -378,6 +378,12 @@
         <end pd="mmc_driver" id="7" />
         <end pd="serial_client" id="8" />
     </channel>
+    <!-- Channel between `mmc_driver` and `timer_driver` for get_num_ticks()
+    calls by `mmc_driver`. -->
+    <channel>
+        <end pd="mmc_driver" id="11"/>
+        <end pd="timer_driver" id="12"/>
+    </channel>
 
 </system>
 

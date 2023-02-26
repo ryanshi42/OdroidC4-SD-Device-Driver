@@ -69,6 +69,7 @@ target_link_libraries(
         mmc_rpi3b_lib_shared_ringbuffer
         mmc_rpi3b_lib_shared_dma
         mmc_rpi3b_lib_result
+        mmc_rpi3b_lib_sel4cp_facade
 )
 
 add_library(mmc_rpi3b_lib_bcm_timer_regs src/timer_driver/bcm_timer_regs.c)

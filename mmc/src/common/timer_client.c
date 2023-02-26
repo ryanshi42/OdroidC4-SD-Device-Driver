@@ -5,11 +5,14 @@ result_t timer_client_init(
         timer_client_t *timer_client,
         uintptr_t shared_dma,
         uintptr_t rx_avail_ring_buf,
-        uintptr_t rx_used_ring_buf
+        uintptr_t rx_used_ring_buf,
+        size_t sel4cp_channel_id_get_num_ticks
 ) {
     if (timer_client == NULL) {
         return result_err("NULL `timer_client` passed to timer_client_init().");
     }
+    /* Save the sel4cp channel ID. */
+    timer_client->sel4cp_channel_id_get_num_ticks = sel4cp_channel_id_get_num_ticks;
     /* Initialise our `rx_ring_buf_handle`, which is just a convenience struct
      * where all relevant Receive ring buffers are located. */
     ring_init(
@@ -35,5 +38,19 @@ result_t timer_client_init(
             return result_err("Failed to enqueue buffer onto Receive available queue in timer_client_init().\n");
         }
     }
+    return result_ok();
+}
+
+
+result_t timer_client_get_num_ticks(
+        timer_client_t *timer_client,
+        uint64_t *ret_val
+) {
+    if (timer_client == NULL) {
+        return result_err("NULL `timer_client` passed to timer_client_get_num_ticks().");
+    }
+    /* Send a notification to `timer_driver`. */
+    sel4cp_notify(timer_client->sel4cp_channel_id_get_num_ticks);
+
     return result_ok();
 }

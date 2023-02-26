@@ -58,7 +58,7 @@ void init(void) {
     /* Initialise `printf`. */
     printf_init(
             mmc_to_serial_client_putchar_buf,
-            MMC_TO_SERIAL_CLIENT_PUTCHAR_CHANNEL
+            MMC_DRIVER_TO_SERIAL_CLIENT_PUTCHAR_CHANNEL
     );
 
     /* Initialise `timer_client`. */
@@ -66,7 +66,8 @@ void init(void) {
             &global_timer_client,
             shared_dma,
             rx_avail_ring_buf,
-            rx_used_ring_buf
+            rx_used_ring_buf,
+            MMC_DRIVER_TO_TIMER_DRIVER_GET_NUM_TICKS_CHANNEL
     );
     if (result_is_err(res_timer_client)) {
         result_printf(res_timer_client);

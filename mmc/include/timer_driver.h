@@ -9,6 +9,7 @@
 #include "printf.h"
 
 #define TIMER_DRIVER_TO_SERIAL_CLIENT_PUTCHAR_CHANNEL (9)
+#define TIMER_DRIVER_TO_MMC_DRIVER_GET_NUM_TICKS_CHANNEL (12)
 
 typedef struct timer_driver timer_driver_t;
 struct timer_driver {
