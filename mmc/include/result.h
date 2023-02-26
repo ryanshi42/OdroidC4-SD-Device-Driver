@@ -7,6 +7,7 @@
 /* Max number of error messages `result.h` can hold is 16. */
 #define MAX_NUM_ERR_MSGS (2 << 3)
 
+/* This macro requires `printf_init()` in `printf.c` to have been called first. */
 #define result_printf(result) \
         printf("\n==========================\n"); \
         printf("ERROR on %s:%d in %s().\n", __FILE__, __LINE__, __FUNCTION__); \
