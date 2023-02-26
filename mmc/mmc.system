@@ -85,71 +85,6 @@
             name="mmc_to_serial_client_putchar_buf"
             size="0x1_000"
             page_size="0x1_000"/>
-    <!-- Shared DMA region for timer driver. -->
-    <memory_region
-            name="timer_driver_shared_dma"
-            size="0x200_000"
-            page_size="0x200_000"/>
-    <memory_region
-            name="timer_driver_rx_avail_ring_buf"
-            size="0x200_000"
-            page_size="0x200_000"/>
-    <memory_region
-            name="timer_driver_rx_used_ring_buf"
-            size="0x200_000"
-            page_size="0x200_000"/>
-    <!-- A shared buffer to pass chars from `timer_driver.c` to `serial_client.c`. -->
-    <memory_region
-            name="timer_driver_to_serial_client_putchar_buf"
-            size="0x1_000"
-            page_size="0x1_000"/>
-    <!-- Protection Domain for Timer driver. -->
-    <protection_domain
-            name="timer_driver"
-            priority="99"
-            pp="true">
-        <program_image path="timer_driver.elf"/>
-        <!-- Memory region mapped to Timer registers. -->
-        <map
-                mr="timer"
-                vaddr="0x2_200_000"
-                perms="rw"
-                cached="false"
-                setvar_vaddr="timer_base_vaddr"/>
-        <!-- `timer_driver_shared_dma` is always mapped to the same virtual
-        address of 0x2_400_000 for ALL PDs that use this memory region (which is
-        a requirement and assumption of the SDDF's transport mechanism). -->
-        <map
-                mr="timer_driver_shared_dma"
-                vaddr="0x2_400_000"
-                perms="rw"
-                cached="true"
-                setvar_vaddr="shared_dma" />
-        <map
-                mr="timer_driver_rx_avail_ring_buf"
-                vaddr="0x2_600_000"
-                perms="rw"
-                cached="true"
-                setvar_vaddr="rx_avail_ring_buf" />
-        <map
-                mr="timer_driver_rx_used_ring_buf"
-                vaddr="0x2_800_000"
-                perms="rw"
-                cached="true"
-                setvar_vaddr="rx_used_ring_buf" />
-        <map
-                mr="timer_driver_to_serial_client_putchar_buf"
-                vaddr="0x3_000_000"
-                perms="rw"
-                cached="true"
-                setvar_vaddr="timer_driver_to_serial_client_putchar_buf"/>
-    </protection_domain>
-    <!-- Channel between `timer_driver` and `serial_client` for printf()
-    calls by `timer_driver`. -->
-    <channel>
-        <end pd="timer_driver" id="9" />
-        <end pd="serial_client" id="10" />
-    </channel>
     <!-- The `serial_driver` PD must have a higher priority than the
     `serial_client` PD so that it doesn't get preempted by `serial_client` when
     it is busy writing to the UART device. -->
@@ -299,6 +234,71 @@
     <channel>
         <end pd="serial_client" id="5" />
         <end pd="serial_driver" id="6" />
+    </channel>
+    <!-- Shared DMA region for timer driver. -->
+    <memory_region
+            name="timer_driver_shared_dma"
+            size="0x200_000"
+            page_size="0x200_000"/>
+    <memory_region
+            name="timer_driver_rx_avail_ring_buf"
+            size="0x200_000"
+            page_size="0x200_000"/>
+    <memory_region
+            name="timer_driver_rx_used_ring_buf"
+            size="0x200_000"
+            page_size="0x200_000"/>
+    <!-- A shared buffer to pass chars from `timer_driver.c` to `serial_client.c`. -->
+    <memory_region
+            name="timer_driver_to_serial_client_putchar_buf"
+            size="0x1_000"
+            page_size="0x1_000"/>
+    <!-- Protection Domain for Timer driver. -->
+    <protection_domain
+            name="timer_driver"
+            priority="99"
+            pp="true">
+        <program_image path="timer_driver.elf"/>
+        <!-- Memory region mapped to Timer registers. -->
+        <map
+                mr="timer"
+                vaddr="0x2_200_000"
+                perms="rw"
+                cached="false"
+                setvar_vaddr="timer_base_vaddr"/>
+        <!-- `timer_driver_shared_dma` is always mapped to the same virtual
+        address of 0x2_400_000 for ALL PDs that use this memory region (which is
+        a requirement and assumption of the SDDF's transport mechanism). -->
+        <map
+                mr="timer_driver_shared_dma"
+                vaddr="0x2_400_000"
+                perms="rw"
+                cached="true"
+                setvar_vaddr="shared_dma" />
+        <map
+                mr="timer_driver_rx_avail_ring_buf"
+                vaddr="0x2_600_000"
+                perms="rw"
+                cached="true"
+                setvar_vaddr="rx_avail_ring_buf" />
+        <map
+                mr="timer_driver_rx_used_ring_buf"
+                vaddr="0x2_800_000"
+                perms="rw"
+                cached="true"
+                setvar_vaddr="rx_used_ring_buf" />
+        <map
+                mr="timer_driver_to_serial_client_putchar_buf"
+                vaddr="0x3_000_000"
+                perms="rw"
+                cached="true"
+                setvar_vaddr="timer_driver_to_serial_client_putchar_buf"/>
+    </protection_domain>
+    <!-- Channel between `timer_driver` and `serial_client` for printf()
+    calls by `timer_driver`. -->
+    <channel>
+        <end pd="timer_driver" id="9" />
+        <end pd="serial_client" id="10" />
     </channel>
     <!-- Protection Domain for MultiMediaCard driver. -->
     <protection_domain
