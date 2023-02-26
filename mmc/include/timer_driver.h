@@ -12,6 +12,7 @@
 
 typedef struct timer_driver timer_driver_t;
 struct timer_driver {
+    /* The BCM2835 Timer Device. */
     bcm_timer_t bcm_timer;
     /* Receive ring buffer handle. This is a convenience `struct` that
      * contains all the pointers to the relevant Receive "available" and "used"
