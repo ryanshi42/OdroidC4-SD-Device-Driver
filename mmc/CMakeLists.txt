@@ -85,6 +85,7 @@ target_link_libraries(
         mmc_rpi3b_lib_result
         mmc_rpi3b_lib_bcm_timer
         mmc_rpi3b_lib_shared_ringbuffer
+        mmc_rpi3b_lib_printf
 )
 
 add_library(mmc_rpi3b_lib_serial_parity src/serial_driver/serial_parity.c)

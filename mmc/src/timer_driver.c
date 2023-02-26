@@ -1,5 +1,8 @@
 #include "timer_driver.h"
 
+/* Used for transporting chars from `timer_driver` to `serial_client`. */
+uintptr_t timer_driver_to_serial_client_putchar_buf;
+
 uintptr_t timer_base_vaddr;
 
 uintptr_t shared_dma;
@@ -44,12 +47,32 @@ result_t timer_driver_init(timer_driver_t *timer_driver, uintptr_t base_vaddr) {
 }
 
 void init(void) {
-    result_t res = timer_driver_init(
+    /* Initialise `printf`. */
+    printf_init(
+            timer_driver_to_serial_client_putchar_buf,
+            TIMER_DRIVER_TO_SERIAL_CLIENT_PUTCHAR_CHANNEL
+    );
+    /* Initialise the `timer_driver`. */
+    result_t result = timer_driver_init(
             &global_timer_driver,
             timer_base_vaddr
     );
-    if (result_is_err(res)) {
-        /* TODO: Print the error out. */
+    /* Print out any errors. */
+    if (result_is_err(result)) {
+        printf("==========================\n");
+        printf("ERROR on %s:%d in %s().\n", __FILE__, __LINE__, __FUNCTION__);
+        printf("Printing %ld out of %ld error messages.\n", result_get_num_err_msgs(result), result_get_total_num_err(result));
+        printf("=== Stack trace ===\n");
+        char err_msg[2 << 11];
+        result_get_err_msg(result, err_msg, 2 << 11);
+        printf("%s", err_msg);
+//        for (size_t i = 0; i < result_get_num_err_msgs(result); i++) {
+//            printf("%ld: %s\n", i, result_get_err_msg_at(result, i));
+//        }
+        if (result_get_num_err_msgs(result) < result_get_total_num_err(result)) {
+            printf("...\n");
+        }
+        printf("==========================\n");
         return;
     }
 }

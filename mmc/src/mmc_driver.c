@@ -1,6 +1,6 @@
 #include "mmc_driver.h"
 
-/* Used for transporting chars from `uart` to `serial_client`. */
+/* Used for transporting chars from `mmc_driver` to `serial_client`. */
 uintptr_t mmc_to_serial_client_putchar_buf;
 
 /* Base virtual address for the GPIO registers. We've deliberately set this

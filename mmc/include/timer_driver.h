@@ -6,6 +6,9 @@
 #include "bcm_timer.h"
 #include "shared_ringbuffer.h"
 #include "sel4cp_facade.h"
+#include "printf.h"
+
+#define TIMER_DRIVER_TO_SERIAL_CLIENT_PUTCHAR_CHANNEL (9)
 
 typedef struct timer_driver timer_driver_t;
 struct timer_driver {

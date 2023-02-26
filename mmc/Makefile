@@ -102,6 +102,7 @@ TIMER_DRIVER_OBJS := \
 	common/result.o \
 	timer_driver/bcm_timer.o \
 	timer_driver/bcm_timer_regs.o \
+	lib_printf/printf.o \
 
 IMAGES := \
 	serial_driver.elf \
