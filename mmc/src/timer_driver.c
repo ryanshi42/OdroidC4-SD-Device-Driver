@@ -59,16 +59,13 @@ void init(void) {
     );
     /* Print out any errors. */
     if (result_is_err(result)) {
-        printf("==========================\n");
+        printf("\n==========================\n");
         printf("ERROR on %s:%d in %s().\n", __FILE__, __LINE__, __FUNCTION__);
         printf("Printing %ld out of %ld error messages.\n", result_get_num_err_msgs(result), result_get_total_num_err(result));
         printf("=== Stack trace ===\n");
-        char err_msg[2 << 11];
-        result_get_err_msg(result, err_msg, 2 << 11);
-        printf("%s", err_msg);
-//        for (size_t i = 0; i < result_get_num_err_msgs(result); i++) {
-//            printf("%ld: %s\n", i, result_get_err_msg_at(result, i));
-//        }
+        for (size_t i = 0; i < result_get_num_err_msgs(result); i++) {
+            printf("%ld: %s\n", i, result_get_err_msg_at(result, i));
+        }
         if (result_get_num_err_msgs(result) < result_get_total_num_err(result)) {
             printf("...\n");
         }
