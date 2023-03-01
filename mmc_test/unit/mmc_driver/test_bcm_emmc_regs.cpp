@@ -14,6 +14,25 @@ FAKE_VALUE_FUNC(result_t, control1_get_srst_hc, control1_t *, bool *);
 FAKE_VALUE_FUNC(result_t, control1_get_srst_cmd, control1_t *, bool *);
 FAKE_VALUE_FUNC(result_t, control1_get_srst_data, control1_t *,bool *);
 
+/* Resets all Fakes for each unit test. */
+class test_bcm_emmc_regs_reset : public testing::Test {
+protected:
+    // You can define per-test set-up logic as usual.
+    void SetUp() override {
+        RESET_FAKE(control1_set_raw32);
+        RESET_FAKE(control1_get_raw32);
+        RESET_FAKE(control1_set_srst_hc);
+        RESET_FAKE(control1_get_srst_hc);
+        RESET_FAKE(control1_get_srst_cmd);
+        RESET_FAKE(control1_get_srst_data);
+    }
+
+    // You can define per-test tear-down logic as usual.
+    void TearDown() override {
+
+    }
+};
+
 TEST(test_bcm_emmc_regs, registers_should_have_the_correct_offset) {
     /* Create a new register struct on the stack. */
     bcm_emmc_regs_t regs = {};
