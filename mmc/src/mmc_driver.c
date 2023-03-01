@@ -62,15 +62,15 @@ void init(void) {
     );
 
     /* Initialise `timer_client`. */
-    result_t res_timer_client = timer_client_init(
+    result_t res_timer = timer_client_init(
             &global_timer_client,
             shared_dma,
             rx_avail_ring_buf,
             rx_used_ring_buf,
             MMC_DRIVER_TO_TIMER_DRIVER_GET_NUM_TICKS_CHANNEL
     );
-    if (result_is_err(res_timer_client)) {
-        result_printf(res_timer_client);
+    if (result_is_err(res_timer)) {
+        result_printf(res_timer);
         return;
     }
 
