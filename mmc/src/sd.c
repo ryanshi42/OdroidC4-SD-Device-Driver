@@ -187,12 +187,12 @@ bool sd_writeblock(unsigned char *buffer, unsigned int lba, unsigned int num) {
  */
 int sd_clk(unsigned int f) {
     unsigned int d, c = 41666666 / f, x, s = 32, h = 0;
-    int cnt = 100000;
-    while ((*EMMC_STATUS & (SR_CMD_INHIBIT | SR_DAT_INHIBIT)) && cnt--) wait_msec(1);
-    if (cnt <= 0) {
-        uart_puts("ERROR: timeout waiting for inhibit flag\n");
-        return SD_ERROR;
-    }
+//    int cnt = 100000;
+//    while ((*EMMC_STATUS & (SR_CMD_INHIBIT | SR_DAT_INHIBIT)) && cnt--) wait_msec(1);
+//    if (cnt <= 0) {
+//        uart_puts("ERROR: timeout waiting for inhibit flag\n");
+//        return SD_ERROR;
+//    }
 
     *EMMC_CONTROL1 &= ~C1_CLK_EN;
     wait_msec(10);

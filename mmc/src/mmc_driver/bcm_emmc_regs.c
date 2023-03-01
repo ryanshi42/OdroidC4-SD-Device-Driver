@@ -66,3 +66,29 @@ result_t bcm_emmc_regs_enable_internal_clock(bcm_emmc_regs_t *bcm_emmc_regs) {
     }
     return result_ok();
 }
+
+result_t bcm_emmc_regs_is_data_lines_busy(bcm_emmc_regs_t *bcm_emmc_regs, bool *ret_val) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_is_data_lines_busy().");
+    }
+    bool is_busy;
+    result_t res = status_get_dat_inhibit(&bcm_emmc_regs->status, &is_busy);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to get `status.DAT_INHIBIT` in bcm_emmc_regs_is_data_lines_busy().");
+    }
+    *ret_val = is_busy;
+    return result_ok();
+}
+
+result_t bcm_emmc_regs_is_cmd_line_busy(bcm_emmc_regs_t *bcm_emmc_regs, bool *ret_val) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_is_cmd_line_busy().");
+    }
+    bool is_busy;
+    result_t res = status_get_cmd_inhibit(&bcm_emmc_regs->status, &is_busy);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to get `status.CMD_INHIBIT` in bcm_emmc_regs_is_cmd_line_busy().");
+    }
+    *ret_val = is_busy;
+    return result_ok();
+}

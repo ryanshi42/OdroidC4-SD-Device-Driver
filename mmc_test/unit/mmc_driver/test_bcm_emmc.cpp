@@ -13,6 +13,8 @@ FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_reset_host_circuit, bcm_emmc_regs_t *)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_host_circuit_reset, bcm_emmc_regs_t *, bool *)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_set_max_data_timeout, bcm_emmc_regs_t *)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_enable_internal_clock, bcm_emmc_regs_t *)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_data_lines_busy, bcm_emmc_regs_t *, bool *)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_cmd_line_busy, bcm_emmc_regs_t *, bool *)
 
 /* Resets all Fakes for each unit test. */
 class test_bcm_emmc_reset : public testing::Test {
@@ -25,6 +27,8 @@ protected:
         RESET_FAKE(bcm_emmc_regs_is_host_circuit_reset);
         RESET_FAKE(bcm_emmc_regs_set_max_data_timeout);
         RESET_FAKE(bcm_emmc_regs_enable_internal_clock);
+        RESET_FAKE(bcm_emmc_regs_is_data_lines_busy);
+        RESET_FAKE(bcm_emmc_regs_is_cmd_line_busy);
     }
 
     // You can define per-test tear-down logic as usual.
@@ -64,3 +68,80 @@ TEST(test_result, init_should_timeout_if_host_circuit_reset_fails) {
     );
 }
 
+TEST(test_result, init_should_timeout_if_cmd_line_is_busy) {
+    bcm_emmc_regs_is_host_circuit_reset_fake.custom_fake = [](bcm_emmc_regs_t *regs, bool *ret_val) {
+        *ret_val = true;
+        return result_ok();
+    };
+
+    bcm_emmc_regs_is_data_lines_busy_fake.custom_fake = [](bcm_emmc_regs_t *regs, bool *ret_val) {
+        *ret_val = false;
+        return result_ok();
+    };
+
+    bcm_emmc_regs_is_cmd_line_busy_fake.custom_fake = [](bcm_emmc_regs_t *regs, bool *ret_val) {
+        *ret_val = true;
+        return result_ok();
+    };
+
+    bcm_emmc_regs_t regs = {};
+    bcm_emmc_t bcm_emmc = {};
+    result_t res = bcm_emmc_init(&bcm_emmc, &regs);
+    ASSERT_TRUE(result_is_err(res));
+    ASSERT_STREQ(
+            "Failed to set clock to low-speed setup frequency in bcm_emmc_init().",
+            result_get_last_err_msg(res)
+    );
+}
+
+TEST(test_result, init_should_timeout_if_data_lines_is_busy) {
+    bcm_emmc_regs_is_host_circuit_reset_fake.custom_fake = [](bcm_emmc_regs_t *regs, bool *ret_val) {
+        *ret_val = true;
+        return result_ok();
+    };
+
+    bcm_emmc_regs_is_data_lines_busy_fake.custom_fake = [](bcm_emmc_regs_t *regs, bool *ret_val) {
+        *ret_val = true;
+        return result_ok();
+    };
+
+    bcm_emmc_regs_is_cmd_line_busy_fake.custom_fake = [](bcm_emmc_regs_t *regs, bool *ret_val) {
+        *ret_val = false;
+        return result_ok();
+    };
+
+    bcm_emmc_regs_t regs = {};
+    bcm_emmc_t bcm_emmc = {};
+    result_t res = bcm_emmc_init(&bcm_emmc, &regs);
+    ASSERT_TRUE(result_is_err(res));
+    ASSERT_STREQ(
+            "Failed to set clock to low-speed setup frequency in bcm_emmc_init().",
+            result_get_last_err_msg(res)
+    );
+}
+
+TEST(test_result, init_should_timeout_if_cmd_and_data_lines_is_busy) {
+    bcm_emmc_regs_is_host_circuit_reset_fake.custom_fake = [](bcm_emmc_regs_t *regs, bool *ret_val) {
+        *ret_val = true;
+        return result_ok();
+    };
+
+    bcm_emmc_regs_is_data_lines_busy_fake.custom_fake = [](bcm_emmc_regs_t *regs, bool *ret_val) {
+        *ret_val = true;
+        return result_ok();
+    };
+
+    bcm_emmc_regs_is_cmd_line_busy_fake.custom_fake = [](bcm_emmc_regs_t *regs, bool *ret_val) {
+        *ret_val = true;
+        return result_ok();
+    };
+
+    bcm_emmc_regs_t regs = {};
+    bcm_emmc_t bcm_emmc = {};
+    result_t res = bcm_emmc_init(&bcm_emmc, &regs);
+    ASSERT_TRUE(result_is_err(res));
+    ASSERT_STREQ(
+            "Failed to set clock to low-speed setup frequency in bcm_emmc_init().",
+            result_get_last_err_msg(res)
+    );
+}

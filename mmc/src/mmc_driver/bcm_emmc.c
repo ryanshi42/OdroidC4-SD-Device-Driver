@@ -1,5 +1,46 @@
 #include "bcm_emmc.h"
 
+/**
+ * Sets the SD clock to the specified frequency..
+ * @param bcm_emmc
+ * @param freq Frequency in Hz.
+ * @return
+ */
+static result_t bcm_emmc_set_sd_clock(bcm_emmc_t *bcm_emmc, uint32_t freq);
+
+static result_t bcm_emmc_set_sd_clock(bcm_emmc_t *bcm_emmc, uint32_t freq) {
+    if (bcm_emmc == NULL) {
+        return result_err("NULL `bcm_emmc` passed to bcm_emmc_set_sd_clock().");
+    }
+    size_t retries = 10000;
+    bool cmd_or_data_lines_busy = false;
+    do {
+        usleep(1);
+        bool data_lines_busy = false;
+        result_t res = bcm_emmc_regs_is_data_lines_busy(
+                bcm_emmc->regs,
+                &data_lines_busy
+        );
+        if (result_is_err(res)) {
+            return result_err_chain(res, "Failed to check if data lines are busy in bcm_emmc_set_sd_clock().");
+        }
+        bool cmd_line_busy = false;
+        res = bcm_emmc_regs_is_cmd_line_busy(
+                bcm_emmc->regs,
+                &cmd_line_busy
+        );
+        if (result_is_err(res)) {
+            return result_err_chain(res, "Failed to check if cmd line is busy in bcm_emmc_set_sd_clock().");
+        }
+        cmd_or_data_lines_busy = data_lines_busy || cmd_line_busy;
+    } while(cmd_or_data_lines_busy && (retries-- > 0));
+    if (cmd_or_data_lines_busy) {
+        return result_err("Timed out waiting for data/cmd lines to be free in bcm_emmc_set_sd_clock().");
+    }
+
+    return result_ok();
+}
+
 result_t bcm_emmc_init(
         bcm_emmc_t *bcm_emmc,
         bcm_emmc_regs_t *bcm_emmc_regs
@@ -49,6 +90,11 @@ result_t bcm_emmc_init(
     /* Wait 10 microseconds. */
     usleep(10);
 
+    /* Set clock to low-speed setup frequency (400KHz). */
+    res = bcm_emmc_set_sd_clock(bcm_emmc, 400000);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to set clock to low-speed setup frequency in bcm_emmc_init().");
+    }
 
     return result_ok();
 }
