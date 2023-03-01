@@ -199,3 +199,17 @@ TEST(test_result, printf_should_acknowledge_there_are_more_messages) {
     ASSERT_TRUE(output.find("...") != std::string::npos);
 }
 
+/* get_last_err_msg */
+
+TEST(test_result, get_last_err_msg_should_return_last_err_msg) {
+    result_t result = result_err("NULL pointer exception");
+    ASSERT_STREQ(
+            "NULL pointer exception",
+            result_get_last_err_msg(result)
+    );
+    result = result_err_chain(result, "Illegal Argument Exception.");
+    ASSERT_STREQ(
+            "Illegal Argument Exception.",
+            result_get_last_err_msg(result)
+    );
+}

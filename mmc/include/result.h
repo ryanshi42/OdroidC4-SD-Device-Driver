@@ -21,6 +21,9 @@
         } \
         printf("==========================\n"); \
 
+#define result_get_last_err_msg(result) \
+    result_get_err_msg_at(result, result_get_num_err_msgs(result) - 1)
+
 typedef struct result result_t;
 struct result {
     bool is_err;
