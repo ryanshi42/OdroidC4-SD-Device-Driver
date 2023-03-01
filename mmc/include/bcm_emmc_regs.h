@@ -104,3 +104,16 @@ result_t bcm_emmc_regs_is_data_lines_busy(bcm_emmc_regs_t *bcm_emmc_regs, bool *
  */
 result_t bcm_emmc_regs_is_cmd_line_busy(bcm_emmc_regs_t *bcm_emmc_regs, bool *ret_val);
 
+/**
+ * Disables the SD clock.
+ * @param bcm_emmc_regs
+ * @return
+ */
+result_t bcm_emmc_regs_disable_sd_clock(bcm_emmc_regs_t *bcm_emmc_regs);
+
+/**
+ * Enables the SD clock.
+ * @param bcm_emmc_regs
+ * @return
+ */
+result_t bcm_emmc_regs_enable_sd_clock(bcm_emmc_regs_t *bcm_emmc_regs);

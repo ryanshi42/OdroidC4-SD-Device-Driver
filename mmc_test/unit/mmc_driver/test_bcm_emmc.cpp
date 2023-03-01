@@ -15,6 +15,8 @@ FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_set_max_data_timeout, bcm_emmc_regs_t *)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_enable_internal_clock, bcm_emmc_regs_t *)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_data_lines_busy, bcm_emmc_regs_t *, bool *)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_cmd_line_busy, bcm_emmc_regs_t *, bool *)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_disable_sd_clock, bcm_emmc_regs_t *)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_enable_sd_clock, bcm_emmc_regs_t *)
 
 /* Resets all Fakes for each unit test. */
 class test_bcm_emmc_reset : public testing::Test {
@@ -29,6 +31,8 @@ protected:
         RESET_FAKE(bcm_emmc_regs_enable_internal_clock);
         RESET_FAKE(bcm_emmc_regs_is_data_lines_busy);
         RESET_FAKE(bcm_emmc_regs_is_cmd_line_busy);
+        RESET_FAKE(bcm_emmc_regs_disable_sd_clock);
+        RESET_FAKE(bcm_emmc_regs_enable_sd_clock);
     }
 
     // You can define per-test tear-down logic as usual.

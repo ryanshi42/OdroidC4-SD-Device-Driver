@@ -37,6 +37,13 @@ static result_t bcm_emmc_set_sd_clock(bcm_emmc_t *bcm_emmc, uint32_t freq) {
     if (cmd_or_data_lines_busy) {
         return result_err("Timed out waiting for data/cmd lines to be free in bcm_emmc_set_sd_clock().");
     }
+    /* Disable SD clock. */
+    result_t res = bcm_emmc_regs_disable_sd_clock(bcm_emmc->regs);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to disable SD clock in bcm_emmc_set_sd_clock().");
+    }
+    usleep(10);
+
 
     return result_ok();
 }
