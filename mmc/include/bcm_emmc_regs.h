@@ -47,13 +47,6 @@ struct __attribute__((__packed__, aligned(4))) bcm_emmc_regs {
 };
 
 /**
- * Returns a pointer to `bcm_emmc_regs_t` given a base virtual address.
- * @param base_vaddr
- * @return
- */
-bcm_emmc_regs_t *bcm_emmc_regs_get(uintptr_t base_vaddr);
-
-/**
  * Zeros out the `control0` register.
  * @param bcm_emmc_regs
  */
