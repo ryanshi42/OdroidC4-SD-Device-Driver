@@ -294,12 +294,12 @@ int sd_init() {
     // Reset the card.
 //    *EMMC_CONTROL0 = 0;
 //    *EMMC_CONTROL1 |= C1_SRST_HC;
-    cnt = 10000;
-    do { wait_msec(10); } while ((*EMMC_CONTROL1 & C1_SRST_HC) && cnt--);
-    if (cnt <= 0) {
-        uart_puts("ERROR: failed to reset EMMC\n");
-        return SD_ERROR;
-    }
+//    cnt = 10000;
+//    do { wait_msec(10); } while ((*EMMC_CONTROL1 & C1_SRST_HC) && cnt--);
+//    if (cnt <= 0) {
+//        uart_puts("ERROR: failed to reset EMMC\n");
+//        return SD_ERROR;
+//    }
     uart_puts("EMMC: reset OK\n");
     *EMMC_CONTROL1 |= C1_CLK_INTLEN | C1_TOUNIT_MAX;
     wait_msec(10);

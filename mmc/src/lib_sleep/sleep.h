@@ -9,7 +9,11 @@
  */
 result_t sleep_init(timer_client_t *timer_client);
 
-#if !MMC_RPI3B_UNIT_TEST
+#if MMC_RPI3B_UNIT_TEST
+
+#include <unistd.h>
+
+#else
 
 typedef unsigned int useconds_t;
 
