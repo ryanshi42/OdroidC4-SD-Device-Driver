@@ -1,9 +1,7 @@
 #pragma once
 
-/* Temporarily using delays. */
-#include "delays.h"
-/* Temporarily directly including bcm_timer. */
-#include "bcm_timer.h"
+#include "timer_client.h"
+#include "result.h"
 
 typedef unsigned int useconds_t;
 
@@ -11,7 +9,7 @@ typedef unsigned int useconds_t;
  * Initialises the sleep library.
  * @param timer_base_vaddr
  */
-void sleep_init(uintptr_t timer_base_vaddr);
+result_t sleep_init(timer_client_t *timer_client);
 
 /**
 * The usleep() function suspends execution of the calling thread for (at least)

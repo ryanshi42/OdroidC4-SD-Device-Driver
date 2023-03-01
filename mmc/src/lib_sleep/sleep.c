@@ -1,20 +1,26 @@
 #include "sleep.h"
 
-/* Global `bcm_timer`. */
-bcm_timer_t global_bcm_timer = {0};
+/* Global `sleep_data`. */
+typedef struct sleep_data sleep_data_t;
+struct sleep_data {
+    /* Timer client. */
+    timer_client_t timer_client;
+};
+sleep_data_t global_sleep_data = {0};
 
-void sleep_init(uintptr_t timer_base_vaddr) {
-    /* Initialise timer. */
-    bcm_timer_init(
-            &global_bcm_timer,
-            timer_base_vaddr
-    );
+result_t sleep_init(timer_client_t *timer_client) {
+    if (timer_client == NULL) {
+        return result_err("NULL `timer_client` passed to sleep_init().");
+    }
+    global_sleep_data.timer_client = *timer_client;
+    return result_ok();
 }
 
 int usleep(useconds_t usec) {
+    timer_client_t *timer_client = &global_sleep_data.timer_client;
     /* Get the number of ticks at beginning. */
     uint64_t start_ticks = 0;
-    result_t res = bcm_timer_get_num_ticks(&global_bcm_timer, &start_ticks);
+    result_t res = timer_client_get_num_ticks(timer_client, &start_ticks);
     if (result_is_err(res)) {
         return -1;
     }
@@ -23,7 +29,7 @@ int usleep(useconds_t usec) {
     uint64_t curr_ticks = 0;
     do {
         /* Get current number of ticks. */
-        res = bcm_timer_get_num_ticks(&global_bcm_timer, &curr_ticks);
+        res = timer_client_get_num_ticks(timer_client, &curr_ticks);
         if (result_is_err(res)) {
             return -1;
         }

@@ -48,8 +48,8 @@ add_library(mmc_rpi3b_lib_sleep src/lib_sleep/sleep.c)
 target_include_directories(mmc_rpi3b_lib_sleep PUBLIC src/lib_sleep/)
 target_link_libraries(
         mmc_rpi3b_lib_sleep
-        mmc_rpi3b_lib_delays
-        mmc_rpi3b_lib_bcm_timer
+        mmc_rpi3b_lib_timer_client
+        mmc_rpi3b_lib_result
 )
 
 add_library(mmc_rpi3b_lib_shared_ringbuffer src/libsharedringbuffer/shared_ringbuffer.c)

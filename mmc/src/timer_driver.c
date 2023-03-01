@@ -74,8 +74,45 @@ void notified(sel4cp_channel channel) {
     switch(channel) {
         /* If MMC has asked the serial client to `putchar`, then print out a character. */
         case TIMER_DRIVER_TO_MMC_DRIVER_GET_NUM_TICKS_CHANNEL: {
-            printf("Got a notification on channel %d", TIMER_DRIVER_TO_MMC_DRIVER_GET_NUM_TICKS_CHANNEL);
-            /* TODO: Write timer driver handling code here. */
+            uint64_t num_ticks;
+            result_t res = bcm_timer_get_num_ticks(&timer_driver->bcm_timer, &num_ticks);
+            if (result_is_err(res)) {
+                result_printf(res);
+                return;
+            }
+            uintptr_t buf_addr; /* The dequeued buffer's address will be stored in `buf_addr`. */
+            unsigned int buf_len; /* The dequeued buffer's length will be stored in `buf_len`. */
+            /* We don't use the `cookie` but the `dequeue_avail` function call requires
+             * a valid pointer for the `cookie` param, so we provide one to it anyway. */
+            void *unused_cookie;
+            /* Dequeue an available buffer from the Receive-available ring. */
+            int ret_dequeue_avail = dequeue_avail(
+                    &timer_driver->rx_ring_buf_handle,
+                    &buf_addr,
+                    &buf_len,
+                    &unused_cookie
+            );
+            if (ret_dequeue_avail < 0) {
+                printf("Failed to dequeue buffer from Receive available queue in notified().\n");
+                return;
+            }
+            if (buf_len < sizeof(num_ticks)) {
+                printf("Buffer too small to hold a uint64_t in notified().\n");
+                return;
+            }
+            /* Save `num_ticks` into the buffer. */
+            *((uint64_t *) buf_addr) = num_ticks;
+            /* Enqueue our now-modified buffer onto the Receive-used ring. */
+            int ret_enqueue_used = enqueue_used(
+                    &timer_driver->rx_ring_buf_handle,
+                    buf_addr, /* This is the buffer that contains our num_ticks value. */
+                    sizeof(num_ticks),
+                    unused_cookie
+            );
+            if (ret_enqueue_used < 0) {
+                printf("Received-used ring is full in notified().\n");
+                return;
+            }
             break;
         }
         default:

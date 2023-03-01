@@ -74,7 +74,11 @@ void init(void) {
         return;
     }
 
-    sleep_init(timer_base_vaddr);
+    result_t res_sleep_init = sleep_init(&global_timer_client);
+    if (result_is_err(res_sleep_init)) {
+        result_printf(res_sleep_init);
+        return;
+    }
 
     uint64_t start_ticks, finish_ticks, delta_ticks;
     start_ticks = clock_getticks();

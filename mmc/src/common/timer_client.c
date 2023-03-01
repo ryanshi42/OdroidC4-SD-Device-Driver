@@ -52,5 +52,34 @@ result_t timer_client_get_num_ticks(
     /* Send a notification to `timer_driver`. */
     sel4cp_notify(timer_client->sel4cp_channel_id_get_num_ticks);
 
+    uintptr_t buf_addr = 0; /* The dequeued buffer's address will be stored in `buf_addr`. */
+    unsigned int buf_len = 0; /* The dequeued buffer's length will be stored in `buf_len`. */
+    /* We don't use the `cookie` but the `driver_dequeue` function call requires
+     * a valid pointer for the `cookie` param, so we provide one to it anyway. */
+    void *unused_cookie = NULL;
+    /* Keep trying to dequeue until there is something available on the
+     * Receive-Used queue. */
+    while (driver_dequeue(
+            timer_client->rx_ring_buf_handle.used_ring,
+            &buf_addr,
+            &buf_len,
+            &unused_cookie
+    ) != 0) {}
+    if (buf_len != sizeof(uint64_t)) {
+        return result_err("Received buffer from `timer_driver` is not the expected size in timer_client_get_num_ticks().");
+    }
+    /* Set the return value to the data in `buf_addr`. */
+    *ret_val = *((uint64_t *) buf_addr);
+    /* Return buffer back to the transmit-avail queue for the `timer_driver` PD
+     * to use. */
+    int ret_enqueue_avail = enqueue_avail(
+            &timer_client->rx_ring_buf_handle,
+            buf_addr,
+            BUF_SIZE,
+            NULL
+    );
+    if (ret_enqueue_avail < 0) {
+        return result_err("Failed to enqueue buffer onto available queue in timer_client_get_num_ticks().\n");
+    }
     return result_ok();
 }

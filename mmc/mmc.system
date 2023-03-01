@@ -303,7 +303,7 @@
     <!-- Protection Domain for MultiMediaCard driver. -->
     <protection_domain
             name="mmc_driver"
-            priority="99"
+            priority="98"
             pp="true">
         <program_image path="mmc_driver.elf"/>
         <!-- `timer_driver_shared_dma` is always mapped to the same virtual
