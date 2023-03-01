@@ -16,6 +16,10 @@ add_google_test(test_mmc_rpi3b_lib_bcm_timer_regs mmc_rpi3b_lib_bcm_timer_regs)
 add_google_test(test_mmc_rpi3b_lib_bcm_timer mmc_rpi3b_lib_bcm_timer)
 
 target_link_libraries(
+        test_mmc_rpi3b_lib_bcm_emmc_regs
+        lib_fff
+)
+target_link_libraries(
         test_mmc_rpi3b_lib_bcm_timer
         lib_fff
 )

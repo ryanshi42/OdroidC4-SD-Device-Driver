@@ -27,6 +27,5 @@ result_t bcm_emmc_init(
         return result_err_chain(res, "Failed to reset host circuit in bcm_emmc_init().");
     }
 
-
     return result_ok();
 }

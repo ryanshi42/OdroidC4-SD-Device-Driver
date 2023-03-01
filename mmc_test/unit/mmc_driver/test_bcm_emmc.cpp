@@ -14,7 +14,7 @@ TEST(test_result, init_should_init_bcm_emmc) {
 
     /* Initialise bcm_emmc_init. */
     bcm_emmc_t bcm_emmc = {};
-    result_t res = bcm_emmc_init(&bcm_emmc, (uintptr_t) &regs);
+    result_t res = bcm_emmc_init(&bcm_emmc, &regs);
     ASSERT_TRUE(result_is_ok(res));
 
     /* The `regs` variable should be set to `regs`. */

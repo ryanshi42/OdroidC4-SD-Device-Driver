@@ -1,8 +1,18 @@
 #include "gtest/gtest.h"
+#include <fff/fff.h>
 
 extern "C" {
 #include "bcm_emmc_regs.h"
 }
+
+DEFINE_FFF_GLOBALS;
+
+FAKE_VALUE_FUNC(result_t, control1_set_raw32, control1_t *, uint32_t);
+FAKE_VALUE_FUNC(result_t, control1_get_raw32, control1_t *, uint32_t *);
+FAKE_VALUE_FUNC(result_t, control1_set_srst_hc, control1_t *, bool);
+FAKE_VALUE_FUNC(result_t, control1_get_srst_hc, control1_t *, bool *);
+FAKE_VALUE_FUNC(result_t, control1_get_srst_cmd, control1_t *, bool *);
+FAKE_VALUE_FUNC(result_t, control1_get_srst_data, control1_t *,bool *);
 
 TEST(test_bcm_emmc_regs, registers_should_have_the_correct_offset) {
     /* Create a new register struct on the stack. */
@@ -58,13 +68,34 @@ TEST(test_bcm_emmc_regs, zero_control0_should_zero_control0) {
     ASSERT_EQ(0, control0);
 }
 
-/* regs_get */
+/* is_host_circuit_reset */
 
-TEST(test_bcm_emmc_regs, get_should_return_the_correct_value) {
+TEST(test_bcm_emmc_regs, is_host_circuit_reset_should_return_true_if_host_circuit_is_reset) {
     bcm_emmc_regs_t regs = {};
 
-    bcm_emmc_regs_t *regs_ptr = bcm_emmc_regs_get((uintptr_t) &regs);
-    ASSERT_EQ((uintptr_t) &regs, (uintptr_t) regs_ptr);
+    control1_get_srst_hc_fake.custom_fake = [](control1_t *control1, bool *ret_val) {
+        *ret_val = false;
+        return result_ok();
+    };
+
+    bool is_host_circuit_reset;
+    result_t res = bcm_emmc_regs_is_host_circuit_reset(&regs, &is_host_circuit_reset);
+    ASSERT_TRUE(result_is_ok(res));
+    ASSERT_TRUE(is_host_circuit_reset);
+}
+
+TEST(test_bcm_emmc_regs, is_host_circuit_reset_should_return_false_if_host_circuit_is_reset) {
+    bcm_emmc_regs_t regs = {};
+
+    control1_get_srst_hc_fake.custom_fake = [](control1_t *control1, bool *ret_val) {
+        *ret_val = true;
+        return result_ok();
+    };
+
+    bool is_host_circuit_reset;
+    result_t res = bcm_emmc_regs_is_host_circuit_reset(&regs, &is_host_circuit_reset);
+    ASSERT_TRUE(result_is_ok(res));
+    ASSERT_FALSE(is_host_circuit_reset);
 }
 
 

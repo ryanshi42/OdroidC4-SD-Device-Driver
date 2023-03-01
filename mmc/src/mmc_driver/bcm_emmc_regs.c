@@ -23,3 +23,23 @@ result_t bcm_emmc_regs_reset_host_circuit(bcm_emmc_regs_t *bcm_emmc_regs) {
     result_t res = control1_set_srst_hc(&bcm_emmc_regs->control1, true);
     return result_ok_or(res, "Failed to set `control1.SRST_HC` in bcm_emmc_regs_reset_host_circuit().");
 }
+
+result_t bcm_emmc_regs_is_host_circuit_reset(bcm_emmc_regs_t *bcm_emmc_regs, bool *ret_val) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_is_host_circuit_reset().");
+    }
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` passed to bcm_emmc_regs_is_host_circuit_reset().");
+    }
+    bool srst_hc;
+    result_t res = control1_get_srst_hc(&bcm_emmc_regs->control1, &srst_hc);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to get `control1.SRST_HC` in bcm_emmc_regs_is_host_circuit_reset().");
+    }
+    /* The host circuit has reset successfully when `control1.SRST_HC` has been
+     * reset back to 0. */
+    *ret_val = (srst_hc == 0);
+    return result_ok();
+}
+
+

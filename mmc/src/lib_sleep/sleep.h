@@ -3,13 +3,15 @@
 #include "timer_client.h"
 #include "result.h"
 
-typedef unsigned int useconds_t;
-
 /**
  * Initialises the sleep library.
  * @param timer_base_vaddr
  */
 result_t sleep_init(timer_client_t *timer_client);
+
+#if !MMC_RPI3B_UNIT_TEST
+
+typedef unsigned int useconds_t;
 
 /**
 * The usleep() function suspends execution of the calling thread for (at least)
@@ -38,3 +40,5 @@ int sleep(unsigned int seconds);
  * @return Zero if the requested time has elapsed. On error, -1 is returned.
  */
 int sleep_cyc(unsigned int cycles);
+
+#endif
