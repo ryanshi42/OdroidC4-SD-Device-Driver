@@ -181,6 +181,7 @@ target_link_libraries(
         mmc_rpi3b_lib_bcm_emmc
         mmc_rpi3b_lib_result
         mmc_rpi3b_lib_bcm_emmc_regs
+        mmc_rpi3b_lib_sleep
 )
 
 add_library(mmc_rpi3b_lib_sd src/sd.c)

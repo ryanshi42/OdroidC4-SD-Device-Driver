@@ -3,6 +3,7 @@
 
 #include "result.h"
 #include "bcm_emmc_regs.h"
+#include "sleep.h"
 
 typedef struct bcm_emmc bcm_emmc_t;
 struct bcm_emmc {
@@ -12,12 +13,12 @@ struct bcm_emmc {
 /**
  * Initialises the BCM EMMC device.
  * @param bcm_emmc
- * @param base_vaddr
+ * @param bcm_emmc_regs
  * @return
  */
 result_t bcm_emmc_init(
         bcm_emmc_t *bcm_emmc,
-        uintptr_t base_vaddr
+        bcm_emmc_regs_t *bcm_emmc_regs
 );
 
 

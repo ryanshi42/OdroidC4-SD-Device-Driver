@@ -132,7 +132,10 @@ void init(void) {
     *GPPUD = 0;
     *GPPUDCLK1 = 0;
 
-    result_t res = bcm_emmc_init(&global_bcm_emmc, emmc_base_vaddr);
+    result_t res = bcm_emmc_init(
+            &global_bcm_emmc,
+            (bcm_emmc_regs_t *) emmc_base_vaddr
+    );
     if (result_is_err(res)) {
         printf("ERROR: failed to initialize EMMC\n");
         return;
