@@ -42,4 +42,27 @@ result_t bcm_emmc_regs_is_host_circuit_reset(bcm_emmc_regs_t *bcm_emmc_regs, boo
     return result_ok();
 }
 
+result_t bcm_emmc_regs_set_max_data_timeout(bcm_emmc_regs_t *bcm_emmc_regs) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_set_max_data_timeout().");
+    }
+    /* Per the BCM2835's manual, setting the Data Timeout Unit to 0b1111
+     * disables the internal clock, which means the maximum value we can set the
+     * register to is 0b1110. */
+    result_t res = control1_set_data_tounit(&bcm_emmc_regs->control1, 0b1110);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to set `control1.DATA_TIMEOUT_UNIT` in bcm_emmc_regs_set_max_data_timeout().");
+    }
+    return result_ok();
+}
 
+result_t bcm_emmc_regs_enable_internal_clock(bcm_emmc_regs_t *bcm_emmc_regs) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_enable_internal_clock().");
+    }
+    result_t res = control1_set_clk_intlen(&bcm_emmc_regs->control1, true);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to set `control1.CLK_INTLEN` in bcm_emmc_regs_enable_internal_clock().");
+    }
+    return result_ok();
+}

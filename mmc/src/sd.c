@@ -300,9 +300,9 @@ int sd_init() {
 //        uart_puts("ERROR: failed to reset EMMC\n");
 //        return SD_ERROR;
 //    }
-    uart_puts("EMMC: reset OK\n");
-    *EMMC_CONTROL1 |= C1_CLK_INTLEN | C1_TOUNIT_MAX;
-    wait_msec(10);
+//    uart_puts("EMMC: reset OK\n");
+//    *EMMC_CONTROL1 |= C1_CLK_INTLEN | C1_TOUNIT_MAX;
+//    wait_msec(10);
     // Set clock to setup frequency.
     if ((r = sd_clk(400000))) return r;
     *EMMC_INT_EN = 0xffffffff;

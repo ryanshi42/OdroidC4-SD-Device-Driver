@@ -43,6 +43,30 @@ result_t control1_set_raw32(control1_t *control1, uint32_t val);
 result_t control1_get_raw32(control1_t *control1, uint32_t *ret_val);
 
 /**
+ * Set the `CLK_INTLEN` field of the `control1` register.
+ * @param control1
+ * @param val
+ * @return
+ */
+result_t control1_set_clk_intlen(control1_t *control1, bool val);
+
+/**
+ * Obtains the `DATA_TOUNIT` field of the `control1` register.
+ * @param control1
+ * @param ret_val
+ * @return
+ */
+result_t control1_get_data_tounit(control1_t *control1, uint8_t *ret_val);
+
+/**
+ * Set the `DATA_TOUNIT` field of the `control1` register.
+ * @param control1
+ * @param val
+ * @return
+ */
+result_t control1_set_data_tounit(control1_t *control1, uint8_t val);
+
+/**
  * Set the `SRST_HC` field of the `control1` register.
  * @param control1
  * @param val

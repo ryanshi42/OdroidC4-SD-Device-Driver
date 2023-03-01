@@ -70,3 +70,24 @@ TEST(test_control1, set_srst_hc_should_set_srst_hc_only) {
     ASSERT_EQ(true, actual_val);
 }
 
+/* set_data_tounit */
+
+TEST(test_control1, set_data_tounit_should_set_data_tounit_only) {
+    control1_t control1 = {};
+    memset((void *) &control1, 0, sizeof(control1));
+    result_t res = control1_set_data_tounit(&control1, 0b1111);
+    ASSERT_TRUE(result_is_ok(res));
+    uint8_t actual_val;
+    control1_get_data_tounit(&control1, &actual_val);
+    ASSERT_EQ(0b1111, actual_val);
+}
+
+TEST(test_control1, set_data_tounit_should_prevent_setting_too_large_value) {
+    control1_t control1 = {};
+    memset((void *) &control1, 0, sizeof(control1));
+    result_t res = control1_set_data_tounit(&control1, 0b1111 + 1);
+    ASSERT_TRUE(result_is_err(res));
+    uint8_t actual_val;
+    control1_get_data_tounit(&control1, &actual_val);
+    ASSERT_EQ(0, actual_val);
+}

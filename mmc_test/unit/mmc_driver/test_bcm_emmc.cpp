@@ -11,6 +11,8 @@ FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_zero_control0, bcm_emmc_regs_t *)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_zero_control1, bcm_emmc_regs_t *)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_reset_host_circuit, bcm_emmc_regs_t *)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_host_circuit_reset, bcm_emmc_regs_t *, bool *)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_set_max_data_timeout, bcm_emmc_regs_t *)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_enable_internal_clock, bcm_emmc_regs_t *)
 
 /* Resets all Fakes for each unit test. */
 class test_bcm_emmc_reset : public testing::Test {
@@ -21,6 +23,8 @@ protected:
         RESET_FAKE(bcm_emmc_regs_zero_control1);
         RESET_FAKE(bcm_emmc_regs_reset_host_circuit);
         RESET_FAKE(bcm_emmc_regs_is_host_circuit_reset);
+        RESET_FAKE(bcm_emmc_regs_set_max_data_timeout);
+        RESET_FAKE(bcm_emmc_regs_enable_internal_clock);
     }
 
     // You can define per-test tear-down logic as usual.

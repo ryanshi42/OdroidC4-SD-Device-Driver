@@ -9,6 +9,9 @@ DEFINE_FFF_GLOBALS;
 
 FAKE_VALUE_FUNC(result_t, control1_set_raw32, control1_t *, uint32_t);
 FAKE_VALUE_FUNC(result_t, control1_get_raw32, control1_t *, uint32_t *);
+FAKE_VALUE_FUNC(result_t, control1_set_clk_intlen, control1_t *, bool);
+FAKE_VALUE_FUNC(result_t, control1_get_data_tounit, control1_t *, uint8_t *);
+FAKE_VALUE_FUNC(result_t, control1_set_data_tounit, control1_t *, uint8_t);
 FAKE_VALUE_FUNC(result_t, control1_set_srst_hc, control1_t *, bool);
 FAKE_VALUE_FUNC(result_t, control1_get_srst_hc, control1_t *, bool *);
 FAKE_VALUE_FUNC(result_t, control1_get_srst_cmd, control1_t *, bool *);
@@ -21,6 +24,9 @@ protected:
     void SetUp() override {
         RESET_FAKE(control1_set_raw32);
         RESET_FAKE(control1_get_raw32);
+        RESET_FAKE(control1_set_clk_intlen);
+        RESET_FAKE(control1_get_data_tounit);
+        RESET_FAKE(control1_set_data_tounit);
         RESET_FAKE(control1_set_srst_hc);
         RESET_FAKE(control1_get_srst_hc);
         RESET_FAKE(control1_get_srst_cmd);

@@ -19,6 +19,33 @@ result_t control1_get_raw32(control1_t *control1, uint32_t *ret_val) {
     return result_ok();
 }
 
+result_t control1_set_clk_intlen(control1_t *control1, bool val) {
+    if (control1 == NULL) {
+        return result_err("NULL `control1` passed to control1_set_clk_intlen().");
+    }
+    control1->CLK_INTLEN = val;
+    return result_ok();
+}
+
+result_t control1_get_data_tounit(control1_t *control1, uint8_t *ret_val) {
+    if (control1 == NULL) {
+        return result_err("NULL `control1` passed to control1_get_data_tounit().");
+    }
+    *ret_val = control1->DATA_TOUNIT;
+    return result_ok();
+}
+
+result_t control1_set_data_tounit(control1_t *control1, uint8_t val) {
+    if (control1 == NULL) {
+        return result_err("NULL `control1` passed to control1_set_data_tounit().");
+    }
+    if (val > 0b1111) {
+        return result_err("Invalid `val` passed to control1_set_data_tounit().");
+    }
+    control1->DATA_TOUNIT = val;
+    return result_ok();
+}
+
 result_t control1_set_srst_hc(control1_t *control1, bool val) {
     if (control1 == NULL) {
         return result_err("NULL `control1` passed to control1_set_srst_hc().");

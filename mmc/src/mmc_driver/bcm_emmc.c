@@ -42,6 +42,15 @@ result_t bcm_emmc_init(
     if (!is_host_circuit_reset) {
         return result_err("Host circuit did not reset in bcm_emmc_init().");
     }
+    /* Set the Data Timeout to the maximum value. */
+    bcm_emmc_regs_set_max_data_timeout(bcm_emmc->regs);
+    /* Enable the Internal Clock. */
+    bcm_emmc_regs_enable_internal_clock(bcm_emmc->regs);
+    /* Wait 10 microseconds. */
+    usleep(10);
+
 
     return result_ok();
 }
+
+

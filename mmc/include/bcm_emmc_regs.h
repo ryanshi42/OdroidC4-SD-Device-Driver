@@ -73,4 +73,18 @@ result_t bcm_emmc_regs_reset_host_circuit(bcm_emmc_regs_t *bcm_emmc_regs);
  */
 result_t bcm_emmc_regs_is_host_circuit_reset(bcm_emmc_regs_t *bcm_emmc_regs, bool *ret_val);
 
+/**
+ * Sets the data timeout to the maximum value.
+ * @param bcm_emmc_regs
+ * @return
+ */
+result_t bcm_emmc_regs_set_max_data_timeout(bcm_emmc_regs_t *bcm_emmc_regs);
+
+/**
+ * Enables the internal clock.
+ * @param bcm_emmc_regs
+ * @return
+ */
+result_t bcm_emmc_regs_enable_internal_clock(bcm_emmc_regs_t *bcm_emmc_regs);
+
 
