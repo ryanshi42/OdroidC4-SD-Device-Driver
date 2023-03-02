@@ -27,6 +27,14 @@ result_t control1_set_clk_intlen(control1_t *control1, bool val) {
     return result_ok();
 }
 
+result_t control1_get_clk_stable(control1_t *control1, bool *ret_val) {
+    if (control1 == NULL) {
+        return result_err("NULL `control1` passed to control1_get_clk_stable().");
+    }
+    *ret_val = control1->CLK_STABLE;
+    return result_ok();
+}
+
 result_t control1_set_clk_en(control1_t *control1, bool val) {
     if (control1 == NULL) {
         return result_err("NULL `control1` passed to control1_set_clk_en().");

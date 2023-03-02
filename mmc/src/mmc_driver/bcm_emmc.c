@@ -132,6 +132,7 @@ result_t bcm_emmc_set_sd_clock(bcm_emmc_t *bcm_emmc, uint32_t freq) {
     }
     log_trace("Setting SD clock to %uHz (divisor: %u).", freq, sd_clock_divisor);
 
+
     /* TODO: WIP */
     return result_ok();
 }

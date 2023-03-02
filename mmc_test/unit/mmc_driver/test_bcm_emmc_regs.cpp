@@ -10,6 +10,7 @@ DEFINE_FFF_GLOBALS;
 FAKE_VALUE_FUNC(result_t, control1_set_raw32, control1_t *, uint32_t);
 FAKE_VALUE_FUNC(result_t, control1_get_raw32, control1_t *, uint32_t *);
 FAKE_VALUE_FUNC(result_t, control1_set_clk_intlen, control1_t *, bool);
+FAKE_VALUE_FUNC(result_t, control1_get_clk_stable, control1_t *, bool *);
 FAKE_VALUE_FUNC(result_t, control1_set_clk_en, control1_t *, bool);
 FAKE_VALUE_FUNC(result_t, control1_set_clk_gensel, control1_t *, bool);
 FAKE_VALUE_FUNC(result_t, control1_set_clk_freq_ms2, control1_t *, uint8_t);
@@ -29,6 +30,7 @@ protected:
         RESET_FAKE(control1_set_raw32);
         RESET_FAKE(control1_get_raw32);
         RESET_FAKE(control1_set_clk_intlen);
+        RESET_FAKE(control1_get_clk_stable);
         RESET_FAKE(control1_set_clk_en);
         RESET_FAKE(control1_set_clk_gensel);
         RESET_FAKE(control1_set_clk_freq_ms2);
@@ -158,4 +160,41 @@ TEST(test_bcm_emmc_regs, set_sd_clock_divisor_should_accept_divisors_less_than_e
         ASSERT_TRUE(result_is_ok(res));
     }
 }
+
+/* is_sd_clock_stable */
+
+TEST(test_bcm_emmc_regs, is_sd_clock_stable_should_return_true_if_clock_stable) {
+    bcm_emmc_regs_t regs = {};
+
+    control1_get_clk_stable_fake.custom_fake = [](control1_t *control1, bool *ret_val) {
+        *ret_val = true;
+        return result_ok();
+    };
+
+    bool is_stable;
+    result_t res = bcm_emmc_regs_is_sd_clock_stable(
+            &regs,
+            &is_stable
+    );
+    ASSERT_TRUE(result_is_ok(res));
+    ASSERT_TRUE(is_stable);
+}
+
+TEST(test_bcm_emmc_regs, is_sd_clock_stable_should_return_false_if_clock_unstable) {
+    bcm_emmc_regs_t regs = {};
+
+    control1_get_clk_stable_fake.custom_fake = [](control1_t *control1, bool *ret_val) {
+        *ret_val = false;
+        return result_ok();
+    };
+
+    bool is_stable;
+    result_t res = bcm_emmc_regs_is_sd_clock_stable(
+            &regs,
+            &is_stable
+    );
+    ASSERT_TRUE(result_is_ok(res));
+    ASSERT_FALSE(is_stable);
+}
+
 

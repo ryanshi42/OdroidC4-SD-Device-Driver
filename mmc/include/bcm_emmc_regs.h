@@ -151,4 +151,13 @@ result_t bcm_emmc_regs_set_sd_clock_divisor(
         uint16_t divisor
 );
 
-
+/**
+ * Returns True if the SD clock is stable and False otherwise.
+ * @param bcm_emmc_regs
+ * @param ret_val
+ * @return
+ */
+result_t bcm_emmc_regs_is_sd_clock_stable(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        bool *ret_val
+);

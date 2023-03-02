@@ -51,6 +51,14 @@ result_t control1_get_raw32(control1_t *control1, uint32_t *ret_val);
 result_t control1_set_clk_intlen(control1_t *control1, bool val);
 
 /**
+ * Obtains the `CLK_STABLE` field of the `control1` register.
+ * @param control1
+ * @param ret_val
+ * @return
+ */
+result_t control1_get_clk_stable(control1_t *control1, bool *ret_val);
+
+/**
  * Sets the `CLK_EN` field of the `control1` register.
  * @param control1
  * @param ret_val
