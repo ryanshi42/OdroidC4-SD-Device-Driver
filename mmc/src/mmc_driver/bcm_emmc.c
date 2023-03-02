@@ -124,6 +124,8 @@ result_t bcm_emmc_set_sd_clock(bcm_emmc_t *bcm_emmc, uint32_t freq) {
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to enable SD clock in bcm_emmc_set_sd_clock().");
     }
+    log_trace("Setting SD clock to %uHz (divisor: %u).", freq, sd_clock_divisor);
+
     /* TODO: Log some stuff. */
 
     /* TODO: WIP */

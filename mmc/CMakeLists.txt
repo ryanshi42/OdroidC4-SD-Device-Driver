@@ -22,6 +22,13 @@ target_link_libraries(
         mmc_rpi3b_lib_sel4cp_facade
 )
 
+add_library(mmc_rpi3b_lib_log src/common/log.c)
+target_include_directories(mmc_rpi3b_lib_log PUBLIC src/lib_log/)
+target_link_libraries(
+        mmc_rpi3b_lib_log
+        mmc_rpi3b_lib_printf
+)
+
 add_library(mmc_rpi3b_lib_assert src/lib_assert/assert.c)
 target_include_directories(mmc_rpi3b_lib_assert PUBLIC include/)
 target_link_libraries(
@@ -199,6 +206,7 @@ target_link_libraries(
         mmc_rpi3b_lib_bcm_emmc_regs
         mmc_rpi3b_lib_sleep
         mmc_rpi3b_lib_arith
+        mmc_rpi3b_lib_log
 )
 
 add_library(mmc_rpi3b_lib_sd src/sd.c)

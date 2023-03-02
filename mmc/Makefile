@@ -100,6 +100,7 @@ MMC_DRIVER_OBJS := \
 	common/result.o \
 	common/timer_client.o \
 	common/shared_dma.o \
+	common/log.o \
 	libsharedringbuffer/shared_ringbuffer.o \
 
 TIMER_DRIVER_OBJS := \

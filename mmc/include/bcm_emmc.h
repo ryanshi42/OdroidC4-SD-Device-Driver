@@ -5,6 +5,7 @@
 #include "bcm_emmc_regs.h"
 #include "sleep.h"
 #include "arith.h"
+#include "log.h"
 
 typedef struct bcm_emmc bcm_emmc_t;
 struct bcm_emmc {
