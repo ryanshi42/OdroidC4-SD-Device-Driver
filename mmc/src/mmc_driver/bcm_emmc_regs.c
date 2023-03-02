@@ -50,10 +50,7 @@ result_t bcm_emmc_regs_set_max_data_timeout(bcm_emmc_regs_t *bcm_emmc_regs) {
      * disables the internal clock, which means the maximum value we can set the
      * register to is 0b1110. */
     result_t res = control1_set_data_tounit(&bcm_emmc_regs->control1, 0b1110);
-    if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to set `control1.DATA_TIMEOUT_UNIT` in bcm_emmc_regs_set_max_data_timeout().");
-    }
-    return result_ok();
+    return result_ok_or(res, "Failed to set `control1.DATA_TIMEOUT_UNIT` in bcm_emmc_regs_set_max_data_timeout().");
 }
 
 result_t bcm_emmc_regs_enable_internal_clock(bcm_emmc_regs_t *bcm_emmc_regs) {
@@ -61,10 +58,7 @@ result_t bcm_emmc_regs_enable_internal_clock(bcm_emmc_regs_t *bcm_emmc_regs) {
         return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_enable_internal_clock().");
     }
     result_t res = control1_set_clk_intlen(&bcm_emmc_regs->control1, true);
-    if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to set `control1.CLK_INTLEN` in bcm_emmc_regs_enable_internal_clock().");
-    }
-    return result_ok();
+    return result_ok_or(res, "Failed to set `control1.CLK_INTLEN` in bcm_emmc_regs_enable_internal_clock().");
 }
 
 result_t bcm_emmc_regs_is_data_lines_busy(bcm_emmc_regs_t *bcm_emmc_regs, bool *ret_val) {
@@ -98,10 +92,7 @@ result_t bcm_emmc_regs_disable_sd_clock(bcm_emmc_regs_t *bcm_emmc_regs) {
         return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_disable_sd_clock().");
     }
     result_t res = control1_set_clk_en(&bcm_emmc_regs->control1, false);
-    if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to set `control1.CLK_EN` in bcm_emmc_regs_disable_sd_clock().");
-    }
-    return result_ok();
+    return result_ok_or(res, "Failed to set `control1.CLK_EN` in bcm_emmc_regs_disable_sd_clock().");
 }
 
 result_t bcm_emmc_regs_enable_sd_clock(bcm_emmc_regs_t *bcm_emmc_regs) {
@@ -109,10 +100,7 @@ result_t bcm_emmc_regs_enable_sd_clock(bcm_emmc_regs_t *bcm_emmc_regs) {
         return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_enable_sd_clock().");
     }
     result_t res = control1_set_clk_en(&bcm_emmc_regs->control1, true);
-    if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to set `control1.CLK_EN` in bcm_emmc_regs_enable_sd_clock().");
-    }
-    return result_ok();
+    return result_ok_or(res,"Failed to set `control1.CLK_EN` in bcm_emmc_regs_enable_sd_clock().");
 }
 
 result_t bcm_emmc_regs_get_host_controller_spec_version(
