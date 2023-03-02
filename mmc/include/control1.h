@@ -14,7 +14,7 @@ struct __attribute__((__packed__, aligned(4))) control1 {
             unsigned reserved: 2;                      // @3-4		Write as zero read as don't care
             volatile unsigned CLK_GENSEL: 1;           // @5		Mode of clock generation (0=Divided, 1=Programmable)
             volatile unsigned CLK_FREQ_MS2: 2;         // @6-7		SD clock base divider MSBs (Version3+ only)
-            volatile unsigned CLK_FREQ8: 8;            // @8-15	SD clock base divider LSBs
+            volatile unsigned CLK_FREQ8: 8;            // @8-15	    SD clock base divider LSBs
             volatile unsigned DATA_TOUNIT: 4;          // @16-19	Data timeout unit exponent
             unsigned reserved1: 4;                     // @20-23	Write as zero read as don't care
             volatile unsigned SRST_HC: 1;              // @24		Reset the complete host circuit
