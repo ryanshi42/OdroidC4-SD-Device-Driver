@@ -24,7 +24,7 @@ FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_sd_clock_stable, bcm_emmc_regs_t *, b
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_enable_interrupts, bcm_emmc_regs_t *)
 
 /* Resets all Fakes for each unit test. */
-class test_bcm_emmc_reset : public testing::Test {
+class test_sdhci_reset : public testing::Test {
 protected:
     // You can define per-test set-up logic as usual.
     void SetUp() override {
