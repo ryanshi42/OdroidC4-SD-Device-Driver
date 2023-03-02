@@ -70,7 +70,7 @@ result_t bcm_emmc_set_sd_clock(bcm_emmc_t *bcm_emmc, uint32_t freq) {
         return result_err("NULL `bcm_emmc` passed to bcm_emmc_set_sd_clock().");
     }
     bcm_emmc_regs_t *bcm_emmc_regs = bcm_emmc->regs;
-    size_t retries = 10000;
+    size_t retries_busy = 10000;
     bool cmd_or_data_lines_busy = false;
     do {
         usleep(1);
@@ -91,7 +91,7 @@ result_t bcm_emmc_set_sd_clock(bcm_emmc_t *bcm_emmc, uint32_t freq) {
             return result_err_chain(res, "Failed to check if cmd line is busy in bcm_emmc_set_sd_clock().");
         }
         cmd_or_data_lines_busy = data_lines_busy || cmd_line_busy;
-    } while(cmd_or_data_lines_busy && (retries-- > 0));
+    } while(cmd_or_data_lines_busy && (retries_busy-- > 0));
     if (cmd_or_data_lines_busy) {
         return result_err("Timed out waiting for data/cmd lines to be free in bcm_emmc_set_sd_clock().");
     }
@@ -131,9 +131,24 @@ result_t bcm_emmc_set_sd_clock(bcm_emmc_t *bcm_emmc, uint32_t freq) {
         return result_err_chain(res, "Failed to enable SD clock in bcm_emmc_set_sd_clock().");
     }
     log_trace("Setting SD clock to %uHz (divisor: %u).", freq, sd_clock_divisor);
-
-
-    /* TODO: WIP */
+    /* Wait for the SD Clock to stabilise. The SDHCI specifies timeout as 150
+     * milliseconds (150,000 microseconds) */
+    size_t retries_stable = 15000;
+    bool is_sd_clock_stable = false;
+    do {
+        usleep(10);
+        res = bcm_emmc_regs_is_sd_clock_stable(
+                bcm_emmc_regs,
+                &is_sd_clock_stable
+        );
+        if (result_is_err(res)) {
+            return result_err_chain(res, "Failed to check if SD clock is stable in bcm_emmc_set_sd_clock().");
+        }
+    } while (!is_sd_clock_stable && (retries_stable-- > 0));
+    if (!is_sd_clock_stable) {
+        return result_err("Timed out waiting for SD clock to be stable in bcm_emmc_set_sd_clock().");
+    }
+    log_trace("SD clock is stable.");
     return result_ok();
 }
 
