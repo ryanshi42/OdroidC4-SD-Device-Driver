@@ -73,7 +73,7 @@ TEST(test_bcm_emmc_regs, registers_should_have_the_correct_offset) {
     ASSERT_EQ(base + 0x8c, (uintptr_t) &regs.tune_steps_std);
     ASSERT_EQ(base + 0x90, (uintptr_t) &regs.tune_steps_ddr);
     ASSERT_EQ(base + 0xf0, (uintptr_t) &regs.spi_int_spt);
-    ASSERT_EQ(base + 0xfc, (uintptr_t) &regs.slot_isr_ver);
+    ASSERT_EQ(base + 0xfc, (uintptr_t) &regs.slotisr_ver);
 }
 
 /* control0_zero */
