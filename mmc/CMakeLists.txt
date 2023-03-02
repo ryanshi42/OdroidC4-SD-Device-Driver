@@ -214,6 +214,17 @@ target_link_libraries(
         mmc_rpi3b_lib_irpt_mask
 )
 
+add_library(mmc_rpi3b_lib_sdhci src/mmc_driver/sdhci.c)
+target_include_directories(mmc_rpi3b_lib_sdhci PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_sdhci
+        mmc_rpi3b_lib_bcm_emmc_regs
+        mmc_rpi3b_lib_result
+        mmc_rpi3b_lib_sleep
+        mmc_rpi3b_lib_log
+        mmc_rpi3b_lib_arith
+)
+
 add_library(mmc_rpi3b_lib_bcm_emmc src/mmc_driver/bcm_emmc.c)
 target_include_directories(mmc_rpi3b_lib_bcm_emmc PUBLIC include/)
 target_link_libraries(
@@ -221,7 +232,7 @@ target_link_libraries(
         mmc_rpi3b_lib_result
         mmc_rpi3b_lib_bcm_emmc_regs
         mmc_rpi3b_lib_sleep
-        mmc_rpi3b_lib_arith
+        mmc_rpi3b_lib_sdhci
         mmc_rpi3b_lib_log
 )
 
