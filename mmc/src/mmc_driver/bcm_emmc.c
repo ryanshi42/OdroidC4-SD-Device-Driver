@@ -44,9 +44,15 @@ result_t bcm_emmc_init(
         return result_err("Host circuit did not reset in bcm_emmc_init().");
     }
     /* Set the Data Timeout to the maximum value. */
-    bcm_emmc_regs_set_max_data_timeout(bcm_emmc->regs);
+    res = bcm_emmc_regs_set_max_data_timeout(bcm_emmc->regs);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to set max data timeout in bcm_emmc_init().");
+    }
     /* Enable the Internal Clock. */
-    bcm_emmc_regs_enable_internal_clock(bcm_emmc->regs);
+    res = bcm_emmc_regs_enable_internal_clock(bcm_emmc->regs);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to enable internal clock in bcm_emmc_init().");
+    }
     /* Wait 10 microseconds. */
     usleep(10);
 
@@ -125,8 +131,6 @@ result_t bcm_emmc_set_sd_clock(bcm_emmc_t *bcm_emmc, uint32_t freq) {
         return result_err_chain(res, "Failed to enable SD clock in bcm_emmc_set_sd_clock().");
     }
     log_trace("Setting SD clock to %uHz (divisor: %u).", freq, sd_clock_divisor);
-
-    /* TODO: Log some stuff. */
 
     /* TODO: WIP */
     return result_ok();
