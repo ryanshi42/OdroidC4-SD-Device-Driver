@@ -305,8 +305,8 @@ int sd_init() {
 //    wait_msec(10);
     // Set clock to setup frequency.
 //    if ((r = sd_clk(400000))) return r;
-    *EMMC_INT_EN = 0xffffffff;
-    *EMMC_INT_MASK = 0xffffffff;
+//    *EMMC_INT_EN = 0xffffffff;
+//    *EMMC_INT_MASK = 0xffffffff;
     sd_scr[0] = sd_scr[1] = sd_rca = sd_err = 0;
     sd_cmd(CMD_GO_IDLE, 0);
     if (sd_err) return sd_err;

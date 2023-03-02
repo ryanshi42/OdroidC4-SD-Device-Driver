@@ -20,6 +20,8 @@ FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_enable_sd_clock, bcm_emmc_regs_t *)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_get_host_controller_spec_version, bcm_emmc_regs_t *, uint8_t *)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_set_sd_clock_mode_as_divided, bcm_emmc_regs_t *)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_set_sd_clock_divisor, bcm_emmc_regs_t *, uint16_t)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_sd_clock_stable, bcm_emmc_regs_t *, bool *)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_enable_interrupts, bcm_emmc_regs_t *)
 
 /* Resets all Fakes for each unit test. */
 class test_bcm_emmc_reset : public testing::Test {
@@ -39,6 +41,8 @@ protected:
         RESET_FAKE(bcm_emmc_regs_get_host_controller_spec_version);
         RESET_FAKE(bcm_emmc_regs_set_sd_clock_mode_as_divided);
         RESET_FAKE(bcm_emmc_regs_set_sd_clock_divisor);
+        RESET_FAKE(bcm_emmc_regs_is_sd_clock_stable);
+        RESET_FAKE(bcm_emmc_regs_enable_interrupts);
     }
 
     // You can define per-test tear-down logic as usual.
@@ -49,6 +53,11 @@ protected:
 
 TEST(test_result, init_should_init_bcm_emmc) {
     bcm_emmc_regs_is_host_circuit_reset_fake.custom_fake = [](bcm_emmc_regs_t *regs, bool *ret_val) {
+        *ret_val = true;
+        return result_ok();
+    };
+
+    bcm_emmc_regs_is_sd_clock_stable_fake.custom_fake = [](bcm_emmc_regs_t *regs, bool *ret_val) {
         *ret_val = true;
         return result_ok();
     };

@@ -12,6 +12,8 @@
 #include "control1.h"
 #include "status.h"
 #include "slotisr_ver.h"
+#include "irpt_mask.h"
+#include "irpt_en.h"
 
 typedef struct bcm_emmc_regs bcm_emmc_regs_t;
 struct __attribute__((__packed__, aligned(4))) bcm_emmc_regs {
@@ -28,8 +30,8 @@ struct __attribute__((__packed__, aligned(4))) bcm_emmc_regs {
     control0_t control0; /* Control 0. */
     control1_t control1; /* Control 1. */
     uint32_t interrupt; /* Interrupt. */
-    uint32_t irpt_mask; /* Interrupt Mask. */
-    uint32_t irpt_en; /* Interrupt Enable. */
+    irpt_mask_t irpt_mask; /* Interrupt Mask. */
+    irpt_en_t irpt_en; /* Interrupt Enable. */
     uint32_t control2; /* Control 2. */
     uint8_t undocumented0[0x50 - 0x40]; /* Undocumented portion of the Register Map. */
     uint32_t force_irpt; /* Force Interrupt. */
@@ -160,4 +162,13 @@ result_t bcm_emmc_regs_set_sd_clock_divisor(
 result_t bcm_emmc_regs_is_sd_clock_stable(
         bcm_emmc_regs_t *bcm_emmc_regs,
         bool *ret_val
+);
+
+/**
+ * Enables interrupts.
+ * @param bcm_emmc_regs
+ * @return
+ */
+result_t bcm_emmc_regs_enable_interrupts(
+        bcm_emmc_regs_t *bcm_emmc_regs
 );

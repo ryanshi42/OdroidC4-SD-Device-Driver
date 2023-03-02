@@ -157,3 +157,16 @@ result_t bcm_emmc_regs_is_sd_clock_stable(
     return control1_get_clk_stable(&bcm_emmc_regs->control1, ret_val);
 }
 
+result_t bcm_emmc_regs_enable_interrupts(
+        bcm_emmc_regs_t *bcm_emmc_regs
+) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_enable_interrupts().");
+    }
+    result_t res = irpt_en_set_raw32(&bcm_emmc_regs->irpt_en, 0xffffffff);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to set `irpt_en` in bcm_emmc_regs_enable_interrupts().");
+    }
+    res = irpt_mask_set_raw32(&bcm_emmc_regs->irpt_mask, 0xffffffff);
+    return result_ok_or(res, "Failed to set `irpt_mask` in bcm_emmc_regs_enable_interrupts().");
+}

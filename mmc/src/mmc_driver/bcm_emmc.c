@@ -57,10 +57,19 @@ result_t bcm_emmc_init(
     usleep(10);
 
     /* Set clock to low-speed setup frequency (400KHz). */
+    log_trace("Setting clock to low-speed setup frequency (400KHz).");
     res = bcm_emmc_set_sd_clock(bcm_emmc, 400000);
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to set clock to low-speed setup frequency in bcm_emmc_init().");
     }
+
+    /* Enable interrupts. */
+    log_trace("Enabling interrupts.");
+    res = bcm_emmc_regs_enable_interrupts(bcm_emmc->regs);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to enable interrupts in bcm_emmc_init().");
+    }
+
 
     return result_ok();
 }
