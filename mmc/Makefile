@@ -89,12 +89,14 @@ MMC_DRIVER_OBJS := \
 	mmc_driver/bcm_emmc_regs/control0.o \
 	mmc_driver/bcm_emmc_regs/control1.o \
 	mmc_driver/bcm_emmc_regs/status.o \
+	mmc_driver/bcm_emmc_regs/slotisr_ver.o \
 	lib_printf/printf.o \
 	lib_sleep/sleep.o \
 	lib_assert/assert.o \
 	lib_time/time.o \
 	timer_driver/bcm_timer.o \
 	timer_driver/bcm_timer_regs.o \
+	common/arith.o \
 	common/result.o \
 	common/timer_client.o \
 	common/shared_dma.o \

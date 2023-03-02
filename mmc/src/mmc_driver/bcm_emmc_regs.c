@@ -115,4 +115,47 @@ result_t bcm_emmc_regs_enable_sd_clock(bcm_emmc_regs_t *bcm_emmc_regs) {
     return result_ok();
 }
 
+result_t bcm_emmc_regs_get_host_controller_spec_version(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        uint8_t *ret_val
+) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_get_host_controller_spec_version().");
+    }
+    result_t res = slotisr_ver_get_sdversion(&bcm_emmc_regs->slotisr_ver, ret_val);
+    return result_ok_or(res,"Failed to get `slotisr_ver.SDVERSION` in bcm_emmc_regs_get_host_controller_spec_version().");
+}
+
+result_t bcm_emmc_regs_set_sd_clock_mode_as_divided(
+        bcm_emmc_regs_t *bcm_emmc_regs
+) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_set_sd_clock_mode_as_divided().");
+    }
+    result_t res = control1_set_clk_gensel(&bcm_emmc_regs->control1, false);
+    return result_ok_or(res, "Failed to set `control1.CLK_GENSEL` in bcm_emmc_regs_set_sd_clock_mode_as_divided().");
+}
+
+result_t bcm_emmc_regs_set_sd_clock_divisor(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        uint16_t divisor
+) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_set_clock_divisor().");
+    }
+    if (divisor > 0b1111111111) {
+        return result_err("Invalid `divisor` passed to bcm_emmc_regs_set_clock_divisor().");
+    }
+    /* Pass the 9th and 10th bit of `divisor` to control1_set_clk_freq_ms2(). */
+    result_t res = control1_set_clk_freq_ms2(&bcm_emmc_regs->control1, (divisor >> 8) & 0b11);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to set `control1.CLK_FREQ_MS2` in bcm_emmc_regs_set_clock_divisor().");
+    }
+    /* Pass the 1st to 8th bits of `divisor` to control1_set_clk_freq8(). */
+    res = control1_set_clk_freq8(&bcm_emmc_regs->control1, (divisor) & 0b11111111);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to set `control1.CLK_FREQ8` in bcm_emmc_regs_set_clock_divisor().");
+    }
+    return result_ok();
+}
 

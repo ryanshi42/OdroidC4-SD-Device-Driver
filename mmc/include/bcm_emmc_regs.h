@@ -11,6 +11,7 @@
 #include "control0.h"
 #include "control1.h"
 #include "status.h"
+#include "slotisr_ver.h"
 
 typedef struct bcm_emmc_regs bcm_emmc_regs_t;
 struct __attribute__((__packed__, aligned(4))) bcm_emmc_regs {
@@ -44,7 +45,7 @@ struct __attribute__((__packed__, aligned(4))) bcm_emmc_regs {
     uint8_t undocumented3[0xf0 - 0x94]; /* Undocumented portion of the Register Map. */
     uint32_t spi_int_spt; /* SPI Interrupt Support. */
     uint8_t undocumented4[0xfc - 0xf4]; /* Undocumented portion of the Register Map. */
-    uint32_t slot_isr_ver; /* Slot Interrupt Status and Version. */
+    slotisr_ver_t slotisr_ver; /* Slot Interrupt Status and Version. */
 };
 
 /**
@@ -117,3 +118,37 @@ result_t bcm_emmc_regs_disable_sd_clock(bcm_emmc_regs_t *bcm_emmc_regs);
  * @return
  */
 result_t bcm_emmc_regs_enable_sd_clock(bcm_emmc_regs_t *bcm_emmc_regs);
+
+
+/**
+ * Returns the Host Controller specification version.
+ * @param bcm_emmc_regs
+ * @param ret_val
+ * @return
+ */
+result_t bcm_emmc_regs_get_host_controller_spec_version(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        uint8_t *ret_val
+);
+
+/**
+ * Sets the SD clock mode to "Divided".
+ * @param bcm_emmc_regs
+ * @return
+ */
+result_t bcm_emmc_regs_set_sd_clock_mode_as_divided(
+        bcm_emmc_regs_t *bcm_emmc_regs
+);
+
+/**
+ * Sets the SD clock's divisor.
+ * @param bcm_emmc_regs
+ * @param divisor
+ * @return
+ */
+result_t bcm_emmc_regs_set_sd_clock_divisor(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        uint16_t divisor
+);
+
+

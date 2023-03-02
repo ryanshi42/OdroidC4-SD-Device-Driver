@@ -173,6 +173,13 @@ target_link_libraries(
         mmc_rpi3b_lib_result
 )
 
+add_library(mmc_rpi3b_lib_slotisr_ver src/mmc_driver/bcm_emmc_regs/slotisr_ver.c)
+target_include_directories(mmc_rpi3b_lib_slotisr_ver PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_slotisr_ver
+        mmc_rpi3b_lib_result
+)
+
 add_library(mmc_rpi3b_lib_bcm_emmc_regs src/mmc_driver/bcm_emmc_regs.c)
 target_include_directories(mmc_rpi3b_lib_bcm_emmc_regs PUBLIC include/)
 target_link_libraries(
@@ -181,6 +188,7 @@ target_link_libraries(
         mmc_rpi3b_lib_control0
         mmc_rpi3b_lib_control1
         mmc_rpi3b_lib_status
+        mmc_rpi3b_lib_slotisr_ver
 )
 
 add_library(mmc_rpi3b_lib_bcm_emmc src/mmc_driver/bcm_emmc.c)
@@ -190,6 +198,7 @@ target_link_libraries(
         mmc_rpi3b_lib_result
         mmc_rpi3b_lib_bcm_emmc_regs
         mmc_rpi3b_lib_sleep
+        mmc_rpi3b_lib_arith
 )
 
 add_library(mmc_rpi3b_lib_sd src/sd.c)

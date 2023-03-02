@@ -91,3 +91,38 @@ TEST(test_control1, set_data_tounit_should_prevent_setting_too_large_value) {
     control1_get_data_tounit(&control1, &actual_val);
     ASSERT_EQ(0, actual_val);
 }
+
+/* set_clk_freq_ms2 */
+
+TEST(test_control1, set_clk_freq_ms2_should_return_error_if_value_too_large) {
+    control1_t control1 = {};
+    memset((void *) &control1, 0, sizeof(control1));
+    result_t res = control1_set_clk_freq_ms2(&control1, 0b11 + 1);
+    ASSERT_TRUE(result_is_err(res));
+    ASSERT_STREQ(
+            "Invalid `val` passed to control1_set_clk_freq_ms2().",
+            result_get_last_err_msg(res)
+    );
+}
+
+TEST(test_control1, set_clk_freq_ms2_should_succeed_for_value_less_than_equal_0b11) {
+    control1_t control1 = {};
+    memset((void *) &control1, 0, sizeof(control1));
+    for (size_t i = 0; i <= 0b11; i++) {
+        result_t res = control1_set_clk_freq_ms2(&control1, i);
+        ASSERT_TRUE(result_is_ok(res));
+    }
+}
+
+/* set_clk_freq8 */
+
+TEST(test_control1, set_clk_freq8_should_succeed_for_value_less_than_equal_0b11111111) {
+    control1_t control1 = {};
+    memset((void *) &control1, 0, sizeof(control1));
+    for (size_t i = 0; i <= 0b11111111; i++) {
+        result_t res = control1_set_clk_freq8(&control1, i);
+        ASSERT_TRUE(result_is_ok(res));
+    }
+}
+
+

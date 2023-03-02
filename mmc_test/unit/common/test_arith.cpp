@@ -4,6 +4,8 @@ extern "C" {
 #include "arith.h"
 }
 
+/* BIT macro */
+
 TEST(test_bit, should_set_first_bit) {
     ASSERT_EQ(
             0b00000000000000000000000000000001,
@@ -37,5 +39,16 @@ TEST(test_bit, should_set_64th_bit) {
             0b1000000000000000000000000000000000000000000000000000000000000000,
             BIT(63)
     );
+}
+
+/* arith_find_most_sig_bit_set */
+
+TEST(test_bit, arith_find_most_sig_bit_set_should_return_most_sig_bit_set) {
+    for (size_t i = 0; i < 32; i++) {
+        ASSERT_EQ(
+                arith_find_most_sig_bit_set(BIT(i)),
+                i + 1
+        );
+    }
 }
 

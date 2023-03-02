@@ -11,12 +11,15 @@ FAKE_VALUE_FUNC(result_t, control1_set_raw32, control1_t *, uint32_t);
 FAKE_VALUE_FUNC(result_t, control1_get_raw32, control1_t *, uint32_t *);
 FAKE_VALUE_FUNC(result_t, control1_set_clk_intlen, control1_t *, bool);
 FAKE_VALUE_FUNC(result_t, control1_set_clk_en, control1_t *, bool);
+FAKE_VALUE_FUNC(result_t, control1_set_clk_gensel, control1_t *, bool);
+FAKE_VALUE_FUNC(result_t, control1_set_clk_freq_ms2, control1_t *, uint8_t);
+FAKE_VALUE_FUNC(result_t, control1_set_clk_freq8, control1_t *, uint8_t);
 FAKE_VALUE_FUNC(result_t, control1_get_data_tounit, control1_t *, uint8_t *);
 FAKE_VALUE_FUNC(result_t, control1_set_data_tounit, control1_t *, uint8_t);
 FAKE_VALUE_FUNC(result_t, control1_set_srst_hc, control1_t *, bool);
 FAKE_VALUE_FUNC(result_t, control1_get_srst_hc, control1_t *, bool *);
 FAKE_VALUE_FUNC(result_t, control1_get_srst_cmd, control1_t *, bool *);
-FAKE_VALUE_FUNC(result_t, control1_get_srst_data, control1_t *,bool *);
+FAKE_VALUE_FUNC(result_t, control1_get_srst_data, control1_t *, bool *);
 
 /* Resets all Fakes for each unit test. */
 class test_bcm_emmc_regs_reset : public testing::Test {
@@ -27,6 +30,9 @@ protected:
         RESET_FAKE(control1_get_raw32);
         RESET_FAKE(control1_set_clk_intlen);
         RESET_FAKE(control1_set_clk_en);
+        RESET_FAKE(control1_set_clk_gensel);
+        RESET_FAKE(control1_set_clk_freq_ms2);
+        RESET_FAKE(control1_set_clk_freq8);
         RESET_FAKE(control1_get_data_tounit);
         RESET_FAKE(control1_set_data_tounit);
         RESET_FAKE(control1_set_srst_hc);
@@ -125,5 +131,31 @@ TEST(test_bcm_emmc_regs, is_host_circuit_reset_should_return_false_if_host_circu
     ASSERT_FALSE(is_host_circuit_reset);
 }
 
+/* set_sd_clock_divisor */
 
+TEST(test_bcm_emmc_regs, set_sd_clock_divisor_should_error_if_divisor_is_too_large) {
+    bcm_emmc_regs_t regs = {};
+
+    result_t res = bcm_emmc_regs_set_sd_clock_divisor(
+            &regs,
+            0b1111111111 + 1
+    );
+    ASSERT_TRUE(result_is_err(res));
+    ASSERT_STREQ(
+            "Invalid `divisor` passed to bcm_emmc_regs_set_clock_divisor().",
+            result_get_last_err_msg(res)
+    );
+}
+
+TEST(test_bcm_emmc_regs, set_sd_clock_divisor_should_accept_divisors_less_than_eq_0b1111111111) {
+    bcm_emmc_regs_t regs = {};
+
+    for (size_t i = 0; i <= 0b1111111111; i++) {
+        result_t res = bcm_emmc_regs_set_sd_clock_divisor(
+                &regs,
+                i
+        );
+        ASSERT_TRUE(result_is_ok(res));
+    }
+}
 

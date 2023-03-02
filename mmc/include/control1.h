@@ -13,8 +13,8 @@ struct __attribute__((__packed__, aligned(4))) control1 {
             volatile unsigned CLK_EN: 1;               // @2		SD clock enable  0=disable 1=enable
             unsigned reserved: 2;                      // @3-4		Write as zero read as don't care
             volatile unsigned CLK_GENSEL: 1;           // @5		Mode of clock generation (0=Divided, 1=Programmable)
-            volatile unsigned CLK_FREQ_MS2: 2;         // @6-7		SD clock base divider MSBs (Version3+ only)
-            volatile unsigned CLK_FREQ8: 8;            // @8-15	    SD clock base divider LSBs
+            volatile unsigned CLK_FREQ_MS2: 2;         // @6-7		SD clock base divider Most Significant Bits (MSBs) (Version3+ only)
+            volatile unsigned CLK_FREQ8: 8;            // @8-15	    SD clock base divider Least Significant Bits (LSBs)
             volatile unsigned DATA_TOUNIT: 4;          // @16-19	Data timeout unit exponent
             unsigned reserved1: 4;                     // @20-23	Write as zero read as don't care
             volatile unsigned SRST_HC: 1;              // @24		Reset the complete host circuit
@@ -57,6 +57,36 @@ result_t control1_set_clk_intlen(control1_t *control1, bool val);
  * @return
  */
 result_t control1_set_clk_en(control1_t *control1, bool val);
+
+/**
+ * Sets the `CLK_GENSEL` field of the `control1` register. This field sets the
+ * Mode of Clock Generation. Setting to False means Divided and setting to True
+ * means Programmable.
+ * @param control1
+ * @param val
+ * @return
+ */
+result_t control1_set_clk_gensel(control1_t *control1, bool val);
+
+/**
+ * Sets the `CLK_FREQ_MS2` field of the `control1` register.
+ * This field should be set to the 9th and 10th Most Significant Bits of the SD
+ * Clock Base Divider.
+ * @param control1
+ * @param val
+ * @return
+ */
+result_t control1_set_clk_freq_ms2(control1_t *control1, uint8_t val);
+
+/**
+ * Sets the `CLK_FREQ8` field of the `control1` register.
+ * This field should be set to the 1st to 8th Least Significant Bits of the SD
+ * Clock Base Divider.
+ * @param control1
+ * @param val
+ * @return
+ */
+result_t control1_set_clk_freq8(control1_t *control1, uint8_t val);
 
 /**
  * Obtains the `DATA_TOUNIT` field of the `control1` register.

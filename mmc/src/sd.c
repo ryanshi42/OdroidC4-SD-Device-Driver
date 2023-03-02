@@ -196,48 +196,48 @@ int sd_clk(unsigned int f) {
 
 //    *EMMC_CONTROL1 &= ~C1_CLK_EN;
 //    wait_msec(10);
-    x = c - 1;
-    if (!x) s = 0;
-    else {
-        if (!(x & 0xffff0000u)) {
-            x <<= 16;
-            s -= 16;
-        }
-        if (!(x & 0xff000000u)) {
-            x <<= 8;
-            s -= 8;
-        }
-        if (!(x & 0xf0000000u)) {
-            x <<= 4;
-            s -= 4;
-        }
-        if (!(x & 0xc0000000u)) {
-            x <<= 2;
-            s -= 2;
-        }
-        if (!(x & 0x80000000u)) {
-            x <<= 1;
-            s -= 1;
-        }
-        if (s > 0) s--;
-        if (s > 7) s = 7;
-    }
-    if (sd_hv > HOST_SPEC_V2) d = c; else d = (1 << s);
-    if (d <= 2) {
-        d = 2;
-        s = 0;
-    }
-    uart_puts("sd_clk divisor ");
-    uart_hex(d);
-    uart_puts(", shift ");
-    uart_hex(s);
-    uart_puts("\n");
-    if (sd_hv > HOST_SPEC_V2) h = (d & 0x300) >> 2;
-    d = (((d & 0x0ff) << 8) | h);
-    *EMMC_CONTROL1 = (*EMMC_CONTROL1 & 0xffff003f) | d;
-    wait_msec(10);
-    *EMMC_CONTROL1 |= C1_CLK_EN;
-    wait_msec(10);
+//    x = c - 1;
+//    if (!x) s = 0;
+//    else {
+//        if (!(x & 0xffff0000u)) {
+//            x <<= 16;
+//            s -= 16;
+//        }
+//        if (!(x & 0xff000000u)) {
+//            x <<= 8;
+//            s -= 8;
+//        }
+//        if (!(x & 0xf0000000u)) {
+//            x <<= 4;
+//            s -= 4;
+//        }
+//        if (!(x & 0xc0000000u)) {
+//            x <<= 2;
+//            s -= 2;
+//        }
+//        if (!(x & 0x80000000u)) {
+//            x <<= 1;
+//            s -= 1;
+//        }
+//        if (s > 0) s--;
+//        if (s > 7) s = 7;
+//    }
+//    if (sd_hv > HOST_SPEC_V2) d = c; else d = (1 << s);
+//    if (d <= 2) {
+//        d = 2;
+//        s = 0;
+//    }
+//    uart_puts("sd_clk divisor ");
+//    uart_hex(d);
+//    uart_puts(", shift ");
+//    uart_hex(s);
+//    uart_puts("\n");
+//    if (sd_hv > HOST_SPEC_V2) h = (d & 0x300) >> 2;
+//    d = (((d & 0x0ff) << 8) | h);
+//    *EMMC_CONTROL1 = (*EMMC_CONTROL1 & 0xffff003f) | d;
+//    wait_msec(10);
+//    *EMMC_CONTROL1 |= C1_CLK_EN;
+//    wait_msec(10);
     cnt = 10000;
     while (!(*EMMC_CONTROL1 & C1_CLK_STABLE) && cnt--) wait_msec(10);
     if (cnt <= 0) {

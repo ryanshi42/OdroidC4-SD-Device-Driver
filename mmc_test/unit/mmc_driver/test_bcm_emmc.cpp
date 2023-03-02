@@ -17,6 +17,9 @@ FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_data_lines_busy, bcm_emmc_regs_t *, b
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_cmd_line_busy, bcm_emmc_regs_t *, bool *)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_disable_sd_clock, bcm_emmc_regs_t *)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_enable_sd_clock, bcm_emmc_regs_t *)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_get_host_controller_spec_version, bcm_emmc_regs_t *, uint8_t *)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_set_sd_clock_mode_as_divided, bcm_emmc_regs_t *)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_set_sd_clock_divisor, bcm_emmc_regs_t *, uint16_t)
 
 /* Resets all Fakes for each unit test. */
 class test_bcm_emmc_reset : public testing::Test {
@@ -33,6 +36,9 @@ protected:
         RESET_FAKE(bcm_emmc_regs_is_cmd_line_busy);
         RESET_FAKE(bcm_emmc_regs_disable_sd_clock);
         RESET_FAKE(bcm_emmc_regs_enable_sd_clock);
+        RESET_FAKE(bcm_emmc_regs_get_host_controller_spec_version);
+        RESET_FAKE(bcm_emmc_regs_set_sd_clock_mode_as_divided);
+        RESET_FAKE(bcm_emmc_regs_set_sd_clock_divisor);
     }
 
     // You can define per-test tear-down logic as usual.
@@ -149,3 +155,48 @@ TEST(test_result, init_should_timeout_if_cmd_and_data_lines_is_busy) {
             result_get_last_err_msg(res)
     );
 }
+
+/* get_sd_clock_divisor */
+
+TEST(test_result, get_sd_clock_divisor_should_return_err_if_freq_is_zero) {
+    uint32_t divisor = 0;
+    bcm_emmc_t bcm_emmc = {};
+    result_t res = bcm_emmc_get_sd_clock_divisor(
+            &bcm_emmc,
+            0,
+            &divisor
+    );
+    ASSERT_TRUE(result_is_err(res));
+    ASSERT_STREQ(
+            "Zero `freq` passed to bcm_emmc_get_sd_clock_divisor().",
+            result_get_last_err_msg(res)
+    );
+}
+
+TEST(test_result, get_sd_clock_divisor_should_return_correct_divisors_for_version_3) {
+    bcm_emmc_regs_get_host_controller_spec_version_fake.custom_fake = [](bcm_emmc_regs_t *regs, uint8_t *ret_val) {
+        *ret_val = 3;
+        return result_ok();
+    };
+    auto input_outputs = std::vector<std::pair<uint32_t, uint32_t>>{
+            /* sd.c: sd_clk divisor 0x00000068, shift 0x00000006 */
+            {400000, 105},
+            /* sd.c: sd_clk divisor 0x00000002, shift 0x00000000 */
+            {25000000, 4},
+    };
+    for (auto input_output : input_outputs) {
+        uint32_t divisor = 0;
+        bcm_emmc_t bcm_emmc = {};
+        result_t res = bcm_emmc_get_sd_clock_divisor(
+                &bcm_emmc,
+                input_output.first,
+                &divisor
+        );
+        ASSERT_TRUE(result_is_ok(res));
+        ASSERT_EQ(input_output.second, divisor);
+    }
+}
+
+
+
+
