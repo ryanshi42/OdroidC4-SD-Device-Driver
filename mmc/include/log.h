@@ -1,7 +1,11 @@
 #pragma once
 
 #include <stdarg.h>
+#if MMC_RPI3B_UNIT_TEST
+#include <stdio.h>
+#else
 #include "printf.h"
+#endif
 
 enum { LOG_TRACE, LOG_DEBUG, LOG_INFO, LOG_WARN, LOG_ERROR, LOG_FATAL };
 
