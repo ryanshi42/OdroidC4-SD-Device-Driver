@@ -7,6 +7,10 @@ RESOURCES_DIR := resources
 directories:
 	mkdir -p $(BUILD_UNIT_TEST_DIR)
 
+.PHONY: clean
+clean:
+	rm -rf $(BUILD_UNIT_TEST_DIR)
+
 # =================================
 # Resources
 # =================================
