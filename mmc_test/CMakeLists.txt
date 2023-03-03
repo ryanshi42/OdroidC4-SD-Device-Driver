@@ -4,7 +4,6 @@ project(mmc_rpi3b_test_unit CXX C)
 
 # GoogleTest requires at least C++14
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_C_STANDARD 99)
 
 # These are compiler flags specific for running tests.
 set(GCC_COMPILE_FLAGS -Wall -Werror -Wvla -O0 -Wno-unused-function -Wno-unused-variable -Wno-unused-but-set-variable)

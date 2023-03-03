@@ -3,6 +3,12 @@ cmake_minimum_required(VERSION 3.7.2)
 
 project(mmc-rpi3b C)
 
+# Fix behavior of CMAKE_C_STANDARD when targeting macOS.
+if (POLICY CMP0025)
+    cmake_policy(SET CMP0025 NEW)
+endif ()
+set(CMAKE_C_STANDARD 11)
+
 option(MMC_RPI3B_UNIT_TEST "Unit testing mode." OFF)
 
 if (MMC_RPI3B_UNIT_TEST)
