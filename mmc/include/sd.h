@@ -4,7 +4,7 @@
 #include "uart.h"
 #include "delays.h"
 #include "sd.h"
-#include "bcm_emmc_regs.h"
+#include "sdhci.h"
 
 #include <stdbool.h>
 

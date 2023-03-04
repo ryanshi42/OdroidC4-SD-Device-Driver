@@ -138,3 +138,15 @@ result_t sdhci_set_sd_clock(
         bcm_emmc_regs_t *bcm_emmc_regs,
         uint32_t freq
 );
+
+/**
+ * Waits for the specified interrupt to be set.
+ * @param bcm_emmc_regs
+ * @param interrupt_mask
+ * @return
+ */
+result_t sdhci_wait_for_interrupt(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        uint32_t interrupt_mask
+);
+

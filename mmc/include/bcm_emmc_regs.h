@@ -15,7 +15,6 @@
 #include "irpt_mask.h"
 #include "irpt_en.h"
 #include "interrupt.h"
-#include "sleep.h"
 
 typedef struct bcm_emmc_regs bcm_emmc_regs_t;
 struct __attribute__((__packed__, aligned(4))) bcm_emmc_regs {
@@ -176,12 +175,69 @@ result_t bcm_emmc_regs_enable_interrupts(
 );
 
 /**
- * Wait for an interrupt.
+ * Masks interrupts.
  * @param bcm_emmc_regs
  * @param mask The interrupt mask.
+ * @param ret_val
  * @return
  */
-result_t bcm_emmc_regs_wait_for_interrupt(
+result_t bcm_emmc_regs_mask_interrupt(
         bcm_emmc_regs_t *bcm_emmc_regs,
-        uint32_t mask
+        uint32_t mask,
+        bool *ret_val
 );
+
+/**
+ * Retrieves the interrupt as a raw 32-bit value.
+ * @param bcm_emmc_regs
+ * @param ret_val
+ * @return
+ */
+result_t bcm_emmc_regs_get_interrupt_raw32(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        uint32_t *ret_val
+);
+
+/**
+ * Sets the interrupt as a raw 32-bit value.
+ * @param bcm_emmc_regs
+ * @param val
+ * @return
+ */
+result_t bcm_emmc_regs_set_interrupt_raw32(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        uint32_t val
+);
+
+/**
+ * Returns true if there is a CMD timeout error and false otherwise.
+ * @param bcm_emmc_regs
+ * @param ret_val
+ * @return
+ */
+result_t bcm_emmc_regs_is_cmd_timeout_err(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        bool *ret_val
+);
+
+/**
+ * Returns true if there is a DATA timeout error and false otherwise.
+ * @param bcm_emmc_regs
+ * @param ret_val
+ * @return
+ */
+result_t bcm_emmc_regs_is_data_timeout_err(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        bool *ret_val
+);
+
+///**
+// * Wait for an interrupt.
+// * @param bcm_emmc_regs
+// * @param mask The interrupt mask.
+// * @return
+// */
+//result_t bcm_emmc_regs_wait_for_interrupt(
+//        bcm_emmc_regs_t *bcm_emmc_regs,
+//        uint32_t mask
+//);

@@ -218,3 +218,93 @@ result_t sdhci_set_sd_clock(bcm_emmc_regs_t *bcm_emmc_regs, uint32_t freq) {
     log_trace("SD clock is stable.");
     return result_ok();
 }
+
+result_t sdhci_wait_for_interrupt(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        uint32_t interrupt_mask
+) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to sdhci_wait_for_interrupt().");
+    }
+    uint32_t mask_with_error = interrupt_mask | INT_ERROR_MASK;
+    bool is_finished_or_error = false;
+    do {
+        result_t res = bcm_emmc_regs_mask_interrupt(
+                bcm_emmc_regs,
+                mask_with_error,
+                &is_finished_or_error
+        );
+        if (result_is_err(res)) {
+            return result_err_chain(res, "Failed to wait for interrupt in bcm_emmc_regs_wait_for_interrupt().");
+        }
+    } while(!is_finished_or_error);
+    /* Read interrupt. */
+    uint32_t interrupt_raw32 = 0;
+    result_t res_get_raw32 = bcm_emmc_regs_get_interrupt_raw32(
+            bcm_emmc_regs,
+            &interrupt_raw32
+    );
+    if (result_is_err(res_get_raw32)) {
+        return result_err_chain(res_get_raw32, "Failed to get `interrupt` in bcm_emmc_regs_wait_for_interrupt().");
+    }
+    /* Timeout case. */
+    if (!is_finished_or_error) {
+        bool is_cmd_timeout = false;
+        result_t res = bcm_emmc_regs_is_cmd_timeout_err(
+                bcm_emmc_regs,
+                &is_cmd_timeout
+        );
+        if (result_is_err(res)) {
+            return result_err_chain(res, "Failed to get `interrupt.CTO_ERR` in bcm_emmc_regs_wait_for_interrupt().");
+        }
+        bool is_data_timeout = false;
+        res = bcm_emmc_regs_is_data_timeout_err(
+                bcm_emmc_regs,
+                &is_data_timeout
+        );
+        if (result_is_err(res)) {
+            return result_err_chain(res, "Failed to get `interrupt.DTO_ERR` in bcm_emmc_regs_wait_for_interrupt().");
+        }
+        /* Clear the interrupt register. */
+        res = bcm_emmc_regs_set_interrupt_raw32(
+                bcm_emmc_regs,
+                interrupt_raw32
+        );
+        if (result_is_err(res)) {
+            return result_err_chain(res, "Failed to clear `interrupt` in bcm_emmc_regs_wait_for_interrupt().");
+        }
+        /* Return error depending on the type of timeout. */
+        if (is_cmd_timeout) {
+            return result_err("Command timeout error in bcm_emmc_regs_wait_for_interrupt().");
+        }
+        if (is_data_timeout) {
+            return result_err("Data timeout error in bcm_emmc_regs_wait_for_interrupt().");
+        }
+        return result_err("Timed out waiting for interrupt in bcm_emmc_regs_wait_for_interrupt().");
+    }
+    /* Error case. */
+    bool is_error = false;
+    result_t res = bcm_emmc_regs_mask_interrupt(bcm_emmc_regs, INT_ERROR_MASK, &is_error);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to check for error in bcm_emmc_regs_wait_for_interrupt().");
+    }
+    if (is_error) {
+        /* Clear the interrupt register. */
+        res = bcm_emmc_regs_set_interrupt_raw32(bcm_emmc_regs, interrupt_raw32);
+        if (result_is_err(res)) {
+            return result_err_chain(res, "Failed to clear `interrupt` in bcm_emmc_regs_wait_for_interrupt().");
+        }
+        return result_err("Error interrupt in bcm_emmc_regs_wait_for_interrupt().");
+    }
+    /* Clear the interrupt register. */
+    res = bcm_emmc_regs_set_interrupt_raw32(bcm_emmc_regs, interrupt_mask);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to clear `interrupt` in bcm_emmc_regs_wait_for_interrupt().");
+    }
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to clear `interrupt` in bcm_emmc_regs_wait_for_interrupt().");
+    }
+
+    /* Success case. */
+    return result_ok();
+}

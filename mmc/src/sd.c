@@ -17,11 +17,14 @@ int sd_status(unsigned int mask) {
  * Wait for interrupt
  */
 int sd_int(unsigned int mask) {
-    result_t res = bcm_emmc_regs_wait_for_interrupt(global_regs, mask);
+    result_t res = sdhci_wait_for_interrupt(
+            global_regs,
+            mask
+    );
     if (result_is_err(res)) {
         return SD_ERROR;
     }
-    unsigned int r, m = mask | INT_ERROR_MASK;
+//    unsigned int r, m = mask | INT_ERROR_MASK;
 //    int cnt = 1000000;
 //    while (!(*EMMC_INTERRUPT & m) && cnt--) {
 //        wait_msec(1);
@@ -35,7 +38,6 @@ int sd_int(unsigned int mask) {
 //        return SD_ERROR;
 //    }
 //    *EMMC_INTERRUPT = mask;
-
     return 0;
 }
 
