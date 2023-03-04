@@ -22,6 +22,11 @@ FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_set_sd_clock_mode_as_divided, bcm_emmc_r
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_set_sd_clock_divisor, bcm_emmc_regs_t *, uint16_t)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_sd_clock_stable, bcm_emmc_regs_t *, bool *)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_enable_interrupts, bcm_emmc_regs_t *)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_mask_interrupt, bcm_emmc_regs_t *, uint32_t, bool *)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_get_interrupt_raw32, bcm_emmc_regs_t *, uint32_t *)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_set_interrupt_raw32, bcm_emmc_regs_t *, uint32_t)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_cmd_timeout_err, bcm_emmc_regs_t *, bool *)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_data_timeout_err, bcm_emmc_regs_t *, bool *)
 
 /* Resets all Fakes for each unit test. */
 class test_sdhci_reset : public testing::Test {
@@ -43,6 +48,11 @@ protected:
         RESET_FAKE(bcm_emmc_regs_set_sd_clock_divisor);
         RESET_FAKE(bcm_emmc_regs_is_sd_clock_stable);
         RESET_FAKE(bcm_emmc_regs_enable_interrupts);
+        RESET_FAKE(bcm_emmc_regs_mask_interrupt);
+        RESET_FAKE(bcm_emmc_regs_get_interrupt_raw32);
+        RESET_FAKE(bcm_emmc_regs_set_interrupt_raw32);
+        RESET_FAKE(bcm_emmc_regs_is_cmd_timeout_err);
+        RESET_FAKE(bcm_emmc_regs_is_data_timeout_err);
     }
 
     // You can define per-test tear-down logic as usual.
@@ -92,6 +102,17 @@ TEST(test_sdhci, get_sd_clock_divisor_should_return_correct_divisors_for_version
     }
 }
 
-
-
+/* wait_for_interrupt. */
+TEST(test_sdhci, wait_for_interrupt_should_timeout) {
+    uint32_t interrupt_mask = INT_CMD_DONE;
+    bcm_emmc_regs_t bcm_emmc_regs = {};
+    bool has_timed_out = false;
+    result_t res = sdhci_wait_for_interrupt(
+            &bcm_emmc_regs,
+            interrupt_mask,
+            &has_timed_out
+    );
+    ASSERT_TRUE(result_is_err(res));
+    ASSERT_TRUE(has_timed_out);
+}
 

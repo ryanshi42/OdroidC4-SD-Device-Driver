@@ -22,6 +22,11 @@ FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_set_sd_clock_mode_as_divided, bcm_emmc_r
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_set_sd_clock_divisor, bcm_emmc_regs_t *, uint16_t)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_sd_clock_stable, bcm_emmc_regs_t *, bool *)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_enable_interrupts, bcm_emmc_regs_t *)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_mask_interrupt, bcm_emmc_regs_t *, uint32_t, bool *)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_get_interrupt_raw32, bcm_emmc_regs_t *, uint32_t *)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_set_interrupt_raw32, bcm_emmc_regs_t *, uint32_t)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_cmd_timeout_err, bcm_emmc_regs_t *, bool *)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_data_timeout_err, bcm_emmc_regs_t *, bool *)
 
 /* Resets all Fakes for each unit test. */
 class test_bcm_emmc_reset : public testing::Test {
@@ -43,6 +48,11 @@ protected:
         RESET_FAKE(bcm_emmc_regs_set_sd_clock_divisor);
         RESET_FAKE(bcm_emmc_regs_is_sd_clock_stable);
         RESET_FAKE(bcm_emmc_regs_enable_interrupts);
+        RESET_FAKE(bcm_emmc_regs_mask_interrupt);
+        RESET_FAKE(bcm_emmc_regs_get_interrupt_raw32);
+        RESET_FAKE(bcm_emmc_regs_set_interrupt_raw32);
+        RESET_FAKE(bcm_emmc_regs_is_cmd_timeout_err);
+        RESET_FAKE(bcm_emmc_regs_is_data_timeout_err);
     }
 
     // You can define per-test tear-down logic as usual.

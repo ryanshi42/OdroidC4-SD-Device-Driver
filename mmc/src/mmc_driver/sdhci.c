@@ -221,7 +221,8 @@ result_t sdhci_set_sd_clock(bcm_emmc_regs_t *bcm_emmc_regs, uint32_t freq) {
 
 result_t sdhci_wait_for_interrupt(
         bcm_emmc_regs_t *bcm_emmc_regs,
-        uint32_t interrupt_mask
+        uint32_t interrupt_mask,
+        bool *has_timed_out
 ) {
     if (bcm_emmc_regs == NULL) {
         return result_err("NULL `bcm_emmc_regs` passed to sdhci_wait_for_interrupt().");
@@ -252,6 +253,7 @@ result_t sdhci_wait_for_interrupt(
     }
     /* Timeout case. */
     if (!is_finished_or_error) {
+        *has_timed_out = true;
         bool is_cmd_timeout = false;
         result_t res = bcm_emmc_regs_is_cmd_timeout_err(
                 bcm_emmc_regs,

@@ -17,9 +17,11 @@ int sd_status(unsigned int mask) {
  * Wait for interrupt
  */
 int sd_int(unsigned int mask) {
+    bool is_timed_out = false;
     result_t res = sdhci_wait_for_interrupt(
             global_regs,
-            mask
+            mask,
+            &is_timed_out
     );
     if (result_is_err(res)) {
         return SD_ERROR;
