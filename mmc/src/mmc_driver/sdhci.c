@@ -229,10 +229,10 @@ result_t sdhci_wait_for_interrupt(
     }
     uint32_t mask_with_error = interrupt_mask | INT_ERROR_MASK;
     /* Wait for the interrupt. We specify a timeout of 1 second. */
-    size_t retries = 1000000;
+    size_t retries = 100000;
     bool is_finished_or_error = false;
     do {
-        usleep(1);
+        usleep(10);
         result_t res = bcm_emmc_regs_mask_interrupt(
                 bcm_emmc_regs,
                 mask_with_error,
