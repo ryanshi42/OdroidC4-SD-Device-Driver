@@ -30,7 +30,8 @@ resources-decompile-dtb-rpi3bp:
 
 .PHONY: test-build
 test-build: directories
-	cmake -S . -B ./$(BUILD_UNIT_TEST_DIR) -DMMC_RPI3B_UNIT_TEST=1
+	cmake -S . -B ./$(BUILD_UNIT_TEST_DIR) \
+		-DMMC_RPI3B_UNIT_TEST=1
 	cmake --build ./$(BUILD_UNIT_TEST_DIR) --parallel "$(nproc)"
 
 .PHONY: test-unit
