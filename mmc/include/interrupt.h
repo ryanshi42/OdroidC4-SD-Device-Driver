@@ -5,6 +5,41 @@
 #include "result.h"
 
 /*
+ * Interrupt Register and Interrupt Mask Register bits
+ */
+#define INT_AUTO_ERROR   0x01000000                                    // ACMD_ERR bit in register
+#define INT_DATA_END_ERR 0x00400000                                    // DEND_ERR bit in register
+#define INT_DATA_CRC_ERR 0x00200000                                    // DCRC_ERR bit in register
+#define INT_DATA_TIMEOUT 0x00100000                                    // DTO_ERR bit in register
+#define INT_INDEX_ERROR  0x00080000                                    // CBAD_ERR bit in register
+#define INT_END_ERROR    0x00040000                                    // CEND_ERR bit in register
+#define INT_CRC_ERROR    0x00020000                                    // CCRC_ERR bit in register
+#define INT_CMD_TIMEOUT  0x00010000                                    // CTO_ERR bit in register
+#define INT_ERR          0x00008000                                    // ERR bit in register
+#define INT_ENDBOOT      0x00004000                                    // ENDBOOT bit in register
+#define INT_BOOTACK      0x00002000                                    // BOOTACK bit in register
+#define INT_RETUNE       0x00001000                                    // RETUNE bit in register
+#define INT_CARD         0x00000100                                    // CARD bit in register
+#define INT_READ_RDY     0x00000020                                    // READ_RDY bit in register
+#define INT_WRITE_RDY    0x00000010                                    // WRITE_RDY bit in register
+#define INT_BLOCK_GAP    0x00000004                                    // BLOCK_GAP bit in register
+#define INT_DATA_DONE    0x00000002                                    // DATA_DONE bit in register
+#define INT_CMD_DONE     0x00000001                                    // CMD_DONE bit in register
+#define INT_ERROR_MASK   (INT_CRC_ERROR| \
+                            INT_END_ERROR| \
+                            INT_INDEX_ERROR| \
+                            INT_DATA_TIMEOUT|\
+                            INT_DATA_CRC_ERR|\
+                            INT_DATA_END_ERR| \
+                            INT_ERR|     \
+                            INT_AUTO_ERROR)
+#define INT_ALL_MASK     (INT_CMD_DONE| \
+                            INT_DATA_DONE| \
+                            INT_READ_RDY|  \
+                            INT_WRITE_RDY| \
+                            INT_ERROR_MASK)
+
+/*
  * EMMC INTERRUPT register - BCM2835.PDF Manual Section 5 pages 75-77
  */
 typedef struct interrupt interrupt_t;
