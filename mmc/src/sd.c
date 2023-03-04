@@ -8,6 +8,28 @@ bcm_emmc_regs_t *global_regs;
  * Wait for data or command ready
  */
 int sd_status(unsigned int mask) {
+    if (mask & SR_CMD_INHIBIT) {
+        sdhci_result_t sdhci_result;
+        result_t res = sdhci_wait_for_cmd_in_progress(
+                global_regs,
+                &sdhci_result
+        );
+        if (result_is_err(res)) {
+            return SD_ERROR;
+        }
+        return SD_OK;
+    }
+    if (mask & SR_DAT_INHIBIT) {
+        sdhci_result_t sdhci_result;
+        result_t res = sdhci_wait_for_data_in_progress(
+                global_regs,
+                &sdhci_result
+        );
+        if (result_is_err(res)) {
+            return SD_ERROR;
+        }
+        return SD_OK;
+    }
     int cnt = 1000000;
     while ((*EMMC_STATUS & mask) && !(*EMMC_INTERRUPT & INT_ERROR_MASK) && cnt--) wait_msec(1);
     return (cnt <= 0 || (*EMMC_INTERRUPT & INT_ERROR_MASK)) ? SD_ERROR : SD_OK;

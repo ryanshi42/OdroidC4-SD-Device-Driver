@@ -5,6 +5,7 @@
 #include "sleep.h"
 #include "log.h"
 #include "arith.h"
+#include "sdhci_result.h"
 
 enum tm_auto_cmd_en {
     TM_NO_COMMAND = 0,  // no command
@@ -152,3 +153,24 @@ result_t sdhci_wait_for_interrupt(
         bool *has_timed_out
 );
 
+/**
+ * Waits for cmd_in_progress to be cleared.
+ * @param bcm_emmc_regs
+ * @param sdhci_result
+ * @return
+ */
+result_t sdhci_wait_for_cmd_in_progress(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdhci_result_t *sdhci_result
+);
+
+/**
+ * Waits for data_in_progress to be cleared.
+ * @param bcm_emmc_regs
+ * @param sdhci_result
+ * @return
+ */
+result_t sdhci_wait_for_data_in_progress(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdhci_result_t *sdhci_result
+);

@@ -221,3 +221,37 @@ result_t bcm_emmc_regs_is_data_timeout_err(
     }
     return interrupt_get_dto_err(&bcm_emmc_regs->interrupt, ret_val);
 }
+
+result_t bcm_emmc_regs_is_any_err(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        bool *ret_val
+) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_is_err().");
+    }
+    return interrupt_mask_raw32(
+            &bcm_emmc_regs->interrupt,
+            INT_ERROR_MASK,
+            ret_val
+    );
+}
+
+result_t bcm_emmc_regs_is_cmd_in_progress(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        bool *ret_val
+) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_is_cmd_in_progress().");
+    }
+    return status_get_cmd_inhibit(&bcm_emmc_regs->status, ret_val);
+}
+
+result_t bcm_emmc_regs_is_data_in_progress(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        bool *ret_val
+) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_is_data_in_progress().");
+    }
+    return status_get_dat_inhibit(&bcm_emmc_regs->status, ret_val);
+}

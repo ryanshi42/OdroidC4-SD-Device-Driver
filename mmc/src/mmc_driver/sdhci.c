@@ -309,3 +309,85 @@ result_t sdhci_wait_for_interrupt(
     /* Success case. */
     return result_ok();
 }
+
+result_t sdhci_wait_for_cmd_in_progress(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdhci_result_t *sdhci_result
+) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to sdhci_wait_for_cmd_in_progress().");
+    }
+    *sdhci_result = SD_OK;
+    bool cmd_in_progress = false;
+    bool has_any_err = false;
+    size_t retries = 100000;
+    do {
+        usleep(10);
+        result_t res_cmd = bcm_emmc_regs_is_cmd_in_progress(
+                bcm_emmc_regs,
+                &cmd_in_progress
+        );
+        if (result_is_err(res_cmd)) {
+            return result_err_chain(res_cmd, "Failed to check if command is in progress in sdhci_wait_for_cmd_in_progress().");
+        }
+        result_t res_err = bcm_emmc_regs_is_any_err(
+                bcm_emmc_regs,
+                &has_any_err
+        );
+        if (result_is_err(res_err)) {
+            return result_err_chain(res_err, "Failed to check if any error occurred in sdhci_wait_for_cmd_in_progress().");
+        }
+    } while (cmd_in_progress && !has_any_err && (retries-- > 0));
+    if (has_any_err) {
+        *sdhci_result = SD_ERROR;
+        return result_err("Error occurred in sdhci_wait_for_cmd_in_progress().");
+    }
+    if (cmd_in_progress) {
+        *sdhci_result = SD_BUSY;
+        return result_err("Timed out waiting for command in sdhci_wait_for_cmd_in_progress().");
+    }
+    return result_ok();
+}
+
+result_t sdhci_wait_for_data_in_progress(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdhci_result_t *sdhci_result
+) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to sdhci_wait_for_cmd_in_progress().");
+    }
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to sdhci_wait_for_cmd_in_progress().");
+    }
+    *sdhci_result = SD_OK;
+    bool data_in_progress = false;
+    bool has_any_err = false;
+    size_t retries = 100000;
+    do {
+        usleep(10);
+        result_t res_cmd = bcm_emmc_regs_is_cmd_in_progress(
+                bcm_emmc_regs,
+                &data_in_progress
+        );
+        if (result_is_err(res_cmd)) {
+            return result_err_chain(res_cmd, "Failed to check if data is in progress in sdhci_wait_for_cmd_in_progress().");
+        }
+        result_t res_err = bcm_emmc_regs_is_any_err(
+                bcm_emmc_regs,
+                &has_any_err
+        );
+        if (result_is_err(res_err)) {
+            return result_err_chain(res_err, "Failed to check if any error occurred in sdhci_wait_for_cmd_in_progress().");
+        }
+    } while (data_in_progress && !has_any_err && (retries-- > 0));
+    if (has_any_err) {
+        *sdhci_result = SD_ERROR;
+        return result_err("Error occurred in sdhci_wait_for_cmd_in_progress().");
+    }
+    if (data_in_progress) {
+        *sdhci_result = SD_BUSY;
+        return result_err("Timed out waiting for data in sdhci_wait_for_cmd_in_progress().");
+    }
+    return result_ok();
+}
+

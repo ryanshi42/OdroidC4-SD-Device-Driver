@@ -230,3 +230,37 @@ result_t bcm_emmc_regs_is_data_timeout_err(
         bcm_emmc_regs_t *bcm_emmc_regs,
         bool *ret_val
 );
+
+/**
+ * Returns true if there is any error and false otherwise.
+ * @param bcm_emmc_regs
+ * @param ret_val
+ * @return
+ */
+result_t bcm_emmc_regs_is_any_err(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        bool *ret_val
+);
+
+/**
+ * Returns true if there is a CMD in progress and false otherwise.
+ * @param bcm_emmc_regs
+ * @param ret_val
+ * @return
+ */
+result_t bcm_emmc_regs_is_cmd_in_progress(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        bool *ret_val
+);
+
+/**
+ * Returns true if there is a DATA in progress and false otherwise.
+ * @param bcm_emmc_regs
+ * @param ret_val
+ * @return
+ */
+result_t bcm_emmc_regs_is_data_in_progress(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        bool *ret_val
+);
+
