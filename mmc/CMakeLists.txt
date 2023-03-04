@@ -240,6 +240,12 @@ target_link_libraries(
         mmc_rpi3b_lib_arith
 )
 
+add_library(mmc_rpi3b_lib_sdhci_result src/mmc_driver/sdhci_result.c)
+target_include_directories(mmc_rpi3b_lib_sdhci_result PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_sdhci_result
+)
+
 add_library(mmc_rpi3b_lib_bcm_emmc src/mmc_driver/bcm_emmc.c)
 target_include_directories(mmc_rpi3b_lib_bcm_emmc PUBLIC include/)
 target_link_libraries(
