@@ -365,7 +365,7 @@ result_t sdhci_wait_for_data_in_progress(
     size_t retries = 100000;
     do {
         usleep(10);
-        result_t res_cmd = bcm_emmc_regs_is_cmd_in_progress(
+        result_t res_cmd = bcm_emmc_regs_is_data_in_progress(
                 bcm_emmc_regs,
                 &data_in_progress
         );
