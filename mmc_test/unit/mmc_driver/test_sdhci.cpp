@@ -27,6 +27,9 @@ FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_get_interrupt_raw32, bcm_emmc_regs_t *, 
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_set_interrupt_raw32, bcm_emmc_regs_t *, uint32_t)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_cmd_timeout_err, bcm_emmc_regs_t *, bool *)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_data_timeout_err, bcm_emmc_regs_t *, bool *)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_any_err, bcm_emmc_regs_t *, bool *)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_cmd_in_progress, bcm_emmc_regs_t *, bool *)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_data_in_progress, bcm_emmc_regs_t *, bool *)
 
 /* Resets all Fakes for each unit test. */
 class test_sdhci_reset : public testing::Test {
@@ -53,6 +56,9 @@ protected:
         RESET_FAKE(bcm_emmc_regs_set_interrupt_raw32);
         RESET_FAKE(bcm_emmc_regs_is_cmd_timeout_err);
         RESET_FAKE(bcm_emmc_regs_is_data_timeout_err);
+        RESET_FAKE(bcm_emmc_regs_is_any_err);
+        RESET_FAKE(bcm_emmc_regs_is_cmd_in_progress);
+        RESET_FAKE(bcm_emmc_regs_is_data_in_progress);
     }
 
     // You can define per-test tear-down logic as usual.
