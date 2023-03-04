@@ -170,3 +170,4 @@ result_t bcm_emmc_regs_enable_interrupts(
     res = irpt_mask_set_raw32(&bcm_emmc_regs->irpt_mask, 0xffffffff);
     return result_ok_or(res, "Failed to set `irpt_mask` in bcm_emmc_regs_enable_interrupts().");
 }
+

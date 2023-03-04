@@ -2,6 +2,8 @@
 
 #include <stdint.h>
 
+#include "result.h"
+
 /*
  * EMMC INTERRUPT register - BCM2835.PDF Manual Section 5 pages 75-77
  */
@@ -33,7 +35,22 @@ struct __attribute__((__packed__, aligned(4))) interrupt {
             volatile unsigned ACMD_ERR: 1;   // @24		Auto command error
             unsigned reserved4: 7;           // @25-31	Write as zero read as don't care
         };
-        volatile uint32_t Raw32;             // @0-31	Union to access all 32 bits as a uint32_t
+        volatile uint32_t raw32;             // @0-31	Union to access all 32 bits as a uint32_t
     };
 };
+
+result_t interrupt_get_raw32(interrupt_t *interrupt, uint32_t *ret_val);
+
+result_t interrupt_set_raw32(interrupt_t *interrupt, uint32_t val);
+
+result_t interrupt_mask_raw32(interrupt_t *interrupt, uint32_t mask, bool *ret_val);
+
+result_t interrupt_get_cmd_done(interrupt_t *interrupt, bool *ret_val);
+
+result_t interrupt_get_data_done(interrupt_t *interrupt, bool *ret_val);
+
+result_t interrupt_get_write_rdy(interrupt_t *interrupt, bool *ret_val);
+
+result_t interrupt_get_read_rdy(interrupt_t *interrupt, bool *ret_val);
+
 
