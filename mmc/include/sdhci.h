@@ -6,29 +6,29 @@
 #include "log.h"
 #include "arith.h"
 
-typedef enum tm_auto_cmd_en tm_auto_cmd_en_t;
 enum tm_auto_cmd_en {
     TM_NO_COMMAND = 0,  // no command
     TM_CMD12 = 1,       // command CMD12
     TM_CMD23 = 2,       // command CMD23
     TM_RESERVED = 3,
 };
+typedef enum tm_auto_cmd_en tm_auto_cmd_en_t;
 
-typedef enum cmd_rspns_type cmd_rspns_type_t;
 enum cmd_rspns_type {
     CMD_NO_RESP = 0,        // no response
     CMD_136BIT_RESP = 1,    // 136 bits response
     CMD_48BIT_RESP = 2,     // 48 bits response
     CMD_BUSY48BIT_RESP = 3, // 48 bits response using busy
 };
+typedef enum cmd_rspns_type cmd_rspns_type_t;
 
-typedef enum cmd_type cmd_type_t;
 enum cmd_type {
     CMD_TYPE_NORMAL = 0,  // normal command
     CMD_TYPE_SUSPEND = 1, // suspend command
     CMD_TYPE_RESUME = 2,  // resume command
     CMD_TYPE_ABORT = 3,   // abort command
 };
+typedef enum cmd_type cmd_type_t;
 
 /**
  * EMMC CMDTM register - BCM2835.PDF Manual Section 5 pages 69-70
@@ -114,94 +114,6 @@ typedef struct EMMCCommand {
 #define IX_APP_SEND_OP_COND 36
 #define IX_SET_CLR_DET      37
 #define IX_SEND_SCR         38
-
-/*--------------------------------------------------------------------------}
-{							  SD CARD COMMAND TABLE						    }
-{--------------------------------------------------------------------------*/
-static EMMCCommand sdCommandTable[IX_SEND_SCR + 1] = {
-        [IX_GO_IDLE_STATE] =    {
-                "GO_IDLE_STATE", .code.CMD_INDEX = 0x00, .code.CMD_RSPNS_TYPE = CMD_NO_RESP, .use_rca = 0, .delay = 0},
-        [IX_ALL_SEND_CID] =        {
-                "ALL_SEND_CID", .code.CMD_INDEX = 0x02, .code.CMD_RSPNS_TYPE = CMD_136BIT_RESP, .use_rca = 0, .delay = 0},
-        [IX_SEND_REL_ADDR] =    {
-                "SEND_REL_ADDR", .code.CMD_INDEX = 0x03, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP, .use_rca = 0, .delay = 0},
-        [IX_SET_DSR] =            {
-                "SET_DSR", .code.CMD_INDEX = 0x04, .code.CMD_RSPNS_TYPE = CMD_NO_RESP, .use_rca = 0, .delay = 0},
-        [IX_SWITCH_FUNC] =        {
-                "SWITCH_FUNC", .code.CMD_INDEX = 0x06, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP, .use_rca = 0, .delay = 0},
-        [IX_CARD_SELECT] =        {
-                "CARD_SELECT", .code.CMD_INDEX = 0x07, .code.CMD_RSPNS_TYPE = CMD_BUSY48BIT_RESP, .use_rca = 1, .delay = 0},
-        [IX_SEND_IF_COND] =    {
-                "SEND_IF_COND", .code.CMD_INDEX = 0x08, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP, .use_rca = 0, .delay = 100},
-        [IX_SEND_CSD] =            {
-                "SEND_CSD", .code.CMD_INDEX = 0x09, .code.CMD_RSPNS_TYPE = CMD_136BIT_RESP, .use_rca = 1, .delay = 0},
-        [IX_SEND_CID] =            {
-                "SEND_CID", .code.CMD_INDEX = 0x0A, .code.CMD_RSPNS_TYPE = CMD_136BIT_RESP, .use_rca = 1, .delay = 0},
-        [IX_VOLTAGE_SWITCH] =    {
-                "VOLT_SWITCH", .code.CMD_INDEX = 0x0B, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP, .use_rca = 0, .delay = 0},
-        [IX_STOP_TRANS] =        {
-                "STOP_TRANS", .code.CMD_INDEX = 0x0C, .code.CMD_RSPNS_TYPE = CMD_BUSY48BIT_RESP, .use_rca = 0, .delay = 0},
-        [IX_SEND_STATUS] =        {
-                "SEND_STATUS", .code.CMD_INDEX = 0x0D, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP, .use_rca = 1, .delay = 0},
-        [IX_GO_INACTIVE] =        {
-                "GO_INACTIVE", .code.CMD_INDEX = 0x0F, .code.CMD_RSPNS_TYPE = CMD_NO_RESP, .use_rca = 1, .delay = 0},
-        [IX_SET_BLOCKLEN] =        {
-                "SET_BLOCKLEN", .code.CMD_INDEX = 0x10, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP, .use_rca = 0, .delay = 0},
-        [IX_READ_SINGLE] =        {"READ_SINGLE", .code.CMD_INDEX = 0x11, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP,
-                .code.CMD_ISDATA = 1, .code.TM_DAT_DIR = 1, .use_rca = 0, .delay = 0},
-        [IX_READ_MULTI] =        {"READ_MULTI", .code.CMD_INDEX = 0x12, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP,
-                .code.CMD_ISDATA = 1, .code.TM_DAT_DIR = 1,
-                .code.TM_BLKCNT_EN =1, .code.TM_MULTI_BLOCK = 1, .use_rca = 0, .delay = 0},
-        [IX_SEND_TUNING] =        {
-                "SEND_TUNING", .code.CMD_INDEX = 0x13, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP, .use_rca = 0, .delay = 0},
-        [IX_SPEED_CLASS] =        {
-                "SPEED_CLASS", .code.CMD_INDEX = 0x14, .code.CMD_RSPNS_TYPE = CMD_BUSY48BIT_RESP, .use_rca = 0, .delay = 0},
-        [IX_SET_BLOCKCNT] =        {
-                "SET_BLOCKCNT", .code.CMD_INDEX = 0x17, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP, .use_rca = 0, .delay = 0},
-        [IX_WRITE_SINGLE] =        {"WRITE_SINGLE", .code.CMD_INDEX = 0x18, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP,
-                .code.CMD_ISDATA = 1, .use_rca = 0, .delay = 0},
-        [IX_WRITE_MULTI] =        {"WRITE_MULTI", .code.CMD_INDEX = 0x19, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP,
-                .code.CMD_ISDATA = 1,
-                .code.TM_BLKCNT_EN = 1, .code.TM_MULTI_BLOCK = 1, .use_rca = 0, .delay = 0},
-        [IX_PROGRAM_CSD] =        {
-                "PROGRAM_CSD", .code.CMD_INDEX = 0x1B, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP, .use_rca = 0, .delay = 0},
-        [IX_SET_WRITE_PR] =        {
-                "SET_WRITE_PR", .code.CMD_INDEX = 0x1C, .code.CMD_RSPNS_TYPE = CMD_BUSY48BIT_RESP, .use_rca = 0, .delay = 0},
-        [IX_CLR_WRITE_PR] =        {
-                "CLR_WRITE_PR", .code.CMD_INDEX = 0x1D, .code.CMD_RSPNS_TYPE = CMD_BUSY48BIT_RESP, .use_rca = 0, .delay = 0},
-        [IX_SND_WRITE_PR] =        {
-                "SND_WRITE_PR", .code.CMD_INDEX = 0x1E, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP, .use_rca = 0, .delay = 0},
-        [IX_ERASE_WR_ST] =        {
-                "ERASE_WR_ST", .code.CMD_INDEX = 0x20, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP, .use_rca = 0, .delay = 0},
-        [IX_ERASE_WR_END] =        {
-                "ERASE_WR_END", .code.CMD_INDEX = 0x21, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP, .use_rca = 0, .delay = 0},
-        [IX_ERASE] =            {
-                "ERASE", .code.CMD_INDEX = 0x26, .code.CMD_RSPNS_TYPE = CMD_BUSY48BIT_RESP, .use_rca = 0, .delay = 0},
-        [IX_LOCK_UNLOCK] =        {
-                "LOCK_UNLOCK", .code.CMD_INDEX = 0x2A, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP, .use_rca = 0, .delay = 0},
-        [IX_APP_CMD] =            {
-                "APP_CMD", .code.CMD_INDEX = 0x37, .code.CMD_RSPNS_TYPE = CMD_NO_RESP, .use_rca = 0, .delay = 100},
-        [IX_APP_CMD_RCA] =        {
-                "APP_CMD", .code.CMD_INDEX = 0x37, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP, .use_rca = 1, .delay = 0},
-        [IX_GEN_CMD] =            {
-                "GEN_CMD", .code.CMD_INDEX = 0x38, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP, .use_rca = 0, .delay = 0},
-
-        // APP commands must be prefixed by an APP_CMD.
-        [IX_SET_BUS_WIDTH] =    {
-                "SET_BUS_WIDTH", .code.CMD_INDEX = 0x06, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP, .use_rca = 0, .delay = 0},
-        [IX_SD_STATUS] =        {
-                "SD_STATUS", .code.CMD_INDEX = 0x0D, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP, .use_rca = 1, .delay = 0},
-        [IX_SEND_NUM_WRBL] =    {
-                "SEND_NUM_WRBL", .code.CMD_INDEX = 0x16, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP, .use_rca = 0, .delay = 0},
-        [IX_SEND_NUM_ERS] =        {
-                "SEND_NUM_ERS", .code.CMD_INDEX = 0x17, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP, .use_rca = 0, .delay = 0},
-        [IX_APP_SEND_OP_COND] =    {
-                "SD_SENDOPCOND", .code.CMD_INDEX = 0x29, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP, .use_rca = 0, .delay = 1000},
-        [IX_SET_CLR_DET] =        {
-                "SET_CLR_DET", .code.CMD_INDEX = 0x2A, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP, .use_rca = 0, .delay = 0},
-        [IX_SEND_SCR] =            {"SEND_SCR", .code.CMD_INDEX = 0x33, .code.CMD_RSPNS_TYPE = CMD_48BIT_RESP,
-                .code.CMD_ISDATA = 1, .code.TM_DAT_DIR = 1, .use_rca = 0, .delay = 0},
-};
 
 /**
  * Returns the SD clock divisor for the given requested frequency. This is
