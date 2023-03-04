@@ -230,14 +230,3 @@ result_t bcm_emmc_regs_is_data_timeout_err(
         bcm_emmc_regs_t *bcm_emmc_regs,
         bool *ret_val
 );
-
-///**
-// * Wait for an interrupt.
-// * @param bcm_emmc_regs
-// * @param mask The interrupt mask.
-// * @return
-// */
-//result_t bcm_emmc_regs_wait_for_interrupt(
-//        bcm_emmc_regs_t *bcm_emmc_regs,
-//        uint32_t mask
-//);
