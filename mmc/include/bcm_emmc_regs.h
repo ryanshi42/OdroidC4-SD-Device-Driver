@@ -15,6 +15,7 @@
 #include "irpt_mask.h"
 #include "irpt_en.h"
 #include "interrupt.h"
+#include "sleep.h"
 
 typedef struct bcm_emmc_regs bcm_emmc_regs_t;
 struct __attribute__((__packed__, aligned(4))) bcm_emmc_regs {
@@ -172,4 +173,15 @@ result_t bcm_emmc_regs_is_sd_clock_stable(
  */
 result_t bcm_emmc_regs_enable_interrupts(
         bcm_emmc_regs_t *bcm_emmc_regs
+);
+
+/**
+ * Wait for an interrupt.
+ * @param bcm_emmc_regs
+ * @param mask The interrupt mask.
+ * @return
+ */
+result_t bcm_emmc_regs_wait_for_interrupt(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        uint32_t mask
 );

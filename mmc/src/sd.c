@@ -2,6 +2,8 @@
 
 unsigned long sd_scr[2], sd_ocr, sd_rca, sd_err, sd_hv;
 
+bcm_emmc_regs_t *global_regs;
+
 /**
  * Wait for data or command ready
  */
@@ -15,18 +17,25 @@ int sd_status(unsigned int mask) {
  * Wait for interrupt
  */
 int sd_int(unsigned int mask) {
-    unsigned int r, m = mask | INT_ERROR_MASK;
-    int cnt = 1000000;
-    while (!(*EMMC_INTERRUPT & m) && cnt--) wait_msec(1);
-    r = *EMMC_INTERRUPT;
-    if (cnt <= 0 || (r & INT_CMD_TIMEOUT) || (r & INT_DATA_TIMEOUT)) {
-        *EMMC_INTERRUPT = r;
-        return SD_TIMEOUT;
-    } else if (r & INT_ERROR_MASK) {
-        *EMMC_INTERRUPT = r;
+    result_t res = bcm_emmc_regs_wait_for_interrupt(global_regs, mask);
+    if (result_is_err(res)) {
         return SD_ERROR;
     }
-    *EMMC_INTERRUPT = mask;
+    unsigned int r, m = mask | INT_ERROR_MASK;
+//    int cnt = 1000000;
+//    while (!(*EMMC_INTERRUPT & m) && cnt--) {
+//        wait_msec(1);
+//    }
+//    r = *EMMC_INTERRUPT;
+//    if ((r & INT_CMD_TIMEOUT) || (r & INT_DATA_TIMEOUT)) {
+//        *EMMC_INTERRUPT = r;
+//        return SD_TIMEOUT;
+//    } else if (r & INT_ERROR_MASK) {
+//        *EMMC_INTERRUPT = r;
+//        return SD_ERROR;
+//    }
+//    *EMMC_INTERRUPT = mask;
+
     return 0;
 }
 
@@ -159,16 +168,19 @@ bool sd_writeblock(unsigned char *buffer, unsigned int lba, unsigned int num) {
     } else {
         *EMMC_BLKSIZECNT = (1 << 16) | 512;
     }
+    printf("sd_writeblock: num=%d\n", num);
     while (c < num) {
         if (!(sd_scr[0] & SCR_SUPP_CCS)) {
             sd_cmd(CMD_WRITE_SINGLE, (lba + c) * 512);
             if (sd_err) return 0;
         }
+        printf("About to wait for INT_WRITE_RDY\n");
         if ((r = sd_int(INT_WRITE_RDY))) {
             uart_puts("\rERROR: Timeout waiting for ready to write\n");
             sd_err = r;
             return 0;
         }
+        printf("Finished waiting for INT_WRITE_RDY\n");
         for (d = 0; d < 128; d++) *EMMC_DATA = buf[d];
         c++;
         buf += 128;
@@ -250,7 +262,8 @@ int sd_clk(unsigned int f) {
 /**
  * initialize EMMC to read SDHC card
  */
-int sd_init() {
+int sd_init(bcm_emmc_regs_t *regs) {
+    global_regs = regs;
     long r, cnt, ccs = 0;
 //    // GPIO_CD
 //    r = *GPFSEL4;

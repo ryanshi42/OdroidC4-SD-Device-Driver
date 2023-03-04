@@ -88,4 +88,6 @@ result_t interrupt_get_write_rdy(interrupt_t *interrupt, bool *ret_val);
 
 result_t interrupt_get_read_rdy(interrupt_t *interrupt, bool *ret_val);
 
+result_t interrupt_get_cto_err(interrupt_t *interrupt, bool *ret_val);
 
+result_t interrupt_get_dto_err(interrupt_t *interrupt, bool *ret_val);

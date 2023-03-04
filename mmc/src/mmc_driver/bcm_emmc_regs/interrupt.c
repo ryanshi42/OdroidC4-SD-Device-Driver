@@ -56,3 +56,18 @@ result_t interrupt_get_read_rdy(interrupt_t *interrupt, bool *ret_val) {
     return result_ok();
 }
 
+result_t interrupt_get_cto_err(interrupt_t *interrupt, bool *ret_val) {
+    if (interrupt == NULL) {
+        return result_err("NULL `interrupt` passed to interrupt_get_cto_err().");
+    }
+    *ret_val = interrupt->CTO_ERR;
+    return result_ok();
+}
+
+result_t interrupt_get_dto_err(interrupt_t *interrupt, bool *ret_val) {
+    if (interrupt == NULL) {
+        return result_err("NULL `interrupt` passed to interrupt_get_dto_err().");
+    }
+    *ret_val = interrupt->DTO_ERR;
+    return result_ok();
+}

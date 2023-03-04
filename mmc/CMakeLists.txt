@@ -256,6 +256,7 @@ target_include_directories(mmc_rpi3b_lib_sd PUBLIC include/)
 target_link_libraries(
         mmc_rpi3b_lib_sd
         mmc_rpi3b_lib_gpio
+        mmc_rpi3b_lib_bcm_emmc_regs
 )
 
 add_library(mmc_rpi3b_lib_mmc_driver src/mmc_driver.c)

@@ -141,7 +141,7 @@ void init(void) {
         return;
     }
 
-    if (sd_init() != SD_OK) {
+    if (sd_init((bcm_emmc_regs_t *) emmc_base_vaddr) != SD_OK) {
         printf("Failed to initialise SD card.\n");
     }
 
