@@ -201,6 +201,13 @@ target_link_libraries(
         mmc_rpi3b_lib_result
 )
 
+add_library(mmc_rpi3b_lib_cmdtm src/mmc_driver/bcm_emmc_regs/cmdtm.c)
+target_include_directories(mmc_rpi3b_lib_cmdtm PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_cmdtm
+        mmc_rpi3b_lib_result
+)
+
 add_library(mmc_rpi3b_lib_bcm_emmc_regs src/mmc_driver/bcm_emmc_regs.c)
 target_include_directories(mmc_rpi3b_lib_bcm_emmc_regs PUBLIC include/)
 target_link_libraries(

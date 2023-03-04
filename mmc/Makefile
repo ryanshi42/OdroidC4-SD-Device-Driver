@@ -93,6 +93,7 @@ MMC_DRIVER_OBJS := \
 	mmc_driver/bcm_emmc_regs/irpt_mask.o \
 	mmc_driver/bcm_emmc_regs/status.o \
 	mmc_driver/bcm_emmc_regs/slotisr_ver.o \
+	mmc_driver/bcm_emmc_regs/cmdtm.o \
 	lib_printf/printf.o \
 	lib_sleep/sleep.o \
 	lib_assert/assert.o \
