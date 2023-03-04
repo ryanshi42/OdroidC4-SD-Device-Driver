@@ -301,9 +301,6 @@ result_t sdhci_wait_for_interrupt(
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to clear `interrupt` in sdhci_wait_for_interrupt().");
     }
-    if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to clear `interrupt` in sdhci_wait_for_interrupt().");
-    }
 
     /* Success case. */
     return result_ok();
