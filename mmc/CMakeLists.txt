@@ -208,6 +208,13 @@ target_link_libraries(
         mmc_rpi3b_lib_result
 )
 
+add_library(mmc_rpi3b_lib_interrupt src/mmc_driver/bcm_emmc_regs/interrupt.c)
+target_include_directories(mmc_rpi3b_lib_interrupt PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_interrupt
+        mmc_rpi3b_lib_result
+)
+
 add_library(mmc_rpi3b_lib_bcm_emmc_regs src/mmc_driver/bcm_emmc_regs.c)
 target_include_directories(mmc_rpi3b_lib_bcm_emmc_regs PUBLIC include/)
 target_link_libraries(
@@ -219,6 +226,7 @@ target_link_libraries(
         mmc_rpi3b_lib_slotisr_ver
         mmc_rpi3b_lib_irpt_en
         mmc_rpi3b_lib_irpt_mask
+        mmc_rpi3b_lib_interrupt
 )
 
 add_library(mmc_rpi3b_lib_sdhci src/mmc_driver/sdhci.c)

@@ -14,6 +14,7 @@
 #include "slotisr_ver.h"
 #include "irpt_mask.h"
 #include "irpt_en.h"
+#include "interrupt.h"
 
 typedef struct bcm_emmc_regs bcm_emmc_regs_t;
 struct __attribute__((__packed__, aligned(4))) bcm_emmc_regs {
@@ -29,7 +30,7 @@ struct __attribute__((__packed__, aligned(4))) bcm_emmc_regs {
     status_t status; /* Status. */
     control0_t control0; /* Control 0. */
     control1_t control1; /* Control 1. */
-    uint32_t interrupt; /* Interrupt. */
+    interrupt_t interrupt; /* Interrupt. */
     irpt_mask_t irpt_mask; /* Interrupt Mask. */
     irpt_en_t irpt_en; /* Interrupt Enable. */
     uint32_t control2; /* Control 2. */
