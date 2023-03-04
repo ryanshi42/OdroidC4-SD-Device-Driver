@@ -46,6 +46,8 @@ int sleep(unsigned int seconds) {
     return 0;
 }
 
+#endif
+
 int sleep_cyc(unsigned int cycles) {
     if (cycles) {
         while (cycles--) {
@@ -55,4 +57,3 @@ int sleep_cyc(unsigned int cycles) {
     return 0;
 }
 
-#endif

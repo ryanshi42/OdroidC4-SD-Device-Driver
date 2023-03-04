@@ -37,6 +37,8 @@ int usleep(useconds_t usec);
  */
 int sleep(unsigned int seconds);
 
+#endif
+
 /**
  * sleep_cyc() causes the calling thread to sleep for the number of CPU cycles
  * specified in cycles.
@@ -44,5 +46,3 @@ int sleep(unsigned int seconds);
  * @return Zero if the requested time has elapsed. On error, -1 is returned.
  */
 int sleep_cyc(unsigned int cycles);
-
-#endif
