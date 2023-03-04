@@ -227,8 +227,11 @@ result_t sdhci_wait_for_interrupt(
         return result_err("NULL `bcm_emmc_regs` passed to sdhci_wait_for_interrupt().");
     }
     uint32_t mask_with_error = interrupt_mask | INT_ERROR_MASK;
+    /* Wait for the interrupt. We specify a timeout of 1 second. */
+    size_t retries = 1000000;
     bool is_finished_or_error = false;
     do {
+        usleep(1);
         result_t res = bcm_emmc_regs_mask_interrupt(
                 bcm_emmc_regs,
                 mask_with_error,
@@ -237,7 +240,7 @@ result_t sdhci_wait_for_interrupt(
         if (result_is_err(res)) {
             return result_err_chain(res, "Failed to wait for interrupt in sdhci_wait_for_interrupt().");
         }
-    } while(!is_finished_or_error);
+    } while (!is_finished_or_error && (retries-- > 0));
     /* Read interrupt. */
     uint32_t interrupt_raw32 = 0;
     result_t res_get_raw32 = bcm_emmc_regs_get_interrupt_raw32(
