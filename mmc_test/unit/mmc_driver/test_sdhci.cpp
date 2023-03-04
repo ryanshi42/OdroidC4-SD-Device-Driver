@@ -103,6 +103,7 @@ TEST(test_sdhci, get_sd_clock_divisor_should_return_correct_divisors_for_version
 }
 
 /* wait_for_interrupt. */
+
 TEST(test_sdhci, wait_for_interrupt_should_timeout) {
     uint32_t interrupt_mask = INT_CMD_DONE;
     bcm_emmc_regs_t bcm_emmc_regs = {};
@@ -114,5 +115,9 @@ TEST(test_sdhci, wait_for_interrupt_should_timeout) {
     );
     ASSERT_TRUE(result_is_err(res));
     ASSERT_TRUE(has_timed_out);
+}
+
+TEST(test_sdhci, wait_for_interrupt_should_return_with_error_if_error) {
+    /* TODO: Test for error case. */
 }
 
