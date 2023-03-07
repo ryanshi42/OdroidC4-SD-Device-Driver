@@ -1,4 +1,4 @@
-#include "sdhci_commands.h"
+#include "sdhci_cmds.h"
 
 /*--------------------------------------------------------------------------}
 {							  SD CARD COMMAND TABLE						    }
@@ -293,7 +293,7 @@ EMMCCommand sdCommandTable[IX_SEND_SCR + 1] = {
         },
 };
 
-result_t sdhci_commands_is_app_cmd(
+result_t sdhci_cmds_is_app_cmd(
         uint32_t cmd_index,
         bool *is_app_cmd
 ) {

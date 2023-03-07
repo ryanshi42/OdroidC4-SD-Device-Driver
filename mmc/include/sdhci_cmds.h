@@ -1,6 +1,6 @@
 #pragma once
 
-#include "sdhci_command.h"
+#include "sdhci_cmd.h"
 #include "result.h"
 
 /*--------------------------------------------------------------------------}
@@ -55,7 +55,7 @@
  * @param is_app_cmd
  * @return
  */
-result_t sdhci_commands_is_app_cmd(
+result_t sdhci_cmds_is_app_cmd(
         uint32_t sdhci_cmd_index,
         bool *is_app_cmd
 );

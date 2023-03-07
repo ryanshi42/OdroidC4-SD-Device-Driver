@@ -237,18 +237,18 @@ target_link_libraries(
         mmc_rpi3b_lib_interrupt
 )
 
-add_library(mmc_rpi3b_lib_sdhci_command src/mmc_driver/sdhci/sdhci_command.c)
-target_include_directories(mmc_rpi3b_lib_sdhci_command PUBLIC include/)
+add_library(mmc_rpi3b_lib_sdhci_cmd src/mmc_driver/sdhci/sdhci_cmd.c)
+target_include_directories(mmc_rpi3b_lib_sdhci_cmd PUBLIC include/)
 target_link_libraries(
-        mmc_rpi3b_lib_sdhci_command
+        mmc_rpi3b_lib_sdhci_cmd
         mmc_rpi3b_lib_cmdtm
 )
 
-add_library(mmc_rpi3b_lib_sdhci_commands src/mmc_driver/sdhci/sdhci_commands.c)
-target_include_directories(mmc_rpi3b_lib_sdhci_commands PUBLIC include/)
+add_library(mmc_rpi3b_lib_sdhci_cmds src/mmc_driver/sdhci/sdhci_cmds.c)
+target_include_directories(mmc_rpi3b_lib_sdhci_cmds PUBLIC include/)
 target_link_libraries(
-        mmc_rpi3b_lib_sdhci_commands
-        mmc_rpi3b_lib_sdhci_command
+        mmc_rpi3b_lib_sdhci_cmds
+        mmc_rpi3b_lib_sdhci_cmd
         mmc_rpi3b_lib_sdhci_result
 )
 
@@ -268,7 +268,7 @@ target_link_libraries(
         mmc_rpi3b_lib_log
         mmc_rpi3b_lib_arith
         mmc_rpi3b_lib_sdhci_result
-        mmc_rpi3b_lib_sdhci_commands
+        mmc_rpi3b_lib_sdhci_cmds
 )
 
 add_library(mmc_rpi3b_lib_bcm_emmc src/mmc_driver/bcm_emmc.c)
