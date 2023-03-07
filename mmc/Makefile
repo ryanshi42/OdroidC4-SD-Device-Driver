@@ -88,6 +88,8 @@ MMC_DRIVER_OBJS := \
 	mmc_driver/bcm_emmc_regs.o \
 	mmc_driver/sdhci.o \
 	mmc_driver/sdhci_result.o \
+	mmc_driver/sdhci/sdhci_command.o \
+	mmc_driver/sdhci/sdhci_commands.o \
 	mmc_driver/bcm_emmc_regs/control0.o \
 	mmc_driver/bcm_emmc_regs/control1.o \
 	mmc_driver/bcm_emmc_regs/irpt_en.o \
@@ -95,6 +97,8 @@ MMC_DRIVER_OBJS := \
 	mmc_driver/bcm_emmc_regs/status.o \
 	mmc_driver/bcm_emmc_regs/slotisr_ver.o \
 	mmc_driver/bcm_emmc_regs/cmdtm.o \
+	mmc_driver/bcm_emmc_regs/cmdtm/cmd_index.o \
+	mmc_driver/bcm_emmc_regs/cmdtm/cmd_rspns_type.o \
 	mmc_driver/bcm_emmc_regs/interrupt.o \
 	lib_printf/printf.o \
 	lib_sleep/sleep.o \
@@ -136,7 +140,9 @@ directories:
 	mkdir -p $(BUILD_DIR)/lib_time
 	mkdir -p $(BUILD_DIR)/common
 	mkdir -p $(BUILD_DIR)/mmc_driver
+	mkdir -p $(BUILD_DIR)/mmc_driver/sdhci
 	mkdir -p $(BUILD_DIR)/mmc_driver/bcm_emmc_regs
+	mkdir -p $(BUILD_DIR)/mmc_driver/bcm_emmc_regs/cmdtm
 	mkdir -p $(BUILD_DIR)/serial_driver
 	mkdir -p $(BUILD_DIR)/timer_driver
 

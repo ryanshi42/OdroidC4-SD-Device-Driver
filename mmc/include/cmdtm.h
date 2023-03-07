@@ -1,6 +1,8 @@
 #pragma once
 
 #include "result.h"
+#include "cmd_rspns_type.h"
+#include "cmd_index.h"
 
 enum tm_auto_cmd_en {
     TM_NO_COMMAND = 0,  // no command
@@ -9,14 +11,6 @@ enum tm_auto_cmd_en {
     TM_RESERVED = 3,
 };
 typedef enum tm_auto_cmd_en tm_auto_cmd_en_t;
-
-enum cmd_rspns_type {
-    CMD_NO_RESP = 0,        // no response
-    CMD_136BIT_RESP = 1,    // 136 bits response
-    CMD_48BIT_RESP = 2,     // 48 bits response
-    CMD_BUSY48BIT_RESP = 3, // 48 bits response using busy
-};
-typedef enum cmd_rspns_type cmd_rspns_type_t;
 
 enum cmd_type {
     CMD_TYPE_NORMAL = 0,  // normal command
@@ -45,7 +39,7 @@ struct __attribute__((__packed__, aligned(4))) cmdtm {
             volatile unsigned CMD_IXCHK_EN: 1;              // @20		Check that response has same index as command (0=disabled, 1= enabled)
             volatile unsigned CMD_ISDATA: 1;                // @21		Command involves data transfer (0=disabled, 1= enabled)
             volatile cmd_type_t CMD_TYPE: 2;                // @16-17
-            volatile unsigned CMD_INDEX: 6;                 // @24-29
+            volatile cmd_index_t CMD_INDEX: 6;              // @24-29
             unsigned reserved3: 2;                          // @30-31	Write as zero read as don't care
         };
         volatile uint32_t Raw32;                            // @0-31	Union to access all 32 bits as a uint32_t
