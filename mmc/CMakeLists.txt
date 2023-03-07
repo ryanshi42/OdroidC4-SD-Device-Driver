@@ -249,6 +249,7 @@ target_include_directories(mmc_rpi3b_lib_sdhci_commands PUBLIC include/)
 target_link_libraries(
         mmc_rpi3b_lib_sdhci_commands
         mmc_rpi3b_lib_sdhci_command
+        mmc_rpi3b_lib_sdhci_result
 )
 
 add_library(mmc_rpi3b_lib_sdhci_result src/mmc_driver/sdhci_result.c)
@@ -267,6 +268,7 @@ target_link_libraries(
         mmc_rpi3b_lib_log
         mmc_rpi3b_lib_arith
         mmc_rpi3b_lib_sdhci_result
+        mmc_rpi3b_lib_sdhci_commands
 )
 
 add_library(mmc_rpi3b_lib_bcm_emmc src/mmc_driver/bcm_emmc.c)

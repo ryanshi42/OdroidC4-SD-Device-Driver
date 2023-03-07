@@ -305,3 +305,16 @@ result_t sdhci_wait_for_data_in_progress(
     return result_ok();
 }
 
+result_t sdhci_send_command(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        size_t sdhci_cmd_index,
+        sdhci_result_t *sdhci_result
+) {
+    *sdhci_result = SD_ERROR;
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to sdhci_send_command().");
+    }
+
+    return result_ok();
+}
+
