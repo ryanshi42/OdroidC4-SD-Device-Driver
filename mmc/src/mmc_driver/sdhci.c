@@ -222,11 +222,12 @@ result_t sdhci_set_sd_clock(bcm_emmc_regs_t *bcm_emmc_regs, uint32_t freq) {
 result_t sdhci_wait_for_interrupt(
         bcm_emmc_regs_t *bcm_emmc_regs,
         uint32_t interrupt_mask,
-        bool *has_timed_out
+        sdhci_result_t *sdhci_result
 ) {
     if (bcm_emmc_regs == NULL) {
         return result_err("NULL `bcm_emmc_regs` passed to sdhci_wait_for_interrupt().");
     }
+    *sdhci_result = SD_ERROR;
     uint32_t mask_with_error = interrupt_mask | INT_ERROR_MASK;
     /* Wait for the interrupt. We specify a timeout of 1 second. */
     size_t retries = 100000;
@@ -253,7 +254,7 @@ result_t sdhci_wait_for_interrupt(
     }
     /* Timeout case. */
     if (!is_finished_or_error) {
-        *has_timed_out = true;
+        *sdhci_result = SD_TIMEOUT;
         bool is_cmd_timeout = false;
         result_t res = bcm_emmc_regs_is_cmd_timeout_err(
                 bcm_emmc_regs,
@@ -306,6 +307,7 @@ result_t sdhci_wait_for_interrupt(
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to clear `interrupt` in sdhci_wait_for_interrupt().");
     }
+    *sdhci_result = SD_OK;
     /* Success case. */
     return result_ok();
 }

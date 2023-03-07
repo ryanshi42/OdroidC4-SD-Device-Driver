@@ -144,13 +144,13 @@ result_t sdhci_set_sd_clock(
  * Waits for the specified interrupt to be set.
  * @param bcm_emmc_regs
  * @param interrupt_mask
- * @param has_timed_out
+ * @param sdhci_result
  * @return
  */
 result_t sdhci_wait_for_interrupt(
         bcm_emmc_regs_t *bcm_emmc_regs,
         uint32_t interrupt_mask,
-        bool *has_timed_out
+        sdhci_result_t *sdhci_result
 );
 
 /**

@@ -113,14 +113,14 @@ TEST(test_sdhci, get_sd_clock_divisor_should_return_correct_divisors_for_version
 TEST(test_sdhci, wait_for_interrupt_should_timeout) {
     uint32_t interrupt_mask = INT_CMD_DONE;
     bcm_emmc_regs_t bcm_emmc_regs = {};
-    bool has_timed_out = false;
+    sdhci_result_t sdhci_result;
     result_t res = sdhci_wait_for_interrupt(
             &bcm_emmc_regs,
             interrupt_mask,
-            &has_timed_out
+            &sdhci_result
     );
     ASSERT_TRUE(result_is_err(res));
-    ASSERT_TRUE(has_timed_out);
+    ASSERT_TRUE(sdhci_result == SD_TIMEOUT);
 }
 
 TEST(test_sdhci, wait_for_interrupt_should_return_with_error_if_error) {
