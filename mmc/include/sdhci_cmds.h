@@ -50,7 +50,7 @@
 #define IX_SEND_SCR         38
 
 /**
- * Returns True if the `cmd_index
+ * Returns True if the `sdhci_cmd_index` is an App Command and False otherwise.
  * @param cmd_index
  * @param is_app_cmd
  * @return
