@@ -62,3 +62,15 @@ TEST(test_sdhci_cmds, is_app_cmd_should_return_false_if_cmd_is_not_app_cmd) {
         ASSERT_FALSE(is_app_cmd);
     }
 }
+
+/* get_cmd */
+
+TEST(test_sdhci_cmds, get_cmd_should_return_the_correct_cmd) {
+    sdhci_cmd_t *cmd;
+    result_t result = sdhci_cmds_get_cmd(
+            IX_GO_IDLE_STATE,
+            &cmd
+    );
+    ASSERT_TRUE(result_is_ok(result));
+    ASSERT_STREQ(cmd->cmd_name, "GO_IDLE_STATE");
+}

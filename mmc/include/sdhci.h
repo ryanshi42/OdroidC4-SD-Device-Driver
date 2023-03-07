@@ -6,7 +6,7 @@
 #include "log.h"
 #include "arith.h"
 #include "sdhci_result.h"
-#include "sdhci_cmd.h"
+#include "sdhci_cmds.h"
 
 /**
  * Returns the SD clock divisor for the given requested frequency. This is
@@ -68,6 +68,13 @@ result_t sdhci_wait_for_data_in_progress(
         sdhci_result_t *sdhci_result
 );
 
+/**
+ * Sends a command to the SD card.
+ * @param bcm_emmc_regs
+ * @param sdhci_cmd_index
+ * @param sdhci_result
+ * @return
+ */
 result_t sdhci_send_cmd(
         bcm_emmc_regs_t *bcm_emmc_regs,
         size_t sdhci_cmd_index,

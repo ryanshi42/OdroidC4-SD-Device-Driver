@@ -312,9 +312,42 @@ result_t sdhci_send_cmd(
 ) {
     *sdhci_result = SD_ERROR;
     if (bcm_emmc_regs == NULL) {
-        return result_err("NULL `bcm_emmc_regs` passed to sdhci_send_command().");
+        return result_err("NULL `bcm_emmc_regs` passed to sdhci_send_cmd().");
+    }
+    /* Check whether command is an App Command. */
+    bool is_app_cmd = false;
+    result_t res_is_app_cmd = sdhci_cmds_is_app_cmd(
+            sdhci_cmd_index,
+            &is_app_cmd
+    );
+    if (result_is_err(res_is_app_cmd)) {
+        return result_err_chain(res_is_app_cmd, "Failed to check if command is an app command in sdhci_send_cmd().");
+    }
+    /* Obtain the command. */
+    sdhci_cmd_t *sdhci_cmd;
+    result_t res_get_cmd = sdhci_cmds_get_cmd(
+            sdhci_cmd_index,
+            &sdhci_cmd
+    );
+    if (result_is_err(res_get_cmd)) {
+        return result_err_chain(res_get_cmd, "Failed to get command in sdhci_send_cmd().");
+    }
+
+    if (is_app_cmd) {
+        /* Recursively call ourselves first. */
+        result_t res_app_cmd = sdhci_send_cmd(
+                bcm_emmc_regs,
+                IX_APP_CMD,
+                sdhci_result
+        );
+        if (result_is_err(res_app_cmd)) {
+            return result_err_chain(res_app_cmd, "Failed to send app command in sdhci_send_cmd().");
+        }
     }
 
     return result_ok();
 }
+
+
+
 

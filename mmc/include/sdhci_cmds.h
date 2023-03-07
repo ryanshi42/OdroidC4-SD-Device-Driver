@@ -59,3 +59,14 @@ result_t sdhci_cmds_is_app_cmd(
         uint32_t sdhci_cmd_index,
         bool *is_app_cmd
 );
+
+/**
+ * Returns the SDHCI Command for the given `sdhci_cmd_index`.
+ * @param sdhci_cmd_index
+ * @param ret_val Pointer to the SDHCI command.
+ * @return
+ */
+result_t sdhci_cmds_get_cmd(
+        uint32_t sdhci_cmd_index,
+        sdhci_cmd_t **ret_val
+);

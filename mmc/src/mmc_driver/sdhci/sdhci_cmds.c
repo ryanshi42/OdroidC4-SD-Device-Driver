@@ -3,7 +3,7 @@
 /*--------------------------------------------------------------------------}
 {							  SD CARD COMMAND TABLE						    }
 {--------------------------------------------------------------------------*/
-EMMCCommand sdCommandTable[IX_SEND_SCR + 1] = {
+sdhci_cmd_t sdhci_cmds[IX_SEND_SCR + 1] = {
         [IX_GO_IDLE_STATE] = {
                 "GO_IDLE_STATE",
                 .cmdtm.CMD_INDEX = 0x00,
@@ -302,5 +302,20 @@ result_t sdhci_cmds_is_app_cmd(
     }
     /* If the command index is in the range of app commands then return true. */
     *is_app_cmd = (cmd_index >= IX_APP_CMD_START);
+    return result_ok();
+}
+
+result_t sdhci_cmds_get_cmd(
+        uint32_t sdhci_cmd_index,
+        sdhci_cmd_t **ret_val
+) {
+    if (sdhci_cmd_index >= IX_SEND_SCR) {
+        return result_err("Command index out of range in sdhci_commands_get_cmd()");
+    }
+    if (ret_val == NULL) {
+        return result_err("ret_val is NULL in sdhci_commands_get_cmd()");
+    }
+    /* Obtains the relevant SDHCI command. */
+    *ret_val = &sdhci_cmds[sdhci_cmd_index];
     return result_ok();
 }
