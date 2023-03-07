@@ -150,7 +150,8 @@ EMMCCommand sdCommandTable[IX_SEND_SCR + 1] = {
                 .use_rca = 0,
                 .delay = 0
         },
-        [IX_READ_SINGLE] = {"READ_SINGLE",
+        [IX_READ_SINGLE] = {
+                "READ_SINGLE",
                 .cmdtm.CMD_INDEX = 0x11,
                 .cmdtm.CMD_RSPNS_TYPE = CMD_48BIT_RESP,
                 .cmdtm.CMD_ISDATA = 1,
@@ -158,7 +159,8 @@ EMMCCommand sdCommandTable[IX_SEND_SCR + 1] = {
                 .use_rca = 0,
                 .delay = 0
         },
-        [IX_READ_MULTI] = {"READ_MULTI",
+        [IX_READ_MULTI] = {
+                "READ_MULTI",
                 .cmdtm.CMD_INDEX = 0x12,
                 .cmdtm.CMD_RSPNS_TYPE = CMD_48BIT_RESP,
                 .cmdtm.CMD_ISDATA = 1,
@@ -189,14 +191,16 @@ EMMCCommand sdCommandTable[IX_SEND_SCR + 1] = {
                 .use_rca = 0,
                 .delay = 0
         },
-        [IX_WRITE_SINGLE] = {"WRITE_SINGLE",
+        [IX_WRITE_SINGLE] = {
+                "WRITE_SINGLE",
                 .cmdtm.CMD_INDEX = 0x18,
                 .cmdtm.CMD_RSPNS_TYPE = CMD_48BIT_RESP,
                 .cmdtm.CMD_ISDATA = 1,
                 .use_rca = 0,
                 .delay = 0
         },
-        [IX_WRITE_MULTI] = {"WRITE_MULTI",
+        [IX_WRITE_MULTI] = {
+                "WRITE_MULTI",
                 .cmdtm.CMD_INDEX = 0x19,
                 .cmdtm.CMD_RSPNS_TYPE = CMD_48BIT_RESP,
                 .cmdtm.CMD_ISDATA = 1,
@@ -326,7 +330,8 @@ EMMCCommand sdCommandTable[IX_SEND_SCR + 1] = {
                 .use_rca = 0,
                 .delay = 0
         },
-        [IX_SEND_SCR] = {"SEND_SCR",
+        [IX_SEND_SCR] = {
+                "SEND_SCR",
                 .cmdtm.CMD_INDEX = 0x33,
                 .cmdtm.CMD_RSPNS_TYPE = CMD_48BIT_RESP,
                 .cmdtm.CMD_ISDATA = 1,
