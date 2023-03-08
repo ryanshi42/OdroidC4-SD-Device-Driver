@@ -5,7 +5,12 @@
 
 typedef struct sdcard sdcard_t;
 struct sdcard {
+    /* Operation Conditions Register. */
     ocr_t ocr;
+    /* Relative Card Address. */
+    uint32_t rca;
+    /* Card Status. */
+    uint32_t status;
 };
 
 /**
@@ -23,3 +28,18 @@ result_t sdcard_init(sdcard_t *sdcard);
  */
 result_t sdcard_set_ocr_raw32(sdcard_t *sdcard, uint32_t val);
 
+/**
+ * Saves the Relative Card Address.
+ * @param sdcard
+ * @param val
+ * @return
+ */
+result_t sdcard_set_rca(sdcard_t *sdcard, uint32_t val);
+
+/**
+ * Saves Card Status.
+ * @param sdcard
+ * @param val
+ * @return
+ */
+result_t sdcard_set_status(sdcard_t *sdcard, uint32_t val);
