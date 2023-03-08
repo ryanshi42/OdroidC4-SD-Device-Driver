@@ -42,6 +42,29 @@ struct __attribute__((__packed__, aligned(4))) cmdtm {
             volatile cmd_index_t CMD_INDEX: 6;              // @24-29
             unsigned reserved3: 2;                          // @30-31	Write as zero read as don't care
         };
-        volatile uint32_t Raw32;                            // @0-31	Union to access all 32 bits as a uint32_t
+        volatile uint32_t raw32;                            // @0-31	Union to access all 32 bits as a uint32_t
     };
 };
+
+/**
+ * Returns the `CMD_RSPNS_TYPE` field from the `cmdtm_t` structure.
+ * @param cmdtm
+ * @param ret_val
+ * @return
+ */
+result_t cmdtm_get_cmd_rspns_type(
+        cmdtm_t *cmdtm,
+        cmd_rspns_type_t *ret_val
+);
+
+/**
+ * Returns the `CMD_INDEX` field from the `cmdtm_t` structure.
+ * @param cmdtm
+ * @param ret_val
+ * @return
+ */
+result_t cmdtm_get_cmd_index(
+        cmdtm_t *cmdtm,
+        cmd_index_t *ret_val
+);
+
