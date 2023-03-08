@@ -15,13 +15,14 @@
 #include "irpt_mask.h"
 #include "irpt_en.h"
 #include "interrupt.h"
+#include "cmdtm.h"
 
 typedef struct bcm_emmc_regs bcm_emmc_regs_t;
 struct __attribute__((__packed__, aligned(4))) bcm_emmc_regs {
     uint32_t arg2; /* ACMD23 Argument. */
     uint32_t blksizecnt; /* Block Size and Count. */
     uint32_t arg1; /* Argument. */
-    uint32_t cmdtm; /* Command and Transfer Mode. */
+    cmdtm_t cmdtm; /* Command and Transfer Mode. */
     uint32_t resp0; /* Response 0. */
     uint32_t resp1; /* Response 1. */
     uint32_t resp2; /* Response 2. */
@@ -262,5 +263,47 @@ result_t bcm_emmc_regs_is_cmd_in_progress(
 result_t bcm_emmc_regs_is_data_in_progress(
         bcm_emmc_regs_t *bcm_emmc_regs,
         bool *ret_val
+);
+
+/**
+ * Clears interrupt flags.
+ * @param bcm_emmc_regs
+ * @return
+ */
+result_t bcm_emmc_regs_clear_interrupt(
+        bcm_emmc_regs_t *bcm_emmc_regs
+);
+
+/**
+ * Sets the `arg1` register.
+ * @param bcm_emmc_regs
+ * @param val
+ * @return
+ */
+result_t bcm_emmc_regs_set_arg1(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        uint32_t val
+);
+
+/**
+ * Sets the `cmdtm` register.
+ * @param bcm_emmc_regs
+ * @param val
+ * @return
+ */
+result_t bcm_emmc_regs_set_cmdtm(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        cmdtm_t val
+);
+
+/**
+ * Gets the `resp0` register.
+ * @param bcm_emmc_regs
+ * @param ret_val
+ * @return
+ */
+result_t bcm_emmc_regs_get_resp0(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        uint32_t *ret_val
 );
 

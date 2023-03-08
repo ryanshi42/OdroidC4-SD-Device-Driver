@@ -65,6 +65,9 @@ result_t bcm_emmc_regs_is_data_lines_busy(bcm_emmc_regs_t *bcm_emmc_regs, bool *
     if (bcm_emmc_regs == NULL) {
         return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_is_data_lines_busy().");
     }
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` passed to bcm_emmc_regs_is_data_lines_busy().");
+    }
     bool is_busy;
     result_t res = status_get_dat_inhibit(&bcm_emmc_regs->status, &is_busy);
     if (result_is_err(res)) {
@@ -77,6 +80,9 @@ result_t bcm_emmc_regs_is_data_lines_busy(bcm_emmc_regs_t *bcm_emmc_regs, bool *
 result_t bcm_emmc_regs_is_cmd_line_busy(bcm_emmc_regs_t *bcm_emmc_regs, bool *ret_val) {
     if (bcm_emmc_regs == NULL) {
         return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_is_cmd_line_busy().");
+    }
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` passed to bcm_emmc_regs_is_cmd_line_busy().");
     }
     bool is_busy;
     result_t res = status_get_cmd_inhibit(&bcm_emmc_regs->status, &is_busy);
@@ -109,6 +115,9 @@ result_t bcm_emmc_regs_get_host_controller_spec_version(
 ) {
     if (bcm_emmc_regs == NULL) {
         return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_get_host_controller_spec_version().");
+    }
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` passed to bcm_emmc_regs_get_host_controller_spec_version().");
     }
     result_t res = slotisr_ver_get_sdversion(&bcm_emmc_regs->slotisr_ver, ret_val);
     return result_ok_or(res,"Failed to get `slotisr_ver.SDVERSION` in bcm_emmc_regs_get_host_controller_spec_version().");
@@ -154,6 +163,9 @@ result_t bcm_emmc_regs_is_sd_clock_stable(
     if (bcm_emmc_regs == NULL) {
         return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_is_sd_clock_stable().");
     }
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` passed to bcm_emmc_regs_is_sd_clock_stable().");
+    }
     return control1_get_clk_stable(&bcm_emmc_regs->control1, ret_val);
 }
 
@@ -179,6 +191,9 @@ result_t bcm_emmc_regs_mask_interrupt(
     if (bcm_emmc_regs == NULL) {
         return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_mask_interrupt().");
     }
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` passed to bcm_emmc_regs_mask_interrupt().");
+    }
     return interrupt_mask_raw32(&bcm_emmc_regs->interrupt, mask, ret_val);
 }
 
@@ -188,6 +203,9 @@ result_t bcm_emmc_regs_get_interrupt_raw32(
 ) {
     if (bcm_emmc_regs == NULL) {
         return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_get_interrupt_raw32().");
+    }
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` passed to bcm_emmc_regs_get_interrupt_raw32().");
     }
     return interrupt_get_raw32(&bcm_emmc_regs->interrupt, ret_val);
 }
@@ -209,6 +227,9 @@ result_t bcm_emmc_regs_is_cmd_timeout_err(
     if (bcm_emmc_regs == NULL) {
         return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_is_cmd_timeout_err().");
     }
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` passed to bcm_emmc_regs_is_cmd_timeout_err().");
+    }
     return interrupt_get_cto_err(&bcm_emmc_regs->interrupt, ret_val);
 }
 
@@ -219,6 +240,9 @@ result_t bcm_emmc_regs_is_data_timeout_err(
     if (bcm_emmc_regs == NULL) {
         return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_is_data_timeout_err().");
     }
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` passed to bcm_emmc_regs_is_data_timeout_err().");
+    }
     return interrupt_get_dto_err(&bcm_emmc_regs->interrupt, ret_val);
 }
 
@@ -228,6 +252,9 @@ result_t bcm_emmc_regs_is_any_err(
 ) {
     if (bcm_emmc_regs == NULL) {
         return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_is_err().");
+    }
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` passed to bcm_emmc_regs_is_err().");
     }
     return interrupt_mask_raw32(
             &bcm_emmc_regs->interrupt,
@@ -243,6 +270,9 @@ result_t bcm_emmc_regs_is_cmd_in_progress(
     if (bcm_emmc_regs == NULL) {
         return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_is_cmd_in_progress().");
     }
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` passed to bcm_emmc_regs_is_cmd_in_progress().");
+    }
     return status_get_cmd_inhibit(&bcm_emmc_regs->status, ret_val);
 }
 
@@ -253,5 +283,53 @@ result_t bcm_emmc_regs_is_data_in_progress(
     if (bcm_emmc_regs == NULL) {
         return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_is_data_in_progress().");
     }
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` passed to bcm_emmc_regs_is_data_in_progress().");
+    }
     return status_get_dat_inhibit(&bcm_emmc_regs->status, ret_val);
+}
+
+result_t bcm_emmc_regs_clear_interrupt(
+        bcm_emmc_regs_t *bcm_emmc_regs
+) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_clear_interrupt().");
+    }
+    return interrupt_clear(&bcm_emmc_regs->interrupt);
+}
+
+result_t bcm_emmc_regs_set_arg1(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        uint32_t val
+) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to bcme_emmc_regs_set_arg1_raw32().");
+    }
+    bcm_emmc_regs->arg1 = val;
+    return result_ok();
+}
+
+result_t bcm_emmc_regs_set_cmdtm(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        cmdtm_t val
+) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_set_cmdtm().");
+    }
+    bcm_emmc_regs->cmdtm = val;
+    return result_ok();
+}
+
+result_t bcm_emmc_regs_get_resp0(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        uint32_t *ret_val
+) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_get_resp0().");
+    }
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` passed to bcm_emmc_regs_get_resp0().");
+    }
+    *ret_val = bcm_emmc_regs->resp0;
+    return result_ok();
 }
