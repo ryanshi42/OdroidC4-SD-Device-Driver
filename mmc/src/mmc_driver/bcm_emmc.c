@@ -3,7 +3,8 @@
 
 result_t bcm_emmc_init(
         bcm_emmc_t *bcm_emmc,
-        bcm_emmc_regs_t *bcm_emmc_regs
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdcard_t *sdcard
 ) {
     if (bcm_emmc == NULL) {
         return result_err("NULL `bcm_emmc` passed to bcm_emmc_init().");
@@ -69,6 +70,8 @@ result_t bcm_emmc_init(
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to enable interrupts in bcm_emmc_init().");
     }
+
+    (void) sdcard;
 
 //    /* Sending GO_IDLE command. */
 //    log_trace("Sending GO_IDLE (CMD0) command...");

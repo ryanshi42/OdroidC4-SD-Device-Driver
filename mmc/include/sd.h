@@ -5,6 +5,7 @@
 #include "delays.h"
 #include "sd.h"
 #include "sdhci.h"
+#include "sdcard.h"
 
 #include <stdbool.h>
 
@@ -106,7 +107,7 @@
 #define SD_TIMEOUT          -1
 #define SD_ERROR            -2
 
-int sd_init(bcm_emmc_regs_t *regs);
+int sd_init(bcm_emmc_regs_t *regs, sdcard_t *sdcard);
 
 bool sd_readblock(unsigned int lba, unsigned char *buffer, unsigned int num);
 

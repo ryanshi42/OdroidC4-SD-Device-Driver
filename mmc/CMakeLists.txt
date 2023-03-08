@@ -238,6 +238,21 @@ target_link_libraries(
         mmc_rpi3b_lib_cmdtm
 )
 
+add_library(mmc_rpi3b_lib_ocr src/mmc_driver/sdcard/ocr.c)
+target_include_directories(mmc_rpi3b_lib_ocr PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_ocr
+        mmc_rpi3b_lib_result
+)
+
+add_library(mmc_rpi3b_lib_sdcard src/mmc_driver/sdcard.c)
+target_include_directories(mmc_rpi3b_lib_sdcard PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_sdcard
+        mmc_rpi3b_lib_result
+        mmc_rpi3b_lib_ocr
+)
+
 add_library(mmc_rpi3b_lib_sdhci_cmd src/mmc_driver/sdhci/sdhci_cmd.c)
 target_include_directories(mmc_rpi3b_lib_sdhci_cmd PUBLIC include/)
 target_link_libraries(
@@ -289,6 +304,7 @@ target_link_libraries(
         mmc_rpi3b_lib_sdhci
         mmc_rpi3b_lib_log
         mmc_rpi3b_lib_sdhci_result
+        mmc_rpi3b_lib_sdcard
 )
 
 add_library(mmc_rpi3b_lib_sd src/sd.c)
@@ -298,6 +314,7 @@ target_link_libraries(
         mmc_rpi3b_lib_gpio
         mmc_rpi3b_lib_bcm_emmc_regs
         mmc_rpi3b_lib_sdhci
+        mmc_rpi3b_lib_sdcard
 )
 
 add_library(mmc_rpi3b_lib_mmc_driver src/mmc_driver.c)
@@ -314,6 +331,7 @@ target_link_libraries(
         mmc_rpi3b_lib_assert
         mmc_rpi3b_lib_time
         mmc_rpi3b_lib_timer_client
+        mmc_rpi3b_lib_sdcard
 )
 
 

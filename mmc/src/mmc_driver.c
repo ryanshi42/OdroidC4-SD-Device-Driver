@@ -42,6 +42,9 @@ bcm_emmc_t global_bcm_emmc = {0};
 /* Global `timer_client`. */
 timer_client_t global_timer_client = {0};
 
+/* Global `sdcard`. */
+sdcard_t global_sdcard = {0};
+
 //// get the end of bss segment from linker
 //extern unsigned char _end;
 
@@ -74,9 +77,19 @@ void init(void) {
         return;
     }
 
+    /* Initialise sleep library. */
     result_t res_sleep_init = sleep_init(&global_timer_client);
     if (result_is_err(res_sleep_init)) {
         result_printf(res_sleep_init);
+        return;
+    }
+
+    /* Initialise sdcard. */
+    result_t res_sdcard = sdcard_init(
+            &global_sdcard
+    );
+    if (result_is_err(res_sdcard)) {
+        result_printf(res_sdcard);
         return;
     }
 
@@ -134,14 +147,15 @@ void init(void) {
 
     result_t res = bcm_emmc_init(
             &global_bcm_emmc,
-            (bcm_emmc_regs_t *) emmc_base_vaddr
+            (bcm_emmc_regs_t *) emmc_base_vaddr,
+            &global_sdcard
     );
     if (result_is_err(res)) {
         printf("ERROR: failed to initialize EMMC\n");
         return;
     }
 
-    if (sd_init((bcm_emmc_regs_t *) emmc_base_vaddr) != SD_OK) {
+    if (sd_init((bcm_emmc_regs_t *) emmc_base_vaddr, &global_sdcard) != SD_OK) {
         printf("Failed to initialise SD card.\n");
     }
 

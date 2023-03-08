@@ -3,6 +3,7 @@
 unsigned long sd_scr[2], sd_ocr, sd_rca, sd_err, sd_hv;
 
 bcm_emmc_regs_t *global_regs;
+sdcard_t *sdcard;
 
 /**
  * Wait for data or command ready
@@ -288,8 +289,9 @@ int sd_clk(unsigned int f) {
 /**
  * initialize EMMC to read SDHC card
  */
-int sd_init(bcm_emmc_regs_t *regs) {
+int sd_init(bcm_emmc_regs_t *regs, sdcard_t *sd) {
     global_regs = regs;
+    sdcard = sd;
     long r, cnt, ccs = 0;
 //    // GPIO_CD
 //    r = *GPFSEL4;
@@ -370,6 +372,13 @@ int sd_init(bcm_emmc_regs_t *regs) {
     while (!(r & ACMD41_CMD_COMPLETE) && cnt--) {
         wait_cycles(400);
         r = sd_cmd(CMD_SEND_OP_COND, ACMD41_ARG_HC);
+//        sdhci_send_cmd(
+//                global_regs,
+//                IX_APP_SEND_OP_COND,
+//                ACMD41_ARG_HC,
+//                &sd_res
+//        );
+//
         uart_puts("EMMC: CMD_SEND_OP_COND returned ");
         if (r & ACMD41_CMD_COMPLETE)
             uart_puts("COMPLETE ");

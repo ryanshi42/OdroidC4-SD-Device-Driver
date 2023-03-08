@@ -86,6 +86,8 @@ MMC_DRIVER_OBJS := \
 	sd.o \
 	mmc_driver/bcm_emmc.o \
 	mmc_driver/bcm_emmc_regs.o \
+	mmc_driver/sdcard.o \
+	mmc_driver/sdcard/ocr.o \
 	mmc_driver/sdhci.o \
 	mmc_driver/sdhci_result.o \
 	mmc_driver/sdhci/sdhci_cmd.o \
@@ -143,6 +145,7 @@ directories:
 	mkdir -p $(BUILD_DIR)/mmc_driver/sdhci
 	mkdir -p $(BUILD_DIR)/mmc_driver/bcm_emmc_regs
 	mkdir -p $(BUILD_DIR)/mmc_driver/bcm_emmc_regs/cmdtm
+	mkdir -p $(BUILD_DIR)/mmc_driver/sdcard
 	mkdir -p $(BUILD_DIR)/serial_driver
 	mkdir -p $(BUILD_DIR)/timer_driver
 

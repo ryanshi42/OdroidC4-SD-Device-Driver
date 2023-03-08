@@ -9,6 +9,13 @@ struct sdcard {
 };
 
 /**
+ * Initialises the SD card.
+ * @param sdcard
+ * @return
+ */
+result_t sdcard_init(sdcard_t *sdcard);
+
+/**
  * Saves the OCR register to the SD card.
  * @param sdcard
  * @param val

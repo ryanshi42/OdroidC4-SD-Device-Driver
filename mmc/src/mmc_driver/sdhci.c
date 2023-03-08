@@ -465,6 +465,7 @@ result_t sdhci_send_cmd(
                         return result_err("Response from SD card does not match argument in sdhci_send_cmd().");
                     }
                 case 0x29:
+                    /* Response handling for `IX_APP_SEND_OP_COND`. */
 
                     break;
                 default:
