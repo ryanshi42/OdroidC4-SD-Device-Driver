@@ -17,6 +17,15 @@ TEST(test_cmdtm, get_cmd_rspns_type_should_return_cmd_rspns_type) {
     ASSERT_EQ(CMD_NO_RESP, cmd_rspns_type);
 }
 
+TEST(test_cmdtm, get_cmd_rspns_type_should_return_err_if_null_ret_val) {
+    cmdtm_t cmdtm = {};
+    cmdtm.CMD_RSPNS_TYPE = CMD_NO_RESP;
+    cmdtm.CMD_INDEX = 0x01;
+
+    result_t res = cmdtm_get_cmd_rspns_type(&cmdtm, NULL);
+    ASSERT_TRUE(result_is_err(res));
+}
+
 /* get_cmd_index() */
 
 TEST(test_cmdtm, get_cmd_index_should_return_cmd_index) {
@@ -30,4 +39,12 @@ TEST(test_cmdtm, get_cmd_index_should_return_cmd_index) {
     ASSERT_EQ(0x01, cmd_index);
 }
 
+TEST(test_cmdtm, get_cmd_index_should_return_err_if_null_ret_val) {
+    cmdtm_t cmdtm = {};
+    cmdtm.CMD_RSPNS_TYPE = CMD_NO_RESP;
+    cmdtm.CMD_INDEX = 0x01;
+
+    result_t res = cmdtm_get_cmd_index(&cmdtm, NULL);
+    ASSERT_TRUE(result_is_err(res));
+}
 
