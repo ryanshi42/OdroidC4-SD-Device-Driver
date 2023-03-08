@@ -305,9 +305,12 @@ result_t sdhci_wait_for_data_in_progress(
     return result_ok();
 }
 
+#define R1_ERRORS_MASK       0xfff9c004
+
 result_t sdhci_send_cmd(
         bcm_emmc_regs_t *bcm_emmc_regs,
         size_t sdhci_cmd_index,
+        uint32_t arg,
         sdhci_result_t *sdhci_result
 ) {
     *sdhci_result = SD_ERROR;
@@ -324,28 +327,160 @@ result_t sdhci_send_cmd(
         return result_err_chain(res_is_app_cmd, "Failed to check if command is an app command in sdhci_send_cmd().");
     }
     /* Obtain the command. */
-    sdhci_cmd_t *sdhci_cmd;
-    result_t res_get_cmd = sdhci_cmds_get_cmd(
+    sdhci_cmd_t *sdhci_cmd = NULL;
+    result_t res = sdhci_cmds_get_cmd(
             sdhci_cmd_index,
             &sdhci_cmd
     );
-    if (result_is_err(res_get_cmd)) {
-        return result_err_chain(res_get_cmd, "Failed to get command in sdhci_send_cmd().");
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to get command in sdhci_send_cmd().");
     }
 
     if (is_app_cmd) {
         /* Recursively call ourselves first. */
-        result_t res_app_cmd = sdhci_send_cmd(
+        res = sdhci_send_cmd(
                 bcm_emmc_regs,
                 IX_APP_CMD,
+                arg,
                 sdhci_result
         );
-        if (result_is_err(res_app_cmd)) {
-            return result_err_chain(res_app_cmd, "Failed to send app command in sdhci_send_cmd().");
+        if (result_is_err(res)) {
+            return result_err_chain(res, "Failed to send app command in sdhci_send_cmd().");
         }
     }
 
-    return result_ok();
+    /* Wait for command in progress. */
+    res = sdhci_wait_for_cmd_in_progress(bcm_emmc_regs, sdhci_result);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to wait for command in progress in sdhci_send_cmd().");
+    }
+
+    /* Clear interrupt flags. */
+    res = bcm_emmc_regs_clear_interrupt(bcm_emmc_regs);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to clear interrupt flags in sdhci_send_cmd().");
+    }
+
+    /* Set the argument register first. */
+    res = bcm_emmc_regs_set_arg1(
+            bcm_emmc_regs,
+            arg
+    );
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to set argument in sdhci_send_cmd().");
+    }
+    /* Get the command register value stored in `sdhci_cmd`. */
+    cmdtm_t cmdtm;
+    res = sdhci_cmd_get_cmdtm(
+            sdhci_cmd,
+            &cmdtm
+    );
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to get cmdtm in sdhci_send_cmd().");
+    }
+    /* Set the command register to the value obtained from `sdhci_cmd`. */
+    res = bcm_emmc_regs_set_cmdtm(
+            bcm_emmc_regs,
+            cmdtm
+    );
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to set cmdtm in sdhci_send_cmd().");
+    }
+    /* Obtain the delay from the command. */
+    size_t delay_us = 0;
+    res = sdhci_cmd_get_delay(
+            sdhci_cmd,
+            &delay_us
+    );
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to get delay in sdhci_send_cmd().");
+    }
+    /* Wait for the delay. */
+    if (delay_us) {
+        usleep(delay_us);
+    }
+
+    /* Wait until command complete interrupt */
+    res = sdhci_wait_for_interrupt(
+            bcm_emmc_regs,
+            INT_CMD_DONE,
+            sdhci_result
+    );
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to wait for command complete interrupt in sdhci_send_cmd().");
+    }
+
+    /* Get the response from `resp0`. */
+    uint32_t resp0;
+    res = bcm_emmc_regs_get_resp0(
+            bcm_emmc_regs,
+            &resp0
+    );
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to get resp0 in sdhci_send_cmd().");
+    }
+
+    /* Get the SDHCI command's response type. */
+    cmd_rspns_type_t cmd_rspns_type;
+    res = sdhci_cmd_get_cmd_rspns_type(
+            sdhci_cmd,
+            &cmd_rspns_type
+    );
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to get cmd_rspns_type in sdhci_send_cmd().");
+    }
+    /* Handle response depending on the SDHCI command's response type. */
+    switch (cmd_rspns_type) {
+        case CMD_NO_RESP: {
+            *sdhci_result = SD_OK;
+            return result_ok();
+        }
+        case CMD_BUSY48BIT_RESP: {
+            *sdhci_result = resp0 & R1_ERRORS_MASK;
+            break;
+        }
+        case CMD_48BIT_RESP: {
+            /* Obtain the command index. */
+            cmd_index_t cmd_index;
+            result_t res_get_cmd_index = sdhci_cmd_get_cmd_index(
+                    sdhci_cmd,
+                    &cmd_index
+            );
+            if (result_is_err(res_get_cmd_index)) {
+                return result_err_chain(res_get_cmd_index, "Failed to get cmd_index in sdhci_send_cmd().");
+            }
+            switch (cmd_index) {
+                case 0x03:
+
+                    break;
+                case 0x08:
+                    /* This is the switch-case for `IX_SEND_IF_COND`. RESP0 contains
+                     * voltage acceptance and check pattern, which should match
+                     * the argument. */
+                    if (resp0 == arg) {
+                        *sdhci_result = SD_OK;
+                        return result_ok();
+                    } else {
+                        *sdhci_result = SD_ERROR;
+                        return result_err("Response from SD card does not match argument in sdhci_send_cmd().");
+                    }
+                case 0x29:
+
+                    break;
+                default:
+
+                    break;
+            }
+            break;
+        }
+        case CMD_136BIT_RESP: {
+
+            *sdhci_result = SD_OK;
+            break;
+        }
+    }
+
+    return result_err("Response not processed by sdhci_send_cmd().");
 }
 
 

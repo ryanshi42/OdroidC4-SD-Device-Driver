@@ -347,10 +347,23 @@ int sd_init(bcm_emmc_regs_t *regs) {
 //    *EMMC_INT_EN = 0xffffffff;
 //    *EMMC_INT_MASK = 0xffffffff;
     sd_scr[0] = sd_scr[1] = sd_rca = sd_err = 0;
-    sd_cmd(CMD_GO_IDLE, 0);
+    sdhci_result_t sd_res;
+    sdhci_send_cmd(
+            global_regs,
+            IX_GO_IDLE_STATE,
+            0,
+            &sd_res
+    );
+//    sd_cmd(CMD_GO_IDLE, 0);
     if (sd_err) return sd_err;
 
-    sd_cmd(CMD_SEND_IF_COND, 0x000001AA);
+//    sd_cmd(CMD_SEND_IF_COND, 0x000001AA);
+    sdhci_send_cmd(
+            global_regs,
+            IX_SEND_IF_COND,
+            0x000001AA,
+            &sd_res
+    );
     if (sd_err) return sd_err;
     cnt = 6;
     r = 0;

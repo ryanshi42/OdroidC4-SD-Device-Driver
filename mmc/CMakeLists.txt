@@ -235,6 +235,7 @@ target_link_libraries(
         mmc_rpi3b_lib_irpt_en
         mmc_rpi3b_lib_irpt_mask
         mmc_rpi3b_lib_interrupt
+        mmc_rpi3b_lib_cmdtm
 )
 
 add_library(mmc_rpi3b_lib_sdhci_cmd src/mmc_driver/sdhci/sdhci_cmd.c)
@@ -242,6 +243,9 @@ target_include_directories(mmc_rpi3b_lib_sdhci_cmd PUBLIC include/)
 target_link_libraries(
         mmc_rpi3b_lib_sdhci_cmd
         mmc_rpi3b_lib_cmdtm
+        mmc_rpi3b_lib_result
+        mmc_rpi3b_lib_cmd_rspns_type
+        mmc_rpi3b_lib_cmd_index
 )
 
 add_library(mmc_rpi3b_lib_sdhci_cmds src/mmc_driver/sdhci/sdhci_cmds.c)
@@ -269,6 +273,10 @@ target_link_libraries(
         mmc_rpi3b_lib_arith
         mmc_rpi3b_lib_sdhci_result
         mmc_rpi3b_lib_sdhci_cmds
+        mmc_rpi3b_lib_sdhci_cmd
+        mmc_rpi3b_lib_cmd_rspns_type
+        mmc_rpi3b_lib_interrupt
+        mmc_rpi3b_lib_cmd_index
 )
 
 add_library(mmc_rpi3b_lib_bcm_emmc src/mmc_driver/bcm_emmc.c)
