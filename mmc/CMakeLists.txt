@@ -292,6 +292,7 @@ target_link_libraries(
         mmc_rpi3b_lib_cmd_rspns_type
         mmc_rpi3b_lib_interrupt
         mmc_rpi3b_lib_cmd_index
+        mmc_rpi3b_lib_sdcard
 )
 
 add_library(mmc_rpi3b_lib_bcm_emmc src/mmc_driver/bcm_emmc.c)

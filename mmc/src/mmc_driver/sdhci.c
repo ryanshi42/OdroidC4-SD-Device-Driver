@@ -311,6 +311,7 @@ result_t sdhci_send_cmd(
         bcm_emmc_regs_t *bcm_emmc_regs,
         size_t sdhci_cmd_index,
         uint32_t arg,
+        sdcard_t *sdcard,
         sdhci_result_t *sdhci_result
 ) {
     *sdhci_result = SD_ERROR;
@@ -342,6 +343,7 @@ result_t sdhci_send_cmd(
                 bcm_emmc_regs,
                 IX_APP_CMD,
                 arg,
+                sdcard,
                 sdhci_result
         );
         if (result_is_err(res)) {

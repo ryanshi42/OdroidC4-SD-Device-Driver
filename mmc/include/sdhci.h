@@ -11,6 +11,7 @@
 #include "cmd_rspns_type.h"
 #include "interrupt.h"
 #include "cmd_index.h"
+#include "sdcard.h"
 
 /**
  * Returns the SD clock divisor for the given requested frequency. This is
@@ -73,9 +74,11 @@ result_t sdhci_wait_for_data_in_progress(
 );
 
 /**
- * Sends a command to the SD card.
+ * Sends the specified command to the SD card.
  * @param bcm_emmc_regs
  * @param sdhci_cmd_index
+ * @param arg
+ * @param sdcard
  * @param sdhci_result
  * @return
  */
@@ -83,6 +86,7 @@ result_t sdhci_send_cmd(
         bcm_emmc_regs_t *bcm_emmc_regs,
         size_t sdhci_cmd_index,
         uint32_t arg,
+        sdcard_t *sdcard,
         sdhci_result_t *sdhci_result
 );
 

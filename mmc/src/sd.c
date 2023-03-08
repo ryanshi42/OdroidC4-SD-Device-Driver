@@ -354,6 +354,7 @@ int sd_init(bcm_emmc_regs_t *regs, sdcard_t *sd) {
             global_regs,
             IX_GO_IDLE_STATE,
             0,
+            sdcard,
             &sd_res
     );
 //    sd_cmd(CMD_GO_IDLE, 0);
@@ -364,6 +365,7 @@ int sd_init(bcm_emmc_regs_t *regs, sdcard_t *sd) {
             global_regs,
             IX_SEND_IF_COND,
             0x000001AA,
+            sdcard,
             &sd_res
     );
     if (sd_err) return sd_err;
