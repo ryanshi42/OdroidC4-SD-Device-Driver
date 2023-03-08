@@ -88,7 +88,7 @@ TEST(test_result, init_should_init_bcm_emmc) {
 
     bcm_emmc_regs_t regs = {};
     bcm_emmc_t bcm_emmc = {};
-    result_t res = bcm_emmc_init(&bcm_emmc, &regs);
+    result_t res = bcm_emmc_init(&bcm_emmc, &regs, NULL);
     ASSERT_TRUE(result_is_ok(res));
 
     /* The `regs` variable should be set to `regs`. */
@@ -103,7 +103,7 @@ TEST(test_result, init_should_timeout_if_host_circuit_reset_fails) {
 
     bcm_emmc_regs_t regs = {};
     bcm_emmc_t bcm_emmc = {};
-    result_t res = bcm_emmc_init(&bcm_emmc, &regs);
+    result_t res = bcm_emmc_init(&bcm_emmc, &regs, NULL);
     ASSERT_FALSE(result_is_ok(res));
     ASSERT_STREQ(
             "Host circuit did not reset in bcm_emmc_init().",
@@ -129,7 +129,7 @@ TEST(test_result, init_should_timeout_if_cmd_line_is_busy) {
 
     bcm_emmc_regs_t regs = {};
     bcm_emmc_t bcm_emmc = {};
-    result_t res = bcm_emmc_init(&bcm_emmc, &regs);
+    result_t res = bcm_emmc_init(&bcm_emmc, &regs, NULL);
     ASSERT_TRUE(result_is_err(res));
     ASSERT_STREQ(
             "Failed to set clock to low-speed setup frequency in bcm_emmc_init().",
@@ -155,7 +155,7 @@ TEST(test_result, init_should_timeout_if_data_lines_is_busy) {
 
     bcm_emmc_regs_t regs = {};
     bcm_emmc_t bcm_emmc = {};
-    result_t res = bcm_emmc_init(&bcm_emmc, &regs);
+    result_t res = bcm_emmc_init(&bcm_emmc, &regs, NULL);
     ASSERT_TRUE(result_is_err(res));
     ASSERT_STREQ(
             "Failed to set clock to low-speed setup frequency in bcm_emmc_init().",
@@ -181,7 +181,7 @@ TEST(test_result, init_should_timeout_if_cmd_and_data_lines_is_busy) {
 
     bcm_emmc_regs_t regs = {};
     bcm_emmc_t bcm_emmc = {};
-    result_t res = bcm_emmc_init(&bcm_emmc, &regs);
+    result_t res = bcm_emmc_init(&bcm_emmc, &regs, NULL);
     ASSERT_TRUE(result_is_err(res));
     ASSERT_STREQ(
             "Failed to set clock to low-speed setup frequency in bcm_emmc_init().",

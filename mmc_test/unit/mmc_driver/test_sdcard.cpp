@@ -13,5 +13,6 @@ TEST(test_sdcard, sdcard_set_ocr_should_set_ocr) {
             0x00FF00FF
     );
     ASSERT_TRUE(result_is_ok(res));
-    ASSERT_EQ(0x00FF00FF, sdcard.ocr.raw32);
+    uint32_t sdcard_ocr = sdcard.ocr.raw32;
+    ASSERT_EQ(0x00FF00FF, sdcard_ocr);
 }
