@@ -71,3 +71,11 @@ result_t interrupt_get_dto_err(interrupt_t *interrupt, bool *ret_val) {
     *ret_val = interrupt->DTO_ERR;
     return result_ok();
 }
+
+result_t interrupt_clear(interrupt_t *interrupt) {
+    if (interrupt == NULL) {
+        return result_err("NULL `interrupt` passed to interrupt_clear().");
+    }
+    interrupt->raw32 = interrupt->raw32;
+    return result_ok();
+}

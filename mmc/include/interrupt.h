@@ -74,20 +74,83 @@ struct __attribute__((__packed__, aligned(4))) interrupt {
     };
 };
 
+/**
+ * Gets the interrupt register.
+ * @param interrupt
+ * @param ret_val
+ * @return
+ */
 result_t interrupt_get_raw32(interrupt_t *interrupt, uint32_t *ret_val);
 
+/**
+ * Sets the interrupt register to the given value.
+ * @param interrupt
+ * @param val
+ * @return
+ */
 result_t interrupt_set_raw32(interrupt_t *interrupt, uint32_t val);
 
+/**
+ * Masks the interrupt register with the given mask.
+ * @param interrupt
+ * @param mask
+ * @param ret_val
+ * @return
+ */
 result_t interrupt_mask_raw32(interrupt_t *interrupt, uint32_t mask, bool *ret_val);
 
+/**
+ * Gets the `CMD_DONE` bit from the interrupt register.
+ * @param interrupt
+ * @param ret_val
+ * @return
+ */
 result_t interrupt_get_cmd_done(interrupt_t *interrupt, bool *ret_val);
 
+/**
+ * Gets the `DATA_DONE` bit from the interrupt register.
+ * @param interrupt
+ * @param ret_val
+ * @return
+ */
 result_t interrupt_get_data_done(interrupt_t *interrupt, bool *ret_val);
 
+/**
+ * Gets the `WRITE_RDY` bit from the interrupt register.
+ * @param interrupt
+ * @param ret_val
+ * @return
+ */
 result_t interrupt_get_write_rdy(interrupt_t *interrupt, bool *ret_val);
 
+/**
+ * Gets the `READ_RDY` bit from the interrupt register.
+ * @param interrupt
+ * @param ret_val
+ * @return
+ */
 result_t interrupt_get_read_rdy(interrupt_t *interrupt, bool *ret_val);
 
+/**
+ * Gets the `CTO_ERR` bit from the interrupt register.
+ * @param interrupt
+ * @param ret_val
+ * @return
+ */
 result_t interrupt_get_cto_err(interrupt_t *interrupt, bool *ret_val);
 
+/**
+ * Gets the `DTO_ERR` bit from the interrupt register.
+ * @param interrupt
+ * @param ret_val
+ * @return
+ */
 result_t interrupt_get_dto_err(interrupt_t *interrupt, bool *ret_val);
+
+/**
+ * Clears interrupt flags by setting the ones that are currently set.
+ * @param interrupt
+ * @return
+ */
+result_t interrupt_clear(interrupt_t *interrupt);
+
