@@ -30,6 +30,10 @@ FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_data_timeout_err, bcm_emmc_regs_t *, 
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_any_err, bcm_emmc_regs_t *, bool *)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_cmd_in_progress, bcm_emmc_regs_t *, bool *)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_data_in_progress, bcm_emmc_regs_t *, bool *)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_clear_interrupt, bcm_emmc_regs_t *)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_set_arg1, bcm_emmc_regs_t *, uint32_t)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_set_cmdtm, bcm_emmc_regs_t *, cmdtm_t)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_get_resp0, bcm_emmc_regs_t *, uint32_t *)
 
 /* Resets all Fakes for each unit test. */
 class test_bcm_emmc_reset : public testing::Test {
@@ -59,6 +63,10 @@ protected:
         RESET_FAKE(bcm_emmc_regs_is_any_err);
         RESET_FAKE(bcm_emmc_regs_is_cmd_in_progress);
         RESET_FAKE(bcm_emmc_regs_is_data_in_progress);
+        RESET_FAKE(bcm_emmc_regs_clear_interrupt);
+        RESET_FAKE(bcm_emmc_regs_set_arg1);
+        RESET_FAKE(bcm_emmc_regs_set_cmdtm);
+        RESET_FAKE(bcm_emmc_regs_get_resp0);
     }
 
     // You can define per-test tear-down logic as usual.
