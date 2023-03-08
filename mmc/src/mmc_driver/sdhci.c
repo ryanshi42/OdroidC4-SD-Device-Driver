@@ -342,7 +342,7 @@ result_t sdhci_send_cmd(
         res = sdhci_send_cmd(
                 bcm_emmc_regs,
                 IX_APP_CMD,
-                arg,
+                0,
                 sdcard,
                 sdhci_result
         );
@@ -467,9 +467,16 @@ result_t sdhci_send_cmd(
                         return result_err("Response from SD card does not match argument in sdhci_send_cmd().");
                     }
                 case 0x29:
-                    /* Response handling for `IX_APP_SEND_OP_COND`. */
-
-                    break;
+                    log_trace("In 0x29.");
+                    /* Response handling for `IX_APP_SEND_OP_COND`. Save the
+                     * RESP0 register as the Operation Conditions Register (OCR)
+                     * for the `sdcard`. */
+                    res = sdcard_set_ocr_raw32(sdcard, resp0);
+                    if (result_is_err(res)) {
+                        return result_err_chain(res, "Failed to set OCR in sdhci_send_cmd().");
+                    }
+                    *sdhci_result = SD_OK;
+                    return result_ok();
                 default:
 
                     break;

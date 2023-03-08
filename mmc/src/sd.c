@@ -361,44 +361,66 @@ int sd_init(bcm_emmc_regs_t *regs, sdcard_t *sd) {
     if (sd_err) return sd_err;
 
 //    sd_cmd(CMD_SEND_IF_COND, 0x000001AA);
-    sdhci_send_cmd(
+    result_t res_if_cond = sdhci_send_cmd(
             global_regs,
             IX_SEND_IF_COND,
             0x000001AA,
             sdcard,
             &sd_res
     );
+    if (result_is_err(res_if_cond)) {
+        result_printf(res_if_cond);
+        return SD_ERROR;
+    }
     if (sd_err) return sd_err;
     cnt = 6;
     r = 0;
-    while (!(r & ACMD41_CMD_COMPLETE) && cnt--) {
+//    while (!(r & ACMD41_CMD_COMPLETE) && cnt--) {
+//        wait_cycles(400);
+//        r = sd_cmd(CMD_SEND_OP_COND, ACMD41_ARG_HC);
+//        uart_puts("EMMC: CMD_SEND_OP_COND returned ");
+//        if (r & ACMD41_CMD_COMPLETE)
+//            uart_puts("COMPLETE ");
+//        if (r & ACMD41_VOLTAGE)
+//            uart_puts("VOLTAGE ");
+//        if (r & ACMD41_CMD_CCS)
+//            uart_puts("CCS ");
+//        uart_hex(r >> 32);
+//        uart_hex(r);
+//        uart_puts("\n");
+//        if (sd_err != SD_TIMEOUT && sd_err != SD_OK) {
+//            uart_puts("ERROR: EMMC ACMD41 returned error\n");
+//            return sd_err;
+//        }
+//        log_trace("EMMC: ACMD41 returned %x\n", r);
+//    }
+//    if (!(r & ACMD41_CMD_COMPLETE) || !cnt) return SD_TIMEOUT;
+//    if (!(r & ACMD41_VOLTAGE)) return SD_ERROR;
+//    if (r & ACMD41_CMD_CCS) ccs = SCR_SUPP_CCS;
+
+    size_t retries = 6;
+    do {
         wait_cycles(400);
-        r = sd_cmd(CMD_SEND_OP_COND, ACMD41_ARG_HC);
-//        sdhci_send_cmd(
-//                global_regs,
-//                IX_APP_SEND_OP_COND,
-//                ACMD41_ARG_HC,
-//                &sd_res
-//        );
-//
-        uart_puts("EMMC: CMD_SEND_OP_COND returned ");
-        if (r & ACMD41_CMD_COMPLETE)
-            uart_puts("COMPLETE ");
-        if (r & ACMD41_VOLTAGE)
-            uart_puts("VOLTAGE ");
-        if (r & ACMD41_CMD_CCS)
-            uart_puts("CCS ");
-        uart_hex(r >> 32);
-        uart_hex(r);
-        uart_puts("\n");
-        if (sd_err != SD_TIMEOUT && sd_err != SD_OK) {
-            uart_puts("ERROR: EMMC ACMD41 returned error\n");
-            return sd_err;
+        result_t res = sdhci_send_cmd(
+                global_regs,
+                IX_APP_SEND_OP_COND,
+                ACMD41_ARG_HC,
+                sdcard,
+                &sd_res
+        );
+        if (result_is_err(res)) {
+            result_printf(res);
+            return -1;
         }
+    } while (sdcard->ocr.card_power_up_busy == 0 && (retries-- > 0));
+    if (sdcard->ocr.card_power_up_busy == 0) {
+        uart_puts("ERROR: EMMC ACMD41 returned error\n");
+        return -1;
     }
-    if (!(r & ACMD41_CMD_COMPLETE) || !cnt) return SD_TIMEOUT;
-    if (!(r & ACMD41_VOLTAGE)) return SD_ERROR;
-    if (r & ACMD41_CMD_CCS) ccs = SCR_SUPP_CCS;
+    if (sdcard->ocr.card_capacity) {
+        log_trace("Card capacity: SDHC\n");
+    }
+
 
     sd_cmd(CMD_ALL_SEND_CID, 0);
 
