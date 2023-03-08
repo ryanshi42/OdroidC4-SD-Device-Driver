@@ -288,6 +288,7 @@ target_link_libraries(
         mmc_rpi3b_lib_sleep
         mmc_rpi3b_lib_sdhci
         mmc_rpi3b_lib_log
+        mmc_rpi3b_lib_sdhci_result
 )
 
 add_library(mmc_rpi3b_lib_sd src/sd.c)

@@ -6,6 +6,7 @@
 #include "sleep.h"
 #include "sdhci.h"
 #include "log.h"
+#include "sdhci_result.h"
 
 typedef struct bcm_emmc bcm_emmc_t;
 struct bcm_emmc {

@@ -70,6 +70,32 @@ result_t bcm_emmc_init(
         return result_err_chain(res, "Failed to enable interrupts in bcm_emmc_init().");
     }
 
+//    /* Sending GO_IDLE command. */
+//    log_trace("Sending GO_IDLE (CMD0) command...");
+//    sdhci_result_t sdhci_res_go_idle;
+//    res = sdhci_send_cmd(
+//            bcm_emmc_regs,
+//            IX_GO_IDLE_STATE,
+//            0,
+//            &sdhci_res_go_idle
+//    );
+//    if (result_is_err(res)) {
+//        return result_err_chain(res, "Failed to send `IX_GO_IDLE_STATE` in bcm_emmc_init().");
+//    }
+//
+//    /* Sending IF_COND command. */
+//    log_trace("Sending IF_COND (CMD8) command...");
+//    sdhci_result_t sdhci_res_if_cond;
+//    res = sdhci_send_cmd(
+//            bcm_emmc_regs,
+//            IX_SEND_IF_COND,
+//            0x000001AA,
+//            &sdhci_res_if_cond
+//    );
+//    if (result_is_err(res)) {
+//        return result_err_chain(res, "Failed to send `IX_SEND_IF_COND` in bcm_emmc_init().");
+//    }
+//
 
     return result_ok();
 }
