@@ -452,10 +452,6 @@ int sd_init(bcm_emmc_regs_t *regs, sdcard_t *sd) {
         result_printf(res);
         return -1;
     }
-//    r = *EMMC_RESP0;
-//    r |= *EMMC_RESP3;
-//    r |= *EMMC_RESP2;
-//    r |= *EMMC_RESP1;
 //    sd_cmd(CMD_ALL_SEND_CID, 0);
 
     sd_rca = sd_cmd(CMD_SEND_REL_ADDR, 0);
