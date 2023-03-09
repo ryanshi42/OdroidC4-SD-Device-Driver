@@ -16,6 +16,17 @@ result_t sdcard_set_ocr_raw32(sdcard_t *sdcard, uint32_t val) {
     return ocr_set_raw32(&sdcard->ocr, val);
 }
 
+result_t sdcard_get_rca(sdcard_t *sdcard, uint32_t *ret_val) {
+    if (sdcard == NULL) {
+        return result_err("NULL `sdcard` passed to sdcard_get_rca().");
+    }
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` passed to sdcard_get_rca().");
+    }
+    *ret_val = sdcard->rca;
+    return result_ok();
+}
+
 result_t sdcard_set_rca(sdcard_t *sdcard, uint32_t val) {
     if (sdcard == NULL) {
         return result_err("NULL `sdcard` passed to sdcard_set_rca().");

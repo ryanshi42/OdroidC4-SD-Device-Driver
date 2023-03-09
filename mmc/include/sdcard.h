@@ -29,6 +29,14 @@ result_t sdcard_init(sdcard_t *sdcard);
 result_t sdcard_set_ocr_raw32(sdcard_t *sdcard, uint32_t val);
 
 /**
+ * Gets the Relative Card Address.
+ * @param sdcard
+ * @param ret_val
+ * @return
+ */
+result_t sdcard_get_rca(sdcard_t *sdcard, uint32_t *ret_val);
+
+/**
  * Saves the Relative Card Address.
  * @param sdcard
  * @param val
