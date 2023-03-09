@@ -245,12 +245,20 @@ target_link_libraries(
         mmc_rpi3b_lib_result
 )
 
+add_library(mmc_rpi3b_lib_cid src/mmc_driver/sdcard/cid.c)
+target_include_directories(mmc_rpi3b_lib_cid PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_cid
+        mmc_rpi3b_lib_result
+)
+
 add_library(mmc_rpi3b_lib_sdcard src/mmc_driver/sdcard.c)
 target_include_directories(mmc_rpi3b_lib_sdcard PUBLIC include/)
 target_link_libraries(
         mmc_rpi3b_lib_sdcard
         mmc_rpi3b_lib_result
         mmc_rpi3b_lib_ocr
+        mmc_rpi3b_lib_cid
 )
 
 add_library(mmc_rpi3b_lib_sdhci_cmd src/mmc_driver/sdhci/sdhci_cmd.c)

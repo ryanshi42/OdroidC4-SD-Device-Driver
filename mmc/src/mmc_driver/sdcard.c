@@ -113,3 +113,30 @@ result_t sdcard_is_high_capacity(sdcard_t *sdcard, bool *ret_val) {
     return ocr_get_card_capacity(&sdcard->ocr, ret_val);
 }
 
+result_t sdcard_set_cid(
+        sdcard_t *sdcard,
+        uint32_t resp0,
+        uint32_t resp1,
+        uint32_t resp2,
+        uint32_t resp3
+) {
+    if (sdcard == NULL) {
+        return result_err("NULL `sdcard` passed to sdcard_set_cid().");
+    }
+    result_t res;
+    res = cid_set_raw32_3(&sdcard->cid, resp0);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to set CID raw32_3 in sdcard_set_cid().");
+    }
+    res = cid_set_raw32_2(&sdcard->cid, resp1);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to set CID raw32_2 in sdcard_set_cid().");
+    }
+    res = cid_set_raw32_1(&sdcard->cid, resp2);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to set CID raw32_1 in sdcard_set_cid().");
+    }
+    res = cid_set_raw32_0(&sdcard->cid, resp3);
+    return result_ok_or(res, "Failed to set CID raw32_0 in sdcard_set_cid().");
+}
+

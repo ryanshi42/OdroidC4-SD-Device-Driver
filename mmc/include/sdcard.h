@@ -2,6 +2,7 @@
 
 #include "ocr.h"
 #include "result.h"
+#include "cid.h"
 
 /* Card Status Mask that indicates APP_CMD was accepted. */
 #define ST_APP_CMD (0x00000020)
@@ -14,6 +15,8 @@ struct sdcard {
     uint32_t rca;
     /* Card Status. */
     uint32_t status;
+    /* Card Identification Register. */
+    cid_t cid;
 };
 
 /**
@@ -103,3 +106,21 @@ result_t sdcard_is_voltage_3v3(sdcard_t *sdcard, bool *ret_val);
  * @return
  */
 result_t sdcard_is_high_capacity(sdcard_t *sdcard, bool *ret_val);
+
+/**
+ * Saves the CID register to the SD card.
+ * @param sdcard
+ * @param resp0 RESP0 register value.
+ * @param resp1 RESP1 register value.
+ * @param resp2 RESP2 register value.
+ * @param resp3 RESP3 register value.
+ * @return
+ */
+result_t sdcard_set_cid(
+        sdcard_t *sdcard,
+        uint32_t resp0,
+        uint32_t resp1,
+        uint32_t resp2,
+        uint32_t resp3
+);
+

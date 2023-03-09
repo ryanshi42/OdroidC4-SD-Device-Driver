@@ -398,11 +398,12 @@ int sd_init(bcm_emmc_regs_t *regs, sdcard_t *sd) {
 //    if (!(r & ACMD41_VOLTAGE)) return SD_ERROR;
 //    if (r & ACMD41_CMD_CCS) ccs = SCR_SUPP_CCS;
 
+    result_t res;
     size_t retries = 7;
     bool has_powered_up = false;
     do {
         usleep(400000);
-        result_t res = sdhci_send_cmd(
+        res = sdhci_send_cmd(
                 global_regs,
                 IX_APP_SEND_OP_COND,
                 ACMD41_ARG_HC,
@@ -425,7 +426,7 @@ int sd_init(bcm_emmc_regs_t *regs, sdcard_t *sd) {
     }
     /* Check voltage */
     bool has_correct_voltage = false;
-    result_t res = sdcard_is_voltage_3v3(sdcard, &has_correct_voltage);
+    res = sdcard_is_voltage_3v3(sdcard, &has_correct_voltage);
     if (!has_correct_voltage) {
         return SD_ERROR_VOLTAGE;
     }
@@ -440,7 +441,22 @@ int sd_init(bcm_emmc_regs_t *regs, sdcard_t *sd) {
         log_trace("Card capacity: SDHC\n");
     }
 
-    sd_cmd(CMD_ALL_SEND_CID, 0);
+    res = sdhci_send_cmd(
+            global_regs,
+            IX_ALL_SEND_CID,
+            0,
+            sdcard,
+            &sd_res
+    );
+    if (result_is_err(res)) {
+        result_printf(res);
+        return -1;
+    }
+//    r = *EMMC_RESP0;
+//    r |= *EMMC_RESP3;
+//    r |= *EMMC_RESP2;
+//    r |= *EMMC_RESP1;
+//    sd_cmd(CMD_ALL_SEND_CID, 0);
 
     sd_rca = sd_cmd(CMD_SEND_REL_ADDR, 0);
     uart_puts("EMMC: CMD_SEND_REL_ADDR returned ");
