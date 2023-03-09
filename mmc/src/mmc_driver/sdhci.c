@@ -133,6 +133,16 @@ result_t sdhci_card_init_and_id(
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to send `IX_SEND_REL_ADDR` in sdhci_card_init_and_id().");
     }
+    /* SD card will have an RCA at this point. */
+
+    /* Set the clock to full speed. */
+    log_trace("Setting clock to full-speed frequency (25GHz)...");
+    res = sdhci_set_sd_clock(bcm_emmc_regs, 25000000);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to set clock to full speed in sdhci_card_init_and_id().");
+    }
+
+
 
 
     return result_ok();
@@ -480,9 +490,10 @@ result_t sdhci_send_cmd(
     if (result_is_err(res_is_app_cmd)) {
         return result_err_chain(res_is_app_cmd, "Failed to check if command is an app command in sdhci_send_cmd().");
     }
-    /* Obtain the command. */
+    result_t res;
+    /* Obtain the command from the list of commands we can send. */
     sdhci_cmd_t *sdhci_cmd = NULL;
-    result_t res = sdhci_cmds_get_cmd(
+    res = sdhci_cmds_get_cmd(
             sdhci_cmd_index,
             &sdhci_cmd
     );
