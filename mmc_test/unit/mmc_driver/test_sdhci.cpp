@@ -170,8 +170,6 @@ TEST_F(TestSdhci, send_cmd_should_send_non_app_cmds) {
 
     SET_CUSTOM_FAKE_SEQ(bcm_emmc_regs_mask_interrupt, mask_interrupt_mocks, 2);
 
-    FFF_RESET_HISTORY();
-
     bcm_emmc_regs_t bcm_emmc_regs = {};
     sdcard_t sdcard = {};
     sdhci_result_t sdhci_result;
@@ -199,31 +197,38 @@ TEST_F(TestSdhci, send_cmd_should_send_non_app_cmds) {
     ASSERT_EQ(fff.call_history[9], (void *) bcm_emmc_regs_get_resp0);
 }
 
-TEST_F(TestSdhci, send_cmd_should_send_app_cmds) {
-
+TEST_F(TestSdhci, send_cmd_should_send_app_cmd_and_ignore_status_if_no_rca) {
     result_t(*mask_interrupt_mocks[])(bcm_emmc_regs_t * regs, uint32_t
     mask, bool * ret_val) = {
-            /* Mask interrupt should return true the first time, which exits us out of the while-loop immediately. */
-              [](bcm_emmc_regs_t *regs, uint32_t mask, bool *ret_val) {
-                *ret_val = true;
-                return result_ok();
-            },
-            /* Mask interrupt returns false the second time for the not an error case. */
-            [](bcm_emmc_regs_t *regs, uint32_t mask, bool *ret_val) {
-                *ret_val = false;
-                return result_ok();
-            },
+        /* Mask interrupt should return true the first time, which exits us out of the while-loop immediately. */
+        [](bcm_emmc_regs_t *regs, uint32_t mask, bool *ret_val) {
+            *ret_val = true;
+            return result_ok();
+        },
+                /* Mask interrupt returns false the second time for the not an error case. */
+                [](bcm_emmc_regs_t *regs, uint32_t mask, bool *ret_val) {
+                    *ret_val = false;
+                    return result_ok();
+                },
+                [](bcm_emmc_regs_t *regs, uint32_t mask, bool *ret_val) {
+                    *ret_val = true;
+                    return result_ok();
+                },
+                /* Mask interrupt returns false the second time for the not an error case. */
+                [](bcm_emmc_regs_t *regs, uint32_t mask, bool *ret_val) {
+                    *ret_val = false;
+                    return result_ok();
+                },
     };
-
-    SET_CUSTOM_FAKE_SEQ(bcm_emmc_regs_mask_interrupt, mask_interrupt_mocks, 2);
+    SET_CUSTOM_FAKE_SEQ(bcm_emmc_regs_mask_interrupt, mask_interrupt_mocks, 4);
 
     bcm_emmc_regs_t bcm_emmc_regs = {};
     sdcard_t sdcard = {};
     sdhci_result_t sdhci_result;
     result_t res = sdhci_send_cmd(
             &bcm_emmc_regs,
-            IX_GO_IDLE_STATE,
-            0,
+            IX_APP_SEND_OP_COND,
+            0x51ff8000,
             &sdcard,
             &sdhci_result
     );
@@ -232,15 +237,9 @@ TEST_F(TestSdhci, send_cmd_should_send_app_cmds) {
     }
     ASSERT_TRUE(result_is_ok(res));
 
-    ASSERT_EQ(fff.call_history[0], (void *) bcm_emmc_regs_is_cmd_in_progress);
-    ASSERT_EQ(fff.call_history[1], (void *) bcm_emmc_regs_is_any_err);
-    ASSERT_EQ(fff.call_history[2], (void *) bcm_emmc_regs_clear_interrupt);
-    ASSERT_EQ(fff.call_history[3], (void *) bcm_emmc_regs_set_arg1);
-    ASSERT_EQ(fff.call_history[4], (void *) bcm_emmc_regs_set_cmdtm);
-    ASSERT_EQ(fff.call_history[5], (void *) bcm_emmc_regs_mask_interrupt);
-    ASSERT_EQ(fff.call_history[6], (void *) bcm_emmc_regs_get_interrupt_raw32);
-    ASSERT_EQ(fff.call_history[7], (void *) bcm_emmc_regs_mask_interrupt);
-    ASSERT_EQ(fff.call_history[8], (void *) bcm_emmc_regs_set_interrupt_raw32);
-    ASSERT_EQ(fff.call_history[9], (void *) bcm_emmc_regs_get_resp0);
+    /* We enter our if-statement in sdhci_send_cmd(). */
+    ASSERT_EQ(fff.call_history[0], (void *) sdcard_has_rca);
+    /* We immediately leave our if-statement in sdhci_send_cmd(). */
+    ASSERT_EQ(fff.call_history[1], (void *) bcm_emmc_regs_is_cmd_in_progress);
 }
 
