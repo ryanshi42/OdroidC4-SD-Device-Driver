@@ -36,10 +36,12 @@ FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_set_cmdtm, bcm_emmc_regs_t *, cmdtm_t)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_get_resp0, bcm_emmc_regs_t *, uint32_t *)
 
 /* Resets all Fakes for each unit test. */
-class test_bcm_emmc_reset : public testing::Test {
+class TestBcmEmmc : public testing::Test {
 protected:
     // You can define per-test set-up logic as usual.
     void SetUp() override {
+        FFF_RESET_HISTORY();
+
         RESET_FAKE(bcm_emmc_regs_zero_control0);
         RESET_FAKE(bcm_emmc_regs_zero_control1);
         RESET_FAKE(bcm_emmc_regs_reset_host_circuit);
@@ -75,7 +77,7 @@ protected:
     }
 };
 
-TEST(test_result, init_should_init_bcm_emmc) {
+TEST_F(TestBcmEmmc, init_should_init_bcm_emmc) {
     bcm_emmc_regs_is_host_circuit_reset_fake.custom_fake = [](bcm_emmc_regs_t *regs, bool *ret_val) {
         *ret_val = true;
         return result_ok();
@@ -86,16 +88,48 @@ TEST(test_result, init_should_init_bcm_emmc) {
         return result_ok();
     };
 
+    result_t(*mask_interrupt_mocks[])(bcm_emmc_regs_t * regs, uint32_t
+    mask, bool * ret_val) = {
+        /* Mask interrupt should return true the first time, which exits us out of the while-loop immediately. */
+        [](bcm_emmc_regs_t *regs, uint32_t mask, bool *ret_val) {
+            *ret_val = true;
+            return result_ok();
+        },
+                /* Mask interrupt returns false the second time for the not an error case. */
+                [](bcm_emmc_regs_t *regs, uint32_t mask, bool *ret_val) {
+                    *ret_val = false;
+                    return result_ok();
+                },
+                [](bcm_emmc_regs_t *regs, uint32_t mask, bool *ret_val) {
+                    *ret_val = true;
+                    return result_ok();
+                },
+                /* Mask interrupt returns false the second time for the not an error case. */
+                [](bcm_emmc_regs_t *regs, uint32_t mask, bool *ret_val) {
+                    *ret_val = false;
+                    return result_ok();
+                },
+    };
+
+    bcm_emmc_regs_get_resp0_fake.custom_fake = [](bcm_emmc_regs_t *regs, uint32_t *ret_val) {
+        *ret_val = 0x000001AA;
+        return result_ok();
+    };
+
+    SET_CUSTOM_FAKE_SEQ(bcm_emmc_regs_mask_interrupt, mask_interrupt_mocks, 4);
+
     bcm_emmc_regs_t regs = {};
     bcm_emmc_t bcm_emmc = {};
-    result_t res = bcm_emmc_init(&bcm_emmc, &regs, NULL);
+    sdcard_t sdcard = {};
+    result_t res = bcm_emmc_init(&bcm_emmc, &regs, &sdcard);
+    result_printf(res);
     ASSERT_TRUE(result_is_ok(res));
 
     /* The `regs` variable should be set to `regs`. */
     ASSERT_EQ((uintptr_t) &regs, (uintptr_t) bcm_emmc.regs);
 }
 
-TEST(test_result, init_should_timeout_if_host_circuit_reset_fails) {
+TEST_F(TestBcmEmmc, init_should_timeout_if_host_circuit_reset_fails) {
     bcm_emmc_regs_is_host_circuit_reset_fake.custom_fake = [](bcm_emmc_regs_t *regs, bool *ret_val) {
         *ret_val = false;
         return result_ok();
@@ -103,7 +137,8 @@ TEST(test_result, init_should_timeout_if_host_circuit_reset_fails) {
 
     bcm_emmc_regs_t regs = {};
     bcm_emmc_t bcm_emmc = {};
-    result_t res = bcm_emmc_init(&bcm_emmc, &regs, NULL);
+    sdcard_t sdcard = {};
+    result_t res = bcm_emmc_init(&bcm_emmc, &regs, &sdcard);
     ASSERT_FALSE(result_is_ok(res));
     ASSERT_STREQ(
             "Host circuit did not reset in bcm_emmc_init().",
@@ -111,7 +146,7 @@ TEST(test_result, init_should_timeout_if_host_circuit_reset_fails) {
     );
 }
 
-TEST(test_result, init_should_timeout_if_cmd_line_is_busy) {
+TEST_F(TestBcmEmmc, init_should_timeout_if_cmd_line_is_busy) {
     bcm_emmc_regs_is_host_circuit_reset_fake.custom_fake = [](bcm_emmc_regs_t *regs, bool *ret_val) {
         *ret_val = true;
         return result_ok();
@@ -129,7 +164,8 @@ TEST(test_result, init_should_timeout_if_cmd_line_is_busy) {
 
     bcm_emmc_regs_t regs = {};
     bcm_emmc_t bcm_emmc = {};
-    result_t res = bcm_emmc_init(&bcm_emmc, &regs, NULL);
+    sdcard_t sdcard = {};
+    result_t res = bcm_emmc_init(&bcm_emmc, &regs, &sdcard);
     ASSERT_TRUE(result_is_err(res));
     ASSERT_STREQ(
             "Failed to set clock to low-speed setup frequency in bcm_emmc_init().",
@@ -137,7 +173,7 @@ TEST(test_result, init_should_timeout_if_cmd_line_is_busy) {
     );
 }
 
-TEST(test_result, init_should_timeout_if_data_lines_is_busy) {
+TEST_F(TestBcmEmmc, init_should_timeout_if_data_lines_is_busy) {
     bcm_emmc_regs_is_host_circuit_reset_fake.custom_fake = [](bcm_emmc_regs_t *regs, bool *ret_val) {
         *ret_val = true;
         return result_ok();
@@ -163,7 +199,7 @@ TEST(test_result, init_should_timeout_if_data_lines_is_busy) {
     );
 }
 
-TEST(test_result, init_should_timeout_if_cmd_and_data_lines_is_busy) {
+TEST_F(TestBcmEmmc, init_should_timeout_if_cmd_and_data_lines_is_busy) {
     bcm_emmc_regs_is_host_circuit_reset_fake.custom_fake = [](bcm_emmc_regs_t *regs, bool *ret_val) {
         *ret_val = true;
         return result_ok();
@@ -181,7 +217,8 @@ TEST(test_result, init_should_timeout_if_cmd_and_data_lines_is_busy) {
 
     bcm_emmc_regs_t regs = {};
     bcm_emmc_t bcm_emmc = {};
-    result_t res = bcm_emmc_init(&bcm_emmc, &regs, NULL);
+    sdcard_t sdcard = {};
+    result_t res = bcm_emmc_init(&bcm_emmc, &regs, &sdcard);
     ASSERT_TRUE(result_is_err(res));
     ASSERT_STREQ(
             "Failed to set clock to low-speed setup frequency in bcm_emmc_init().",
