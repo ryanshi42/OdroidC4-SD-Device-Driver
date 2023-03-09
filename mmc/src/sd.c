@@ -198,7 +198,20 @@ bool sd_readblock(unsigned int lba, unsigned char *buffer, unsigned int num) {
         c++;
         buf += 128;
     }
-    if (num > 1 && !(sd_scr[0] & SCR_SUPP_SET_BLKCNT) && (sd_scr[0] & SCR_SUPP_CCS)) sd_cmd(CMD_STOP_TRANS, 0);
+    if (num > 1 && !(sd_scr[0] & SCR_SUPP_SET_BLKCNT) && (sd_scr[0] & SCR_SUPP_CCS)) {
+//        sd_cmd(CMD_STOP_TRANS, 0);
+        res = sdhci_send_cmd(
+                global_regs,
+                IX_STOP_TRANS,
+                0,
+                sdcard,
+                &sd_res
+        );
+        if (result_is_err(res)) {
+            result_printf(res);
+            return -1;
+        }
+    }
     return sd_err != SD_OK || c != num ? 0 : num * 512;
 }
 
