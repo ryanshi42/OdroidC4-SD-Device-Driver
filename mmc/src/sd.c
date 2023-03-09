@@ -220,6 +220,8 @@ bool sd_readblock(unsigned int lba, unsigned char *buffer, unsigned int num) {
  * returns 0 on error.
  */
 bool sd_writeblock(unsigned char *buffer, unsigned int lba, unsigned int num) {
+    result_t res;
+    sdhci_result_t sd_res;
     int r, c = 0, d;
     if (num < 1) num = 1;
     uart_puts("sd_writeblock lba ");
@@ -234,11 +236,33 @@ bool sd_writeblock(unsigned char *buffer, unsigned int lba, unsigned int num) {
     unsigned int *buf = (unsigned int *) buffer;
     if (sd_scr[0] & SCR_SUPP_CCS) {
         if (num > 1 && (sd_scr[0] & SCR_SUPP_SET_BLKCNT)) {
-            sd_cmd(CMD_SET_BLOCKCNT, num);
+//            sd_cmd(CMD_SET_BLOCKCNT, num);
+            res = sdhci_send_cmd(
+                    global_regs,
+                    IX_SET_BLOCKCNT,
+                    num,
+                    sdcard,
+                    &sd_res
+            );
+            if (result_is_err(res)) {
+                result_printf(res);
+                return -1;
+            }
             if (sd_err) return 0;
         }
         *EMMC_BLKSIZECNT = (num << 16) | 512;
-        sd_cmd(num == 1 ? CMD_WRITE_SINGLE : CMD_WRITE_MULTI, lba);
+//        sd_cmd(num == 1 ? CMD_WRITE_SINGLE : CMD_WRITE_MULTI, lba);
+        res = sdhci_send_cmd(
+                global_regs,
+                num == 1 ? IX_WRITE_SINGLE : IX_WRITE_MULTI,
+                lba,
+                sdcard,
+                &sd_res
+        );
+        if (result_is_err(res)) {
+            result_printf(res);
+            return -1;
+        }
         if (sd_err) return 0;
     } else {
         *EMMC_BLKSIZECNT = (1 << 16) | 512;
@@ -246,7 +270,18 @@ bool sd_writeblock(unsigned char *buffer, unsigned int lba, unsigned int num) {
     printf("sd_writeblock: num=%d\n", num);
     while (c < num) {
         if (!(sd_scr[0] & SCR_SUPP_CCS)) {
-            sd_cmd(CMD_WRITE_SINGLE, (lba + c) * 512);
+//            sd_cmd(CMD_WRITE_SINGLE, (lba + c) * 512);
+            res = sdhci_send_cmd(
+                    global_regs,
+                    IX_WRITE_SINGLE,
+                    (lba + c) * 512,
+                    sdcard,
+                    &sd_res
+            );
+            if (result_is_err(res)) {
+                result_printf(res);
+                return -1;
+            }
             if (sd_err) return 0;
         }
         printf("About to wait for INT_WRITE_RDY\n");
@@ -265,7 +300,20 @@ bool sd_writeblock(unsigned char *buffer, unsigned int lba, unsigned int num) {
         sd_err = r;
         return 0;
     }
-    if (num > 1 && !(sd_scr[0] & SCR_SUPP_SET_BLKCNT) && (sd_scr[0] & SCR_SUPP_CCS)) sd_cmd(CMD_STOP_TRANS, 0);
+    if (num > 1 && !(sd_scr[0] & SCR_SUPP_SET_BLKCNT) && (sd_scr[0] & SCR_SUPP_CCS)) {
+//        sd_cmd(CMD_STOP_TRANS, 0);
+        res = sdhci_send_cmd(
+                global_regs,
+                IX_STOP_TRANS,
+                0,
+                sdcard,
+                &sd_res
+        );
+        if (result_is_err(res)) {
+            result_printf(res);
+            return -1;
+        }
+    }
     return sd_err != SD_OK || c != num ? 0 : num * 512;
 }
 
