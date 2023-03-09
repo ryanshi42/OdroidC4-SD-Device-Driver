@@ -454,7 +454,20 @@ int sd_init(bcm_emmc_regs_t *regs, sdcard_t *sd) {
     }
 //    sd_cmd(CMD_ALL_SEND_CID, 0);
 
-    sd_rca = sd_cmd(CMD_SEND_REL_ADDR, 0);
+//    sd_rca = sd_cmd(CMD_SEND_REL_ADDR, 0);
+    res = sdhci_send_cmd(
+            global_regs,
+            IX_SEND_REL_ADDR,
+            0,
+            sdcard,
+            &sd_res
+    );
+    if (result_is_err(res)) {
+        result_printf(res);
+        return -1;
+    }
+    sd_rca = sdcard->rca;
+
     uart_puts("EMMC: CMD_SEND_REL_ADDR returned ");
     uart_hex(sd_rca >> 32);
     uart_hex(sd_rca);
