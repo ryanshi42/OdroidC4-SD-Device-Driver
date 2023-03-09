@@ -191,7 +191,8 @@ TEST_F(TestBcmEmmc, init_should_timeout_if_data_lines_is_busy) {
 
     bcm_emmc_regs_t regs = {};
     bcm_emmc_t bcm_emmc = {};
-    result_t res = bcm_emmc_init(&bcm_emmc, &regs, NULL);
+    sdcard_t sdcard = {};
+    result_t res = bcm_emmc_init(&bcm_emmc, &regs, &sdcard);
     ASSERT_TRUE(result_is_err(res));
     ASSERT_STREQ(
             "Failed to set clock to low-speed setup frequency in bcm_emmc_init().",
