@@ -126,6 +126,8 @@ int sd_cmd(unsigned int code, unsigned int arg) {
  * returns 0 on error.
  */
 bool sd_readblock(unsigned int lba, unsigned char *buffer, unsigned int num) {
+    result_t res;
+    sdhci_result_t sd_res;
     int r, c = 0, d;
     if (num < 1) num = 1;
     uart_puts("sd_readblock lba ");
@@ -140,7 +142,18 @@ bool sd_readblock(unsigned int lba, unsigned char *buffer, unsigned int num) {
     unsigned int *buf = (unsigned int *) buffer;
     if (sd_scr[0] & SCR_SUPP_CCS) {
         if (num > 1 && (sd_scr[0] & SCR_SUPP_SET_BLKCNT)) {
-            sd_cmd(CMD_SET_BLOCKCNT, num);
+//            sd_cmd(CMD_SET_BLOCKCNT, num);
+            res = sdhci_send_cmd(
+                    global_regs,
+                    IX_SET_BLOCKCNT,
+                    num,
+                    sdcard,
+                    &sd_res
+            );
+            if (result_is_err(res)) {
+                result_printf(res);
+                return -1;
+            }
             if (sd_err) return 0;
         }
         *EMMC_BLKSIZECNT = (num << 16) | 512;
