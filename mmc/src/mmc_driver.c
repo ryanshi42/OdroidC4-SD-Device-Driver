@@ -151,7 +151,7 @@ void init(void) {
             &global_sdcard
     );
     if (result_is_err(res)) {
-        printf("ERROR: failed to initialize EMMC\n");
+        result_printf(res);
         return;
     }
 
