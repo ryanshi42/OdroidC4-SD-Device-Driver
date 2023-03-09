@@ -421,8 +421,15 @@ int sd_init(bcm_emmc_regs_t *regs, sdcard_t *sd) {
     } while (!has_powered_up && (retries-- > 0));
     if (!has_powered_up) {
         printf("ERROR: EMMC card did not power up\n");
-        return -1;
+        return SD_TIMEOUT;
     }
+    /* Check voltage */
+    bool has_correct_voltage = false;
+    result_t res = sdcard_is_voltage_3v3(sdcard, &has_correct_voltage);
+    if (!has_correct_voltage) {
+        return SD_ERROR_VOLTAGE;
+    }
+
     if (sdcard->ocr.card_capacity) {
         log_trace("Card capacity: SDHC\n");
     }

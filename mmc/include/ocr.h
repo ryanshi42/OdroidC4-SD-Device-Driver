@@ -44,3 +44,19 @@ result_t ocr_set_raw32(ocr_t *ocr, uint32_t val);
  * @return
  */
 result_t ocr_get_card_power_up_busy(ocr_t *ocr, bool *ret_val);
+
+/**
+ * Returns True if voltage window is 3.2v to 3.3v.
+ * @param ocr
+ * @param ret_val
+ * @return
+ */
+result_t ocr_get_voltage_3v2to3v3(ocr_t *ocr, bool *ret_val);
+
+/**
+ * Returns True if voltage window is 3.3v to 3.4v.
+ * @param ocr
+ * @param ret_val
+ * @return
+ */
+result_t ocr_get_voltage_3v3to3v4(ocr_t *ocr, bool *ret_val);

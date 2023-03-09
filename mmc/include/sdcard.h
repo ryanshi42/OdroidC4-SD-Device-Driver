@@ -88,3 +88,10 @@ result_t sdcard_is_app_cmd_accepted(sdcard_t *sdcard, bool *ret_val);
  */
 result_t sdcard_has_powered_up(sdcard_t *sdcard, bool *ret_val);
 
+/**
+ * Returns True if the SD card is 3.3V and False otherwise.
+ * @param sdcard
+ * @param ret_val
+ * @return
+ */
+result_t sdcard_is_voltage_3v3(sdcard_t *sdcard, bool *ret_val);

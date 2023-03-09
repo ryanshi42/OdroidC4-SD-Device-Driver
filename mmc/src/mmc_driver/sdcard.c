@@ -78,3 +78,24 @@ result_t sdcard_has_powered_up(sdcard_t *sdcard, bool *ret_val) {
     }
     return ocr_get_card_power_up_busy(&sdcard->ocr, ret_val);
 }
+
+result_t sdcard_is_voltage_3v3(sdcard_t *sdcard, bool *ret_val) {
+    if (sdcard == NULL) {
+        return result_err("NULL `sdcard` passed to sdcard_is_voltage_3v3().");
+    }
+    bool voltage3v2to3v3 = false;
+    result_t result = ocr_get_voltage_3v2to3v3(&sdcard->ocr, &voltage3v2to3v3);
+    if (result_is_err(result)) {
+        return result_err_chain(result, "Failed to get voltage 3v2to3v3.");
+    }
+    bool voltage3v3to3v4 = false;
+    result = ocr_get_voltage_3v3to3v4(&sdcard->ocr, &voltage3v3to3v4);
+    if (result_is_err(result)) {
+        return result_err_chain(result, "Failed to get voltage 3v3to3v4.");
+    }
+    *ret_val = voltage3v2to3v3 || voltage3v3to3v4;
+    return result_ok();
+}
+
+
+
