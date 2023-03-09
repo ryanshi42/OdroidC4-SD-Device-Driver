@@ -2,8 +2,19 @@
 
 result_t sdhci_card_init_and_id(
         bcm_emmc_regs_t *bcm_emmc_regs,
-        sdcard_t *sdcard
+        sdcard_t *sdcard,
+        sdhci_result_t *sdhci_result
 ) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("bcm_emmc_regs is NULL in sdhci_card_init_and_id().");
+    }
+    if (sdcard == NULL) {
+        return result_err("sdcard is NULL in sdhci_card_init_and_id().");
+    }
+    if (sdhci_result == NULL) {
+        return result_err("sdhci_result is NULL in sdhci_card_init_and_id().");
+    }
+    *sdhci_result = SD_ERROR;
     result_t res;
     /* Sending GO_IDLE command. */
     log_trace("Sending GO_IDLE (CMD0) command...");
@@ -16,7 +27,7 @@ result_t sdhci_card_init_and_id(
             &sdhci_res_go_idle
     );
     if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to send `IX_GO_IDLE_STATE` in bcm_emmc_init().");
+        return result_err_chain(res, "Failed to send `IX_GO_IDLE_STATE` in sdhci_card_init_and_id().");
     }
 
     /* Sending IF_COND command. */
@@ -30,7 +41,65 @@ result_t sdhci_card_init_and_id(
             &sdhci_res_if_cond
     );
     if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to send `IX_SEND_IF_COND` in bcm_emmc_init().");
+        return result_err_chain(res, "Failed to send `IX_SEND_IF_COND` in sdhci_card_init_and_id().");
+    }
+
+    /* Send APP_SEND_OP_COND. */
+    size_t retries = 7;
+    bool has_powered_up = false;
+    do {
+        usleep(400000);
+        res = sdhci_send_cmd(
+                bcm_emmc_regs,
+                IX_APP_SEND_OP_COND,
+                ACMD41_ARG_HC,
+                sdcard,
+                sdhci_result
+        );
+        if (result_is_err(res)) {
+            return result_err_chain(res, "Failed to send `IX_APP_SEND_OP_COND` in sdhci_card_init_and_id().");
+        }
+        res = sdcard_has_powered_up(sdcard, &has_powered_up);
+        if (result_is_err(res)) {
+            return result_err_chain(res, "Failed to check if card has powered up in sdhci_card_init_and_id().");
+        }
+    } while (!has_powered_up && (retries-- > 0));
+    if (!has_powered_up) {
+        *sdhci_result = SD_TIMEOUT;
+        return result_err("EMMC card did not power up in sdhci_card_init_and_id().");
+    }
+    /* Check voltage */
+    log_trace("Checking card voltage is 3v3...");
+    bool has_correct_voltage = false;
+    res = sdcard_is_voltage_3v3(sdcard, &has_correct_voltage);
+    if (result_is_err(res)) {
+        return result_err("Failed to check if card has correct voltage in sdhci_card_init_and_id().");
+    }
+    if (!has_correct_voltage) {
+        *sdhci_result = SD_ERROR_VOLTAGE;
+        return result_err("EMMC card does not have correct voltage in sdhci_card_init_and_id().");
+    }
+    log_trace("Voltage good.");
+
+    /* Check card capacity. */
+    log_trace("Checking card type...");
+    bool is_high_capacity = false;
+    res = sdcard_is_high_capacity(sdcard, &is_high_capacity);
+    if (result_is_err(res)) {
+        return result_err("Failed to check if card is high capacity in sdhci_card_init_and_id().");
+    }
+    if (is_high_capacity) {
+        res = sdcard_set_type(sdcard, SD_TYPE_2_HC);
+        if (result_is_err(res)) {
+            return result_err_chain(res, "Failed to set card type to SD_TYPE_2_HC in sdhci_card_init_and_id().");
+        }
+        log_trace("Card high capacity (HC).");
+    } else {
+        res = sdcard_set_type(sdcard, SD_TYPE_2_SC);
+        if (result_is_err(res)) {
+            return result_err_chain(res, "Failed to set card type to SD_TYPE_2_SC in sdhci_card_init_and_id().");
+        }
+        log_trace("Card standard capacity (SC).");
     }
 
     return result_ok();
@@ -46,6 +115,9 @@ result_t sdhci_get_sd_clock_divisor(
     }
     if (freq == 0) {
         return result_err("Zero `freq` passed to sdhci_get_sd_clock_divisor().");
+    }
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` passed to sdhci_get_sd_clock_divisor().");
     }
     /* The Pi's SD frequency is always 41.66667Mhz when running bare metal. */
     uint32_t divisor = (41666667 + freq - 1) / freq;
@@ -172,10 +244,13 @@ result_t sdhci_wait_for_interrupt(
         uint32_t interrupt_mask,
         sdhci_result_t *sdhci_result
 ) {
-    *sdhci_result = SD_ERROR;
     if (bcm_emmc_regs == NULL) {
         return result_err("NULL `bcm_emmc_regs` passed to sdhci_wait_for_interrupt().");
     }
+    if (sdhci_result == NULL) {
+        return result_err("NULL `sdhci_result` passed to sdhci_wait_for_interrupt().");
+    }
+    *sdhci_result = SD_ERROR;
     uint32_t mask_with_error = interrupt_mask | INT_ERROR_MASK;
     /* Wait for the interrupt. We specify a timeout of 1 second. */
     size_t retries = 100000;
@@ -264,10 +339,13 @@ result_t sdhci_wait_for_cmd_in_progress(
         bcm_emmc_regs_t *bcm_emmc_regs,
         sdhci_result_t *sdhci_result
 ) {
-    *sdhci_result = SD_ERROR;
     if (bcm_emmc_regs == NULL) {
         return result_err("NULL `bcm_emmc_regs` passed to sdhci_wait_for_cmd_in_progress().");
     }
+    if (sdhci_result == NULL) {
+        return result_err("NULL `sdhci_result` passed to sdhci_wait_for_cmd_in_progress().");
+    }
+    *sdhci_result = SD_ERROR;
     bool cmd_in_progress = false;
     bool has_any_err = false;
     size_t retries = 100000;
@@ -303,13 +381,13 @@ result_t sdhci_wait_for_data_in_progress(
         bcm_emmc_regs_t *bcm_emmc_regs,
         sdhci_result_t *sdhci_result
 ) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to sdhci_wait_for_data_in_progress().");
+    }
+    if (sdhci_result == NULL) {
+        return result_err("NULL `sdhci_result` passed to sdhci_wait_for_data_in_progress().");
+    }
     *sdhci_result = SD_ERROR;
-    if (bcm_emmc_regs == NULL) {
-        return result_err("NULL `bcm_emmc_regs` passed to sdhci_wait_for_data_in_progress().");
-    }
-    if (bcm_emmc_regs == NULL) {
-        return result_err("NULL `bcm_emmc_regs` passed to sdhci_wait_for_data_in_progress().");
-    }
     bool data_in_progress = false;
     bool has_any_err = false;
     size_t retries = 100000;
@@ -350,7 +428,6 @@ result_t sdhci_send_cmd(
         sdcard_t *sdcard,
         sdhci_result_t *sdhci_result
 ) {
-    *sdhci_result = SD_ERROR;
     if (bcm_emmc_regs == NULL) {
         return result_err("NULL `bcm_emmc_regs` passed to sdhci_send_cmd().");
     }
@@ -360,6 +437,7 @@ result_t sdhci_send_cmd(
     if (sdhci_result == NULL) {
         return result_err("NULL `sdhci_result` passed to sdhci_send_cmd().");
     }
+    *sdhci_result = SD_ERROR;
     /* Check whether command is an APP Command. */
     bool is_app_cmd = false;
     result_t res_is_app_cmd = sdhci_cmds_is_app_cmd(

@@ -50,6 +50,17 @@
 #define IX_SEND_SCR         38
 
 /**
+ * CMD 41 BIT SELECTIONS
+ */
+#define ACMD41_HCS           0x40000000
+#define ACMD41_SDXC_POWER    0x10000000
+#define ACMD41_S18R          0x04000000
+#define ACMD41_VOLTAGE       0x00ff8000
+/* PI DOES NOT SUPPORT VOLTAGE SWITCH */
+#define ACMD41_ARG_HC        (ACMD41_HCS|ACMD41_SDXC_POWER|ACMD41_VOLTAGE)//(ACMD41_HCS|ACMD41_SDXC_POWER|ACMD41_VOLTAGE|ACMD41_S18R)
+#define ACMD41_ARG_SC        (ACMD41_VOLTAGE)   //(ACMD41_VOLTAGE|ACMD41_S18R)
+
+/**
  * Returns True if the `sdhci_cmd_index` is an App Command and False otherwise.
  * @param sdhci_cmd_index
  * @param is_app_cmd

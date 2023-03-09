@@ -495,47 +495,47 @@ int sd_init(bcm_emmc_regs_t *regs, sdcard_t *sd) {
 //    if (r & ACMD41_CMD_CCS) ccs = SCR_SUPP_CCS;
 
     result_t res;
-    size_t retries = 7;
-    bool has_powered_up = false;
-    do {
-        usleep(400000);
-        res = sdhci_send_cmd(
-                global_regs,
-                IX_APP_SEND_OP_COND,
-                ACMD41_ARG_HC,
-                sdcard,
-                &sd_res
-        );
-        if (result_is_err(res)) {
-            result_printf(res);
-            return -1;
-        }
-        res = sdcard_has_powered_up(sdcard, &has_powered_up);
-        if (result_is_err(res)) {
-            result_printf(res);
-            return -1;
-        }
-    } while (!has_powered_up && (retries-- > 0));
-    if (!has_powered_up) {
-        printf("ERROR: EMMC card did not power up\n");
-        return SD_TIMEOUT;
-    }
-    /* Check voltage */
-    bool has_correct_voltage = false;
-    res = sdcard_is_voltage_3v3(sdcard, &has_correct_voltage);
-    if (!has_correct_voltage) {
-        return SD_ERROR_VOLTAGE;
-    }
-    /* Check card capacity. */
-    bool is_high_capacity = false;
-    res = sdcard_is_high_capacity(sdcard, &is_high_capacity);
-    if (result_is_err(res)) {
-        result_printf(res);
-        return -1;
-    }
-    if (is_high_capacity) {
-        log_trace("Card capacity: SDHC\n");
-    }
+//    size_t retries = 7;
+//    bool has_powered_up = false;
+//    do {
+//        usleep(400000);
+//        res = sdhci_send_cmd(
+//                global_regs,
+//                IX_APP_SEND_OP_COND,
+//                ACMD41_ARG_HC,
+//                sdcard,
+//                &sd_res
+//        );
+//        if (result_is_err(res)) {
+//            result_printf(res);
+//            return -1;
+//        }
+//        res = sdcard_has_powered_up(sdcard, &has_powered_up);
+//        if (result_is_err(res)) {
+//            result_printf(res);
+//            return -1;
+//        }
+//    } while (!has_powered_up && (retries-- > 0));
+//    if (!has_powered_up) {
+//        printf("ERROR: EMMC card did not power up\n");
+//        return SD_TIMEOUT;
+//    }
+//    /* Check voltage */
+//    bool has_correct_voltage = false;
+//    res = sdcard_is_voltage_3v3(sdcard, &has_correct_voltage);
+//    if (!has_correct_voltage) {
+//        return SD_ERROR_VOLTAGE;
+//    }
+//    /* Check card capacity. */
+//    bool is_high_capacity = false;
+//    res = sdcard_is_high_capacity(sdcard, &is_high_capacity);
+//    if (result_is_err(res)) {
+//        result_printf(res);
+//        return -1;
+//    }
+//    if (is_high_capacity) {
+//        log_trace("Card capacity: SDHC\n");
+//    }
 
     res = sdhci_send_cmd(
             global_regs,

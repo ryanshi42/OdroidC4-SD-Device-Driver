@@ -155,9 +155,11 @@ void init(void) {
     }
 
     /* Initialise the SD card. */
+    sdhci_result_t sdhci_result;
     res = sdhci_card_init_and_id(
             (bcm_emmc_regs_t *) emmc_base_vaddr,
-            &global_sdcard
+            &global_sdcard,
+            &sdhci_result
     );
     if (result_is_err(res)) {
         result_printf(res);

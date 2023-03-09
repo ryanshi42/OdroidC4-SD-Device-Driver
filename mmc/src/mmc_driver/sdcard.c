@@ -140,3 +140,10 @@ result_t sdcard_set_cid(
     return result_ok_or(res, "Failed to set CID raw32_0 in sdcard_set_cid().");
 }
 
+result_t sdcard_set_type(sdcard_t *sdcard, sdcard_type_t type) {
+    if (sdcard == NULL) {
+        return result_err("NULL `sdcard` passed to sdcard_set_type().");
+    }
+    sdcard->type = type;
+    return result_ok();
+}

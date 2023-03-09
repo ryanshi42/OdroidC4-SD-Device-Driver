@@ -1,8 +1,9 @@
 #pragma once
 
-#include "ocr.h"
 #include "result.h"
+#include "ocr.h"
 #include "cid.h"
+#include "sdcard_type.h"
 
 /* Card Status Mask that indicates APP_CMD was accepted. */
 #define ST_APP_CMD (0x00000020)
@@ -17,6 +18,8 @@ struct sdcard {
     uint32_t status;
     /* Card Identification Register. */
     cid_t cid;
+    /* SD Card Type. */
+    sdcard_type_t type;
 };
 
 /**
@@ -123,4 +126,12 @@ result_t sdcard_set_cid(
         uint32_t resp2,
         uint32_t resp3
 );
+
+/**
+ * Sets the SD card type.
+ * @param sdcard
+ * @param type
+ * @return
+ */
+result_t sdcard_set_type(sdcard_t *sdcard, sdcard_type_t type);
 

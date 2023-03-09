@@ -21,7 +21,8 @@
  */
 result_t sdhci_card_init_and_id(
         bcm_emmc_regs_t *bcm_emmc_regs,
-        sdcard_t *sdcard
+        sdcard_t *sdcard,
+        sdhci_result_t *sdhci_result
 );
 
 /**
