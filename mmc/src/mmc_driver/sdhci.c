@@ -16,6 +16,7 @@ result_t sdhci_card_init_and_id(
     }
     *sdhci_result = SD_ERROR;
     result_t res;
+
     /* Sending GO_IDLE command. */
     log_trace("Sending GO_IDLE (CMD0) command...");
     sdhci_result_t sdhci_res_go_idle;
@@ -30,7 +31,8 @@ result_t sdhci_card_init_and_id(
         return result_err_chain(res, "Failed to send `IX_GO_IDLE_STATE` in sdhci_card_init_and_id().");
     }
 
-    /* Sending IF_COND command. */
+    /* Sending SEND_IF_COND,0x000001AA (CMD8) voltage range 0x1 check pattern 0xAA.
+     * TODO: If voltage range and check pattern don't match, look for older card. */
     log_trace("Sending IF_COND (CMD8) command...");
     sdhci_result_t sdhci_res_if_cond;
     res = sdhci_send_cmd(
@@ -44,7 +46,8 @@ result_t sdhci_card_init_and_id(
         return result_err_chain(res, "Failed to send `IX_SEND_IF_COND` in sdhci_card_init_and_id().");
     }
 
-    /* Send APP_SEND_OP_COND. */
+    /* If card responded with voltage and check pattern, resolve voltage and
+     * check for high capacity card with IX_APP_SEND_OP_COND. */
     size_t retries = 7;
     bool has_powered_up = false;
     do {
@@ -64,10 +67,12 @@ result_t sdhci_card_init_and_id(
             return result_err_chain(res, "Failed to check if card has powered up in sdhci_card_init_and_id().");
         }
     } while (!has_powered_up && (retries-- > 0));
+    /* If the card still hasn't powered up, we timeout. */
     if (!has_powered_up) {
         *sdhci_result = SD_TIMEOUT;
         return result_err("EMMC card did not power up in sdhci_card_init_and_id().");
     }
+
     /* Check voltage */
     log_trace("Checking card voltage is 3v3...");
     bool has_correct_voltage = false;
@@ -101,6 +106,8 @@ result_t sdhci_card_init_and_id(
         }
         log_trace("Card standard capacity (SC).");
     }
+
+
 
     return result_ok();
 }
