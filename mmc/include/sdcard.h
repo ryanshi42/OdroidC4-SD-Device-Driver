@@ -95,3 +95,11 @@ result_t sdcard_has_powered_up(sdcard_t *sdcard, bool *ret_val);
  * @return
  */
 result_t sdcard_is_voltage_3v3(sdcard_t *sdcard, bool *ret_val);
+
+/**
+ * Returns True if the SD card is SDHC (High Capacity) and False otherwise.
+ * @param sdcard
+ * @param ret_val
+ * @return
+ */
+result_t sdcard_is_high_capacity(sdcard_t *sdcard, bool *ret_val);

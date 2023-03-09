@@ -429,11 +429,16 @@ int sd_init(bcm_emmc_regs_t *regs, sdcard_t *sd) {
     if (!has_correct_voltage) {
         return SD_ERROR_VOLTAGE;
     }
-
-    if (sdcard->ocr.card_capacity) {
+    /* Check card capacity. */
+    bool is_high_capacity = false;
+    res = sdcard_is_high_capacity(sdcard, &is_high_capacity);
+    if (result_is_err(res)) {
+        result_printf(res);
+        return -1;
+    }
+    if (is_high_capacity) {
         log_trace("Card capacity: SDHC\n");
     }
-
 
     sd_cmd(CMD_ALL_SEND_CID, 0);
 

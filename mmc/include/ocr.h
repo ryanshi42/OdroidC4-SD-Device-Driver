@@ -60,3 +60,12 @@ result_t ocr_get_voltage_3v2to3v3(ocr_t *ocr, bool *ret_val);
  * @return
  */
 result_t ocr_get_voltage_3v3to3v4(ocr_t *ocr, bool *ret_val);
+
+/**
+ * Returns True if card is SDSC or SDHC.
+ * @param ocr
+ * @param ret_val
+ * @return
+ */
+result_t ocr_get_card_capacity(ocr_t *ocr, bool *ret_val);
+

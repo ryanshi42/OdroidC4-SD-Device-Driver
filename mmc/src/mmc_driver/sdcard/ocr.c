@@ -32,3 +32,11 @@ result_t ocr_get_voltage_3v3to3v4(ocr_t *ocr, bool *ret_val) {
     *ret_val = ocr->voltage3v3to3v4;
     return result_ok();
 }
+
+result_t ocr_get_card_capacity(ocr_t *ocr, bool *ret_val) {
+    if (ocr == NULL) {
+        return result_err("NULL `ocr` passed to ocr_get_card_capacity().");
+    }
+    *ret_val = ocr->card_capacity;
+    return result_ok();
+}

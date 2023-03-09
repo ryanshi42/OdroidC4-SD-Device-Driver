@@ -97,5 +97,19 @@ result_t sdcard_is_voltage_3v3(sdcard_t *sdcard, bool *ret_val) {
     return result_ok();
 }
 
-
+result_t sdcard_is_high_capacity(sdcard_t *sdcard, bool *ret_val) {
+    if (sdcard == NULL) {
+        return result_err("NULL `sdcard` passed to sdcard_is_high_capacity().");
+    }
+    bool has_powered_up = false;
+    result_t result = sdcard_has_powered_up(sdcard, &has_powered_up);
+    if (result_is_err(result)) {
+        return result_err_chain(result, "Failed to get power up status in sdcard_is_high_capacity().");
+    }
+    /* Per the SD Physical spec, the capacity bit is only valid when the card is powered up. */
+    if (!has_powered_up) {
+        return result_err("SD card has not powered up in sdcard_is_high_capacity().");
+    }
+    return ocr_get_card_capacity(&sdcard->ocr, ret_val);
+}
 
