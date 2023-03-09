@@ -14,6 +14,17 @@
 #include "sdcard.h"
 
 /**
+ * Initialises an SD card.
+ * @param bcm_emmc_regs
+ * @param sdcard
+ * @return
+ */
+result_t sdhci_card_init_and_id(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdcard_t *sdcard
+);
+
+/**
  * Returns the SD clock divisor for the given requested frequency. This is
  * calculated relative to the SD base clock of 41.66667Mhz
  * @param bcm_emmc
