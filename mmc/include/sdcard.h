@@ -43,3 +43,12 @@ result_t sdcard_set_rca(sdcard_t *sdcard, uint32_t val);
  * @return
  */
 result_t sdcard_set_status(sdcard_t *sdcard, uint32_t val);
+
+/**
+ * Checks if the SD card has an RCA.
+ * @param sdcard
+ * @param ret_val
+ * @return
+ */
+result_t sdcard_has_rca(sdcard_t *sdcard, bool *ret_val);
+

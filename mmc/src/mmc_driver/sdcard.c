@@ -32,3 +32,13 @@ result_t sdcard_set_status(sdcard_t *sdcard, uint32_t val) {
     return result_ok();
 }
 
+result_t sdcard_has_rca(sdcard_t *sdcard, bool *ret_val) {
+    if (sdcard == NULL) {
+        return result_err("NULL `sdcard` passed to sdcard_has_rca().");
+    }
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` passed to sdcard_has_rca().");
+    }
+    *ret_val = sdcard->rca != 0;
+    return result_ok();
+}
