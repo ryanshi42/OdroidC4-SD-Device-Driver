@@ -512,7 +512,7 @@ result_t sdhci_send_cmd(
                     }
                     return result_ok();
                 }
-                case 0x08:
+                case 0x08: {
                     /* This is the switch-case for `IX_SEND_IF_COND`. RESP0 contains
                      * voltage acceptance and check pattern, which should match
                      * the argument. */
@@ -523,7 +523,8 @@ result_t sdhci_send_cmd(
                         *sdhci_result = SD_ERROR;
                         return result_err("Response from SD card does not match argument in sdhci_send_cmd().");
                     }
-                case 0x29:
+                }
+                case 0x29: {
                     /* Response handling for `IX_APP_SEND_OP_COND`. Save the
                      * RESP0 register as the Operation Conditions Register (OCR)
                      * for the `sdcard`. */
@@ -533,7 +534,8 @@ result_t sdhci_send_cmd(
                     }
                     *sdhci_result = SD_OK;
                     return result_ok();
-                default:
+                }
+                default: {
                     /* Save the response as the SD card's status. */
                     res = sdcard_set_status(sdcard, resp0);
                     if (result_is_err(res)) {
@@ -544,8 +546,8 @@ result_t sdhci_send_cmd(
                         return result_err("Response from SD card indicates error in sdhci_send_cmd().");
                     }
                     return result_ok();
+                }
             }
-            break;
         }
         case CMD_136BIT_RESP: {
             /* Obtain the command index. */
