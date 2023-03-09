@@ -3,6 +3,9 @@
 #include "ocr.h"
 #include "result.h"
 
+/* Card Status Mask that indicates APP_CMD was accepted. */
+#define ST_APP_CMD (0x00000020)
+
 typedef struct sdcard sdcard_t;
 struct sdcard {
     /* Operation Conditions Register. */
@@ -53,6 +56,15 @@ result_t sdcard_set_rca(sdcard_t *sdcard, uint32_t val);
 result_t sdcard_set_status(sdcard_t *sdcard, uint32_t val);
 
 /**
+ * Masks the SD card status.
+ * @param sdcard
+ * @param mask
+ * @param ret_val
+ * @return
+ */
+result_t sdcard_mask_status(sdcard_t *sdcard, uint32_t mask, bool* ret_val);
+
+/**
  * Checks if the SD card has an RCA.
  * @param sdcard
  * @param ret_val
@@ -60,3 +72,10 @@ result_t sdcard_set_status(sdcard_t *sdcard, uint32_t val);
  */
 result_t sdcard_has_rca(sdcard_t *sdcard, bool *ret_val);
 
+/**
+ * Checks if the App CMD was accepted using the SD card status.
+ * @param sdcard
+ * @param ret_val
+ * @return
+ */
+result_t sdcard_is_app_cmd_accepted(sdcard_t *sdcard, bool *ret_val);

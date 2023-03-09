@@ -43,6 +43,17 @@ result_t sdcard_set_status(sdcard_t *sdcard, uint32_t val) {
     return result_ok();
 }
 
+result_t sdcard_mask_status(sdcard_t *sdcard, uint32_t mask, bool* ret_val) {
+    if (sdcard == NULL) {
+        return result_err("NULL `sdcard` passed to sdcard_mask_status().");
+    }
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` passed to sdcard_mask_status().");
+    }
+    *ret_val = sdcard->status & mask;
+    return result_ok();
+}
+
 result_t sdcard_has_rca(sdcard_t *sdcard, bool *ret_val) {
     if (sdcard == NULL) {
         return result_err("NULL `sdcard` passed to sdcard_has_rca().");
@@ -53,3 +64,11 @@ result_t sdcard_has_rca(sdcard_t *sdcard, bool *ret_val) {
     *ret_val = sdcard->rca != 0;
     return result_ok();
 }
+
+result_t sdcard_is_app_cmd_accepted(sdcard_t *sdcard, bool *ret_val) {
+    if (sdcard == NULL) {
+        return result_err("NULL `sdcard` passed to sdcard_is_app_cmd_accepted().");
+    }
+    return sdcard_mask_status(sdcard, ST_APP_CMD, ret_val);
+}
+

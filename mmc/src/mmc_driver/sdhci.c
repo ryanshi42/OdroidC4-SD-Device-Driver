@@ -318,7 +318,13 @@ result_t sdhci_send_cmd(
     if (bcm_emmc_regs == NULL) {
         return result_err("NULL `bcm_emmc_regs` passed to sdhci_send_cmd().");
     }
-    /* Check whether command is an App Command. */
+    if (sdcard == NULL) {
+        return result_err("NULL `sdcard` passed to sdhci_send_cmd().");
+    }
+    if (sdhci_result == NULL) {
+        return result_err("NULL `sdhci_result` passed to sdhci_send_cmd().");
+    }
+    /* Check whether command is an APP Command. */
     bool is_app_cmd = false;
     result_t res_is_app_cmd = sdhci_cmds_is_app_cmd(
             sdhci_cmd_index,
@@ -338,16 +344,45 @@ result_t sdhci_send_cmd(
     }
 
     if (is_app_cmd) {
-        /* Recursively call ourselves first. */
+        /* Check if Relative Card Address (RCA) has been saved yet. */
+        bool has_rca = false;
+        res = sdcard_has_rca(sdcard, &has_rca);
+        if (result_is_err(res)) {
+            return result_err_chain(res, "Failed to check if sdcard has RCA in sdhci_send_cmd().");
+        }
+        size_t app_cmd_index = IX_APP_CMD;
+        uint32_t app_cmd_arg = 0;
+        /* If yes, use the RCA as the `app_cmd_arg`. */
+        if (has_rca) {
+            app_cmd_index = IX_APP_CMD_RCA;
+            res = sdcard_get_rca(sdcard, &app_cmd_arg);
+            if (result_is_err(res)) {
+                return result_err_chain(res, "Failed to get RCA in sdhci_send_cmd().");
+            }
+        }
+        /* `app_cmd_arg` will be 0 if no RCA and will be RCA otherwise. This is
+         * a recursive call to ourselves. */
         res = sdhci_send_cmd(
                 bcm_emmc_regs,
-                IX_APP_CMD,
-                0,
+                app_cmd_index, /* This will change depending on if RCA exists or not. */
+                app_cmd_arg,
                 sdcard,
                 sdhci_result
         );
         if (result_is_err(res)) {
             return result_err_chain(res, "Failed to send app command in sdhci_send_cmd().");
+        }
+        /* When there is an RCA, we should check the status indicates APP_CMD accepted. */
+        if (app_cmd_index == IX_APP_CMD_RCA) {
+            bool is_app_cmd_accepted;
+            res = sdcard_is_app_cmd_accepted(sdcard, &is_app_cmd_accepted);
+            if (result_is_err(res)) {
+                return result_err_chain(res, "Failed to check if app command was accepted in sdhci_send_cmd().");
+            }
+            if (!is_app_cmd_accepted) {
+                *sdhci_result = SD_ERROR;
+                return result_err("App command was not accepted in sdhci_send_cmd().");
+            }
         }
     }
 
@@ -467,7 +502,6 @@ result_t sdhci_send_cmd(
                         return result_err("Response from SD card does not match argument in sdhci_send_cmd().");
                     }
                 case 0x29:
-                    log_trace("In 0x29.");
                     /* Response handling for `IX_APP_SEND_OP_COND`. Save the
                      * RESP0 register as the Operation Conditions Register (OCR)
                      * for the `sdcard`. */
@@ -478,8 +512,16 @@ result_t sdhci_send_cmd(
                     *sdhci_result = SD_OK;
                     return result_ok();
                 default:
-
-                    break;
+                    /* Save the response as the SD card's status. */
+                    res = sdcard_set_status(sdcard, resp0);
+                    if (result_is_err(res)) {
+                        return result_err_chain(res, "Failed to set status in sdhci_send_cmd().");
+                    }
+                    *sdhci_result = resp0 & R1_ERRORS_MASK;
+                    if (*sdhci_result != 0) {
+                        return result_err("Response from SD card indicates error in sdhci_send_cmd().");
+                    }
+                    return result_ok();
             }
             break;
         }

@@ -41,6 +41,8 @@ FAKE_VALUE_FUNC(result_t, sdcard_get_rca, sdcard_t *, uint32_t *)
 FAKE_VALUE_FUNC(result_t, sdcard_set_rca, sdcard_t *, uint32_t)
 FAKE_VALUE_FUNC(result_t, sdcard_set_status, sdcard_t *, uint32_t)
 FAKE_VALUE_FUNC(result_t, sdcard_has_rca, sdcard_t *, bool *)
+FAKE_VALUE_FUNC(result_t, sdcard_mask_status, sdcard_t *, uint32_t, bool*)
+FAKE_VALUE_FUNC(result_t, sdcard_is_app_cmd_accepted, sdcard_t *, bool *)
 
 /* Resets all Fakes for each unit test. */
 class TestSdhci : public testing::Test {
@@ -83,6 +85,8 @@ protected:
         RESET_FAKE(sdcard_set_rca);
         RESET_FAKE(sdcard_set_status);
         RESET_FAKE(sdcard_has_rca);
+        RESET_FAKE(sdcard_mask_status);
+        RESET_FAKE(sdcard_is_app_cmd_accepted);
     }
 
     // You can define per-test tear-down logic as usual.
@@ -90,6 +94,15 @@ protected:
 
     }
 };
+
+int find_call_history_idx(void *func) {
+    for (int i = 0; i < 50; i++) {
+        if (fff.call_history[i] == func) {
+            return i;
+        }
+    }
+    return -1;
+}
 
 /* get_sd_clock_divisor */
 
@@ -243,3 +256,77 @@ TEST_F(TestSdhci, send_cmd_should_send_app_cmd_and_ignore_status_if_no_rca) {
     ASSERT_EQ(fff.call_history[1], (void *) bcm_emmc_regs_is_cmd_in_progress);
 }
 
+TEST_F(TestSdhci, send_cmd_should_send_app_cmd_and_check_status_if_rca_present) {
+    result_t(*mask_interrupt_mocks[])(bcm_emmc_regs_t * regs, uint32_t
+    mask, bool * ret_val) = {
+        /* Mask interrupt should return true the first time, which exits us out of the while-loop immediately. */
+        [](bcm_emmc_regs_t *regs, uint32_t mask, bool *ret_val) {
+            *ret_val = true;
+            return result_ok();
+        },
+                /* Mask interrupt returns false the second time for the not an error case. */
+                [](bcm_emmc_regs_t *regs, uint32_t mask, bool *ret_val) {
+                    *ret_val = false;
+                    return result_ok();
+                },
+                [](bcm_emmc_regs_t *regs, uint32_t mask, bool *ret_val) {
+                    *ret_val = true;
+                    return result_ok();
+                },
+                /* Mask interrupt returns false the second time for the not an error case. */
+                [](bcm_emmc_regs_t *regs, uint32_t mask, bool *ret_val) {
+                    *ret_val = false;
+                    return result_ok();
+                },
+    };
+    SET_CUSTOM_FAKE_SEQ(bcm_emmc_regs_mask_interrupt, mask_interrupt_mocks, 4);
+
+    /* Make RCA present */
+    sdcard_has_rca_fake.custom_fake = [](sdcard_t *sdcard, bool *ret_val) {
+        *ret_val = true;
+        return result_ok();
+    };
+
+    /* Make the APP_CMD accepted. */
+    sdcard_is_app_cmd_accepted_fake.custom_fake = [](sdcard_t *sdcard, bool *ret_val) {
+        *ret_val = true;
+        return result_ok();
+    };
+
+    /* We must also return a response that is not the error response. */
+    bcm_emmc_regs_get_resp0_fake.custom_fake = [](bcm_emmc_regs_t *regs, uint32_t *ret_val) {
+        /* This is just ~R1_ERRORS_MASK */
+        *ret_val = ~0xfff9c004;
+        return result_ok();
+    };
+
+    bcm_emmc_regs_t bcm_emmc_regs = {};
+    sdcard_t sdcard = {};
+    sdhci_result_t sdhci_result;
+    result_t res = sdhci_send_cmd(
+            &bcm_emmc_regs,
+            IX_APP_SEND_OP_COND,
+            0x51ff8000,
+            &sdcard,
+            &sdhci_result
+    );
+    if (result_is_err(res)) {
+        result_printf(res);
+    }
+    ASSERT_TRUE(result_is_ok(res));
+
+    /* We enter our if-statement in sdhci_send_cmd(). */
+    ASSERT_EQ(fff.call_history[0], (void *) sdcard_has_rca);
+    /* We should obtain the RCA. */
+    ASSERT_EQ(fff.call_history[1], (void *) sdcard_get_rca);
+    /* We should eventually call `sdcard_set_status`. */
+    int sdcard_set_status_idx = find_call_history_idx((void *) sdcard_set_status);
+    ASSERT_NE(sdcard_set_status_idx, -1);
+    /* We should eventually call `sdcard_is_app_cmd_accepted`. */
+    int sdcard_is_app_cmd_accepted_idx = find_call_history_idx((void *) sdcard_is_app_cmd_accepted);
+    ASSERT_NE(sdcard_is_app_cmd_accepted_idx, -1);
+    /* `sdcard_is_app_cmd_accepted` should be called after `sdcard_set_status` */
+    printf("sdcard_set_status_idx: %d", sdcard_set_status_idx);
+    printf("sdcard_is_app_cmd_accepted_idx: %d", sdcard_is_app_cmd_accepted_idx);
+    ASSERT_TRUE(sdcard_is_app_cmd_accepted_idx > sdcard_set_status_idx);
+}
