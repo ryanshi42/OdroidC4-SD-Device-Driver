@@ -294,14 +294,14 @@ sdhci_cmd_t sdhci_cmds[IX_SEND_SCR + 1] = {
 };
 
 result_t sdhci_cmds_is_app_cmd(
-        uint32_t cmd_index,
+        uint32_t sdhci_cmd_index,
         bool *is_app_cmd
 ) {
-    if (cmd_index >= IX_SEND_SCR) {
+    if (sdhci_cmd_index > IX_SEND_SCR) {
         return result_err("Command index out of range in sdhci_commands_is_app_cmd()");
     }
     /* If the command index is in the range of app commands then return true. */
-    *is_app_cmd = (cmd_index >= IX_APP_CMD_START);
+    *is_app_cmd = (sdhci_cmd_index >= IX_APP_CMD_START);
     return result_ok();
 }
 
@@ -309,7 +309,7 @@ result_t sdhci_cmds_get_cmd(
         uint32_t sdhci_cmd_index,
         sdhci_cmd_t **ret_val
 ) {
-    if (sdhci_cmd_index >= IX_SEND_SCR) {
+    if (sdhci_cmd_index > IX_SEND_SCR) {
         return result_err("Command index out of range in sdhci_commands_get_cmd()");
     }
     if (ret_val == NULL) {

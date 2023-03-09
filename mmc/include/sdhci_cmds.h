@@ -51,7 +51,7 @@
 
 /**
  * Returns True if the `sdhci_cmd_index` is an App Command and False otherwise.
- * @param cmd_index
+ * @param sdhci_cmd_index
  * @param is_app_cmd
  * @return
  */

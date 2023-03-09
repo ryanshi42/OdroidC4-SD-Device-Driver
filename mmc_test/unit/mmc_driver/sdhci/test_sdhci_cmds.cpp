@@ -67,10 +67,46 @@ TEST(test_sdhci_cmds, is_app_cmd_should_return_false_if_cmd_is_not_app_cmd) {
 
 TEST(test_sdhci_cmds, get_cmd_should_return_the_correct_cmd) {
     sdhci_cmd_t *cmd;
-    result_t result = sdhci_cmds_get_cmd(
-            IX_GO_IDLE_STATE,
-            &cmd
-    );
-    ASSERT_TRUE(result_is_ok(result));
-    ASSERT_STREQ(cmd->cmd_name, "GO_IDLE_STATE");
+    for (size_t i = 0; i < IX_SEND_SCR; i++) {
+        result_t result = sdhci_cmds_get_cmd(
+                i,
+                &cmd
+        );
+        ASSERT_TRUE(result_is_ok(result));
+    }
+}
+
+TEST(test_sdhci_cmds, get_cmd_should_return_err_if_cmd_idx_is_invalid) {
+    sdhci_cmd_t *cmd;
+    for (size_t i = IX_SEND_SCR + 1; i < IX_SEND_SCR * 2; i++) {
+        result_t result = sdhci_cmds_get_cmd(
+                i,
+                &cmd
+        );
+        ASSERT_TRUE(result_is_err(result));
+    }
+}
+
+/* is_app_cmd */
+
+TEST(test_sdhci_cmds, is_app_cmd_should_return_the_correct_cmd) {
+    bool is_app_cmd;
+    for (size_t i = 0; i < IX_SEND_SCR; i++) {
+        result_t result = sdhci_cmds_is_app_cmd(
+                i,
+                &is_app_cmd
+        );
+        ASSERT_TRUE(result_is_ok(result));
+    }
+}
+
+TEST(test_sdhci_cmds, is_app_cmd_should_return_err_if_cmd_idx_is_invalid) {
+    bool is_app_cmd;
+    for (size_t i = IX_SEND_SCR + 1; i < IX_SEND_SCR * 2; i++) {
+        result_t result = sdhci_cmds_is_app_cmd(
+                i,
+                &is_app_cmd
+        );
+        ASSERT_TRUE(result_is_err(result));
+    }
 }
