@@ -29,7 +29,7 @@ result_t bcm_emmc_init(
         return result_err_chain(res, "Failed to reset host circuit in bcm_emmc_init().");
     }
     /* Wait until host circuit has finished resetting. */
-    size_t retries = 10000;
+    size_t retries_host_circuit = 10000;
     bool is_host_circuit_reset = false;
     do {
         usleep(10); /* Wait for 10 microseconds. */
@@ -40,7 +40,7 @@ result_t bcm_emmc_init(
         if (result_is_err(res)) {
             return result_err_chain(res, "Failed to check if host circuit was reset in bcm_emmc_init().");
         }
-    } while (!is_host_circuit_reset && (retries-- > 0));
+    } while (!is_host_circuit_reset && (retries_host_circuit-- > 0));
     if (!is_host_circuit_reset) {
         return result_err("Host circuit did not reset in bcm_emmc_init().");
     }
