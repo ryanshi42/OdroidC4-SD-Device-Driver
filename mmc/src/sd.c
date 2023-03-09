@@ -524,7 +524,18 @@ int sd_init(bcm_emmc_regs_t *regs, sdcard_t *sd) {
     }
     if (r != 2) return SD_TIMEOUT;
     if (sd_scr[0] & SCR_SD_BUS_WIDTH_4) {
-        sd_cmd(CMD_SET_BUS_WIDTH, sd_rca | 2);
+//        sd_cmd(CMD_SET_BUS_WIDTH, sd_rca | 2);
+        res = sdhci_send_cmd(
+                global_regs,
+                IX_SET_BUS_WIDTH,
+                sd_rca | 2,
+                sdcard,
+                &sd_res
+        );
+        if (result_is_err(res)) {
+            result_printf(res);
+            return -1;
+        }
         if (sd_err) return sd_err;
         *EMMC_CONTROL0 |= C0_HCTL_DWITDH;
     }
