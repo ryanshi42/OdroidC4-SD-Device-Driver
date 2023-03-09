@@ -571,11 +571,11 @@ int sd_init(bcm_emmc_regs_t *regs, sdcard_t *sd) {
     if (sd_err) return sd_err;
 
 //    if ((r = sd_clk(25000000))) return r;
-    res = sdhci_set_sd_clock(global_regs, 25000000);
-    if (result_is_err(res)) {
-        result_printf(res);
-        return -1;
-    }
+//    res = sdhci_set_sd_clock(global_regs, 25000000);
+//    if (result_is_err(res)) {
+//        result_printf(res);
+//        return -1;
+//    }
 
 //    sd_cmd(CMD_CARD_SELECT, sd_rca);
 //    if (sd_err) return sd_err;
