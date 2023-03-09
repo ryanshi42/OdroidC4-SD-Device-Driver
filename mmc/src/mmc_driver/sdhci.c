@@ -473,8 +473,16 @@ result_t sdhci_send_cmd(
             return result_ok();
         }
         case CMD_BUSY48BIT_RESP: {
+            /* `IX_CARD_SELECT` will enter here. */
+            res = sdcard_set_status(sdcard, resp0);
+            if (result_is_err(res)) {
+                return result_err_chain(res, "Failed to set status in sdhci_send_cmd().");
+            }
             *sdhci_result = resp0 & R1_ERRORS_MASK;
-            break;
+            if (*sdhci_result != 0) {
+                return result_err("Response from SD card indicates error in `CMD_BUSY48BIT_RESP` case in sdhci_send_cmd().");
+            }
+            return result_ok();
         }
         case CMD_48BIT_RESP: {
             /* Obtain the command index. */
