@@ -157,7 +157,18 @@ bool sd_readblock(unsigned int lba, unsigned char *buffer, unsigned int num) {
             if (sd_err) return 0;
         }
         *EMMC_BLKSIZECNT = (num << 16) | 512;
-        sd_cmd(num == 1 ? CMD_READ_SINGLE : CMD_READ_MULTI, lba);
+//        sd_cmd(num == 1 ? CMD_READ_SINGLE : CMD_READ_MULTI, lba);
+        res = sdhci_send_cmd(
+                global_regs,
+                num == 1 ? IX_READ_SINGLE : IX_READ_MULTI,
+                lba,
+                sdcard,
+                &sd_res
+        );
+        if (result_is_err(res)) {
+            result_printf(res);
+            return -1;
+        }
         if (sd_err) return 0;
     } else {
         *EMMC_BLKSIZECNT = (1 << 16) | 512;
