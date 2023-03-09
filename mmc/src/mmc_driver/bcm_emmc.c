@@ -12,6 +12,9 @@ result_t bcm_emmc_init(
     if (bcm_emmc_regs == 0) {
         return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_init().");
     }
+    if (sdcard == NULL) {
+        return result_err("NULL `sdcard` passed to bcm_emmc_init().");
+    }
     bcm_emmc->regs = bcm_emmc_regs;
     /* Set control0 to zero. */
     result_t res = bcm_emmc_regs_zero_control0(bcm_emmc_regs);
