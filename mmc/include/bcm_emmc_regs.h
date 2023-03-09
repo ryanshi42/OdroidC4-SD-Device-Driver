@@ -307,3 +307,35 @@ result_t bcm_emmc_regs_get_resp0(
         uint32_t *ret_val
 );
 
+/**
+ * Gets the `resp1` register.
+ * @param bcm_emmc_regs
+ * @param ret_val
+ * @return
+ */
+result_t bcm_emmc_regs_get_resp1(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        uint32_t *ret_val
+);
+
+/**
+ * Gets the `resp2` register.
+ * @param bcm_emmc_regs
+ * @param ret_val
+ * @return
+ */
+result_t bcm_emmc_regs_get_resp2(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        uint32_t *ret_val
+);
+
+/**
+ * Gets the `resp3` register.
+ * @param bcm_emmc_regs
+ * @param ret_val
+ * @return
+ */
+result_t bcm_emmc_regs_get_resp3(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        uint32_t *ret_val
+);

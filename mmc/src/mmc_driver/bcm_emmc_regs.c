@@ -333,3 +333,47 @@ result_t bcm_emmc_regs_get_resp0(
     *ret_val = bcm_emmc_regs->resp0;
     return result_ok();
 }
+
+result_t bcm_emmc_regs_get_resp1(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        uint32_t *ret_val
+) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_get_resp1().");
+    }
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` passed to bcm_emmc_regs_get_resp1().");
+    }
+    *ret_val = bcm_emmc_regs->resp1;
+    return result_ok();
+}
+
+result_t bcm_emmc_regs_get_resp2(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        uint32_t *ret_val
+) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_get_resp2().");
+    }
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` passed to bcm_emmc_regs_get_resp2().");
+    }
+    *ret_val = bcm_emmc_regs->resp2;
+    return result_ok();
+}
+
+result_t bcm_emmc_regs_get_resp3(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        uint32_t *ret_val
+) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_get_resp3().");
+    }
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` passed to bcm_emmc_regs_get_resp3().");
+    }
+    *ret_val = bcm_emmc_regs->resp3;
+    return result_ok();
+}
+
+

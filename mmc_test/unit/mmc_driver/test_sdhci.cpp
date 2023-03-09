@@ -34,6 +34,9 @@ FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_clear_interrupt, bcm_emmc_regs_t *)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_set_arg1, bcm_emmc_regs_t *, uint32_t)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_set_cmdtm, bcm_emmc_regs_t *, cmdtm_t)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_get_resp0, bcm_emmc_regs_t *, uint32_t *)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_get_resp1, bcm_emmc_regs_t *, uint32_t *)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_get_resp2, bcm_emmc_regs_t *, uint32_t *)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_get_resp3, bcm_emmc_regs_t *, uint32_t *)
 
 FAKE_VALUE_FUNC(result_t, sdcard_init, sdcard_t *)
 FAKE_VALUE_FUNC(result_t, sdcard_set_ocr_raw32, sdcard_t *, uint32_t)
@@ -78,6 +81,9 @@ protected:
         RESET_FAKE(bcm_emmc_regs_set_arg1);
         RESET_FAKE(bcm_emmc_regs_set_cmdtm);
         RESET_FAKE(bcm_emmc_regs_get_resp0);
+        RESET_FAKE(bcm_emmc_regs_get_resp1);
+        RESET_FAKE(bcm_emmc_regs_get_resp2);
+        RESET_FAKE(bcm_emmc_regs_get_resp3);
 
         RESET_FAKE(sdcard_init);
         RESET_FAKE(sdcard_set_ocr_raw32);
