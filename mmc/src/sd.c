@@ -175,7 +175,18 @@ bool sd_readblock(unsigned int lba, unsigned char *buffer, unsigned int num) {
     }
     while (c < num) {
         if (!(sd_scr[0] & SCR_SUPP_CCS)) {
-            sd_cmd(CMD_READ_SINGLE, (lba + c) * 512);
+//            sd_cmd(CMD_READ_SINGLE, (lba + c) * 512);
+            res = sdhci_send_cmd(
+                    global_regs,
+                    IX_READ_SINGLE,
+                    (lba + c) * 512,
+                    sdcard,
+                    &sd_res
+            );
+            if (result_is_err(res)) {
+                result_printf(res);
+                return -1;
+            }
             if (sd_err) return 0;
         }
         if ((r = sd_int(INT_READ_RDY))) {
