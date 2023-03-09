@@ -107,6 +107,32 @@ result_t sdhci_card_init_and_id(
         log_trace("Card standard capacity (SC).");
     }
 
+    /* Send ALL_SEND_CID (CMD2). */
+    log_trace("Sending ALL_SEND_CID (CMD2) command...");
+    res = sdhci_send_cmd(
+            bcm_emmc_regs,
+            IX_ALL_SEND_CID,
+            0,
+            sdcard,
+            sdhci_result
+    );
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to send `IX_ALL_SEND_CID` in sdhci_card_init_and_id().");
+    }
+
+    /* Send SEND_REL_ADDR (CMD3). */
+    /* TODO: In theory, loop back to SEND_IF_COND to find additional cards. */
+    log_trace("Sending SEND_REL_ADDR (CMD3) command...");
+    res = sdhci_send_cmd(
+            bcm_emmc_regs,
+            IX_SEND_REL_ADDR,
+            0,
+            sdcard,
+            sdhci_result
+    );
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to send `IX_SEND_REL_ADDR` in sdhci_card_init_and_id().");
+    }
 
 
     return result_ok();
