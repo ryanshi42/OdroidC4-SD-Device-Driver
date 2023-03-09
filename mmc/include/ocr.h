@@ -37,3 +37,10 @@ struct __attribute__((__packed__, aligned(4))) ocr {
  */
 result_t ocr_set_raw32(ocr_t *ocr, uint32_t val);
 
+/**
+ * True means the card has finished Power Up Routine and False means the card is not Powered Up.
+ * @param ocr
+ * @param ret_val
+ * @return
+ */
+result_t ocr_get_card_power_up_busy(ocr_t *ocr, bool *ret_val);

@@ -79,3 +79,12 @@ result_t sdcard_has_rca(sdcard_t *sdcard, bool *ret_val);
  * @return
  */
 result_t sdcard_is_app_cmd_accepted(sdcard_t *sdcard, bool *ret_val);
+
+/**
+ * Returns True if the SD card has powered up and False otherwise.
+ * @param sdcard
+ * @param ret_val
+ * @return
+ */
+result_t sdcard_has_powered_up(sdcard_t *sdcard, bool *ret_val);
+

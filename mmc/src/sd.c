@@ -398,9 +398,10 @@ int sd_init(bcm_emmc_regs_t *regs, sdcard_t *sd) {
 //    if (!(r & ACMD41_VOLTAGE)) return SD_ERROR;
 //    if (r & ACMD41_CMD_CCS) ccs = SCR_SUPP_CCS;
 
-    size_t retries = 6;
+    size_t retries = 7;
+    bool has_powered_up = false;
     do {
-        wait_cycles(400);
+        usleep(400000);
         result_t res = sdhci_send_cmd(
                 global_regs,
                 IX_APP_SEND_OP_COND,
@@ -412,9 +413,14 @@ int sd_init(bcm_emmc_regs_t *regs, sdcard_t *sd) {
             result_printf(res);
             return -1;
         }
-    } while (sdcard->ocr.card_power_up_busy == 0 && (retries-- > 0));
-    if (sdcard->ocr.card_power_up_busy == 0) {
-        uart_puts("ERROR: EMMC ACMD41 returned error\n");
+        res = sdcard_has_powered_up(sdcard, &has_powered_up);
+        if (result_is_err(res)) {
+            result_printf(res);
+            return -1;
+        }
+    } while (!has_powered_up && (retries-- > 0));
+    if (!has_powered_up) {
+        printf("ERROR: EMMC card did not power up\n");
         return -1;
     }
     if (sdcard->ocr.card_capacity) {

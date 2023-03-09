@@ -72,3 +72,9 @@ result_t sdcard_is_app_cmd_accepted(sdcard_t *sdcard, bool *ret_val) {
     return sdcard_mask_status(sdcard, ST_APP_CMD, ret_val);
 }
 
+result_t sdcard_has_powered_up(sdcard_t *sdcard, bool *ret_val) {
+    if (sdcard == NULL) {
+        return result_err("NULL `sdcard` passed to sdcard_has_powered_up().");
+    }
+    return ocr_get_card_power_up_busy(&sdcard->ocr, ret_val);
+}
