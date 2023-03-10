@@ -579,17 +579,17 @@ int sd_init(bcm_emmc_regs_t *regs, sdcard_t *sd) {
 
 //    sd_cmd(CMD_CARD_SELECT, sd_rca);
 //    if (sd_err) return sd_err;
-    res = sdhci_send_cmd(
-            global_regs,
-            IX_CARD_SELECT,
-            sd_rca,
-            sdcard,
-            &sd_res
-    );
-    if (result_is_err(res)) {
-        result_printf(res);
-        return -1;
-    }
+//    res = sdhci_send_cmd(
+//            global_regs,
+//            IX_CARD_SELECT,
+//            sd_rca,
+//            sdcard,
+//            &sd_res
+//    );
+//    if (result_is_err(res)) {
+//        result_printf(res);
+//        return -1;
+//    }
 
     if (sd_status(SR_DAT_INHIBIT)) return SD_TIMEOUT;
     *EMMC_BLKSIZECNT = (1 << 16) | 8;

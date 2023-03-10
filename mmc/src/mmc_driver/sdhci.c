@@ -142,6 +142,28 @@ result_t sdhci_card_init_and_id(
         return result_err_chain(res, "Failed to set clock to full speed in sdhci_card_init_and_id().");
     }
 
+    /* Get the sdcard's RCA. */
+    log_trace("Obtaining SD card's Relative Card Address (RCA)...");
+    uint32_t rca = 0;
+    res = sdcard_get_rca(sdcard, &rca);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to get card's RCA in sdhci_card_init_and_id().");
+    }
+    /* Call the `IX_CARD_SELECT` CMD using the RCA. */
+    /* TODO: Check card_is_locked status in the R1 response from CMD7 [bit 25],
+     * if so, use CMD42 to unlock CMD42 structure [4.3.7] same as a single block
+     * write; data block includes PWD setting mode, PWD len, PWD data.*/
+    log_trace("Sending CARD_SELECT (CMD7)...");
+    res = sdhci_send_cmd(
+            bcm_emmc_regs,
+            IX_CARD_SELECT,
+            rca,
+            sdcard,
+            sdhci_result
+    );
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to send `IX_CARD_SELECT` in sdhci_card_init_and_id().");
+    }
 
 
 
@@ -481,15 +503,6 @@ result_t sdhci_send_cmd(
         return result_err("NULL `sdhci_result` passed to sdhci_send_cmd().");
     }
     *sdhci_result = SD_ERROR;
-    /* Check whether command is an APP Command. */
-    bool is_app_cmd = false;
-    result_t res_is_app_cmd = sdhci_cmds_is_app_cmd(
-            sdhci_cmd_index,
-            &is_app_cmd
-    );
-    if (result_is_err(res_is_app_cmd)) {
-        return result_err_chain(res_is_app_cmd, "Failed to check if command is an app command in sdhci_send_cmd().");
-    }
     result_t res;
     /* Obtain the command from the list of commands we can send. */
     sdhci_cmd_t *sdhci_cmd = NULL;
@@ -499,6 +512,37 @@ result_t sdhci_send_cmd(
     );
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to get command in sdhci_send_cmd().");
+    }
+    /* Determine if this command requires an RCA or not. */
+    bool requires_rca = false;
+    res = sdhci_cmd_uses_rca(
+            sdhci_cmd,
+            &requires_rca
+    );
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to check if command uses RCA in sdhci_send_cmd().");
+    }
+    /* If the command requires an RCA, check the argument passed into this
+     * function is the RCA or throw an error. */
+    if (requires_rca) {
+        uint32_t rca = 0;
+        res = sdcard_get_rca(sdcard, &rca);
+        if (result_is_err(res)) {
+            return result_err_chain(res, "Failed to get RCA in sdhci_send_cmd().");
+        }
+        if (rca != arg) {
+            return result_err("Illegal Argument Exception: Command requires RCA, but RCA passed to sdhci_send_cmd() is not the RCA of the sdcard.");
+        }
+    }
+
+    /* Check whether command is an APP Command. */
+    bool is_app_cmd = false;
+    result_t res_is_app_cmd = sdhci_cmds_is_app_cmd(
+            sdhci_cmd_index,
+            &is_app_cmd
+    );
+    if (result_is_err(res_is_app_cmd)) {
+        return result_err_chain(res_is_app_cmd, "Failed to check if command is an app command in sdhci_send_cmd().");
     }
 
     if (is_app_cmd) {
