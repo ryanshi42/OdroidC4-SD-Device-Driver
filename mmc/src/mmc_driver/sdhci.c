@@ -813,7 +813,7 @@ result_t sdhci_send_cmd(
         }
     }
 
-    return result_err("Response handling has not been implemented in sdhci_send_cmd().");
+    return result_err("Response handling for command has not been implemented in sdhci_send_cmd().");
 }
 
 
