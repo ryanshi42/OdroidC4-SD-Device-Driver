@@ -95,5 +95,26 @@ TEST(test_sdhci_cmd, get_cmd_index_should_return_err_if_null_ret_val) {
     ASSERT_TRUE(result_is_err(res));
 }
 
+/* use_rca(). */
 
+TEST(test_sdhci_cmd, use_rca_should_return_true_if_uses_rca) {
+    cmdtm_t cmdtm = {};
+    sdhci_cmd_t sdhci_cmd = {
+            .use_rca = true,
+    };
+    bool uses_rca = false;
+    result_t res = sdhci_cmd_uses_rca(&sdhci_cmd, &uses_rca);
+    ASSERT_TRUE(result_is_ok(res));
+    ASSERT_EQ(true, uses_rca);
+}
 
+TEST(test_sdhci_cmd, use_rca_should_return_false_if_does_not_use_rca) {
+    cmdtm_t cmdtm = {};
+    sdhci_cmd_t sdhci_cmd = {
+            .use_rca = false,
+    };
+    bool uses_rca = false;
+    result_t res = sdhci_cmd_uses_rca(&sdhci_cmd, &uses_rca);
+    ASSERT_TRUE(result_is_ok(res));
+    ASSERT_EQ(false, uses_rca);
+}

@@ -35,6 +35,9 @@ result_t sdhci_cmd_get_cmd_rspns_type(
     if (sdhci_cmd == NULL) {
         return result_err("NULL `sdhci_cmd` passed to sdhci_cmd_get_cmd_rspns_type().");
     }
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` passed to sdhci_cmd_get_cmd_rspns_type().");
+    }
     return cmdtm_get_cmd_rspns_type(&sdhci_cmd->cmdtm, ret_val);
 }
 
@@ -45,6 +48,23 @@ result_t sdhci_cmd_get_cmd_index(
     if (sdhci_cmd == NULL) {
         return result_err("NULL `sdhci_cmd` passed to sdhci_cmd_get_cmd_index().");
     }
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` passed to sdhci_cmd_get_cmd_index().");
+    }
     return cmdtm_get_cmd_index(&sdhci_cmd->cmdtm, ret_val);
+}
+
+result_t sdhci_cmd_uses_rca(
+        sdhci_cmd_t *sdhci_cmd,
+        bool *ret_val
+) {
+    if (sdhci_cmd == NULL) {
+        return result_err("NULL `sdhci_cmd` passed to sdhci_cmd_uses_rca().");
+    }
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` passed to sdhci_cmd_uses_rca().");
+    }
+    *ret_val = sdhci_cmd->use_rca;
+    return result_ok();
 }
 

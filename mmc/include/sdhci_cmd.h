@@ -7,9 +7,9 @@
 #include "cmd_rspns_type.h"
 #include "cmd_index.h"
 
-/*--------------------------------------------------------------------------}
-{						   SD CARD COMMAND RECORD						    }
-{--------------------------------------------------------------------------*/
+/**
+ * SD CARD COMMAND RECORD
+ */
 typedef struct sdhci_cmd sdhci_cmd_t;
 struct sdhci_cmd {
     const char cmd_name[16];
@@ -61,4 +61,15 @@ result_t sdhci_cmd_get_cmd_rspns_type(
 result_t sdhci_cmd_get_cmd_index(
         sdhci_cmd_t *sdhci_cmd,
         cmd_index_t *ret_val
+);
+
+/**
+ * Returns whether the command uses rca or not.
+ * @param sdhci_cmd
+ * @param ret_val
+ * @return
+ */
+result_t sdhci_cmd_uses_rca(
+        sdhci_cmd_t *sdhci_cmd,
+        bool *ret_val
 );
