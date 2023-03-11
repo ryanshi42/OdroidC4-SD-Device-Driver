@@ -39,8 +39,8 @@ FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_get_resp2, bcm_emmc_regs_t *, uint32_t *
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_get_resp3, bcm_emmc_regs_t *, uint32_t *)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_set_block_size, bcm_emmc_regs_t *, uint32_t)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_set_block_count, bcm_emmc_regs_t *, uint32_t)
-FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_ready_to_read, bcm_emmc_regs_t *, bool *)
-FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_ready_to_write, bcm_emmc_regs_t *, bool *)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_read_ready, bcm_emmc_regs_t *, bool *)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_write_ready, bcm_emmc_regs_t *, bool *)
 
 /* Resets all Fakes for each unit test. */
 class TestBcmEmmc : public testing::Test {
@@ -81,8 +81,8 @@ protected:
         RESET_FAKE(bcm_emmc_regs_get_resp3);
         RESET_FAKE(bcm_emmc_regs_set_block_size);
         RESET_FAKE(bcm_emmc_regs_set_block_count);
-        RESET_FAKE(bcm_emmc_regs_is_ready_to_read);
-        RESET_FAKE(bcm_emmc_regs_is_ready_to_write);
+        RESET_FAKE(bcm_emmc_regs_is_read_ready);
+        RESET_FAKE(bcm_emmc_regs_is_write_ready);
     }
 
     // You can define per-test tear-down logic as usual.

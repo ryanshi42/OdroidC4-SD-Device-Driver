@@ -369,7 +369,7 @@ result_t bcm_emmc_regs_set_block_count(
  * @param ret_val
  * @return
  */
-result_t bcm_emmc_regs_is_ready_to_read(
+result_t bcm_emmc_regs_is_read_ready(
         bcm_emmc_regs_t *bcm_emmc_regs,
         bool *ret_val
 );
@@ -380,7 +380,7 @@ result_t bcm_emmc_regs_is_ready_to_read(
  * @param ret_val
  * @return
  */
-result_t bcm_emmc_regs_is_ready_to_write(
+result_t bcm_emmc_regs_is_write_ready(
         bcm_emmc_regs_t *bcm_emmc_regs,
         bool *ret_val
 );
