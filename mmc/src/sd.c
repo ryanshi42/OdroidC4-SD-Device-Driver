@@ -606,9 +606,9 @@ int sd_init(bcm_emmc_regs_t *regs, sdcard_t *sd) {
 //        result_printf(res);
 //        return -1;
 //    }
-
-    if (sd_err) return sd_err;
-    if (sd_int(INT_READ_RDY)) return SD_TIMEOUT;
+//
+//    if (sd_err) return sd_err;
+//    if (sd_int(INT_READ_RDY)) return SD_TIMEOUT;
 
     r = 0;
     cnt = 100000;

@@ -195,7 +195,15 @@ result_t sdhci_card_init_and_id(
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to send `IX_SEND_SCR` in sdhci_card_init_and_id().");
     }
-
+    /* Wait until we're ready to read. */
+    res = sdhci_wait_for_interrupt(
+            bcm_emmc_regs,
+            INT_READ_RDY,
+            sdhci_result
+    );
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to wait for `INT_READ_RDY` in sdhci_card_init_and_id().");
+    }
 
 
     return result_ok();
