@@ -436,3 +436,12 @@ result_t bcm_emmc_regs_get_data(
     return result_ok();
 }
 
+result_t bcm_emmc_regs_set_bus_width_4(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        bool val
+) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_use_4_data_lines().");
+    }
+    return control0_set_hctl_dwidth(&bcm_emmc_regs->control0, val);
+}

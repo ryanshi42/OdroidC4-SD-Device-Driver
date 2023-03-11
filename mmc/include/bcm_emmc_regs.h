@@ -396,3 +396,14 @@ result_t bcm_emmc_regs_get_data(
         uint32_t *ret_val
 );
 
+/**
+ * Enables or disables the use of 4 data lines.
+ * @param bcm_emmc_regs
+ * @param val
+ * @return
+ */
+result_t bcm_emmc_regs_set_bus_width_4(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        bool val
+);
+

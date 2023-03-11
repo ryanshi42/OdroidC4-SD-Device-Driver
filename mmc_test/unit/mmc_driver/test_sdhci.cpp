@@ -42,6 +42,7 @@ FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_set_block_count, bcm_emmc_regs_t *, uint
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_read_ready, bcm_emmc_regs_t *, bool *)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_write_ready, bcm_emmc_regs_t *, bool *)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_get_data, bcm_emmc_regs_t *, uint32_t *)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_set_bus_width_4, bcm_emmc_regs_t *, bool)
 
 FAKE_VALUE_FUNC(result_t, sdcard_init, sdcard_t *)
 FAKE_VALUE_FUNC(result_t, sdcard_set_ocr_raw32, sdcard_t *, uint32_t)
@@ -58,6 +59,8 @@ FAKE_VALUE_FUNC(result_t, sdcard_set_cid, sdcard_t *, uint32_t, uint32_t, uint32
 FAKE_VALUE_FUNC(result_t, sdcard_set_type, sdcard_t *, sdcard_type_t)
 FAKE_VALUE_FUNC(result_t, sdcard_set_scr_raw32_lo, sdcard_t *, uint32_t)
 FAKE_VALUE_FUNC(result_t, sdcard_set_scr_raw32_hi, sdcard_t *, uint32_t)
+FAKE_VALUE_FUNC(result_t, sdcard_is_bus_width_4, sdcard_t *, bool *)
+FAKE_VALUE_FUNC(result_t, sdcard_is_bus_width_1, sdcard_t *, bool *)
 
 /* Resets all Fakes for each unit test. */
 class TestSdhci : public testing::Test {
@@ -101,6 +104,7 @@ protected:
         RESET_FAKE(bcm_emmc_regs_is_read_ready);
         RESET_FAKE(bcm_emmc_regs_is_write_ready);
         RESET_FAKE(bcm_emmc_regs_get_data);
+        RESET_FAKE(bcm_emmc_regs_set_bus_width_4);
 
         RESET_FAKE(sdcard_init);
         RESET_FAKE(sdcard_set_ocr_raw32);
@@ -117,6 +121,8 @@ protected:
         RESET_FAKE(sdcard_set_type);
         RESET_FAKE(sdcard_set_scr_raw32_lo);
         RESET_FAKE(sdcard_set_scr_raw32_hi);
+        RESET_FAKE(sdcard_is_bus_width_4);
+        RESET_FAKE(sdcard_is_bus_width_1);
     }
 
     // You can define per-test tear-down logic as usual.

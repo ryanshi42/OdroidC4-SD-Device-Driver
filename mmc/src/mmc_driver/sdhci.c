@@ -183,7 +183,8 @@ result_t sdhci_card_init_and_id(
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to set block size to 8 in sdhci_card_init_and_id().");
     }
-    /* Send the `SEND_SCR` command. */
+    /* Get the SCR by sending the `SEND_SCR` command. We need the SCR to figure
+     * out what the allowed bus widths are. */
     log_trace("Sending SEND_SCR (CMD51) command...");
     res = sdhci_send_cmd(
             bcm_emmc_regs,
@@ -245,7 +246,35 @@ result_t sdhci_card_init_and_id(
         *sdhci_result = SD_TIMEOUT;
         return result_err("Failed to read SCR in sdhci_card_init_and_id().");
     }
-
+    /* Check the bus width. */
+    bool is_bus_width_4_bit = false;
+    res = sdcard_is_bus_width_4(sdcard, &is_bus_width_4_bit);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to check if bus width is 4 bit in sdhci_card_init_and_id().");
+    }
+    /* Send APP_SET_BUS_WIDTH (ACMD6) command. If supported, set 4 bit bus width
+     * and update the CONTROL0 register. */
+    if (is_bus_width_4_bit) {
+        log_trace("Setting bus width to 4 bit...");
+        res = sdhci_send_cmd(
+                bcm_emmc_regs,
+                IX_SET_BUS_WIDTH,
+                rca | 2,
+                sdcard,
+                sdhci_result
+        );
+        if (result_is_err(res)) {
+            return result_err_chain(res, "Failed to send `IX_SET_BUS_WIDTH` in sdhci_card_init_and_id().");
+        }
+        /* Sets the bus width to 4 bit. */
+        res = bcm_emmc_regs_set_bus_width_4(
+                bcm_emmc_regs,
+                true
+        );
+        if (result_is_err(res)) {
+            return result_err_chain(res, "Failed to use 4 data lines in sdhci_card_init_and_id().");
+        }
+    }
 
     return result_ok();
 }

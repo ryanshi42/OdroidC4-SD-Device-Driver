@@ -89,3 +89,19 @@ result_t scr_set_raw32_hi(scr_t *scr, uint32_t val);
  */
 result_t scr_get_bus_width(scr_t *scr, bus_width_t *ret_val);
 
+/**
+ * Returns true if the card supports 1-bit bus width and false otherwise.
+ * @param scr
+ * @param ret_val
+ * @return
+ */
+result_t scr_is_bus_width_1_supported(scr_t *scr, bool *ret_val);
+
+/**
+ * Returns true if the card supports 4-bit bus width and false otherwise.
+ * @param scr
+ * @param ret_val
+ * @return
+ */
+result_t scr_is_bus_width_4_supported(scr_t *scr, bool *ret_val);
+

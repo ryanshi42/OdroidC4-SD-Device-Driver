@@ -161,3 +161,17 @@ result_t sdcard_set_scr_raw32_hi(sdcard_t *sdcard, uint32_t val) {
     }
     return scr_set_raw32_hi(&sdcard->scr, val);
 }
+
+result_t sdcard_is_bus_width_4(sdcard_t *sdcard, bool *ret_val) {
+    if (sdcard == NULL) {
+        return result_err("NULL `sdcard` passed to sdcard_is_bus_width_4().");
+    }
+    return scr_is_bus_width_4_supported(&sdcard->scr, ret_val);
+}
+
+result_t sdcard_is_bus_width_1(sdcard_t *sdcard, bool *ret_val) {
+    if (sdcard == NULL) {
+        return result_err("NULL `sdcard` passed to sdcard_is_bus_width_1().");
+    }
+    return scr_is_bus_width_1_supported(&sdcard->scr, ret_val);
+}

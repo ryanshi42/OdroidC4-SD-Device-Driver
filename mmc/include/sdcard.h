@@ -153,3 +153,19 @@ result_t sdcard_set_scr_raw32_lo(sdcard_t *sdcard, uint32_t val);
  * @return
  */
 result_t sdcard_set_scr_raw32_hi(sdcard_t *sdcard, uint32_t val);
+
+/**
+ * Checks if the SD card is 4-bit bus width.
+ * @param sdcard
+ * @param ret_val
+ * @return
+ */
+result_t sdcard_is_bus_width_4(sdcard_t *sdcard, bool *ret_val);
+
+/**
+ * Checks if the SD card is 1-bit bus width.
+ * @param sdcard
+ * @param ret_val
+ * @return
+ */
+result_t sdcard_is_bus_width_1(sdcard_t *sdcard, bool *ret_val);

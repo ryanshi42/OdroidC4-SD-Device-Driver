@@ -48,3 +48,11 @@ result_t control0_set_raw32(control0_t *control0, uint32_t val);
  * @return
  */
 result_t control0_get_raw32(control0_t *control0, uint32_t *ret_val);
+
+/**
+ * Sets the `HCTL_DWIDTH` field of the `control0` register.
+ * @param control0
+ * @param val
+ * @return
+ */
+result_t control0_set_hctl_dwidth(control0_t *control0, bool val);

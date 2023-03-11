@@ -14,6 +14,7 @@ add_executable(test_mmc_rpi3b_lib_sdcard mmc_driver/test_sdcard.cpp)
 add_executable(test_mmc_rpi3b_lib_result mmc_driver/common/test_result.cpp)
 add_executable(test_mmc_rpi3b_lib_bcm_timer_regs timer_driver/test_bcm_timer_regs.cpp)
 add_executable(test_mmc_rpi3b_lib_bcm_timer timer_driver/test_bcm_timer.cpp)
+add_executable(test_mmc_rpi3b_lib_scr mmc_driver/sdcard/test_scr.cpp)
 
 add_google_test(test_mmc_rpi3b_lib_arith mmc_rpi3b_lib_arith)
 add_google_test(test_mmc_rpi3b_lib_control0 mmc_rpi3b_lib_control0)
@@ -30,6 +31,7 @@ add_google_test(test_mmc_rpi3b_lib_sdcard mmc_rpi3b_lib_sdcard)
 add_google_test(test_mmc_rpi3b_lib_result mmc_rpi3b_lib_result)
 add_google_test(test_mmc_rpi3b_lib_bcm_timer_regs mmc_rpi3b_lib_bcm_timer_regs)
 add_google_test(test_mmc_rpi3b_lib_bcm_timer mmc_rpi3b_lib_bcm_timer)
+add_google_test(test_mmc_rpi3b_lib_scr mmc_rpi3b_lib_scr)
 
 target_link_libraries(
         test_mmc_rpi3b_lib_bcm_emmc

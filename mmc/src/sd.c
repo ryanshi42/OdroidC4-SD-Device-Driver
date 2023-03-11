@@ -620,24 +620,22 @@ int sd_init(bcm_emmc_regs_t *regs, sdcard_t *sd) {
 //    }
 //    if (r != 2) return SD_TIMEOUT;
 
-    sd_scr[0] = sdcard->scr.raw32_lo;
-    sd_scr[1] = sdcard->scr.raw32_hi;
-    if (sd_scr[0] & SCR_SD_BUS_WIDTH_4) {
-//        sd_cmd(CMD_SET_BUS_WIDTH, sd_rca | 2);
-        res = sdhci_send_cmd(
-                global_regs,
-                IX_SET_BUS_WIDTH,
-                sd_rca | 2,
-                sdcard,
-                &sd_res
-        );
-        if (result_is_err(res)) {
-            result_printf(res);
-            return -1;
-        }
-        if (sd_err) return sd_err;
-        *EMMC_CONTROL0 |= C0_HCTL_DWITDH;
-    }
+//    if (sd_scr[0] & SCR_SD_BUS_WIDTH_4) {
+////        sd_cmd(CMD_SET_BUS_WIDTH, sd_rca | 2);
+//        res = sdhci_send_cmd(
+//                global_regs,
+//                IX_SET_BUS_WIDTH,
+//                sd_rca | 2,
+//                sdcard,
+//                &sd_res
+//        );
+//        if (result_is_err(res)) {
+//            result_printf(res);
+//            return -1;
+//        }
+//        if (sd_err) return sd_err;
+//        *EMMC_CONTROL0 |= C0_HCTL_DWITDH;
+//    }
     // add software flag
     uart_puts("EMMC: supports ");
     if (sd_scr[0] & SCR_SUPP_SET_BLKCNT)
