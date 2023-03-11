@@ -38,3 +38,19 @@ result_t status_get_cmd_inhibit(status_t *status, bool *ret_val);
  * @return
  */
 result_t status_get_dat_inhibit(status_t *status, bool *ret_val);
+
+/**
+ * Returns the `READ_TRANSFER` field of the `status` register.
+ * @param status
+ * @param ret_val
+ * @return
+ */
+result_t status_get_read_transfer(status_t *status, bool *ret_val);
+
+/**
+ * Returns the `WRITE_TRANSFER` field of the `status` register.
+ * @param status
+ * @param ret_val
+ * @return
+ */
+result_t status_get_write_transfer(status_t *status, bool *ret_val);

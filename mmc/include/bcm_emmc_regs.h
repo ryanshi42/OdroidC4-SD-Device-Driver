@@ -363,4 +363,25 @@ result_t bcm_emmc_regs_set_block_count(
         uint32_t val
 );
 
+/**
+ * Returns True if new data is available and ready to be read.
+ * @param bcm_emmc_regs
+ * @param ret_val
+ * @return
+ */
+result_t bcm_emmc_regs_is_ready_to_read(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        bool *ret_val
+);
+
+/**
+ * Returns True if new data is available and ready to be written.
+ * @param bcm_emmc_regs
+ * @param ret_val
+ * @return
+ */
+result_t bcm_emmc_regs_is_ready_to_write(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        bool *ret_val
+);
 

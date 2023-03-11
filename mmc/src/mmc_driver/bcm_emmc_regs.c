@@ -396,4 +396,30 @@ result_t bcm_emmc_regs_set_block_count(
     return blksizecnt_set_blkcnt(&bcm_emmc_regs->blksizecnt, val);
 }
 
+result_t bcm_emmc_regs_is_ready_to_read(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        bool *ret_val
+) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_is_ready_to_read().");
+    }
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` passed to bcm_emmc_regs_is_ready_to_read().");
+    }
+    return status_get_read_transfer(&bcm_emmc_regs->status, ret_val);
+}
+
+result_t bcm_emmc_regs_is_ready_to_write(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        bool *ret_val
+) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_is_ready_to_write().");
+    }
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` passed to bcm_emmc_regs_is_ready_to_write().");
+    }
+    return status_get_write_transfer(&bcm_emmc_regs->status, ret_val);
+}
+
 
