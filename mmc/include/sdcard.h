@@ -4,6 +4,7 @@
 #include "ocr.h"
 #include "cid.h"
 #include "sdcard_type.h"
+#include "scr.h"
 
 /* Card Status Mask that indicates APP_CMD was accepted. */
 #define ST_APP_CMD (0x00000020)
@@ -20,6 +21,8 @@ struct sdcard {
     cid_t cid;
     /* SD Card Type. */
     sdcard_type_t type;
+    /* SD Card Configuration Register. */
+    scr_t scr;
 };
 
 /**
@@ -135,3 +138,18 @@ result_t sdcard_set_cid(
  */
 result_t sdcard_set_type(sdcard_t *sdcard, sdcard_type_t type);
 
+/**
+ * Saves the lower 32 bits of the SD card SCR register.
+ * @param sdcard
+ * @param val
+ * @return
+ */
+result_t sdcard_set_scr_raw32_lo(sdcard_t *sdcard, uint32_t val);
+
+/**
+ * Saves the upper 32 bits of the SD card SCR register.
+ * @param sdcard
+ * @param val
+ * @return
+ */
+result_t sdcard_set_scr_raw32_hi(sdcard_t *sdcard, uint32_t val);

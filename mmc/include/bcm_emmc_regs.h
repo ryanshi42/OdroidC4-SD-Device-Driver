@@ -385,3 +385,14 @@ result_t bcm_emmc_regs_is_write_ready(
         bool *ret_val
 );
 
+/**
+ * Returns the data as a raw 32-bit value.
+ * @param bcm_emmc_regs
+ * @param ret_val
+ * @return
+ */
+result_t bcm_emmc_regs_get_data(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        uint32_t *ret_val
+);
+

@@ -204,6 +204,47 @@ result_t sdhci_card_init_and_id(
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to wait for `INT_READ_RDY` in sdhci_card_init_and_id().");
     }
+    /* Start reading SCR from EMMC. */
+    int num_scr_reads = 0;
+    int num_scr_retries = 100000;
+    bool is_read_ready = false;
+    do {
+        res = bcm_emmc_regs_is_read_ready(bcm_emmc_regs, &is_read_ready);
+        if (result_is_err(res)) {
+            return result_err_chain(res, "Failed to check if read ready in sdhci_card_init_and_id().");
+        }
+        if (is_read_ready) {
+            /* Read the SCR from the data register. */
+            uint32_t data = 0;
+            res = bcm_emmc_regs_get_data(bcm_emmc_regs, &data);
+            if (result_is_err(res)) {
+                return result_err_chain(res, "Failed to get data in sdhci_card_init_and_id().");
+            }
+            if (num_scr_reads == 0) {
+                /* Save low portion of SCR register to sdcard. */
+                res = sdcard_set_scr_raw32_lo(sdcard, data);
+                if (result_is_err(res)) {
+                    return result_err_chain(res, "Failed to set SCR raw32 lo in sdhci_card_init_and_id().");
+                }
+            } else {
+                /* Save high portion of SCR register to sdcard. */
+                res = sdcard_set_scr_raw32_hi(sdcard, data);
+                if (result_is_err(res)) {
+                    return result_err_chain(res, "Failed to set SCR raw32 hi in sdhci_card_init_and_id().");
+                }
+            }
+            num_scr_reads++;
+        } else {
+            usleep(1);
+            if (--num_scr_retries == 0) {
+                break;
+            }
+        }
+    } while (num_scr_reads < 2);
+    if (num_scr_reads < 2) {
+        *sdhci_result = SD_TIMEOUT;
+        return result_err("Failed to read SCR in sdhci_card_init_and_id().");
+    }
 
 
     return result_ok();

@@ -422,4 +422,17 @@ result_t bcm_emmc_regs_is_write_ready(
     return status_get_write_transfer(&bcm_emmc_regs->status, ret_val);
 }
 
+result_t bcm_emmc_regs_get_data(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        uint32_t *ret_val
+) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_get_data().");
+    }
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` passed to bcm_emmc_regs_get_data().");
+    }
+    *ret_val = bcm_emmc_regs->data;
+    return result_ok();
+}
 

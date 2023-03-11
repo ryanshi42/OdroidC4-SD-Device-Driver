@@ -610,15 +610,18 @@ int sd_init(bcm_emmc_regs_t *regs, sdcard_t *sd) {
 //    if (sd_err) return sd_err;
 //    if (sd_int(INT_READ_RDY)) return SD_TIMEOUT;
 
-    r = 0;
-    cnt = 100000;
-    while (r < 2 && cnt) {
-        if (*EMMC_STATUS & SR_READ_AVAILABLE)
-            sd_scr[r++] = *EMMC_DATA;
-        else
-            wait_msec(1);
-    }
-    if (r != 2) return SD_TIMEOUT;
+//    r = 0;
+//    cnt = 100000;
+//    while (r < 2 && cnt) {
+//        if (*EMMC_STATUS & SR_READ_AVAILABLE)
+//            sd_scr[r++] = *EMMC_DATA;
+//        else
+//            wait_msec(1);
+//    }
+//    if (r != 2) return SD_TIMEOUT;
+
+    sd_scr[0] = sdcard->scr.raw32_lo;
+    sd_scr[1] = sdcard->scr.raw32_hi;
     if (sd_scr[0] & SCR_SD_BUS_WIDTH_4) {
 //        sd_cmd(CMD_SET_BUS_WIDTH, sd_rca | 2);
         res = sdhci_send_cmd(

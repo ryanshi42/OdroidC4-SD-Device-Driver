@@ -147,3 +147,17 @@ result_t sdcard_set_type(sdcard_t *sdcard, sdcard_type_t type) {
     sdcard->type = type;
     return result_ok();
 }
+
+result_t sdcard_set_scr_raw32_lo(sdcard_t *sdcard, uint32_t val) {
+    if (sdcard == NULL) {
+        return result_err("NULL `sdcard` passed to sdcard_set_scr_raw32_lo().");
+    }
+    return scr_set_raw32_lo(&sdcard->scr, val);
+}
+
+result_t sdcard_set_scr_raw32_hi(sdcard_t *sdcard, uint32_t val) {
+    if (sdcard == NULL) {
+        return result_err("NULL `sdcard` passed to sdcard_set_scr_raw32_hi().");
+    }
+    return scr_set_raw32_hi(&sdcard->scr, val);
+}
