@@ -103,6 +103,7 @@ MMC_DRIVER_OBJS := \
 	mmc_driver/bcm_emmc_regs/cmdtm/cmd_index.o \
 	mmc_driver/bcm_emmc_regs/cmdtm/cmd_rspns_type.o \
 	mmc_driver/bcm_emmc_regs/interrupt.o \
+	mmc_driver/bcm_emmc_regs/blksizecnt.o \
 	lib_printf/printf.o \
 	lib_sleep/sleep.o \
 	lib_assert/assert.o \

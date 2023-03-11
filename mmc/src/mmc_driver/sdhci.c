@@ -165,6 +165,37 @@ result_t sdhci_card_init_and_id(
         return result_err_chain(res, "Failed to send `IX_CARD_SELECT` in sdhci_card_init_and_id().");
     }
 
+    /* Reading from the SD Card Configuration Register (SCR).
+     * SEND_SCR command is like a READ_SINGLE but for a block of 8 bytes.*/
+    log_trace("Reading from the SD Card Configuration Register (SCR)...");
+    /* Wait for any data operation that might be in progress before reading the block. */
+    res = sdhci_wait_for_data_in_progress(bcm_emmc_regs, sdhci_result);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to wait for data in progress in sdhci_card_init_and_id().");
+    }
+    /* Set BLKSIZECNT to 1 block of 8 bytes. */
+    log_trace("Setting BLKSIZECNT to 1 block of 8 bytes...");
+    res = bcm_emmc_regs_set_block_count(bcm_emmc_regs, 1);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to set block count to 1 in sdhci_card_init_and_id().");
+    }
+    res = bcm_emmc_regs_set_block_size(bcm_emmc_regs, 8);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to set block size to 8 in sdhci_card_init_and_id().");
+    }
+    /* Send the `SEND_SCR` command. */
+    log_trace("Sending SEND_SCR (CMD51) command...");
+    res = sdhci_send_cmd(
+            bcm_emmc_regs,
+            IX_SEND_SCR,
+            0,
+            sdcard,
+            sdhci_result
+    );
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to send `IX_SEND_SCR` in sdhci_card_init_and_id().");
+    }
+
 
 
     return result_ok();
