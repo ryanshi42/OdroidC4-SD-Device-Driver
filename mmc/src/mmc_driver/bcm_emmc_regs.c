@@ -376,4 +376,24 @@ result_t bcm_emmc_regs_get_resp3(
     return result_ok();
 }
 
+result_t bcm_emmc_regs_set_block_size(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        uint32_t val
+) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_set_blk_size().");
+    }
+    return blksizecnt_set_blksize(&bcm_emmc_regs->blksizecnt, val);
+}
+
+result_t bcm_emmc_regs_set_block_count(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        uint32_t val
+) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_set_blk_cnt().");
+    }
+    return blksizecnt_set_blkcnt(&bcm_emmc_regs->blksizecnt, val);
+}
+
 

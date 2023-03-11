@@ -340,3 +340,27 @@ result_t bcm_emmc_regs_get_resp3(
         bcm_emmc_regs_t *bcm_emmc_regs,
         uint32_t *ret_val
 );
+
+/**
+ * Sets the block size.
+ * @param bcm_emmc_regs
+ * @param val
+ * @return
+ */
+result_t bcm_emmc_regs_set_block_size(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        uint32_t val
+);
+
+/**
+ * Sets the block count.
+ * @param bcm_emmc_regs
+ * @param val
+ * @return
+ */
+result_t bcm_emmc_regs_set_block_count(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        uint32_t val
+);
+
+
