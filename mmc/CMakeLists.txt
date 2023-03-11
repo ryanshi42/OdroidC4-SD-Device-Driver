@@ -223,6 +223,13 @@ target_link_libraries(
         mmc_rpi3b_lib_result
 )
 
+add_library(mmc_rpi3b_lib_blksizecnt src/mmc_driver/bcm_emmc_regs/blksizecnt.c)
+target_include_directories(mmc_rpi3b_lib_blksizecnt PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_blksizecnt
+        mmc_rpi3b_lib_result
+)
+
 add_library(mmc_rpi3b_lib_bcm_emmc_regs src/mmc_driver/bcm_emmc_regs.c)
 target_include_directories(mmc_rpi3b_lib_bcm_emmc_regs PUBLIC include/)
 target_link_libraries(
@@ -236,6 +243,7 @@ target_link_libraries(
         mmc_rpi3b_lib_irpt_mask
         mmc_rpi3b_lib_interrupt
         mmc_rpi3b_lib_cmdtm
+        mmc_rpi3b_lib_blksizecnt
 )
 
 add_library(mmc_rpi3b_lib_ocr src/mmc_driver/sdcard/ocr.c)

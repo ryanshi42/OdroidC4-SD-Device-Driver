@@ -16,11 +16,12 @@
 #include "irpt_en.h"
 #include "interrupt.h"
 #include "cmdtm.h"
+#include "blksizecnt.h"
 
 typedef struct bcm_emmc_regs bcm_emmc_regs_t;
 struct __attribute__((__packed__, aligned(4))) bcm_emmc_regs {
     uint32_t arg2; /* ACMD23 Argument. */
-    uint32_t blksizecnt; /* Block Size and Count. */
+    blksizecnt_t blksizecnt; /* Block Size and Count. */
     uint32_t arg1; /* Argument. */
     cmdtm_t cmdtm; /* Command and Transfer Mode. */
     uint32_t resp0; /* Response 0. */
