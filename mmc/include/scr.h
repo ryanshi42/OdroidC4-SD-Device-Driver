@@ -53,7 +53,7 @@ struct __attribute__((__packed__, aligned(4))) scr {
             volatile scr_struct_t SCR_STRUCT: 4;    // @4-7		SCR structure version
             volatile bus_width_t BUS_WIDTH: 4;      // @8-11	SD Bus width
             volatile sd_security_t SD_SECURITY: 3;  // @12-14	Card security in use
-            volatile unsigned DATA_AFTER_ERASE: 1;  // @15		Defines the data status after erase, whether it is 0 or 1
+            volatile unsigned DATA_AFTER_ERASE: 1;  // @15		Defines the data status after erase, whether it is 0 or 1
             unsigned reserved: 3;                   // @16-18	Write as zero read as don't care
             volatile ex_security_t EX_SECURITY: 4;  // @19-22	Extended security
             volatile unsigned SD_SPEC3: 1;          // @23		Spec. Version 3.00 or higher
@@ -80,3 +80,12 @@ result_t scr_set_raw32_lo(scr_t *scr, uint32_t val);
  * @return
  */
 result_t scr_set_raw32_hi(scr_t *scr, uint32_t val);
+
+/**
+ * Gets the `BUS_WIDTH` field of the scr register.
+ * @param scr
+ * @param val
+ * @return
+ */
+result_t scr_get_bus_width(scr_t *scr, bus_width_t *ret_val);
+
