@@ -279,6 +279,39 @@ result_t sdhci_card_init_and_id(
     return result_ok();
 }
 
+result_t sdhci_read_blocks(
+        sdcard_t *sdcard,
+        size_t lba,
+        size_t num_blocks,
+        char *dst_buffer
+) {
+    if (sdcard == NULL) {
+        return result_err("NULL `sdcard` passed to sdhci_read_blocks().");
+    }
+    if (dst_buffer == NULL) {
+        return result_err("NULL `dst_buffer` passed to sdhci_read_blocks().");
+    }
+    
+
+    return result_ok();
+}
+
+result_t sdhci_write_blocks(
+        sdcard_t *sdcard,
+        size_t lba,
+        size_t num_blocks,
+        char *src_buffer
+) {
+    if (sdcard == NULL) {
+        return result_err("NULL `sdcard` passed to sdhci_write_blocks().");
+    }
+    if (src_buffer == NULL) {
+        return result_err("NULL `src_buffer` passed to sdhci_write_blocks().");
+    }
+
+    return result_ok();
+}
+
 result_t sdhci_get_sd_clock_divisor(
         bcm_emmc_regs_t *bcm_emmc_regs,
         uint32_t freq,

@@ -26,6 +26,36 @@ result_t sdhci_card_init_and_id(
 );
 
 /**
+ * Reads the specified number of blocks from the SD card.
+ * @param sdcard
+ * @param lba
+ * @param num_blocks
+ * @param dst_buffer
+ * @return
+ */
+result_t sdhci_read_blocks(
+        sdcard_t *sdcard,
+        size_t lba,
+        size_t num_blocks,
+        char *dst_buffer
+);
+
+/**
+ * Writes the specified number of blocks to the SD card.
+ * @param sdcard
+ * @param lba
+ * @param num_blocks
+ * @param src_buffer
+ * @return
+ */
+result_t sdhci_write_blocks(
+        sdcard_t *sdcard,
+        size_t lba,
+        size_t num_blocks,
+        char *src_buffer
+);
+
+/**
  * Returns the SD clock divisor for the given requested frequency. This is
  * calculated relative to the SD base clock of 41.66667Mhz
  * @param bcm_emmc
