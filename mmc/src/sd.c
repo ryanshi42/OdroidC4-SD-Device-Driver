@@ -637,13 +637,13 @@ int sd_init(bcm_emmc_regs_t *regs, sdcard_t *sd) {
 //        *EMMC_CONTROL0 |= C0_HCTL_DWITDH;
 //    }
     // add software flag
-    uart_puts("EMMC: supports ");
-    if (sd_scr[0] & SCR_SUPP_SET_BLKCNT)
-        uart_puts("SET_BLKCNT ");
-    if (ccs)
-        uart_puts("CCS ");
-    uart_puts("\n");
-    sd_scr[0] &= ~SCR_SUPP_CCS;
-    sd_scr[0] |= ccs;
+//    uart_puts("EMMC: supports ");
+//    if (sd_scr[0] & SCR_SUPP_SET_BLKCNT)
+//        uart_puts("SET_BLKCNT ");
+//    if (ccs)
+//        uart_puts("CCS ");
+//    uart_puts("\n");
+//    sd_scr[0] &= ~SCR_SUPP_CCS;
+//    sd_scr[0] |= ccs;
     return SD_OK;
 }
