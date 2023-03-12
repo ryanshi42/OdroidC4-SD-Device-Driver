@@ -291,7 +291,7 @@ result_t sdhci_read_blocks(
     if (dst_buffer == NULL) {
         return result_err("NULL `dst_buffer` passed to sdhci_read_blocks().");
     }
-    
+    /* TODO: */
 
     return result_ok();
 }
@@ -308,6 +308,7 @@ result_t sdhci_write_blocks(
     if (src_buffer == NULL) {
         return result_err("NULL `src_buffer` passed to sdhci_write_blocks().");
     }
+    /* TODO: */
 
     return result_ok();
 }
