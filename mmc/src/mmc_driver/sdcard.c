@@ -175,3 +175,11 @@ result_t sdcard_is_bus_width_1(sdcard_t *sdcard, bool *ret_val) {
     }
     return scr_is_bus_width_1_supported(&sdcard->scr, ret_val);
 }
+
+result_t sdcard_is_type_unknown(sdcard_t *sdcard, bool *ret_val) {
+    if (sdcard == NULL) {
+        return result_err("NULL `sdcard` passed to sdcard_is_type_unknown().");
+    }
+    *ret_val = sdcard->type == SD_TYPE_UNKNOWN;
+    return result_ok();
+}

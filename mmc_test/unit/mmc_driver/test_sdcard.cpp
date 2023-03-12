@@ -51,3 +51,37 @@ TEST(test_sdcard, has_rca_should_return_true_if_rca_present) {
     ASSERT_TRUE(result_is_ok(res));
     ASSERT_TRUE(has_rca);
 }
+
+/* is_type_unknown */
+
+TEST(test_sdcard, is_type_unknown_should_return_true_if_type_unknown) {
+    sdcard_t sdcard = {};
+    result_t res = sdcard_init(&sdcard);
+    ASSERT_TRUE(result_is_ok(res));
+
+    sdcard.type = SD_TYPE_UNKNOWN;
+
+    bool is_type_unknown = false;
+    res = sdcard_is_type_unknown(
+            &sdcard,
+            &is_type_unknown
+    );
+    ASSERT_TRUE(result_is_ok(res));
+    ASSERT_TRUE(is_type_unknown);
+}
+
+TEST(test_sdcard, is_type_unknown_should_return_false_if_type_known) {
+    sdcard_t sdcard = {};
+    result_t res = sdcard_init(&sdcard);
+    ASSERT_TRUE(result_is_ok(res));
+
+    sdcard.type = SD_TYPE_2_SC;
+
+    bool is_type_unknown = false;
+    res = sdcard_is_type_unknown(
+            &sdcard,
+            &is_type_unknown
+    );
+    ASSERT_TRUE(result_is_ok(res));
+    ASSERT_TRUE(!is_type_unknown);
+}

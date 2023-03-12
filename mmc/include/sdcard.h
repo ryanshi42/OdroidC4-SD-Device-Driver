@@ -169,3 +169,11 @@ result_t sdcard_is_bus_width_4(sdcard_t *sdcard, bool *ret_val);
  * @return
  */
 result_t sdcard_is_bus_width_1(sdcard_t *sdcard, bool *ret_val);
+
+/**
+ * Returns True if the SD card is unknown and False otherwise.
+ * @param sdcard
+ * @param ret_val
+ * @return
+ */
+result_t sdcard_is_type_unknown(sdcard_t *sdcard, bool *ret_val);
