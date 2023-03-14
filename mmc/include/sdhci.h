@@ -31,13 +31,15 @@ result_t sdhci_card_init_and_id(
  * @param lba
  * @param num_blocks
  * @param dst_buffer
+ * @param sdhci_result
  * @return
  */
 result_t sdhci_read_blocks(
         sdcard_t *sdcard,
         size_t lba,
         size_t num_blocks,
-        char *dst_buffer
+        char *dst_buffer,
+        sdhci_result_t *sdhci_result
 );
 
 /**
@@ -46,13 +48,34 @@ result_t sdhci_read_blocks(
  * @param lba
  * @param num_blocks
  * @param src_buffer
+ * @param sdhci_result
  * @return
  */
 result_t sdhci_write_blocks(
         sdcard_t *sdcard,
         size_t lba,
         size_t num_blocks,
-        char *src_buffer
+        char *src_buffer,
+        sdhci_result_t *sdhci_result
+);
+
+/**
+ * Transfers specified number of blocks to/from the SD card.
+ * @param sdcard
+ * @param lba
+ * @param num_blocks
+ * @param is_write
+ * @param buffer
+ * @param sdhci_result
+ * @return
+ */
+result_t sdhci_transfer_blocks(
+        sdcard_t *sdcard,
+        size_t lba,
+        size_t num_blocks,
+        bool is_write,
+        char *buffer,
+        sdhci_result_t *sdhci_result
 );
 
 /**

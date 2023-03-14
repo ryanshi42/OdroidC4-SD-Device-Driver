@@ -368,3 +368,27 @@ TEST_F(TestSdhci, send_cmd_should_send_app_cmd_and_check_status_if_rca_present) 
     printf("sdcard_is_app_cmd_accepted_idx: %d", sdcard_is_app_cmd_accepted_idx);
     ASSERT_TRUE(sdcard_is_app_cmd_accepted_idx > sdcard_set_status_idx);
 }
+
+/* sdhci_transfer_blocks */
+
+TEST_F(TestSdhci, sdhci_transfer_blocks_should_return_err_if_sdcard_type_is_unknown) {
+    /* Return True for `is_type_unknown`.. */
+    sdcard_is_type_unknown_fake.custom_fake = [](sdcard_t *sdcard, bool *ret_val) {
+        *ret_val = true;
+        return result_ok();
+    };
+    sdcard_t sdcard = {};
+    sdhci_result_t sdhci_result;
+    char buf[512];
+    result_t res = sdhci_transfer_blocks(
+            &sdcard,
+            0,
+            0,
+            true,
+            buf,
+            &sdhci_result
+    );
+    ASSERT_TRUE(result_is_err(res));
+    ASSERT_TRUE(sdhci_result == SD_NO_RESP);
+}
+
