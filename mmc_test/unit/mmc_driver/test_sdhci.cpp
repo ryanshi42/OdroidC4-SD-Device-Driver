@@ -61,6 +61,7 @@ FAKE_VALUE_FUNC(result_t, sdcard_set_scr_raw32_lo, sdcard_t *, uint32_t)
 FAKE_VALUE_FUNC(result_t, sdcard_set_scr_raw32_hi, sdcard_t *, uint32_t)
 FAKE_VALUE_FUNC(result_t, sdcard_is_bus_width_4, sdcard_t *, bool *)
 FAKE_VALUE_FUNC(result_t, sdcard_is_bus_width_1, sdcard_t *, bool *)
+FAKE_VALUE_FUNC(result_t, sdcard_is_type_unknown, sdcard_t *, bool *)
 
 /* Resets all Fakes for each unit test. */
 class TestSdhci : public testing::Test {
@@ -123,6 +124,7 @@ protected:
         RESET_FAKE(sdcard_set_scr_raw32_hi);
         RESET_FAKE(sdcard_is_bus_width_4);
         RESET_FAKE(sdcard_is_bus_width_1);
+        RESET_FAKE(sdcard_is_type_unknown);
     }
 
     // You can define per-test tear-down logic as usual.
