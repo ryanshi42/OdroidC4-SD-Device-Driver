@@ -10,14 +10,18 @@
 /* This macro requires `printf_init()` in `printf.c` to have been called first. */
 #define result_printf(result) \
         printf("\n==========================\n"); \
-        printf("ERROR on %s:%d in %s().\n", __FILE__, __LINE__, __FUNCTION__); \
-        printf("Printing %ld out of %ld error messages.\n", result_get_num_err_msgs(result), result_get_total_num_err(result)); \
-        printf("=== Stack trace ===\n"); \
-        for (size_t i = 0; i < result_get_num_err_msgs(result); i++) { \
-            printf("%ld: %s\n", i, result_get_err_msg_at(result, i)); \
-        } \
-        if (result_get_num_err_msgs(result) < result_get_total_num_err(result)) { \
-            printf("...\n"); \
+        if (result_is_err(result)) { \
+            printf("ERROR on %s:%d in %s().\n", __FILE__, __LINE__, __FUNCTION__); \
+            printf("Printing %ld out of %ld error messages.\n", result_get_num_err_msgs(result), result_get_total_num_err(result)); \
+            printf("=== Stack trace ===\n"); \
+            for (size_t i = 0; i < result_get_num_err_msgs(result); i++) { \
+                printf("%ld: %s\n", i, result_get_err_msg_at(result, i)); \
+            } \
+            if (result_get_num_err_msgs(result) < result_get_total_num_err(result)) { \
+                printf("...\n"); \
+            } \
+        } else { \
+            printf("SUCCESS!\n"); \
         } \
         printf("==========================\n"); \
 
