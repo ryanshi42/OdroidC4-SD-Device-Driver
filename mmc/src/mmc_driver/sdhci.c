@@ -377,6 +377,12 @@ result_t sdhci_transfer_blocks(
         return result_err("NULL `sdhci_result` passed to sdhci_transfer_blocks().");
     }
     *sdhci_result = SD_ERROR;
+    /* All buffers must be word-aligned i.e. multiples of 4 bytes (32 bits)
+     * since we'll be transferring to/from the 32 bit EMMC "data" register in 32
+     * bit chunks. */
+    if (buffer_len % sizeof(uint32_t) != 0) {
+        return result_err("Buffer length is not a multiple of 4 in sdhci_transfer_blocks().");
+    }
     result_t res;
     /* Check the SD card type. */
     bool is_sdcard_type_unknown = true;
@@ -482,7 +488,7 @@ result_t sdhci_transfer_blocks(
             return result_err_chain(res, "Failed to wait for ready interrupt in sdhci_transfer_blocks().");
         }
         /* Loop through the block 4 bytes (32 bits) at a time. */
-        for (size_t i = 0; i < (block_size / 4); i++) {
+        for (size_t i = 0; i < (block_size / sizeof(uint32_t)); i++) {
             if (is_write) {
                 res = bcm_emmc_regs_set_data(bcm_emmc_regs, ((uint32_t *) buffer)[i]);
                 if (result_is_err(res)) {

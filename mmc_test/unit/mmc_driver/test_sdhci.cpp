@@ -404,3 +404,32 @@ TEST_F(TestSdhci, sdhci_transfer_blocks_should_return_err_if_sdcard_type_is_unkn
     ASSERT_TRUE(sdhci_result == SD_NO_RESP);
 }
 
+TEST_F(TestSdhci, sdhci_transfer_blocks_should_reject_non_word_aligned_buffer_sizes) {
+    bcm_emmc_regs_t bcm_emmc_regs = {};
+    sdcard_t sdcard = {};
+    sdhci_result_t sdhci_result;
+    auto buf_sizes = std::vector<size_t>{1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15};
+    for (auto buf_size : buf_sizes) {
+        char buf[512];
+        result_t res = sdhci_transfer_blocks(
+                &bcm_emmc_regs,
+                &sdcard,
+                0,
+                0,
+                512,
+                true,
+                buf,
+                buf_size,
+                &sdhci_result
+        );
+        ASSERT_TRUE(result_is_err(res));
+        ASSERT_TRUE(sdhci_result == SD_ERROR);
+        ASSERT_STREQ(
+                "Buffer length is not a multiple of 4 in sdhci_transfer_blocks().",
+                result_get_last_err_msg(res)
+        );
+    }
+}
+
+
+
