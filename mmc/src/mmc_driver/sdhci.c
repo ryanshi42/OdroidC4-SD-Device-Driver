@@ -280,12 +280,16 @@ result_t sdhci_card_init_and_id(
 }
 
 result_t sdhci_read_blocks(
+        bcm_emmc_regs_t *bcm_emmc_regs,
         sdcard_t *sdcard,
         size_t lba,
         size_t num_blocks,
         char *dst_buffer,
         sdhci_result_t *sdhci_result
 ) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to sdhci_read_blocks().");
+    }
     if (sdcard == NULL) {
         return result_err("NULL `sdcard` passed to sdhci_read_blocks().");
     }
@@ -298,6 +302,7 @@ result_t sdhci_read_blocks(
     *sdhci_result = SD_ERROR;
     /* Transfer blocks for reading from the SD Card. */
     return sdhci_transfer_blocks(
+            bcm_emmc_regs,
             sdcard,
             lba,
             num_blocks,
@@ -308,12 +313,16 @@ result_t sdhci_read_blocks(
 }
 
 result_t sdhci_write_blocks(
+        bcm_emmc_regs_t *bcm_emmc_regs,
         sdcard_t *sdcard,
         size_t lba,
         size_t num_blocks,
         char *src_buffer,
         sdhci_result_t *sdhci_result
 ) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to sdhci_write_blocks().");
+    }
     if (sdcard == NULL) {
         return result_err("NULL `sdcard` passed to sdhci_write_blocks().");
     }
@@ -326,6 +335,7 @@ result_t sdhci_write_blocks(
     *sdhci_result = SD_ERROR;
     /* Transfer blocks for writing to the SD Card. */
     return sdhci_transfer_blocks(
+            bcm_emmc_regs,
             sdcard,
             lba,
             num_blocks,
@@ -336,6 +346,7 @@ result_t sdhci_write_blocks(
 }
 
 result_t sdhci_transfer_blocks(
+        bcm_emmc_regs_t *bcm_emmc_regs,
         sdcard_t *sdcard,
         size_t lba,
         size_t num_blocks,
@@ -343,6 +354,9 @@ result_t sdhci_transfer_blocks(
         char *buffer,
         sdhci_result_t *sdhci_result
 ) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to sdhci_transfer_blocks().");
+    }
     if (sdcard == NULL) {
         return result_err("NULL `sdcard` passed to sdhci_transfer_blocks().");
     }
@@ -353,8 +367,9 @@ result_t sdhci_transfer_blocks(
         return result_err("NULL `sdhci_result` passed to sdhci_transfer_blocks().");
     }
     *sdhci_result = SD_ERROR;
+    result_t res;
     bool is_sdcard_type_unknown = true;
-    result_t res = sdcard_is_type_unknown(sdcard, &is_sdcard_type_unknown);
+    res = sdcard_is_type_unknown(sdcard, &is_sdcard_type_unknown);
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to check if SD Card type is unknown in sdhci_transfer_blocks().");
     }
@@ -362,6 +377,7 @@ result_t sdhci_transfer_blocks(
         *sdhci_result = SD_NO_RESP;
         return result_err("SD Card type is unknown in sdhci_transfer_blocks().");
     }
+    res = sdhci_wait_for_data_in_progress(bcm_emmc_regs, sdhci_result);
 
     return result_ok();
 }

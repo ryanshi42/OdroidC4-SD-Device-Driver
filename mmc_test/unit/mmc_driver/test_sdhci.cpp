@@ -377,10 +377,12 @@ TEST_F(TestSdhci, sdhci_transfer_blocks_should_return_err_if_sdcard_type_is_unkn
         *ret_val = true;
         return result_ok();
     };
+    bcm_emmc_regs_t bcm_emmc_regs = {};
     sdcard_t sdcard = {};
     sdhci_result_t sdhci_result;
     char buf[512];
     result_t res = sdhci_transfer_blocks(
+            &bcm_emmc_regs,
             &sdcard,
             0,
             0,

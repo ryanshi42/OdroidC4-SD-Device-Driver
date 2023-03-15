@@ -27,6 +27,7 @@ result_t sdhci_card_init_and_id(
 
 /**
  * Reads the specified number of blocks from the SD card.
+ * @param bcm_emmc_regs
  * @param sdcard
  * @param lba
  * @param num_blocks
@@ -35,6 +36,7 @@ result_t sdhci_card_init_and_id(
  * @return
  */
 result_t sdhci_read_blocks(
+        bcm_emmc_regs_t *bcm_emmc_regs,
         sdcard_t *sdcard,
         size_t lba,
         size_t num_blocks,
@@ -44,6 +46,7 @@ result_t sdhci_read_blocks(
 
 /**
  * Writes the specified number of blocks to the SD card.
+ * @param bcm_emmc_regs
  * @param sdcard
  * @param lba
  * @param num_blocks
@@ -52,6 +55,7 @@ result_t sdhci_read_blocks(
  * @return
  */
 result_t sdhci_write_blocks(
+        bcm_emmc_regs_t *bcm_emmc_regs,
         sdcard_t *sdcard,
         size_t lba,
         size_t num_blocks,
@@ -61,6 +65,7 @@ result_t sdhci_write_blocks(
 
 /**
  * Transfers specified number of blocks to/from the SD card.
+ * @param bcm_emmc_regs
  * @param sdcard
  * @param lba
  * @param num_blocks
@@ -70,6 +75,7 @@ result_t sdhci_write_blocks(
  * @return
  */
 result_t sdhci_transfer_blocks(
+        bcm_emmc_regs_t *bcm_emmc_regs,
         sdcard_t *sdcard,
         size_t lba,
         size_t num_blocks,
