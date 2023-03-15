@@ -42,6 +42,7 @@ FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_set_block_count, bcm_emmc_regs_t *, uint
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_read_ready, bcm_emmc_regs_t *, bool *)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_is_write_ready, bcm_emmc_regs_t *, bool *)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_get_data, bcm_emmc_regs_t *, uint32_t *)
+FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_set_data, bcm_emmc_regs_t *, uint32_t)
 FAKE_VALUE_FUNC(result_t, bcm_emmc_regs_set_bus_width_4, bcm_emmc_regs_t *, bool)
 
 FAKE_VALUE_FUNC(result_t, sdcard_init, sdcard_t *)
@@ -108,6 +109,7 @@ protected:
         RESET_FAKE(bcm_emmc_regs_is_read_ready);
         RESET_FAKE(bcm_emmc_regs_is_write_ready);
         RESET_FAKE(bcm_emmc_regs_get_data);
+        RESET_FAKE(bcm_emmc_regs_set_data);
         RESET_FAKE(bcm_emmc_regs_set_bus_width_4);
 
         RESET_FAKE(sdcard_init);

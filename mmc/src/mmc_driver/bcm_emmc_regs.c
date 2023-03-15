@@ -436,6 +436,17 @@ result_t bcm_emmc_regs_get_data(
     return result_ok();
 }
 
+result_t bcm_emmc_regs_set_data(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        uint32_t val
+) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_regs_set_data().");
+    }
+    bcm_emmc_regs->data = val;
+    return result_ok();
+}
+
 result_t bcm_emmc_regs_set_bus_width_4(
         bcm_emmc_regs_t *bcm_emmc_regs,
         bool val
