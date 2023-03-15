@@ -455,11 +455,12 @@ result_t sdhci_transfer_blocks(
     } else {
         block_addr = lba;
     }
-    // Set BLKSIZECNT to number of blocks * 512 bytes, send the read or write command.
-    // Once the data transfer has started and the TM_BLKCNT_EN bit in the CMDTM register is
-    // set the EMMC module automatically decreases the BLKCNT value as the data blocks
-    // are transferred and stops the transfer once BLKCNT reaches 0.
-    // TODO: TM_AUTO_CMD12 - is this needed?  What effect does it have?
+    /* Set BLKSIZECNT to number of blocks * 512 bytes, send the read or write command.
+     * Once the data transfer has started and the TM_BLKCNT_EN bit in the CMDTM
+     * register is set the EMMC module automatically decreases the BLKCNT value
+     * as the data blocks are transferred and stops the transfer once BLKCNT
+     * reaches 0.
+     * TODO: TM_AUTO_CMD12 - is this needed?  What effect does it have? */
     res = bcm_emmc_regs_set_block_count(bcm_emmc_regs, num_blocks);
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to set block count to 1 in sdhci_card_init_and_id().");
