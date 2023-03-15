@@ -383,6 +383,10 @@ result_t sdhci_transfer_blocks(
     if (buffer_len % sizeof(uint32_t) != 0) {
         return result_err("Buffer length is not a multiple of 4 in sdhci_transfer_blocks().");
     }
+    /* All buffers must be the same size as the amount of data we are transferring. */
+    if (buffer_len != num_blocks * block_size) {
+        return result_err("Buffer length is not equal to the number of blocks times the block size in sdhci_transfer_blocks().");
+    }
     result_t res;
     /* Check the SD card type. */
     bool is_sdcard_type_unknown = true;

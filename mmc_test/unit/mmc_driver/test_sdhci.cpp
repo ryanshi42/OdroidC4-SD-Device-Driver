@@ -393,7 +393,7 @@ TEST_F(TestSdhci, sdhci_transfer_blocks_should_return_err_if_sdcard_type_is_unkn
             &bcm_emmc_regs,
             &sdcard,
             0,
-            0,
+            1,
             512,
             true,
             buf,
@@ -431,5 +431,36 @@ TEST_F(TestSdhci, sdhci_transfer_blocks_should_reject_non_word_aligned_buffer_si
     }
 }
 
+TEST_F(TestSdhci, sdhci_transfer_blocks_should_reject_insufficient_buffer_sizes) {
+    bcm_emmc_regs_t bcm_emmc_regs = {};
+    sdcard_t sdcard = {};
+    sdhci_result_t sdhci_result;
+    size_t block_size = 512;
+    auto buf_sizes = std::vector<size_t>{1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15};
+    for (size_t i = 1; i < 10; i++) {
+        int delta = -1 * (int) sizeof(uint32_t);
+        if (i % 2 == 0) {
+            delta = 1 * (int) sizeof(uint32_t);
+        }
+        char buf[512];
+        result_t res = sdhci_transfer_blocks(
+                &bcm_emmc_regs,
+                &sdcard,
+                0,
+                i,
+                block_size,
+                true,
+                buf,
+                (i * block_size) + delta,
+                &sdhci_result
+        );
+        ASSERT_TRUE(result_is_err(res));
+        ASSERT_TRUE(sdhci_result == SD_ERROR);
+        ASSERT_STREQ(
+                "Buffer length is not equal to the number of blocks times the block size in sdhci_transfer_blocks().",
+                result_get_last_err_msg(res)
+        );
+    }
+}
 
 
