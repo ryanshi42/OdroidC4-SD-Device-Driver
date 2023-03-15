@@ -165,10 +165,10 @@ void init(void) {
         result_printf(res);
         return;
     }
-
-    if (sd_init((bcm_emmc_regs_t *) emmc_base_vaddr, &global_sdcard) != SD_OK) {
-        printf("Failed to initialise SD card.\n");
-    }
+//
+//    if (sd_init((bcm_emmc_regs_t *) emmc_base_vaddr, &global_sdcard) != SD_OK) {
+//        printf("Failed to initialise SD card.\n");
+//    }
 
     printf("Successfully initialised SD card.\n");
 //    bool is_write_success = false;
