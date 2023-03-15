@@ -143,10 +143,33 @@ target_link_libraries(
         mmc_rpi3b_lib_sel4cp_facade
 )
 
+add_library(mmc_rpi3b_lib_gpio_mode src/gpio_driver/gpio_mode.c)
+target_include_directories(mmc_rpi3b_lib_gpio_mode PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_gpio_mode
+)
+
+add_library(mmc_rpi3b_lib_bcm_gpio_regs src/gpio_driver/bcm_gpio_regs.c)
+target_include_directories(mmc_rpi3b_lib_bcm_gpio_regs PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_bcm_gpio_regs
+        mmc_rpi3b_lib_result
+)
+
+add_library(mmc_rpi3b_lib_gpio_driver src/gpio_driver.c)
+target_include_directories(mmc_rpi3b_lib_gpio_driver PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_gpio_driver
+        mmc_rpi3b_lib_result
+        mmc_rpi3b_lib_gpio_mode
+        mmc_rpi3b_lib_bcm_gpio_regs
+)
+
 add_library(mmc_rpi3b_lib_gpio src/gpio.c)
 target_include_directories(mmc_rpi3b_lib_gpio PUBLIC include/)
 target_link_libraries(
         mmc_rpi3b_lib_gpio
+        mmc_rpi3b_lib_result
 )
 
 add_library(mmc_rpi3b_lib_result src/common/result.c)
@@ -356,6 +379,7 @@ target_link_libraries(
         mmc_rpi3b_lib_time
         mmc_rpi3b_lib_timer_client
         mmc_rpi3b_lib_sdcard
+        mmc_rpi3b_lib_gpio_driver
 )
 
 

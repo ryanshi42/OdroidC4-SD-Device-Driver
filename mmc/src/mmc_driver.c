@@ -113,20 +113,33 @@ void init(void) {
     r = *GPFSEL4;
     r &= ~(7 << (7 * 3));
     *GPFSEL4 = r;
+
     *GPPUD = 2;
     wait_cycles(150);
     *GPPUDCLK1 = (1 << 15);
     wait_cycles(150);
     *GPPUD = 0;
     *GPPUDCLK1 = 0;
+
     r = *GPHEN1;
     r |= 1 << 15;
     *GPHEN1 = r;
 
     // GPIO_CLK, GPIO_CMD
-    r = *GPFSEL4;
-    r |= (7 << (8 * 3)) | (7 << (9 * 3));
-    *GPFSEL4 = r;
+//    r = *GPFSEL4;
+//    r |= (7 << (8 * 3)) | (7 << (9 * 3));
+//    *GPFSEL4 = r;
+    gpio_driver_setup_pin(
+            (bcm_gpio_regs_t *) gpio_base_vaddr,
+            48,
+            GPIO_ALTFUNC3
+    );
+    gpio_driver_setup_pin(
+            (bcm_gpio_regs_t *) gpio_base_vaddr,
+            49,
+            GPIO_ALTFUNC3
+    );
+
     *GPPUD = 2;
     wait_cycles(150);
     *GPPUDCLK1 = (1 << 16) | (1 << 17);
@@ -138,6 +151,7 @@ void init(void) {
     r = *GPFSEL5;
     r |= (7 << (0 * 3)) | (7 << (1 * 3)) | (7 << (2 * 3)) | (7 << (3 * 3));
     *GPFSEL5 = r;
+
     *GPPUD = 2;
     wait_cycles(150);
     *GPPUDCLK1 = (1 << 18) | (1 << 19) | (1 << 20) | (1 << 21);

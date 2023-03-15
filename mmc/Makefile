@@ -116,6 +116,9 @@ MMC_DRIVER_OBJS := \
 	common/shared_dma.o \
 	common/log.o \
 	libsharedringbuffer/shared_ringbuffer.o \
+	gpio_driver.o \
+	gpio_driver/bcm_gpio_regs.o \
+	gpio_driver/gpio_mode.o \
 
 TIMER_DRIVER_OBJS := \
 	timer_driver.o \
@@ -150,6 +153,7 @@ directories:
 	mkdir -p $(BUILD_DIR)/mmc_driver/sdcard
 	mkdir -p $(BUILD_DIR)/serial_driver
 	mkdir -p $(BUILD_DIR)/timer_driver
+	mkdir -p $(BUILD_DIR)/gpio_driver
 
 # ======================================
 # Step 1: Generate $(BUILD_DIR)/%.o object files from $(SRC_DIR)/%.c source
