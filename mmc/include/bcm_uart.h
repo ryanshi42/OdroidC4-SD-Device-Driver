@@ -5,7 +5,7 @@
 #include "bcm_uart_regs.h"
 
 typedef struct bcm_uart bcm_uart_t;
-volatile struct bcm_uart {
+struct bcm_uart {
     volatile bcm_uart_regs_t *regs;
     /* Will be `true` if user wants `\n` chars to be automatically converted to
      * `\r\n` and will be `false` otherwise. */
