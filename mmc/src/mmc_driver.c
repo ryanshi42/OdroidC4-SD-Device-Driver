@@ -171,33 +171,64 @@ void init(void) {
     }
 
     printf("Successfully initialised SD card.\n");
-    bool is_write_success = false;
-    bool is_read_success = false;
-    /* Initialise the block to 0. */
-    is_write_success = sd_writeblock(buf, COUNTER_SECTOR, 1);
-    if (!is_write_success) {
+//    bool is_write_success = false;
+//    bool is_read_success = false;
+//    /* Initialise the block to 0. */
+//    is_write_success = sd_writeblock(buf, COUNTER_SECTOR, 1);
+    res = sdhci_write_blocks(
+            (bcm_emmc_regs_t *) emmc_base_vaddr,
+            &global_sdcard,
+            COUNTER_SECTOR,
+            1,
+            buf,
+            &sdhci_result
+    );
+    if (result_is_err(res)) {
         printf("Failed to write 0 to SD card.\n");
+        result_printf(res);
         return;
     }
     for (int i = 0; i < 0x3; i++) {
         /* Read the block. */
-        is_read_success = sd_readblock(COUNTER_SECTOR, buf, 1);
-        if (!is_read_success) {
+        res = sdhci_read_blocks(
+                (bcm_emmc_regs_t *) emmc_base_vaddr,
+                &global_sdcard,
+                COUNTER_SECTOR,
+                1,
+                buf,
+                &sdhci_result
+        );
+        if (result_is_err(res)) {
             printf("Failed to read SD card.\n");
             return;
         }
         /* Increment the block. */
         (*counter)++;
         /* Write the block to disk. */
-        is_write_success = sd_writeblock(buf, COUNTER_SECTOR, 1);
-        if (!is_write_success) {
+        res = sdhci_write_blocks(
+                (bcm_emmc_regs_t *) emmc_base_vaddr,
+                &global_sdcard,
+                COUNTER_SECTOR,
+                1,
+                buf,
+                &sdhci_result
+        );
+        if (result_is_err(res)) {
             printf("Failed to write 0x%lx to SD card.\n", (uintptr_t) *counter);
             return;
         }
     }
     /* Finally, read the block and print it out. */
-    is_read_success = sd_readblock(COUNTER_SECTOR, buf, 1);
-    if (!is_read_success) {
+    /* Read the block. */
+    res = sdhci_read_blocks(
+            (bcm_emmc_regs_t *) emmc_base_vaddr,
+            &global_sdcard,
+            COUNTER_SECTOR,
+            1,
+            buf,
+            &sdhci_result
+    );
+    if (result_is_err(res)) {
         printf("Failed to read SD card.\n");
         return;
     }

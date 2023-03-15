@@ -351,7 +351,7 @@ result_t sdhci_transfer_blocks(
         size_t lba,
         size_t num_blocks,
         bool is_write,
-        char *buffer,
+        char *buffer, /* TODO, should do some error checking on this buffer and require users to pass in the size of their buffer. */
         sdhci_result_t *sdhci_result
 ) {
     if (bcm_emmc_regs == NULL) {
@@ -368,6 +368,7 @@ result_t sdhci_transfer_blocks(
     }
     *sdhci_result = SD_ERROR;
     result_t res;
+    /* Check the SD card type. */
     bool is_sdcard_type_unknown = true;
     res = sdcard_is_type_unknown(sdcard, &is_sdcard_type_unknown);
     if (result_is_err(res)) {
@@ -377,8 +378,158 @@ result_t sdhci_transfer_blocks(
         *sdhci_result = SD_NO_RESP;
         return result_err("SD Card type is unknown in sdhci_transfer_blocks().");
     }
+    /* Wait for any data command in progress. */
     res = sdhci_wait_for_data_in_progress(bcm_emmc_regs, sdhci_result);
-
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to wait for data in progress in sdhci_transfer_blocks().");
+    }
+    /* Determine the interrupt and command values for the transfer. */
+    int ready_interrupt;
+    int transfer_cmd;
+    if (is_write) {
+        ready_interrupt = INT_WRITE_RDY;
+        if (num_blocks == 1) {
+            transfer_cmd = IX_WRITE_SINGLE;
+        } else {
+            transfer_cmd = IX_WRITE_MULTI;
+        }
+    } else {
+        ready_interrupt = INT_READ_RDY;
+        if (num_blocks == 1) {
+            transfer_cmd = IX_READ_SINGLE;
+        } else {
+            transfer_cmd = IX_READ_MULTI;
+        }
+    }
+    /* Check to see if the card supports multi block transfers. */
+    bool is_set_block_count_cmd_supported = false;
+    res = sdcard_is_set_block_count_cmd_supported(sdcard, &is_set_block_count_cmd_supported);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to check if SD Card supports multi block transfers in sdhci_transfer_blocks().");
+    }
+    /* If more than one block to transfer, and the card supports it, send
+     * SET_BLOCK_COUNT command to indicate the number of blocks to transfer. */
+    if (num_blocks > 1 && is_set_block_count_cmd_supported) {
+        res = sdhci_send_cmd(
+                bcm_emmc_regs,
+                IX_SET_BLOCKCNT,
+                num_blocks,
+                sdcard,
+                sdhci_result
+        );
+        if (result_is_err(res)) {
+            return result_err_chain(res, "Failed to send SET_BLOCKCNT command in sdhci_transfer_blocks().");
+        }
+    }
+    /* Address is different depending on the card type.
+     * HC pass address as block # so just pass it through.
+     * SC pass address so need to multiply by 512 which is shift left 9. */
+    uint32_t block_addr = 0;
+    bool is_type_standard_capacity = false;
+    res = sdcard_is_type_standard_capacity(sdcard, &is_type_standard_capacity);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to check if SD Card is standard capacity in sdhci_transfer_blocks().");
+    }
+    if (is_type_standard_capacity) {
+        block_addr = (lba << 9);
+    } else {
+        block_addr = lba;
+    }
+    // Set BLKSIZECNT to number of blocks * 512 bytes, send the read or write command.
+    // Once the data transfer has started and the TM_BLKCNT_EN bit in the CMDTM register is
+    // set the EMMC module automatically decreases the BLKCNT value as the data blocks
+    // are transferred and stops the transfer once BLKCNT reaches 0.
+    // TODO: TM_AUTO_CMD12 - is this needed?  What effect does it have?
+    res = bcm_emmc_regs_set_block_count(bcm_emmc_regs, num_blocks);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to set block count to 1 in sdhci_card_init_and_id().");
+    }
+    res = bcm_emmc_regs_set_block_size(bcm_emmc_regs, BLOCK_SIZE);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to set block size to 8 in sdhci_card_init_and_id().");
+    }
+    /* Send the Transfer Command. */
+    res = sdhci_send_cmd(
+            bcm_emmc_regs,
+            transfer_cmd,
+            block_addr,
+            sdcard,
+            sdhci_result
+    );
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to send transfer command in sdhci_transfer_blocks().");
+    }
+    /* Transfer all blocks. */
+    size_t blocks_done = 0;
+    while (blocks_done < num_blocks) {
+        /* Wait for ready interrupt for the next block. */
+        res = sdhci_wait_for_interrupt(
+                bcm_emmc_regs,
+                ready_interrupt,
+                sdhci_result
+        );
+        if (result_is_err(res)) {
+            return result_err_chain(res, "Failed to wait for ready interrupt in sdhci_transfer_blocks().");
+        }
+        /* Loop through the block 4 bytes (32 bits) at a time. */
+        for (uint_fast16_t i = 0; i < (BLOCK_SIZE / 4); i++) {
+            if (is_write) {
+                res = bcm_emmc_regs_set_data(bcm_emmc_regs, ((uint32_t *) buffer)[i]);
+                if (result_is_err(res)) {
+                    return result_err_chain(res, "Failed to set data in sdhci_transfer_blocks().");
+                }
+            } else {
+                res = bcm_emmc_regs_get_data(bcm_emmc_regs, &((uint32_t *) buffer)[i]);
+                if (result_is_err(res)) {
+                    return result_err_chain(res, "Failed to get data in sdhci_transfer_blocks().");
+                }
+            }
+        }
+        blocks_done++;
+        buffer += BLOCK_SIZE;
+    }
+    /* If not all bytes were read/written, the operation timed out. */
+    if (blocks_done != num_blocks) {
+        *sdhci_result = SD_TIMEOUT;
+        if (!is_write && num_blocks > 1) {
+            res = sdhci_send_cmd(
+                    bcm_emmc_regs,
+                    IX_STOP_TRANS,
+                    0,
+                    sdcard,
+                    sdhci_result
+            );
+            if (result_is_err(res)) {
+                return result_err_chain(res, "Failed to send STOP_TRANSMISSION command in sdhci_transfer_blocks().");
+            }
+        }
+    }
+    /* For a write operation, ensure DATA_DONE interrupt before we stop transmission. */
+    if (is_write) {
+        res = sdhci_wait_for_interrupt(
+                bcm_emmc_regs,
+                INT_DATA_DONE,
+                sdhci_result
+        );
+        if (result_is_err(res)) {
+            return result_err_chain(res, "Failed to wait for data done interrupt in sdhci_transfer_blocks().");
+        }
+    }
+    /* For a multi-block operation, if SET_BLOCKCNT is not supported, we need to indicate
+     * that there are no more blocks to be transferred. */
+    if (num_blocks > 1 && !is_set_block_count_cmd_supported) {
+        res = sdhci_send_cmd(
+                bcm_emmc_regs,
+                IX_STOP_TRANS,
+                0,
+                sdcard,
+                sdhci_result
+        );
+        if (result_is_err(res)) {
+            return result_err_chain(res, "Failed to send STOP_TRANSMISSION command in sdhci_transfer_blocks().");
+        }
+    }
+    *sdhci_result = SD_OK;
     return result_ok();
 }
 

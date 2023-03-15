@@ -13,6 +13,9 @@
 #include "cmd_index.h"
 #include "sdcard.h"
 
+/* TODO: Move this #define to a more appropriate location. */
+#define BLOCK_SIZE (512)
+
 /**
  * Initialises an SD card.
  * @param bcm_emmc_regs
