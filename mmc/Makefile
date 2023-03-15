@@ -80,7 +80,6 @@ SERIAL_CLIENT_OBJS := \
 
 MMC_DRIVER_OBJS := \
 	mmc_driver.o \
-	uart.o \
 	gpio.o \
 	delays.o \
 	sd.o \

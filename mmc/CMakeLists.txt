@@ -149,13 +149,6 @@ target_link_libraries(
         mmc_rpi3b_lib_gpio
 )
 
-add_library(mmc_rpi3b_lib_uart src/uart.c)
-target_include_directories(mmc_rpi3b_lib_uart PUBLIC include/)
-target_link_libraries(
-        mmc_rpi3b_lib_uart
-        mmc_rpi3b_lib_printf
-)
-
 add_library(mmc_rpi3b_lib_result src/common/result.c)
 target_include_directories(mmc_rpi3b_lib_result PUBLIC include/)
 
@@ -354,7 +347,6 @@ target_include_directories(mmc_rpi3b_lib_mmc_driver PUBLIC include/)
 target_link_libraries(
         mmc_rpi3b_lib_mmc_driver
         mmc_rpi3b_sel4cp_facade
-        mmc_rpi3b_lib_uart
         mmc_rpi3b_lib_sd
         mmc_rpi3b_lib_bcm_emmc
         mmc_rpi3b_lib_result

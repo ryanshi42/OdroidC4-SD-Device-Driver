@@ -1,7 +1,7 @@
 #pragma once
 
 #include "gpio.h"
-#include "uart.h"
+//#include "uart.h"
 #include "delays.h"
 #include "sd.h"
 #include "sdhci.h"
