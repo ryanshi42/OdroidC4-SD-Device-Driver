@@ -13,9 +13,6 @@
 #include "cmd_index.h"
 #include "sdcard.h"
 
-/* TODO: Move this #define to a more appropriate location. */
-#define BLOCK_SIZE (512)
-
 /**
  * Initialises an SD card.
  * @param bcm_emmc_regs
@@ -34,7 +31,9 @@ result_t sdhci_card_init_and_id(
  * @param sdcard
  * @param lba
  * @param num_blocks
- * @param dst_buffer
+ * @param block_size The size of each block in bytes.
+ * @param dst_buffer The destination buffer.
+ * @param dst_buffer_len The length of the destination buffer in bytes.
  * @param sdhci_result
  * @return
  */
@@ -43,7 +42,9 @@ result_t sdhci_read_blocks(
         sdcard_t *sdcard,
         size_t lba,
         size_t num_blocks,
+        size_t block_size,
         char *dst_buffer,
+        size_t dst_buffer_len,
         sdhci_result_t *sdhci_result
 );
 
@@ -53,7 +54,9 @@ result_t sdhci_read_blocks(
  * @param sdcard
  * @param lba
  * @param num_blocks
- * @param src_buffer
+ * @param block_size The size of each block in bytes.
+ * @param src_buffer The source buffer.
+ * @param src_buffer_len The length of the source buffer in bytes.
  * @param sdhci_result
  * @return
  */
@@ -62,7 +65,9 @@ result_t sdhci_write_blocks(
         sdcard_t *sdcard,
         size_t lba,
         size_t num_blocks,
+        size_t block_size,
         char *src_buffer,
+        size_t src_buffer_len,
         sdhci_result_t *sdhci_result
 );
 
@@ -72,8 +77,10 @@ result_t sdhci_write_blocks(
  * @param sdcard
  * @param lba
  * @param num_blocks
+ * @param block_size The size of each block in bytes.
  * @param is_write
- * @param buffer
+ * @param buffer The buffer.
+ * @param buffer_len The length of the buffer in bytes.
  * @param sdhci_result
  * @return
  */
@@ -82,8 +89,10 @@ result_t sdhci_transfer_blocks(
         sdcard_t *sdcard,
         size_t lba,
         size_t num_blocks,
+        size_t block_size,
         bool is_write,
         char *buffer,
+        size_t buffer_len,
         sdhci_result_t *sdhci_result
 );
 

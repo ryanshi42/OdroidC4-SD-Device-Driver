@@ -394,8 +394,10 @@ TEST_F(TestSdhci, sdhci_transfer_blocks_should_return_err_if_sdcard_type_is_unkn
             &sdcard,
             0,
             0,
+            512,
             true,
             buf,
+            sizeof(buf),
             &sdhci_result
     );
     ASSERT_TRUE(result_is_err(res));

@@ -169,6 +169,7 @@ void init(void) {
 //    if (sd_init((bcm_emmc_regs_t *) emmc_base_vaddr, &global_sdcard) != SD_OK) {
 //        printf("Failed to initialise SD card.\n");
 //    }
+    size_t block_size = 512;
 
     printf("Successfully initialised SD card.\n");
 //    bool is_write_success = false;
@@ -180,7 +181,9 @@ void init(void) {
             &global_sdcard,
             COUNTER_SECTOR,
             1,
+            block_size,
             buf,
+            sizeof(buf),
             &sdhci_result
     );
     if (result_is_err(res)) {
@@ -195,7 +198,9 @@ void init(void) {
                 &global_sdcard,
                 COUNTER_SECTOR,
                 1,
+                block_size,
                 buf,
+                sizeof(buf),
                 &sdhci_result
         );
         if (result_is_err(res)) {
@@ -210,7 +215,9 @@ void init(void) {
                 &global_sdcard,
                 COUNTER_SECTOR,
                 1,
+                block_size,
                 buf,
+                sizeof(buf),
                 &sdhci_result
         );
         if (result_is_err(res)) {
@@ -225,7 +232,9 @@ void init(void) {
             &global_sdcard,
             COUNTER_SECTOR,
             1,
+            block_size,
             buf,
+            sizeof(buf),
             &sdhci_result
     );
     if (result_is_err(res)) {

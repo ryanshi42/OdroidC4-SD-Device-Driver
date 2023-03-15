@@ -284,7 +284,9 @@ result_t sdhci_read_blocks(
         sdcard_t *sdcard,
         size_t lba,
         size_t num_blocks,
+        size_t block_size,
         char *dst_buffer,
+        size_t dst_buffer_len,
         sdhci_result_t *sdhci_result
 ) {
     if (bcm_emmc_regs == NULL) {
@@ -306,8 +308,10 @@ result_t sdhci_read_blocks(
             sdcard,
             lba,
             num_blocks,
+            block_size,
             false,
             dst_buffer,
+            dst_buffer_len,
             sdhci_result
     );
 }
@@ -317,7 +321,9 @@ result_t sdhci_write_blocks(
         sdcard_t *sdcard,
         size_t lba,
         size_t num_blocks,
+        size_t block_size,
         char *src_buffer,
+        size_t src_buffer_len,
         sdhci_result_t *sdhci_result
 ) {
     if (bcm_emmc_regs == NULL) {
@@ -339,8 +345,10 @@ result_t sdhci_write_blocks(
             sdcard,
             lba,
             num_blocks,
+            block_size,
             true,
             src_buffer,
+            src_buffer_len,
             sdhci_result
     );
 }
@@ -350,8 +358,10 @@ result_t sdhci_transfer_blocks(
         sdcard_t *sdcard,
         size_t lba,
         size_t num_blocks,
+        size_t block_size,
         bool is_write,
-        char *buffer, /* TODO, should do some error checking on this buffer and require users to pass in the size of their buffer. */
+        char *buffer,
+        size_t buffer_len,
         sdhci_result_t *sdhci_result
 ) {
     if (bcm_emmc_regs == NULL) {
@@ -444,7 +454,7 @@ result_t sdhci_transfer_blocks(
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to set block count to 1 in sdhci_card_init_and_id().");
     }
-    res = bcm_emmc_regs_set_block_size(bcm_emmc_regs, BLOCK_SIZE);
+    res = bcm_emmc_regs_set_block_size(bcm_emmc_regs, block_size);
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to set block size to 8 in sdhci_card_init_and_id().");
     }
@@ -472,7 +482,7 @@ result_t sdhci_transfer_blocks(
             return result_err_chain(res, "Failed to wait for ready interrupt in sdhci_transfer_blocks().");
         }
         /* Loop through the block 4 bytes (32 bits) at a time. */
-        for (uint_fast16_t i = 0; i < (BLOCK_SIZE / 4); i++) {
+        for (size_t i = 0; i < (block_size / 4); i++) {
             if (is_write) {
                 res = bcm_emmc_regs_set_data(bcm_emmc_regs, ((uint32_t *) buffer)[i]);
                 if (result_is_err(res)) {
@@ -486,7 +496,7 @@ result_t sdhci_transfer_blocks(
             }
         }
         blocks_done++;
-        buffer += BLOCK_SIZE;
+        buffer += block_size; /* TODO: Test this works. */
     }
     /* If not all bytes were read/written, the operation timed out. */
     if (blocks_done != num_blocks) {
