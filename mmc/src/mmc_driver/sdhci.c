@@ -507,7 +507,7 @@ result_t sdhci_transfer_blocks(
             }
         }
         blocks_done++;
-        buffer += block_size; /* TODO: Test this works. */
+        buffer += block_size;
     }
     /* If not all bytes were read/written, the operation timed out. */
     if (blocks_done != num_blocks) {
