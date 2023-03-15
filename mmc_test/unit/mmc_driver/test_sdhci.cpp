@@ -380,7 +380,7 @@ TEST_F(TestSdhci, send_cmd_should_send_app_cmd_and_check_status_if_rca_present) 
 /* sdhci_transfer_blocks */
 
 TEST_F(TestSdhci, sdhci_transfer_blocks_should_return_err_if_sdcard_type_is_unknown) {
-    /* Return True for `is_type_unknown`.. */
+    /* Return True for `is_type_unknown`. */
     sdcard_is_type_unknown_fake.custom_fake = [](sdcard_t *sdcard, bool *ret_val) {
         *ret_val = true;
         return result_ok();
@@ -463,4 +463,70 @@ TEST_F(TestSdhci, sdhci_transfer_blocks_should_reject_insufficient_buffer_sizes)
     }
 }
 
+TEST_F(TestSdhci, sdhci_transfer_blocks_should_correctly_write_a_single_block) {
+    /* Return False for `is_type_unknown`. */
+    sdcard_is_type_unknown_fake.custom_fake = [](sdcard_t *sdcard, bool *ret_val) {
+        *ret_val = false;
+        return result_ok();
+    };
+
+    result_t(*mask_interrupt_mocks[])(bcm_emmc_regs_t * regs, uint32_t
+    mask, bool * ret_val) = {
+        /* Mask interrupt should return true the first time, which exits us out of the while-loop immediately. */
+        [](bcm_emmc_regs_t *regs, uint32_t mask, bool *ret_val) {
+            *ret_val = true;
+            return result_ok();
+        },
+                /* Mask interrupt returns false the second time for the not an error case. */
+                [](bcm_emmc_regs_t *regs, uint32_t mask, bool *ret_val) {
+                    *ret_val = false;
+                    return result_ok();
+                },
+                [](bcm_emmc_regs_t *regs, uint32_t mask, bool *ret_val) {
+                    *ret_val = true;
+                    return result_ok();
+                },
+                /* Mask interrupt returns false the second time for the not an error case. */
+                [](bcm_emmc_regs_t *regs, uint32_t mask, bool *ret_val) {
+                    *ret_val = false;
+                    return result_ok();
+                },
+                [](bcm_emmc_regs_t *regs, uint32_t mask, bool *ret_val) {
+                    *ret_val = true;
+                    return result_ok();
+                },
+                /* Mask interrupt returns false the second time for the not an error case. */
+                [](bcm_emmc_regs_t *regs, uint32_t mask, bool *ret_val) {
+                    *ret_val = false;
+                    return result_ok();
+                },
+    };
+    SET_CUSTOM_FAKE_SEQ(bcm_emmc_regs_mask_interrupt, mask_interrupt_mocks, 6);
+
+    bcm_emmc_regs_t bcm_emmc_regs = {};
+    sdcard_t sdcard = {};
+    sdhci_result_t sdhci_result;
+    /* Using a smaller block size since max argument history length FFF provides is 50. */
+    char buf[128];
+    for (size_t i = 0; i < sizeof(buf) / sizeof(uint32_t); i++) {
+        ((uint32_t *) buf)[i] = i;
+    }
+    result_t res = sdhci_transfer_blocks(
+            &bcm_emmc_regs,
+            &sdcard,
+            0,
+            1,
+            128,
+            true,
+            buf,
+            sizeof(buf),
+            &sdhci_result
+    );
+    ASSERT_TRUE(result_is_ok(res));
+    ASSERT_TRUE(sdhci_result == SD_OK);
+
+    for (size_t i = 0; i < sizeof(buf) / sizeof(uint32_t); i++) {
+        ASSERT_EQ(bcm_emmc_regs_set_data_fake.arg1_history[i], i);
+    }
+}
 
