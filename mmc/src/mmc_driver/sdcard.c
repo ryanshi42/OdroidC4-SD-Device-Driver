@@ -183,3 +183,12 @@ result_t sdcard_is_type_unknown(sdcard_t *sdcard, bool *ret_val) {
     *ret_val = sdcard->type == SD_TYPE_UNKNOWN;
     return result_ok();
 }
+
+result_t sdcard_is_set_block_count_cmd_supported(sdcard_t *sdcard, bool *ret_val) {
+    if (sdcard == NULL) {
+        return result_err("NULL `sdcard` passed to sdcard_is_set_block_count_cmd_supported().");
+    }
+    return scr_is_set_block_count_cmd_supported(&sdcard->scr, ret_val);
+}
+
+
