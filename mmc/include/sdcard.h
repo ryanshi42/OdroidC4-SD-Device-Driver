@@ -179,6 +179,22 @@ result_t sdcard_is_bus_width_1(sdcard_t *sdcard, bool *ret_val);
 result_t sdcard_is_type_unknown(sdcard_t *sdcard, bool *ret_val);
 
 /**
+ * Returns True if the SD card is SDSC (Standard Capacity) and False otherwise.
+ * @param sdcard
+ * @param ret_val
+ * @return
+ */
+result_t sdcard_is_type_standard_capacity(sdcard_t *sdcard, bool *ret_val);
+
+/**
+ * Returns True if the SD card is SDHC (High Capacity) and False otherwise.
+ * @param sdcard
+ * @param ret_val
+ * @return
+ */
+result_t sdcard_is_type_high_capacity(sdcard_t *sdcard, bool *ret_val);
+
+/**
  * Returns True if the SD card supports the Set Block Count command and False otherwise.
  * @param sdcard
  * @param ret_val

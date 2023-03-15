@@ -62,6 +62,8 @@ FAKE_VALUE_FUNC(result_t, sdcard_set_scr_raw32_hi, sdcard_t *, uint32_t)
 FAKE_VALUE_FUNC(result_t, sdcard_is_bus_width_4, sdcard_t *, bool *)
 FAKE_VALUE_FUNC(result_t, sdcard_is_bus_width_1, sdcard_t *, bool *)
 FAKE_VALUE_FUNC(result_t, sdcard_is_type_unknown, sdcard_t *, bool *)
+FAKE_VALUE_FUNC(result_t, sdcard_is_type_standard_capacity, sdcard_t *, bool *)
+FAKE_VALUE_FUNC(result_t, sdcard_is_type_high_capacity, sdcard_t *, bool *)
 FAKE_VALUE_FUNC(result_t, sdcard_is_set_block_count_cmd_supported, sdcard_t *, bool *)
 
 /* Resets all Fakes for each unit test. */
@@ -126,6 +128,8 @@ protected:
         RESET_FAKE(sdcard_is_bus_width_4);
         RESET_FAKE(sdcard_is_bus_width_1);
         RESET_FAKE(sdcard_is_type_unknown);
+        RESET_FAKE(sdcard_is_type_standard_capacity);
+        RESET_FAKE(sdcard_is_type_high_capacity);
         RESET_FAKE(sdcard_is_set_block_count_cmd_supported);
     }
 

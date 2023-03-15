@@ -184,6 +184,22 @@ result_t sdcard_is_type_unknown(sdcard_t *sdcard, bool *ret_val) {
     return result_ok();
 }
 
+result_t sdcard_is_type_standard_capacity(sdcard_t *sdcard, bool *ret_val) {
+    if (sdcard == NULL) {
+        return result_err("NULL `sdcard` passed to sdcard_is_type_standard_capacity().");
+    }
+    *ret_val = sdcard->type == SD_TYPE_2_SC;
+    return result_ok();
+}
+
+result_t sdcard_is_type_high_capacity(sdcard_t *sdcard, bool *ret_val) {
+    if (sdcard == NULL) {
+        return result_err("NULL `sdcard` passed to sdcard_is_type_high_capacity().");
+    }
+    *ret_val = sdcard->type == SD_TYPE_2_HC;
+    return result_ok();
+}
+
 result_t sdcard_is_set_block_count_cmd_supported(sdcard_t *sdcard, bool *ret_val) {
     if (sdcard == NULL) {
         return result_err("NULL `sdcard` passed to sdcard_is_set_block_count_cmd_supported().");
