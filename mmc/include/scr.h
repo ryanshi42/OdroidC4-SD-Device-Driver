@@ -105,3 +105,18 @@ result_t scr_is_bus_width_1_supported(scr_t *scr, bool *ret_val);
  */
 result_t scr_is_bus_width_4_supported(scr_t *scr, bool *ret_val);
 
+/**
+ * Returns true if the card supports the SET_BLOCK_COUNT command and false otherwise.
+ * @param scr
+ * @param ret_val
+ * @return
+ */
+result_t scr_is_set_block_count_cmd_supported(scr_t *scr, bool *ret_val);
+
+/**
+ * Returns true if the card supports the SPEED_CLASS_CONTROL command and false otherwise.
+ * @param scr
+ * @param ret_val
+ * @return
+ */
+result_t scr_is_speed_class_control_cmd_supported(scr_t *scr, bool *ret_val);

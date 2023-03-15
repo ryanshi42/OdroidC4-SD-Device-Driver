@@ -48,3 +48,27 @@ result_t scr_is_bus_width_4_supported(scr_t *scr, bool *ret_val) {
     *ret_val = scr->BUS_WIDTH & BUS_WIDTH_4;
     return result_ok();
 }
+
+result_t scr_is_set_block_count_cmd_supported(scr_t *scr, bool *ret_val) {
+    if (scr == NULL) {
+        return result_err("NULL `scr` passed to scr_is_set_block_count_cmd_supported().");
+    }
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` passed to scr_is_set_block_count_cmd_supported().");
+    }
+    *ret_val = scr->CMD_SUPPORT & CMD_SUPP_SET_BLKCNT;
+    return result_ok();
+}
+
+result_t scr_is_speed_class_control_cmd_supported(scr_t *scr, bool *ret_val) {
+    if (scr == NULL) {
+        return result_err("NULL `scr` passed to scr_is_speed_class_control_cmd_supported().");
+    }
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` passed to scr_is_speed_class_control_cmd_supported().");
+    }
+    *ret_val = scr->CMD_SUPPORT & CMD_SUPP_SPEED_CLASS;
+    return result_ok();
+}
+
+
