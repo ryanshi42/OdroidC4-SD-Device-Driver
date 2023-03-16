@@ -108,7 +108,7 @@ void init(void) {
     printf("delta_ticks: %llu\n", delta_ticks);
     assert(delta_ticks <= 1);
 
-    long r = 0;
+//    long r = 0;
 //    // GPIO_CD
 //    r = *GPFSEL4;
 //    r &= ~(7 << (7 * 3));
@@ -126,9 +126,9 @@ void init(void) {
             PULLDOWN
     );
 
-    r = *GPHEN1;
-    r |= 1 << 15;
-    *GPHEN1 = r;
+//    r = *GPHEN1;
+//    r |= 1 << 15;
+//    *GPHEN1 = r;
 
     // GPIO_CLK, GPIO_CMD
 //    r = *GPFSEL4;
