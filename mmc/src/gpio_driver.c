@@ -30,13 +30,13 @@ result_t gpio_driver_fix_resistor(
     if (gpio_fix_resistor > 3) {
         return result_err("Invalid GPIO fix resistor in gpio_driver_fix_resistor().");
     }
-    uint32_t regnum = pin_no / 32;								// Create register number
-    uint32_t bit = 1 << (pin_no % 32);							// Create mask bit
-    bcm_gpio_regs->GPPUD = gpio_fix_resistor;										// Set fixed resistor request to PUD register
+    uint32_t regnum = pin_no / 32; /* Create register number */
+    uint32_t bit = 1 << (pin_no % 32); /* Create mask bit */
+    bcm_gpio_regs->GPPUD = gpio_fix_resistor; /* Set fixed resistor request to PUD register */
     sleep_cyc(150); /* Sleep for 150 cycles. */
-    bcm_gpio_regs->GPPUDCLK[regnum] = bit;								// Set the PUD clock bit register
+    bcm_gpio_regs->GPPUDCLK[regnum] = bit; /* Set the PUD clock bit register */
     sleep_cyc(150); /* Sleep for 150 cycles. */
-    bcm_gpio_regs->GPPUD = 0;											// Clear GPIO resistor setting
-    bcm_gpio_regs->GPPUDCLK[regnum] = 0;									// Clear PUDCLK from GPIO
+    bcm_gpio_regs->GPPUD = 0; /* Clear GPIO resistor setting */
+    bcm_gpio_regs->GPPUDCLK[regnum] = 0; /* Clear PUDCLK from GPIO */
     return result_ok();
 }
