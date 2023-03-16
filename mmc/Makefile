@@ -80,9 +80,6 @@ SERIAL_CLIENT_OBJS := \
 
 MMC_DRIVER_OBJS := \
 	mmc_driver.o \
-	gpio.o \
-	delays.o \
-	sd.o \
 	mmc_driver/bcm_emmc.o \
 	mmc_driver/bcm_emmc_regs.o \
 	mmc_driver/sdcard.o \
