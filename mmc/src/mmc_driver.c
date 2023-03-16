@@ -163,9 +163,29 @@ void init(void) {
     );
 
     // GPIO_DAT0, GPIO_DAT1, GPIO_DAT2, GPIO_DAT3
-    r = *GPFSEL5;
-    r |= (7 << (0 * 3)) | (7 << (1 * 3)) | (7 << (2 * 3)) | (7 << (3 * 3));
-    *GPFSEL5 = r;
+//    r = *GPFSEL5;
+//    r |= (7 << (0 * 3)) | (7 << (1 * 3)) | (7 << (2 * 3)) | (7 << (3 * 3));
+//    *GPFSEL5 = r;
+    gpio_driver_setup_pin(
+            (bcm_gpio_regs_t *) gpio_base_vaddr,
+            50,
+            GPIO_ALTFUNC3
+    );
+    gpio_driver_setup_pin(
+            (bcm_gpio_regs_t *) gpio_base_vaddr,
+            51,
+            GPIO_ALTFUNC3
+    );
+    gpio_driver_setup_pin(
+            (bcm_gpio_regs_t *) gpio_base_vaddr,
+            52,
+            GPIO_ALTFUNC3
+    );
+    gpio_driver_setup_pin(
+            (bcm_gpio_regs_t *) gpio_base_vaddr,
+            53,
+            GPIO_ALTFUNC3
+    );
 
 //    *GPPUD = 2;
 //    wait_cycles(150);
