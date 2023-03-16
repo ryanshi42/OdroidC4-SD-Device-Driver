@@ -90,11 +90,11 @@ void init(void) {
     }
 
     /* Initialise sdcard. */
-    result_t res_sdcard = sdcard_init(
+    res = sdcard_init(
             &global_sdcard
     );
-    if (result_is_err(res_sdcard)) {
-        result_printf(res_sdcard);
+    if (result_is_err(res)) {
+        result_printf(res);
         return;
     }
 
