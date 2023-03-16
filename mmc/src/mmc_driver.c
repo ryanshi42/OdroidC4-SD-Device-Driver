@@ -105,90 +105,10 @@ void init(void) {
     printf("delta_ticks: %llu\n", delta_ticks);
     assert(delta_ticks <= 1);
 
-//    long r = 0;
-//    // GPIO_CD
-//    r = *GPFSEL4;
-//    r &= ~(7 << (7 * 3));
-//    *GPFSEL4 = r;
-
-    gpio_driver_fix_resistor(
-            (bcm_gpio_regs_t *) gpio_base_vaddr,
-            47,
-            PULLDOWN
-    );
-
-//    r = *GPHEN1;
-//    r |= 1 << 15;
-//    *GPHEN1 = r;
-
-    gpio_driver_set_pin_function(
-            (bcm_gpio_regs_t *) gpio_base_vaddr,
-            48,
-            GPIO_ALTFUNC3
-    );
-    gpio_driver_set_pin_function(
-            (bcm_gpio_regs_t *) gpio_base_vaddr,
-            49,
-            GPIO_ALTFUNC3
-    );
-
-    gpio_driver_fix_resistor(
-            (bcm_gpio_regs_t *) gpio_base_vaddr,
-            48,
-            PULLDOWN
-    );
-    gpio_driver_fix_resistor(
-            (bcm_gpio_regs_t *) gpio_base_vaddr,
-            49,
-            PULLDOWN
-    );
-
-    // GPIO_DAT0, GPIO_DAT1, GPIO_DAT2, GPIO_DAT3
-    gpio_driver_set_pin_function(
-            (bcm_gpio_regs_t *) gpio_base_vaddr,
-            50,
-            GPIO_ALTFUNC3
-    );
-    gpio_driver_set_pin_function(
-            (bcm_gpio_regs_t *) gpio_base_vaddr,
-            51,
-            GPIO_ALTFUNC3
-    );
-    gpio_driver_set_pin_function(
-            (bcm_gpio_regs_t *) gpio_base_vaddr,
-            52,
-            GPIO_ALTFUNC3
-    );
-    gpio_driver_set_pin_function(
-            (bcm_gpio_regs_t *) gpio_base_vaddr,
-            53,
-            GPIO_ALTFUNC3
-    );
-
-    gpio_driver_fix_resistor(
-            (bcm_gpio_regs_t *) gpio_base_vaddr,
-            50,
-            PULLDOWN
-    );
-    gpio_driver_fix_resistor(
-            (bcm_gpio_regs_t *) gpio_base_vaddr,
-            51,
-            PULLDOWN
-    );
-    gpio_driver_fix_resistor(
-            (bcm_gpio_regs_t *) gpio_base_vaddr,
-            52,
-            PULLDOWN
-    );
-    gpio_driver_fix_resistor(
-            (bcm_gpio_regs_t *) gpio_base_vaddr,
-            53,
-            PULLDOWN
-    );
-
     /* Initialise and reset the BCM EMMC Host Controller. */
     result_t res = bcm_emmc_init(
-            (bcm_emmc_regs_t *) emmc_base_vaddr
+            (bcm_emmc_regs_t *) emmc_base_vaddr,
+            (bcm_gpio_regs_t *) gpio_base_vaddr
     );
     if (result_is_err(res)) {
         result_printf(res);

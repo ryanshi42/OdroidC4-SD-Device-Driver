@@ -2,11 +2,97 @@
 
 
 result_t bcm_emmc_init(
-        bcm_emmc_regs_t *bcm_emmc_regs
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        bcm_gpio_regs_t *bcm_gpio_regs
 ) {
-    if (bcm_emmc_regs == 0) {
+    if (bcm_emmc_regs == NULL) {
         return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_init().");
     }
+    if (bcm_gpio_regs == NULL) {
+        return result_err("NULL `bcm_gpio_regs` passed to bcm_emmc_init().");
+    }
+
+//    long r = 0;
+//    // GPIO_CD
+//    r = *GPFSEL4;
+//    r &= ~(7 << (7 * 3));
+//    *GPFSEL4 = r;
+
+    gpio_driver_fix_resistor(
+            bcm_gpio_regs,
+            47,
+            PULLDOWN
+    );
+
+//    r = *GPHEN1;
+//    r |= 1 << 15;
+//    *GPHEN1 = r;
+
+    gpio_driver_set_pin_function(
+            bcm_gpio_regs,
+            48,
+            GPIO_ALTFUNC3
+    );
+    gpio_driver_set_pin_function(
+            bcm_gpio_regs,
+            49,
+            GPIO_ALTFUNC3
+    );
+
+    gpio_driver_fix_resistor(
+            bcm_gpio_regs,
+            48,
+            PULLDOWN
+    );
+    gpio_driver_fix_resistor(
+            bcm_gpio_regs,
+            49,
+            PULLDOWN
+    );
+
+    // GPIO_DAT0, GPIO_DAT1, GPIO_DAT2, GPIO_DAT3
+    gpio_driver_set_pin_function(
+            bcm_gpio_regs,
+            50,
+            GPIO_ALTFUNC3
+    );
+    gpio_driver_set_pin_function(
+            bcm_gpio_regs,
+            51,
+            GPIO_ALTFUNC3
+    );
+    gpio_driver_set_pin_function(
+            bcm_gpio_regs,
+            52,
+            GPIO_ALTFUNC3
+    );
+    gpio_driver_set_pin_function(
+            bcm_gpio_regs,
+            53,
+            GPIO_ALTFUNC3
+    );
+
+    gpio_driver_fix_resistor(
+            bcm_gpio_regs,
+            50,
+            PULLDOWN
+    );
+    gpio_driver_fix_resistor(
+            bcm_gpio_regs,
+            51,
+            PULLDOWN
+    );
+    gpio_driver_fix_resistor(
+            bcm_gpio_regs,
+            52,
+            PULLDOWN
+    );
+    gpio_driver_fix_resistor(
+            bcm_gpio_regs,
+            53,
+            PULLDOWN
+    );
+
     /* Set control0 to zero. */
     result_t res = bcm_emmc_regs_zero_control0(bcm_emmc_regs);
     if (result_is_err(res)) {
