@@ -109,10 +109,10 @@ void init(void) {
     assert(delta_ticks <= 1);
 
     long r = 0;
-    // GPIO_CD
-    r = *GPFSEL4;
-    r &= ~(7 << (7 * 3));
-    *GPFSEL4 = r;
+//    // GPIO_CD
+//    r = *GPFSEL4;
+//    r &= ~(7 << (7 * 3));
+//    *GPFSEL4 = r;
 
 //    *GPPUD = 2;
 //    wait_cycles(150);
