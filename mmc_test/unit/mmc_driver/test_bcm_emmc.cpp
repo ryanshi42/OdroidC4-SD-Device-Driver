@@ -139,13 +139,10 @@ TEST_F(TestBcmEmmc, init_should_init_bcm_emmc) {
     SET_CUSTOM_FAKE_SEQ(bcm_emmc_regs_mask_interrupt, mask_interrupt_mocks, 4);
 
     bcm_emmc_regs_t regs = {};
-    bcm_emmc_t bcm_emmc = {};
-    result_t res = bcm_emmc_init(&bcm_emmc, &regs);
+    result_t res = bcm_emmc_init(&regs);
     result_printf(res);
     ASSERT_TRUE(result_is_ok(res));
 
-    /* The `regs` variable should be set to `regs`. */
-    ASSERT_EQ((uintptr_t) &regs, (uintptr_t) bcm_emmc.regs);
 }
 
 TEST_F(TestBcmEmmc, init_should_timeout_if_host_circuit_reset_fails) {
@@ -155,8 +152,7 @@ TEST_F(TestBcmEmmc, init_should_timeout_if_host_circuit_reset_fails) {
     };
 
     bcm_emmc_regs_t regs = {};
-    bcm_emmc_t bcm_emmc = {};
-    result_t res = bcm_emmc_init(&bcm_emmc, &regs);
+    result_t res = bcm_emmc_init(&regs);
     ASSERT_FALSE(result_is_ok(res));
     ASSERT_STREQ(
             "Host circuit did not reset in bcm_emmc_init().",
@@ -181,8 +177,7 @@ TEST_F(TestBcmEmmc, init_should_timeout_if_cmd_line_is_busy) {
     };
 
     bcm_emmc_regs_t regs = {};
-    bcm_emmc_t bcm_emmc = {};
-    result_t res = bcm_emmc_init(&bcm_emmc, &regs);
+    result_t res = bcm_emmc_init(&regs);
     ASSERT_TRUE(result_is_err(res));
     ASSERT_STREQ(
             "Failed to set clock to low-speed setup frequency in bcm_emmc_init().",
@@ -207,8 +202,7 @@ TEST_F(TestBcmEmmc, init_should_timeout_if_data_lines_is_busy) {
     };
 
     bcm_emmc_regs_t regs = {};
-    bcm_emmc_t bcm_emmc = {};
-    result_t res = bcm_emmc_init(&bcm_emmc, &regs);
+    result_t res = bcm_emmc_init(&regs);
     ASSERT_TRUE(result_is_err(res));
     ASSERT_STREQ(
             "Failed to set clock to low-speed setup frequency in bcm_emmc_init().",
@@ -233,8 +227,7 @@ TEST_F(TestBcmEmmc, init_should_timeout_if_cmd_and_data_lines_is_busy) {
     };
 
     bcm_emmc_regs_t regs = {};
-    bcm_emmc_t bcm_emmc = {};
-    result_t res = bcm_emmc_init(&bcm_emmc, &regs);
+    result_t res = bcm_emmc_init(&regs);
     ASSERT_TRUE(result_is_err(res));
     ASSERT_STREQ(
             "Failed to set clock to low-speed setup frequency in bcm_emmc_init().",

@@ -36,9 +36,6 @@ uintptr_t timer_base_vaddr;
  * registers are actually mapped to. */
 uintptr_t emmc_base_vaddr;
 
-/* Global `bcm_emmc`. */
-bcm_emmc_t global_bcm_emmc = {0};
-
 /* Global `timer_client`. */
 timer_client_t global_timer_client = {0};
 
@@ -189,8 +186,8 @@ void init(void) {
             PULLDOWN
     );
 
+    /* Initialise and reset the BCM EMMC Host Controller. */
     result_t res = bcm_emmc_init(
-            &global_bcm_emmc,
             (bcm_emmc_regs_t *) emmc_base_vaddr
     );
     if (result_is_err(res)) {
