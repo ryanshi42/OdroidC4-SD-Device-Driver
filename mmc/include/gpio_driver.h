@@ -13,14 +13,14 @@
 /**
  * Sets up the GPIO pin.
  * @param bcm_gpio_regs_t
- * @param gpio
  * @param pin_no
+ * @param mode
  * @return
  */
-result_t gpio_driver_setup_pin(
+result_t gpio_driver_set_pin_function(
         bcm_gpio_regs_t *bcm_gpio_regs,
         uint8_t pin_no,
-        gpio_mode_t gpio_mode
+        gpio_mode_t mode
 );
 
 /**

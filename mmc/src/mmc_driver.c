@@ -134,12 +134,12 @@ void init(void) {
 //    r = *GPFSEL4;
 //    r |= (7 << (8 * 3)) | (7 << (9 * 3));
 //    *GPFSEL4 = r;
-    gpio_driver_setup_pin(
+    gpio_driver_set_pin_function(
             (bcm_gpio_regs_t *) gpio_base_vaddr,
             48,
             GPIO_ALTFUNC3
     );
-    gpio_driver_setup_pin(
+    gpio_driver_set_pin_function(
             (bcm_gpio_regs_t *) gpio_base_vaddr,
             49,
             GPIO_ALTFUNC3
@@ -166,22 +166,22 @@ void init(void) {
 //    r = *GPFSEL5;
 //    r |= (7 << (0 * 3)) | (7 << (1 * 3)) | (7 << (2 * 3)) | (7 << (3 * 3));
 //    *GPFSEL5 = r;
-    gpio_driver_setup_pin(
+    gpio_driver_set_pin_function(
             (bcm_gpio_regs_t *) gpio_base_vaddr,
             50,
             GPIO_ALTFUNC3
     );
-    gpio_driver_setup_pin(
+    gpio_driver_set_pin_function(
             (bcm_gpio_regs_t *) gpio_base_vaddr,
             51,
             GPIO_ALTFUNC3
     );
-    gpio_driver_setup_pin(
+    gpio_driver_set_pin_function(
             (bcm_gpio_regs_t *) gpio_base_vaddr,
             52,
             GPIO_ALTFUNC3
     );
-    gpio_driver_setup_pin(
+    gpio_driver_set_pin_function(
             (bcm_gpio_regs_t *) gpio_base_vaddr,
             53,
             GPIO_ALTFUNC3
