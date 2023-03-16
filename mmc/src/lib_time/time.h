@@ -1,8 +1,21 @@
 #pragma once
 
 #include <stdint.h>
-#include "delays.h"
 #include "string.h"
+#include "timer_client.h"
+#include "result.h"
+
+typedef struct clock_data clock_data_t;
+struct clock_data {
+    timer_client_t *timer_client;
+};
+
+/**
+ * Initialises the clock.
+ * @param timer_client
+ * @return
+ */
+result_t clock_init(timer_client_t *timer_client);
 
 //#define CLOCK_MONOTONIC          1
 //

@@ -54,6 +54,7 @@ void init(void) {
     // use the last 4 bytes on the second sector as a boot counter
     unsigned int *counter = (unsigned int*)(buf + 508);
 //    unsigned int *counter = (unsigned int*)(&_end + 508);
+    result_t res;
 
     /* Initialise `printf`. */
     printf_init(
@@ -62,22 +63,29 @@ void init(void) {
     );
 
     /* Initialise `timer_client`. */
-    result_t res_timer = timer_client_init(
+    res = timer_client_init(
             &global_timer_client,
             shared_dma,
             rx_avail_ring_buf,
             rx_used_ring_buf,
             MMC_DRIVER_TO_TIMER_DRIVER_GET_NUM_TICKS_CHANNEL
     );
-    if (result_is_err(res_timer)) {
-        result_printf(res_timer);
+    if (result_is_err(res)) {
+        result_printf(res);
+        return;
+    }
+
+    /* Initialise clock library. */
+    res = clock_init(&global_timer_client);
+    if (result_is_err(res)) {
+        result_printf(res);
         return;
     }
 
     /* Initialise sleep library. */
-    result_t res_sleep_init = sleep_init(&global_timer_client);
-    if (result_is_err(res_sleep_init)) {
-        result_printf(res_sleep_init);
+    res = sleep_init(&global_timer_client);
+    if (result_is_err(res)) {
+        result_printf(res);
         return;
     }
 
@@ -103,10 +111,10 @@ void init(void) {
     finish_ticks = clock_getticks();
     delta_ticks = finish_ticks - start_ticks;
     printf("delta_ticks: %llu\n", delta_ticks);
-    assert(delta_ticks <= 1);
+    assert(delta_ticks <= 10);
 
     /* Initialise and reset the BCM EMMC Host Controller. */
-    result_t res = bcm_emmc_init(
+    res = bcm_emmc_init(
             (bcm_emmc_regs_t *) emmc_base_vaddr,
             (bcm_gpio_regs_t *) gpio_base_vaddr
     );

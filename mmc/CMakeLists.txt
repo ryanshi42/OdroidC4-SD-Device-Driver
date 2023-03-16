@@ -36,19 +36,12 @@ target_link_libraries(
         lib_sel4cp_rpi3b
 )
 
-
-add_library(mmc_rpi3b_lib_delays src/delays.c)
-target_include_directories(mmc_rpi3b_lib_delays PUBLIC include/)
-target_link_libraries(
-        mmc_rpi3b_lib_delays
-        mmc_rpi3b_lib_gpio
-)
-
 add_library(mmc_rpi3b_lib_time src/lib_time/time.c)
 target_include_directories(mmc_rpi3b_lib_time PUBLIC src/lib_time/)
 target_link_libraries(
         mmc_rpi3b_lib_time
-        mmc_rpi3b_lib_delays
+        mmc_rpi3b_lib_timer_client
+        mmc_rpi3b_lib_result
 )
 
 add_library(mmc_rpi3b_lib_sleep src/lib_sleep/sleep.c)
@@ -171,13 +164,6 @@ target_link_libraries(
         mmc_rpi3b_lib_bcm_gpio_regs
         mmc_rpi3b_lib_gpio_fix_resistor
         mmc_rpi3b_lib_sleep
-)
-
-add_library(mmc_rpi3b_lib_gpio src/gpio.c)
-target_include_directories(mmc_rpi3b_lib_gpio PUBLIC include/)
-target_link_libraries(
-        mmc_rpi3b_lib_gpio
-        mmc_rpi3b_lib_result
 )
 
 add_library(mmc_rpi3b_lib_result src/common/result.c)
