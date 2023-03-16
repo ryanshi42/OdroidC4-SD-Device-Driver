@@ -114,12 +114,6 @@ void init(void) {
 //    r &= ~(7 << (7 * 3));
 //    *GPFSEL4 = r;
 
-//    *GPPUD = 2;
-//    wait_cycles(150);
-//    *GPPUDCLK1 = (1 << 15);
-//    wait_cycles(150);
-//    *GPPUD = 0;
-//    *GPPUDCLK1 = 0;
     gpio_driver_fix_resistor(
             (bcm_gpio_regs_t *) gpio_base_vaddr,
             47,
@@ -130,10 +124,6 @@ void init(void) {
 //    r |= 1 << 15;
 //    *GPHEN1 = r;
 
-    // GPIO_CLK, GPIO_CMD
-//    r = *GPFSEL4;
-//    r |= (7 << (8 * 3)) | (7 << (9 * 3));
-//    *GPFSEL4 = r;
     gpio_driver_set_pin_function(
             (bcm_gpio_regs_t *) gpio_base_vaddr,
             48,
@@ -145,12 +135,6 @@ void init(void) {
             GPIO_ALTFUNC3
     );
 
-//    *GPPUD = 2;
-//    wait_cycles(150);
-//    *GPPUDCLK1 = (1 << 16) | (1 << 17);
-//    wait_cycles(150);
-//    *GPPUD = 0;
-//    *GPPUDCLK1 = 0;
     gpio_driver_fix_resistor(
             (bcm_gpio_regs_t *) gpio_base_vaddr,
             48,
@@ -163,9 +147,6 @@ void init(void) {
     );
 
     // GPIO_DAT0, GPIO_DAT1, GPIO_DAT2, GPIO_DAT3
-//    r = *GPFSEL5;
-//    r |= (7 << (0 * 3)) | (7 << (1 * 3)) | (7 << (2 * 3)) | (7 << (3 * 3));
-//    *GPFSEL5 = r;
     gpio_driver_set_pin_function(
             (bcm_gpio_regs_t *) gpio_base_vaddr,
             50,
@@ -187,12 +168,6 @@ void init(void) {
             GPIO_ALTFUNC3
     );
 
-//    *GPPUD = 2;
-//    wait_cycles(150);
-//    *GPPUDCLK1 = (1 << 18) | (1 << 19) | (1 << 20) | (1 << 21);
-//    wait_cycles(150);
-//    *GPPUD = 0;
-//    *GPPUDCLK1 = 0;
     gpio_driver_fix_resistor(
             (bcm_gpio_regs_t *) gpio_base_vaddr,
             50,
