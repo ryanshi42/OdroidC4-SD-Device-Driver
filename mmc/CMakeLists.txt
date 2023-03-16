@@ -365,22 +365,11 @@ target_link_libraries(
         mmc_rpi3b_lib_gpio_driver
 )
 
-add_library(mmc_rpi3b_lib_sd src/sd.c)
-target_include_directories(mmc_rpi3b_lib_sd PUBLIC include/)
-target_link_libraries(
-        mmc_rpi3b_lib_sd
-        mmc_rpi3b_lib_gpio
-        mmc_rpi3b_lib_bcm_emmc_regs
-        mmc_rpi3b_lib_sdhci
-        mmc_rpi3b_lib_sdcard
-)
-
 add_library(mmc_rpi3b_lib_mmc_driver src/mmc_driver.c)
 target_include_directories(mmc_rpi3b_lib_mmc_driver PUBLIC include/)
 target_link_libraries(
         mmc_rpi3b_lib_mmc_driver
         mmc_rpi3b_sel4cp_facade
-        mmc_rpi3b_lib_sd
         mmc_rpi3b_lib_bcm_emmc
         mmc_rpi3b_lib_result
         mmc_rpi3b_lib_printf
