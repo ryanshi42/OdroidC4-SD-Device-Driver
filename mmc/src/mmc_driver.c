@@ -103,14 +103,14 @@ void init(void) {
     usleep(1000000);
     finish_ticks = clock_getticks();
     delta_ticks = finish_ticks - start_ticks;
-    printf("delta_ticks: %llu\n", delta_ticks);
+    log_trace("delta_ticks: %lu\n", delta_ticks);
     assert(delta_ticks - 1000000 <= 2000);
 
     start_ticks = clock_getticks();
     sleep_cyc(150);
     finish_ticks = clock_getticks();
     delta_ticks = finish_ticks - start_ticks;
-    printf("delta_ticks: %llu\n", delta_ticks);
+    log_trace("delta_ticks: %lu\n", delta_ticks);
     assert(delta_ticks <= 10);
 
     /* Initialise and reset the BCM EMMC Host Controller. */

@@ -47,6 +47,7 @@ CFLAGS := \
 	-g3 \
 	-O3 \
 	-Wall \
+	-Werror \
 	-Wno-unused-function
 LDFLAGS := -L$(BOARD_DIR)/lib
 LIBS := -lsel4cp -Tsel4cp.ld -lc
