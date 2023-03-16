@@ -36,10 +36,10 @@ target_link_libraries(
         lib_sel4cp_rpi3b
 )
 
-add_library(mmc_rpi3b_lib_time src/lib_time/time.c)
-target_include_directories(mmc_rpi3b_lib_time PUBLIC src/lib_time/)
+add_library(mmc_rpi3b_lib_clock src/lib_clock/clock.c)
+target_include_directories(mmc_rpi3b_lib_clock PUBLIC src/lib_clock/)
 target_link_libraries(
-        mmc_rpi3b_lib_time
+        mmc_rpi3b_lib_clock
         mmc_rpi3b_lib_timer_client
         mmc_rpi3b_lib_result
 )
@@ -361,7 +361,7 @@ target_link_libraries(
         mmc_rpi3b_lib_printf
         mmc_rpi3b_lib_sleep
         mmc_rpi3b_lib_assert
-        mmc_rpi3b_lib_time
+        mmc_rpi3b_lib_clock
         mmc_rpi3b_lib_timer_client
         mmc_rpi3b_lib_sdcard
 )

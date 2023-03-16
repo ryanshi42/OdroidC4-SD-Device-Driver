@@ -9,7 +9,7 @@
 #include "printf.h"
 #include "sleep.h"
 #include "assert.h"
-#include "time.h"
+#include "clock.h"
 #include "timer_client.h"
 #include "sdcard.h"
 
