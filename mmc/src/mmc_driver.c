@@ -122,6 +122,7 @@ void init(void) {
         result_printf(res);
         return;
     }
+    log_trace("Finished initialising SD Host Controller.");
 
     /* Initialise the SD card. */
     sdhci_result_t sdhci_result;
@@ -134,17 +135,9 @@ void init(void) {
         result_printf(res);
         return;
     }
-//
-//    if (sd_init((bcm_emmc_regs_t *) emmc_base_vaddr, &global_sdcard) != SD_OK) {
-//        printf("Failed to initialise SD card.\n");
-//    }
+    log_trace("Finished initialising SD card.");
     size_t block_size = 512;
-
-    printf("Successfully initialised SD card.\n");
-//    bool is_write_success = false;
-//    bool is_read_success = false;
 //    /* Initialise the block to 0. */
-//    is_write_success = sd_writeblock(buf, COUNTER_SECTOR, 1);
     res = sdhci_write_blocks(
             (bcm_emmc_regs_t *) emmc_base_vaddr,
             &global_sdcard,
