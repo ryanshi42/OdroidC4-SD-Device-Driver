@@ -50,10 +50,6 @@ sdcard_t global_sdcard = {0};
 #define COUNTER_SECTOR 1
 
 void init(void) {
-    char buf[512] = {0};
-    // use the last 4 bytes on the second sector as a boot counter
-    unsigned int *counter = (unsigned int*)(buf + 508);
-//    unsigned int *counter = (unsigned int*)(&_end + 508);
     result_t res;
 
     /* Initialise `printf`. */
@@ -136,8 +132,13 @@ void init(void) {
         return;
     }
     log_trace("Finished initialising SD card.");
+
+    char buf[512] = {0};
+    // use the last 4 bytes on the second sector as a boot counter
+    unsigned int *counter = (unsigned int*)(buf + 508);
+//    unsigned int *counter = (unsigned int*)(&_end + 508);
     size_t block_size = 512;
-//    /* Initialise the block to 0. */
+    /* Initialise the block to 0. */
     res = sdhci_write_blocks(
             (bcm_emmc_regs_t *) emmc_base_vaddr,
             &global_sdcard,
