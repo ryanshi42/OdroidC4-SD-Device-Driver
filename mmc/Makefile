@@ -119,6 +119,7 @@ MMC_DRIVER_OBJS := \
 	gpio_driver.o \
 	gpio_driver/bcm_gpio_regs.o \
 	gpio_driver/gpio_mode.o \
+	gpio_driver/gpio_fix_resistor.o \
 
 TIMER_DRIVER_OBJS := \
 	timer_driver.o \

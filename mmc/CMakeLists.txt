@@ -143,6 +143,12 @@ target_link_libraries(
         mmc_rpi3b_lib_sel4cp_facade
 )
 
+add_library(mmc_rpi3b_lib_gpio_fix_resistor src/gpio_driver/gpio_fix_resistor.c)
+target_include_directories(mmc_rpi3b_lib_gpio_fix_resistor PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_gpio_fix_resistor
+)
+
 add_library(mmc_rpi3b_lib_gpio_mode src/gpio_driver/gpio_mode.c)
 target_include_directories(mmc_rpi3b_lib_gpio_mode PUBLIC include/)
 target_link_libraries(
@@ -163,6 +169,8 @@ target_link_libraries(
         mmc_rpi3b_lib_result
         mmc_rpi3b_lib_gpio_mode
         mmc_rpi3b_lib_bcm_gpio_regs
+        mmc_rpi3b_lib_gpio_fix_resistor
+        mmc_rpi3b_lib_sleep
 )
 
 add_library(mmc_rpi3b_lib_gpio src/gpio.c)

@@ -30,7 +30,7 @@ struct __attribute__((__packed__, aligned(4))) bcm_gpio_regs {
 	uint32_t reserved10;		// 0x84  reserved
 	uint32_t GPAFEN[2]; 		// 0x88  GPAFEN0 - GPAFEN1;
 	uint32_t reserved11;		// 0x90  reserved
-//	uint32_t GPPUD; 			// 0x94  GPPUD /* TODO: uncomment this. */
+	uint32_t GPPUD; 			// 0x94  GPPUD
 	uint32_t GPPUDCLK[2]; 		// 0x98  GPPUDCLK0 - GPPUDCLK1;
 };
 

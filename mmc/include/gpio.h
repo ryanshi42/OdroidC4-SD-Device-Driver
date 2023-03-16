@@ -38,7 +38,7 @@
 #define GPEDS1          ((volatile unsigned int*)(GPIO_BASE+0x44))
 #define GPHEN0          ((volatile unsigned int*)(GPIO_BASE+0x64))
 #define GPHEN1          ((volatile unsigned int*)(GPIO_BASE+0x68))
-#define GPPUD           ((volatile unsigned int*)(GPIO_BASE+0x94))
+//#define GPPUD           ((volatile unsigned int*)(GPIO_BASE+0x94))
 #define GPPUDCLK0       ((volatile unsigned int*)(GPIO_BASE+0x98))
 #define GPPUDCLK1       ((volatile unsigned int*)(GPIO_BASE+0x9C))
 
