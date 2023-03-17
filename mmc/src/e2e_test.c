@@ -1,7 +1,7 @@
 #include "e2e_test.h"
 
 result_t e2e_test_sleep() {
-    log_info("Starting e2e_test_sleep():");
+    log_info("Starting e2e_test_sleep().");
 
     uint64_t start_ticks, finish_ticks, delta_ticks;
     start_ticks = clock_getticks();
@@ -18,7 +18,7 @@ result_t e2e_test_sleep() {
     log_info("delta_ticks (sleep_cyc): %lu", delta_ticks);
     assert(delta_ticks <= 10);
 
-    log_info("Finished e2e_test_sleep():");
+    log_info("Finished e2e_test_sleep().");
     return result_ok();
 }
 
@@ -26,6 +26,7 @@ result_t e2e_read_write_simple(
         bcm_emmc_regs_t *bcm_emmc_regs,
         sdcard_t *sdcard
 ) {
+    log_info("Starting e2e_read_write_simple().");
     result_t res;
     sdhci_result_t sdhci_result;
 
@@ -103,6 +104,8 @@ result_t e2e_read_write_simple(
         return result_ok();
     }
     printf("Boot counter 0x%lx written to SD card.\n", (uintptr_t) *counter);
+
+    log_info("Finished e2e_read_write_simple().");
     return result_ok();
 }
 
