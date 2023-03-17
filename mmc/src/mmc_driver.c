@@ -117,10 +117,14 @@ void init(void) {
     log_trace("Finished initialising and identifying the SD card.");
 
     /* Running E2E tests to verify our SD card driver works properly.*/
-    e2e_test_read_write_simple(
+    res = e2e_test_read_write_simple(
             (bcm_emmc_regs_t *) emmc_base_vaddr,
             &global_sdcard
     );
+    if (result_is_err(res)) {
+        result_printf(res);
+        return;
+    }
 }
 
 void notified(sel4cp_channel ch) {

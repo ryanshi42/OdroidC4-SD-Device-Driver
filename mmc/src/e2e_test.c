@@ -54,7 +54,7 @@ result_t e2e_test_read_write_simple(
             &sdhci_result
     );
     if (result_is_err(res)) {
-        printf("Failed to write 0 to SD card.\n");
+        log_info("Failed to write a single zeroed block to the SD card.");
         result_printf(res);
         return result_ok();
     }
@@ -72,7 +72,8 @@ result_t e2e_test_read_write_simple(
                 &sdhci_result
         );
         if (result_is_err(res)) {
-            printf("Failed to read SD card.\n");
+            log_info("Failed to read block from SD card on iteration %d. Counter was %d.", i, *counter);
+            result_printf(res);
             return result_ok();
         }
         /* Increment the counter. */
@@ -89,7 +90,8 @@ result_t e2e_test_read_write_simple(
                 &sdhci_result
         );
         if (result_is_err(res)) {
-            printf("Failed to write 0x%lx to SD card.\n", (uintptr_t) *counter);
+            log_info("Failed to write block to SD card on iteration %d. Counter is %d", i, *counter);
+            result_printf(res);
             return result_ok();
         }
     }
@@ -105,13 +107,13 @@ result_t e2e_test_read_write_simple(
             &sdhci_result
     );
     if (result_is_err(res)) {
-        printf("Failed to read SD card.\n");
+        log_info("Failed to read block from SD card.");
+        result_printf(res);
         return result_ok();
     }
-    /* Assert the counter has been set to the right value. */
+    log_info("Num iterations was %d and Counter was %d.", num_iterations, *counter);
+    /* Assert the counter equals `num_iterations`. */
     assert(num_iterations == *counter);
-
-    printf("Boot counter 0x%lx written to SD card.\n", (uintptr_t) *counter);
 
     log_info("Finished e2e_test_read_write_simple().");
     return result_ok();
