@@ -81,6 +81,7 @@ SERIAL_CLIENT_OBJS := \
 
 MMC_DRIVER_OBJS := \
 	mmc_driver.o \
+	e2e_test.o \
 	mmc_driver/bcm_emmc.o \
 	mmc_driver/bcm_emmc_regs.o \
 	mmc_driver/sdcard.o \
