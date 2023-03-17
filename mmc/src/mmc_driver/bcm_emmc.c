@@ -11,6 +11,10 @@ result_t bcm_emmc_init(
     if (bcm_gpio_regs == NULL) {
         return result_err("NULL `bcm_gpio_regs` passed to bcm_emmc_init().");
     }
+    /* ============================
+     * Setting GPIO pin functions to enable the SDHCI SD card controller on the
+     * Pi.
+     * ============================ */
 //    long r = 0;
 //    // GPIO_CD
 //    r = *GPFSEL4;
@@ -125,6 +129,9 @@ result_t bcm_emmc_init(
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to set GPIO 53 to pull down in bcm_emmc_init().");
     }
+    /* ============================
+     * Initialising the SDHCI SD card controller on the Pi.
+     * ============================ */
     /* Set control0 to zero. */
     res = bcm_emmc_regs_zero_control0(bcm_emmc_regs);
     if (result_is_err(res)) {
