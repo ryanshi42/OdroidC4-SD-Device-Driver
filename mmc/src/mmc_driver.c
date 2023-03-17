@@ -77,7 +77,7 @@ void init(void) {
         return;
     }
 
-    /* Initialise sdcard. */
+    /* Initialise the `sdcard` data structure by clearing the memory. */
     res = sdcard_init(&global_sdcard);
     if (result_is_err(res)) {
         result_printf(res);
