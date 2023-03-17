@@ -88,7 +88,8 @@ void init(void) {
         return;
     }
 
-    /* Run E2E tests to verify sleep works.*/
+    /* Run E2E tests to verify sleep works properly, which our SD card driver
+     * depends upon.*/
     e2e_test_sleep();
 
     /* Initialise and reset the Pi's SD card Host Controller. */
@@ -115,80 +116,11 @@ void init(void) {
     }
     log_trace("Finished initialising and identifying the SD card.");
 
-    char buf[512] = {0};
-    /* Using the last 4 bytes on the second sector as a boot counter */
-    unsigned int *counter = (unsigned int *) (buf + 508);
-    size_t block_size = 512;
-    /* Do not use the first sector (lba 0), could render your card unbootable
-     * choose a sector which is unused by your partitions */
-    size_t counter_sector = 1;
-    /* Initialise the block to 0. */
-    res = sdhci_write_blocks(
+    /* Running E2E tests to verify our SD card driver works properly.*/
+    e2e_read_write_simple(
             (bcm_emmc_regs_t *) emmc_base_vaddr,
-            &global_sdcard,
-            counter_sector,
-            1,
-            block_size,
-            buf,
-            sizeof(buf),
-            &sdhci_result
+            &global_sdcard
     );
-    if (result_is_err(res)) {
-        printf("Failed to write 0 to SD card.\n");
-        result_printf(res);
-        return;
-    }
-    for (int i = 0; i < 0x3; i++) {
-        /* Read the block. */
-        res = sdhci_read_blocks(
-                (bcm_emmc_regs_t *) emmc_base_vaddr,
-                &global_sdcard,
-                counter_sector,
-                1,
-                block_size,
-                buf,
-                sizeof(buf),
-                &sdhci_result
-        );
-        if (result_is_err(res)) {
-            printf("Failed to read SD card.\n");
-            return;
-        }
-        /* Increment the block. */
-        (*counter)++;
-        /* Write the block to disk. */
-        res = sdhci_write_blocks(
-                (bcm_emmc_regs_t *) emmc_base_vaddr,
-                &global_sdcard,
-                counter_sector,
-                1,
-                block_size,
-                buf,
-                sizeof(buf),
-                &sdhci_result
-        );
-        if (result_is_err(res)) {
-            printf("Failed to write 0x%lx to SD card.\n", (uintptr_t) *counter);
-            return;
-        }
-    }
-    /* Finally, read the block and print it out. */
-    /* Read the block. */
-    res = sdhci_read_blocks(
-            (bcm_emmc_regs_t *) emmc_base_vaddr,
-            &global_sdcard,
-            counter_sector,
-            1,
-            block_size,
-            buf,
-            sizeof(buf),
-            &sdhci_result
-    );
-    if (result_is_err(res)) {
-        printf("Failed to read SD card.\n");
-        return;
-    }
-    printf("Boot counter 0x%lx written to SD card.\n", (uintptr_t) *counter);
 }
 
 void notified(sel4cp_channel ch) {

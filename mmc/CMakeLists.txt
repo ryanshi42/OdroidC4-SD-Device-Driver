@@ -360,6 +360,8 @@ target_link_libraries(
         mmc_rpi3b_lib_assert
         mmc_rpi3b_lib_clock
         mmc_rpi3b_lib_log
+        mmc_rpi3b_lib_bcm_emmc
+        mmc_rpi3b_lib_sdcard
 )
 
 add_library(mmc_rpi3b_lib_mmc_driver src/mmc_driver.c)
@@ -377,6 +379,7 @@ target_link_libraries(
         mmc_rpi3b_lib_timer_client
         mmc_rpi3b_lib_sdcard
         mmc_rpi3b_lib_e2e_test
+        mmc_rpi3b_lib_sdhci
 )
 
 
