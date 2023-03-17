@@ -22,30 +22,35 @@ result_t e2e_test_sleep() {
     return result_ok();
 }
 
-result_t e2e_read_write_simple(
+result_t e2e_test_read_write_simple(
         bcm_emmc_regs_t *bcm_emmc_regs,
         sdcard_t *sdcard
 ) {
-    log_info("Starting e2e_read_write_simple().");
+    log_info("Starting e2e_test_read_write_simple().");
     result_t res;
     sdhci_result_t sdhci_result;
 
+    /* Initialise our buffer to zero. */
     char buf[512] = {0};
-    /* Using the last 4 bytes on the second sector as a boot counter */
-    unsigned int *counter = (unsigned int *) (buf + 508);
+    size_t buf_len = sizeof(buf);
+    size_t num_blocks = 1;
     size_t block_size = 512;
+    /* The buffer length should the same size as `num_blocks` * `block_size`. */
+    assert(buf_len == num_blocks * block_size);
     /* Do not use the first sector (lba 0), could render your card unbootable
      * choose a sector which is unused by your partitions */
-    size_t counter_sector = 1;
-    /* Initialise the block to 0. */
+    size_t lba_counter = 1;
+    /* Using the last 4 bytes on the second sector as a counter */
+    uint32_t *counter = (uint32_t *) (buf + 508);
+    /* Write a single zeroed block to the SD card. */
     res = sdhci_write_blocks(
             bcm_emmc_regs,
             sdcard,
-            counter_sector,
-            1,
+            lba_counter,
+            num_blocks,
             block_size,
             buf,
-            sizeof(buf),
+            buf_len,
             &sdhci_result
     );
     if (result_is_err(res)) {
@@ -53,33 +58,34 @@ result_t e2e_read_write_simple(
         result_printf(res);
         return result_ok();
     }
-    for (int i = 0; i < 0x3; i++) {
+    size_t num_iterations = 20;
+    for (int i = 0; i < num_iterations; i++) {
         /* Read the block. */
         res = sdhci_read_blocks(
                 bcm_emmc_regs,
                 sdcard,
-                counter_sector,
-                1,
+                lba_counter,
+                num_blocks,
                 block_size,
                 buf,
-                sizeof(buf),
+                buf_len,
                 &sdhci_result
         );
         if (result_is_err(res)) {
             printf("Failed to read SD card.\n");
             return result_ok();
         }
-        /* Increment the block. */
+        /* Increment the counter. */
         (*counter)++;
         /* Write the block to disk. */
         res = sdhci_write_blocks(
                 bcm_emmc_regs,
                 sdcard,
-                counter_sector,
-                1,
+                lba_counter,
+                num_blocks,
                 block_size,
                 buf,
-                sizeof(buf),
+                buf_len,
                 &sdhci_result
         );
         if (result_is_err(res)) {
@@ -87,25 +93,27 @@ result_t e2e_read_write_simple(
             return result_ok();
         }
     }
-    /* Finally, read the block and print it out. */
     /* Read the block. */
     res = sdhci_read_blocks(
             bcm_emmc_regs,
             sdcard,
-            counter_sector,
-            1,
+            lba_counter,
+            num_blocks,
             block_size,
             buf,
-            sizeof(buf),
+            buf_len,
             &sdhci_result
     );
     if (result_is_err(res)) {
         printf("Failed to read SD card.\n");
         return result_ok();
     }
+    /* Assert the counter has been set to the right value. */
+    assert(num_iterations == *counter);
+
     printf("Boot counter 0x%lx written to SD card.\n", (uintptr_t) *counter);
 
-    log_info("Finished e2e_read_write_simple().");
+    log_info("Finished e2e_test_read_write_simple().");
     return result_ok();
 }
 

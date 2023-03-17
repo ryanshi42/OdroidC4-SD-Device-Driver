@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdint.h>
+
 #include "result.h"
 #include "sleep.h"
 #include "assert.h"
@@ -19,7 +21,7 @@ result_t e2e_test_sleep();
  * Simple read/write test on the SD card.
  * @return
  */
-result_t e2e_read_write_simple(
+result_t e2e_test_read_write_simple(
         bcm_emmc_regs_t *bcm_emmc_regs,
         sdcard_t *sdcard
 );
