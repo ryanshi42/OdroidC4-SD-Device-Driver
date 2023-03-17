@@ -3,7 +3,6 @@
 /* Used for transporting chars from `mmc_driver` to `serial_client`. */
 uintptr_t mmc_to_serial_client_putchar_buf;
 
-
 uintptr_t shared_dma;
 
 /* `rx_` stands for "Receive". The following two Receive buffers are to assist
@@ -42,13 +41,6 @@ timer_client_t global_timer_client = {0};
 /* Global `sdcard`. */
 sdcard_t global_sdcard = {0};
 
-//// get the end of bss segment from linker
-//extern unsigned char _end;
-
-// do not use the first sector (lba 0), could render your card unbootable
-// choose a sector which is unused by your partitions
-#define COUNTER_SECTOR 1
-
 void init(void) {
     result_t res;
 
@@ -86,9 +78,7 @@ void init(void) {
     }
 
     /* Initialise sdcard. */
-    res = sdcard_init(
-            &global_sdcard
-    );
+    res = sdcard_init(&global_sdcard);
     if (result_is_err(res)) {
         result_printf(res);
         return;
@@ -134,15 +124,17 @@ void init(void) {
     log_trace("Finished initialising SD card.");
 
     char buf[512] = {0};
-    // use the last 4 bytes on the second sector as a boot counter
-    unsigned int *counter = (unsigned int*)(buf + 508);
-//    unsigned int *counter = (unsigned int*)(&_end + 508);
+    /* Using the last 4 bytes on the second sector as a boot counter */
+    unsigned int *counter = (unsigned int *) (buf + 508);
     size_t block_size = 512;
+    /* Do not use the first sector (lba 0), could render your card unbootable
+     * choose a sector which is unused by your partitions */
+    size_t counter_sector = 1;
     /* Initialise the block to 0. */
     res = sdhci_write_blocks(
             (bcm_emmc_regs_t *) emmc_base_vaddr,
             &global_sdcard,
-            COUNTER_SECTOR,
+            counter_sector,
             1,
             block_size,
             buf,
@@ -159,7 +151,7 @@ void init(void) {
         res = sdhci_read_blocks(
                 (bcm_emmc_regs_t *) emmc_base_vaddr,
                 &global_sdcard,
-                COUNTER_SECTOR,
+                counter_sector,
                 1,
                 block_size,
                 buf,
@@ -176,7 +168,7 @@ void init(void) {
         res = sdhci_write_blocks(
                 (bcm_emmc_regs_t *) emmc_base_vaddr,
                 &global_sdcard,
-                COUNTER_SECTOR,
+                counter_sector,
                 1,
                 block_size,
                 buf,
@@ -193,7 +185,7 @@ void init(void) {
     res = sdhci_read_blocks(
             (bcm_emmc_regs_t *) emmc_base_vaddr,
             &global_sdcard,
-            COUNTER_SECTOR,
+            counter_sector,
             1,
             block_size,
             buf,
