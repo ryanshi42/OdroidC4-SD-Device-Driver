@@ -128,9 +128,9 @@ result_t e2e_test_read_write_multiple_blocks(
     sdhci_result_t sdhci_result;
 
     /* Initialise our buffer to zero. */
-    char buf[1024] = {0};
+    char buf[4608] = {0};
     size_t buf_len = sizeof(buf);
-    size_t num_blocks = 2;
+    size_t num_blocks = 9;
     size_t block_size = 512;
     /* The buffer length should the same size as `num_blocks` * `block_size`. */
     assert(buf_len == num_blocks * block_size);
