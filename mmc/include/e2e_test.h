@@ -25,3 +25,15 @@ result_t e2e_test_read_write_simple(
         bcm_emmc_regs_t *bcm_emmc_regs,
         sdcard_t *sdcard
 );
+
+/**
+ * Read/write test on the SD card.
+ * @return
+ * @param bcm_emmc_regs
+ * @param sdcard
+ * @return
+ */
+result_t e2e_test_read_write_multiple_blocks(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdcard_t *sdcard
+);

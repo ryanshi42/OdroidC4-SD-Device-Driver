@@ -119,4 +119,67 @@ result_t e2e_test_read_write_simple(
     return result_ok();
 }
 
+result_t e2e_test_read_write_multiple_blocks(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdcard_t *sdcard
+) {
+    log_info("Starting e2e_test_read_write_multiple_blocks().");
+    result_t res;
+    sdhci_result_t sdhci_result;
+
+    /* Initialise our buffer to zero. */
+    char buf[1024] = {0};
+    size_t buf_len = sizeof(buf);
+    size_t num_blocks = 2;
+    size_t block_size = 512;
+    /* The buffer length should the same size as `num_blocks` * `block_size`. */
+    assert(buf_len == num_blocks * block_size);
+    /* Do not use the first sector (lba 0), could render your card unbootable
+     * choose a sector which is unused by your partitions */
+    size_t lba_counter = 2;
+
+    /* Fill our buffer to all 'a'. */
+    memset(buf, 'a', buf_len);
+
+    /* Write our buffer to the SD card. */
+    res = sdhci_write_blocks(
+            bcm_emmc_regs,
+            sdcard,
+            lba_counter,
+            num_blocks,
+            block_size,
+            buf,
+            buf_len,
+            &sdhci_result
+    );
+    if (result_is_err(res)) {
+        log_info("Failed to write block to the SD card.");
+        result_printf(res);
+        return result_ok();
+    }
+    /* Clear out our buffer. */
+    memset(buf, 0, buf_len);
+    /* Read the block into our cleared out buffer. */
+    res = sdhci_read_blocks(
+            bcm_emmc_regs,
+            sdcard,
+            lba_counter,
+            num_blocks,
+            block_size,
+            buf,
+            buf_len,
+            &sdhci_result
+    );
+    if (result_is_err(res)) {
+        log_info("Failed to read blocks from SD card.");
+        result_printf(res);
+        return result_ok();
+    }
+    for (int i = 0; i < buf_len; i++) {
+        /* Assert that the buffer is filled with 'a'. */
+        assert(buf[i] == 'a');
+    }
+    log_info("Finished e2e_test_read_write_multiple_blocks().");
+    return result_ok();
+}
 
