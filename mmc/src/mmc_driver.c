@@ -20,19 +20,10 @@ uintptr_t rx_avail_ring_buf;
  * `timer_driver` for the `mmc_driver` PD to process.  */
 uintptr_t rx_used_ring_buf;
 
-/* Base virtual address for the GPIO registers. We've deliberately set this
- * value to 0x3f200000 in `mmc.system`, which is the Physical Address the GPIO
- * registers are actually mapped to. */
+/* Base virtual address for the GPIO registers. */
 uintptr_t gpio_base_vaddr;
 
-/* Base virtual address for the Timer registers. We've deliberately set this
- * value to 0x3f003000 in `mmc.system`, which is the Physical Address the Timer
- * registers are actually mapped to. */
-uintptr_t timer_base_vaddr;
-
-/* Base virtual address for the EMMC registers. We've deliberately set this
- * value to 0x3f300000 in `mmc.system`, which is the Physical Address the EMMC
- * registers are actually mapped to. */
+/* Base virtual address for the EMMC registers. */
 uintptr_t emmc_base_vaddr;
 
 /* Global `timer_client`. */

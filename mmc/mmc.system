@@ -335,39 +335,19 @@
                 perms="rw"
                 cached="true"
                 setvar_vaddr="mmc_to_serial_client_putchar_buf"/>
-        <!-- Memory region mapped to GPIO registers. Notice that the virtual
-        address we've mapped them to is identical to the physical address these
-        registers are actually mapped to. We did this so that we wouldn't have
-        to make dramatic changes to the SD card code we're porting to the Core
-        Platform. Since this region of memory is memory-mapped, we turn caching
-        off. -->
+        <!-- Memory region mapped to GPIO registers. Since this region of memory
+        is memory-mapped, we turn caching off. -->
         <map
                 mr="gpio"
-                vaddr="0x3f_200_000"
+                vaddr="0x3_002_000"
                 perms="rw"
                 cached="false"
                 setvar_vaddr="gpio_base_vaddr"/>
-        <!-- Memory region mapped to Timer registers. Notice that the virtual
-        address we've mapped them to is identical to the physical address these
-        registers are actually mapped to. We did this so that we wouldn't have
-        to make dramatic changes to the SD card code we're porting to the Core
-        Platform. Since this region of memory is memory-mapped, we turn caching
-        off. -->
-        <map
-                mr="timer"
-                vaddr="0x3f_003_000"
-                perms="rw"
-                cached="false"
-                setvar_vaddr="timer_base_vaddr"/>
-        <!-- Memory region mapped to EMMC registers. Notice that the virtual
-        address we've mapped them to is identical to the physical address these
-        registers are actually mapped to. We did this so that we wouldn't have
-        to make dramatic changes to the SD card code we're porting to the Core
-        Platform. Since this region of memory is memory-mapped, we turn caching
-        off. -->
+        <!-- Memory region mapped to EMMC registers. Since this region of memory
+        is memory-mapped, we turn caching off. -->
         <map
                 mr="emmc"
-                vaddr="0x3f_300_000"
+                vaddr="0x3_004_000"
                 perms="rw"
                 cached="false"
                 setvar_vaddr="emmc_base_vaddr"/>
