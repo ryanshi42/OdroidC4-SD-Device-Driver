@@ -5,13 +5,14 @@ static const char *level_strings[] = {
 };
 
 void log_log(int level, const char *file, int line, const char *fmt, ...) {
-    (void) level;
+    /* Deliberately not using file and line for now to keep output clean.
+     * Keeping the existing interface for extensibility purposes if I decide to
+     * change my mind in the future. */
     (void) file;
     (void) line;
 
     /* Print the trace level. */
     printf("%s: ", level_strings[level]);
-
     /* Declare a va_list type variable */
     va_list myargs;
     /* Initialise the va_list variable with the ... after fmt */
