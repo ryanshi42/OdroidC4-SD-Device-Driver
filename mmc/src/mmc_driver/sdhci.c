@@ -626,7 +626,7 @@ result_t sdhci_set_sd_clock(bcm_emmc_regs_t *bcm_emmc_regs, uint32_t freq) {
         if (result_is_err(res)) {
             return result_err_chain(res, "Failed to check if cmd line is busy in sdhci_set_sd_clock().");
         }
-        cmd_or_data_lines_busy = data_lines_busy || cmd_line_busy;
+        cmd_or_data_lines_busy = data_lines_busy | cmd_line_busy;
     } while(cmd_or_data_lines_busy && (retries_busy-- > 0));
     if (cmd_or_data_lines_busy) {
         return result_err("Timed out waiting for data/cmd lines to be free in sdhci_set_sd_clock().");
