@@ -113,6 +113,7 @@ MMC_DRIVER_OBJS := \
 	timer_driver/bcm_timer_regs.o \
 	common/arith.o \
 	lib_result/result.o \
+	lib_result/result_test.o \
 	common/timer_client.o \
 	common/shared_dma.o \
 	common/log.o \
@@ -126,6 +127,7 @@ TIMER_DRIVER_OBJS := \
 	timer_driver.o \
 	libsharedringbuffer/shared_ringbuffer.o \
 	lib_result/result.o \
+	lib_result/result_test.o \
 	timer_driver/bcm_timer.o \
 	timer_driver/bcm_timer_regs.o \
 	lib_printf/printf.o \
