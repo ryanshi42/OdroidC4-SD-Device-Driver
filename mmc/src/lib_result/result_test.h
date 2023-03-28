@@ -1,5 +1,9 @@
 #pragma once
 
+/*
+ * The `result` used during development / testing.
+ */
+
 #include <stdbool.h>
 #include <string.h>
 #include <stdint.h>

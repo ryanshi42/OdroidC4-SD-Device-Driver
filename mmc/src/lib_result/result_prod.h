@@ -1,11 +1,15 @@
 #pragma once
 
+/*
+ * The `result` used in production when running on real hardware.
+ */
+
 #include <stdbool.h>
 #include <string.h>
 #include <stdint.h>
 
-/* Max number of error messages `result.h` can hold is 16. */
-#define MAX_NUM_ERR_MSGS (2 << 3)
+/* Max number of error messages `result.h` can hold is 1024. */
+#define MAX_NUM_ERR_MSGS (2 << 9)
 
 /* This macro requires `printf_init()` in `printf.c` to have been called first. */
 #define result_printf(result) \
@@ -28,14 +32,16 @@
 #define result_get_last_err_msg(result) \
     result_get_err_msg_at(result, result_get_num_err_msgs(result) - 1)
 
-typedef struct result result_t;
-struct result {
+typedef bool result_t;
+
+typedef struct result_data result_data_t;
+struct result_data {
     bool is_err;
     const char *err_msgs[MAX_NUM_ERR_MSGS];
     size_t num_err_msgs;
-    /* `total_num_err` represents the actual total number of errors in this
-     * `result`, which is >= `num_err_msgs`. This is required since `err_msgs`
-     * has a fixed total capacity of `MAX_NUM_ERR_MSGS`. */
+    /* `total_num_err` represents the total number of errors in this `result`,
+     * which is >= `num_err_msgs`. This is required since `err_msgs` has a fixed
+     * total capacity of `MAX_NUM_ERR_MSGS`. */
     size_t total_num_err;
 };
 
