@@ -1,4 +1,4 @@
-#include "result.h"
+#include "result_test.h"
 
 result_t result_ok() {
     result_t res = {0};

@@ -169,11 +169,15 @@ target_link_libraries(
 add_library(mmc_rpi3b_lib_result_test src/lib_result/result_test.c)
 target_include_directories(mmc_rpi3b_lib_result_test PUBLIC src/lib_result/)
 
+add_library(mmc_rpi3b_lib_result_prod src/lib_result/result_prod.c)
+target_include_directories(mmc_rpi3b_lib_result_prod PUBLIC src/lib_result/)
+
 add_library(mmc_rpi3b_lib_result src/lib_result/result.c)
 target_include_directories(mmc_rpi3b_lib_result PUBLIC src/lib_result/)
 target_link_libraries(
         mmc_rpi3b_lib_result
         mmc_rpi3b_lib_result_test
+        mmc_rpi3b_lib_result_prod
 )
 
 add_library(mmc_rpi3b_lib_status src/mmc_driver/bcm_emmc_regs/status.c)
