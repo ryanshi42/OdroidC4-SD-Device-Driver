@@ -5,7 +5,7 @@ result_t sdcard_init(sdcard_t *sdcard) {
         return result_err("NULL `sdcard` passed to sdcard_init().");
     }
     /* Initialise everything to 0. */
-    memset(sdcard, 0, sizeof(sdcard_t));
+    memset(sdcard, 0, sizeof(*sdcard));
     return result_ok();
 }
 
