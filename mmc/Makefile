@@ -37,6 +37,7 @@ LIB_PRINTF_DIR := $(SRC_DIR)/lib_printf
 LIB_SLEEP_DIR := $(SRC_DIR)/lib_sleep
 LIB_ASSERT_DIR := $(SRC_DIR)/lib_assert
 LIB_CLOCK_DIR := $(SRC_DIR)/lib_clock
+LIB_RESULT_DIR := $(SRC_DIR)/lib_result
 
 BOARD_DIR := $(SEL4CP_SDK)/board/$(SEL4CP_BOARD)/$(SEL4CP_CONFIG)
 
@@ -63,6 +64,7 @@ CFLAGS += \
 	-I$(LIB_SLEEP_DIR) \
 	-I$(LIB_ASSERT_DIR) \
 	-I$(LIB_CLOCK_DIR) \
+	-I$(LIB_RESULT_DIR) \
 
 # Specifies which Object files in $(BUILD_DIR) should be linked.
 SERIAL_DRIVER_OBJS := \
@@ -110,7 +112,7 @@ MMC_DRIVER_OBJS := \
 	timer_driver/bcm_timer.o \
 	timer_driver/bcm_timer_regs.o \
 	common/arith.o \
-	common/result.o \
+	lib_result/result.o \
 	common/timer_client.o \
 	common/shared_dma.o \
 	common/log.o \
@@ -123,7 +125,7 @@ MMC_DRIVER_OBJS := \
 TIMER_DRIVER_OBJS := \
 	timer_driver.o \
 	libsharedringbuffer/shared_ringbuffer.o \
-	common/result.o \
+	lib_result/result.o \
 	timer_driver/bcm_timer.o \
 	timer_driver/bcm_timer_regs.o \
 	lib_printf/printf.o \
@@ -145,6 +147,7 @@ directories:
 	mkdir -p $(BUILD_DIR)/lib_sleep
 	mkdir -p $(BUILD_DIR)/lib_assert
 	mkdir -p $(BUILD_DIR)/lib_clock
+	mkdir -p $(BUILD_DIR)/lib_result
 	mkdir -p $(BUILD_DIR)/common
 	mkdir -p $(BUILD_DIR)/mmc_driver
 	mkdir -p $(BUILD_DIR)/mmc_driver/sdhci

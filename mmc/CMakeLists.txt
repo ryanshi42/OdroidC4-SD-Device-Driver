@@ -166,8 +166,8 @@ target_link_libraries(
         mmc_rpi3b_lib_sleep
 )
 
-add_library(mmc_rpi3b_lib_result src/common/result.c)
-target_include_directories(mmc_rpi3b_lib_result PUBLIC include/)
+add_library(mmc_rpi3b_lib_result src/lib_result/result.c)
+target_include_directories(mmc_rpi3b_lib_result PUBLIC src/lib_result/)
 
 add_library(mmc_rpi3b_lib_status src/mmc_driver/bcm_emmc_regs/status.c)
 target_include_directories(mmc_rpi3b_lib_status PUBLIC include/)
