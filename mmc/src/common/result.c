@@ -1,8 +1,7 @@
 #include "result.h"
 
 result_t result_ok() {
-    result_t res = {};
-    memset(&res, 0, sizeof(res));
+    result_t res = {0};
     return res;
 }
 
@@ -13,7 +12,6 @@ result_t result_err(const char *err_msg) {
             .num_err_msgs = 1,
             .total_num_err = 1,
     };
-    memset(result.err_msgs, 0, sizeof(result.err_msgs));
     result.err_msgs[0] = err_msg;
     return result;
 }
@@ -54,7 +52,6 @@ const char *result_get_err_msg_at(result_t result, size_t index) {
     return result.err_msgs[index];
 }
 
-/* TODO: Figure out why I can't run this function on CP. */
 void result_get_err_msg(result_t result, char *ret_buf, size_t buf_len) {
     if (ret_buf == NULL || buf_len == 0) {
         return;

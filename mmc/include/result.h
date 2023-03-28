@@ -33,9 +33,9 @@ struct result {
     bool is_err;
     const char *err_msgs[MAX_NUM_ERR_MSGS];
     size_t num_err_msgs;
-    /* `total_num_err` represents the total number of errors in this `result`,
-     * which is >= `num_err_msgs`. This is required since `err_msgs` has a fixed
-     * total capacity of `MAX_NUM_ERR_MSGS`. */
+    /* `total_num_err` represents the actual total number of errors in this
+     * `result`, which is >= `num_err_msgs`. This is required since `err_msgs`
+     * has a fixed total capacity of `MAX_NUM_ERR_MSGS`. */
     size_t total_num_err;
 };
 
