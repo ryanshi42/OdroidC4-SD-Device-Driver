@@ -20,7 +20,7 @@ struct __attribute__((__packed__, aligned(4))) cid {
     };
     union {
         struct __attribute__((__packed__, aligned(1))) {
-            volatile char ProdName4: 8;  // @0-7		Product name character four
+            volatile char ProdName4: 8;  // @0-7	Product name character four
             volatile char ProdName3: 8;  // @8-15	Product name character three
             volatile char ProdName2: 8;  // @16-23	Product name character two
             volatile char ProdName1: 8;  // @24-31	Product name character one
