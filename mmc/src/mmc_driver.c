@@ -3,22 +3,8 @@
 /* Used for transporting chars from `mmc_driver` to `serial_client`. */
 uintptr_t mmc_to_serial_client_putchar_buf;
 
-uintptr_t shared_dma;
-
-/* `rx_` stands for "Receive". The following two Receive buffers are to assist
- * with transporting data from `timer_driver` to `mmc_driver`. */
-
-/* In the SDDF's design-documentation, `rx_avail_ring_buf` is referred to as the
- * "Transmit-Free" (TxF) ring buffer. `rx_avail_ring_buf` holds all the buffers
- * in the `shared_dma` data region that are ready to be reused for transporting
- * new data from `timer_driver` to `mmc_driver`. */
-uintptr_t rx_avail_ring_buf;
-
-/* In the SDDF's design-documentation, `rx_used_ring_buf` is referred to as the
- * "Transmit-Available" (TxA) ring buffer. `rx_used_ring_buf` holds all the
- * buffers in the `shared_dma` data region that currently hold data sent by
- * `timer_driver` for the `mmc_driver` PD to process.  */
-uintptr_t rx_used_ring_buf;
+/* Used for transporting num ticks from `timer_driver` to `mmc_driver`. */
+uintptr_t timer_driver_to_mmc_driver_numticks_buf;
 
 /* Base virtual address for the GPIO registers. */
 uintptr_t gpio_base_vaddr;
@@ -46,10 +32,8 @@ void init(void) {
      * with the `timer_driver` PD. */
     res = timer_client_init(
             &global_timer_client,
-            shared_dma,
-            rx_avail_ring_buf,
-            rx_used_ring_buf,
-            MMC_DRIVER_TO_TIMER_DRIVER_GET_NUM_TICKS_CHANNEL
+            MMC_DRIVER_TO_TIMER_DRIVER_GET_NUM_TICKS_CHANNEL,
+            (uint64_t *) timer_driver_to_mmc_driver_numticks_buf
     );
     if (result_is_err(res)) {
         result_printf(res);
