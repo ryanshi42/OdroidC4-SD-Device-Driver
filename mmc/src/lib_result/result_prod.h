@@ -97,6 +97,8 @@ bool result_is_err(result_t result);
 const char *result_get_err_msg_at(result_t result, size_t index);
 
 /**
+ * @deprecated No longer used in client code since `result_printf()` is used to
+ * print error messages instead.
  * Returns the error message stored in the error.
  * @param result
  * @param ret_buf The character buffer you wish to store the error message in.
