@@ -1103,10 +1103,15 @@ result_t sdhci_send_cmd(
                     if (result_is_err(res)) {
                         return result_err_chain(res, "Failed to set status in sdhci_send_cmd().");
                     }
-                    *sdhci_result = status & R1_ERRORS_MASK;
-                    if (*sdhci_result != 0) {
+                    bool resp_r1_has_err = true;
+                    res = sdhci_resp_r1_has_error(status, &resp_r1_has_err);
+                    if (result_is_err(res)) {
+                        return result_err_chain(res, "Failed to check if resp_r1 has error in sdhci_send_cmd().");
+                    }
+                    if (resp_r1_has_err) {
                         return result_err("Response from SD card indicates error in sdhci_send_cmd().");
                     }
+                    *sdhci_result = SD_OK;
                     return result_ok();
                 }
                 case 0x08: {
@@ -1138,10 +1143,15 @@ result_t sdhci_send_cmd(
                     if (result_is_err(res)) {
                         return result_err_chain(res, "Failed to set status in sdhci_send_cmd().");
                     }
-                    *sdhci_result = resp0 & R1_ERRORS_MASK;
-                    if (*sdhci_result != 0) {
+                    bool resp_r1_has_err = true;
+                    res = sdhci_resp_r1_has_error(resp0, &resp_r1_has_err);
+                    if (result_is_err(res)) {
+                        return result_err_chain(res, "Failed to check if resp_r1 has error in sdhci_send_cmd().");
+                    }
+                    if (resp_r1_has_err) {
                         return result_err("Response from SD card indicates error in sdhci_send_cmd().");
                     }
+                    *sdhci_result = SD_OK;
                     return result_ok();
                 }
             }

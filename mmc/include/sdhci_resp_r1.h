@@ -7,7 +7,7 @@
 /**
  * Returns True if R1 Response has Error and False otherwise.
  * @param resp
- * @param ret_val
+ * @param[out] ret_val
  * @return
  */
 result_t sdhci_resp_r1_has_error(uint32_t resp, bool *ret_val);
