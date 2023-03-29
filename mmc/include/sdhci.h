@@ -12,6 +12,7 @@
 #include "interrupt.h"
 #include "cmd_index.h"
 #include "sdcard.h"
+#include "sdhci_resp_r1.h"
 
 /**
  * Initialises an SD card.

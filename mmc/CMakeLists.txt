@@ -316,6 +316,13 @@ target_link_libraries(
         mmc_rpi3b_lib_cmd_index
 )
 
+add_library(mmc_rpi3b_lib_sdhci_resp_r1 src/mmc_driver/sdhci/sdhci_resp_r1.c)
+target_include_directories(mmc_rpi3b_lib_sdhci_resp_r1 PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_sdhci_resp_r1
+        mmc_rpi3b_lib_result
+)
+
 add_library(mmc_rpi3b_lib_sdhci_cmds src/mmc_driver/sdhci/sdhci_cmds.c)
 target_include_directories(mmc_rpi3b_lib_sdhci_cmds PUBLIC include/)
 target_link_libraries(
@@ -346,6 +353,7 @@ target_link_libraries(
         mmc_rpi3b_lib_interrupt
         mmc_rpi3b_lib_cmd_index
         mmc_rpi3b_lib_sdcard
+        mmc_rpi3b_lib_sdhci_resp_r1
 )
 
 add_library(mmc_rpi3b_lib_bcm_emmc src/mmc_driver/bcm_emmc.c)
