@@ -400,9 +400,6 @@ target_link_libraries(
         mmc_rpi3b_lib_result
         mmc_rpi3b_lib_printf
         mmc_rpi3b_lib_log
-#        mmc_rpi3b_lib_sleep
-#        mmc_rpi3b_lib_assert
-#        mmc_rpi3b_lib_clock
         mmc_rpi3b_lib_timer_client
         mmc_rpi3b_lib_sdcard
         mmc_rpi3b_lib_e2e_test
