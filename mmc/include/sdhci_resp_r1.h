@@ -6,7 +6,7 @@
 
 /**
  * Returns True if R1 Response has Error and False otherwise.
- * @param resp
+ * @param[in] resp
  * @param[out] ret_val
  * @return
  */

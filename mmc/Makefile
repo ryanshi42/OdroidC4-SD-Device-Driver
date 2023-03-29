@@ -95,6 +95,7 @@ MMC_DRIVER_OBJS := \
 	mmc_driver/sdhci/sdhci_cmd.o \
 	mmc_driver/sdhci/sdhci_cmds.o \
 	mmc_driver/sdhci/sdhci_resp_r1.o \
+	mmc_driver/sdhci/sdhci_resp_r6.o \
 	mmc_driver/bcm_emmc_regs/control0.o \
 	mmc_driver/bcm_emmc_regs/control1.o \
 	mmc_driver/bcm_emmc_regs/irpt_en.o \

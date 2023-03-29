@@ -13,6 +13,7 @@
 #include "cmd_index.h"
 #include "sdcard.h"
 #include "sdhci_resp_r1.h"
+#include "sdhci_resp_r6.h"
 
 /**
  * Initialises an SD card.

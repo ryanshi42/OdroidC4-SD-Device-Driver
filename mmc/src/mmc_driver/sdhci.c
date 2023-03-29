@@ -1085,14 +1085,20 @@ result_t sdhci_send_cmd(
             }
             switch (cmd_index) {
                 case 0x03: {
-                    /* This is the switch-case for `IX_SEND_REL_ADDR`. RESP0
-                     * contains the RCA. */
-                    /* RESP0 contains RCA and status bits 23,22,19,12:0 */
-                    uint32_t rca = resp0 & 0xffff0000; // RCA[31:16] of response
-                    uint32_t status = ((resp0 & 0x00001fff)) |       // 12:0 map directly to status 12:0
-                                      ((resp0 & 0x00002000) << 6) |  // 13 maps to status 19 ERROR
-                                      ((resp0 & 0x00004000) << 8) |  // 14 maps to status 22 ILLEGAL_COMMAND
-                                      ((resp0 & 0x00008000) << 8);
+                    /* This is the switch-case for `IX_SEND_REL_ADDR`.
+                     * RESP0 contains the RCA and status bits 23,22,19,12:0. */
+                    /* Get the RCA from `resp0`. */
+                    uint32_t rca = 0;
+                    res = sdhci_resp_r6_get_rca(resp0, &rca);
+                    if (result_is_err(res)) {
+                        return result_err_chain(res, "Failed to get RCA in sdhci_send_cmd().");
+                    }
+                    /* Get the status from `resp0`. */
+                    uint32_t status = 0;
+                    res = sdhci_resp_r6_get_status(resp0, &status);
+                    if (result_is_err(res)) {
+                        return result_err_chain(res, "Failed to get status in sdhci_send_cmd().");
+                    }
                     /* Save the RCA. */
                     res = sdcard_set_rca(sdcard, rca);
                     if (result_is_err(res)) {
