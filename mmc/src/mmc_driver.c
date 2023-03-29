@@ -109,6 +109,18 @@ void init(void) {
         return;
     }
     log_info("Successfully finished E2E tests.");
+
+    int rc;
+    DWORD buff[FF_MAX_SS];  /* Working buffer (4 sector in size) */
+
+    /* Check function/compatibility of the physical drive #0 */
+    rc = test_diskio(0, 3, buff, sizeof buff);
+
+    if (rc) {
+        printf("Sorry the function/compatibility test failed. (rc=%d)\nFatFs will not work with this disk driver.\n", rc);
+    } else {
+        printf("Congratulations! The disk driver works well.\n");
+    }
 }
 
 void notified(sel4cp_channel ch) {

@@ -38,6 +38,7 @@ LIB_SLEEP_DIR := $(SRC_DIR)/lib_sleep
 LIB_ASSERT_DIR := $(SRC_DIR)/lib_assert
 LIB_CLOCK_DIR := $(SRC_DIR)/lib_clock
 LIB_RESULT_DIR := $(SRC_DIR)/lib_result
+LIB_FATFS_DIR := $(SRC_DIR)/lib_fatfs
 
 BOARD_DIR := $(SEL4CP_SDK)/board/$(SEL4CP_BOARD)/$(SEL4CP_CONFIG)
 
@@ -65,6 +66,7 @@ CFLAGS += \
 	-I$(LIB_ASSERT_DIR) \
 	-I$(LIB_CLOCK_DIR) \
 	-I$(LIB_RESULT_DIR) \
+	-I$(LIB_FATFS_DIR) \
 
 # Specifies which Object files in $(BUILD_DIR) should be linked.
 SERIAL_DRIVER_OBJS := \
@@ -124,6 +126,9 @@ MMC_DRIVER_OBJS := \
 	gpio_driver/bcm_gpio_regs.o \
 	gpio_driver/gpio_mode.o \
 	gpio_driver/gpio_fix_resistor.o \
+	lib_fatfs/diskio.o \
+	lib_fatfs/ff.o \
+	lib_fatfs/diskio_test.o \
 
 TIMER_DRIVER_OBJS := \
 	timer_driver.o \

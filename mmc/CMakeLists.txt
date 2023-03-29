@@ -404,32 +404,34 @@ target_link_libraries(
         mmc_rpi3b_lib_sdcard
         mmc_rpi3b_lib_e2e_test
         mmc_rpi3b_lib_sdhci
+        mmc_rpi3b_lib_diskio_test
 )
 
 add_library(mmc_rpi3b_lib_diskio src/lib_fatfs/diskio.c)
-target_include_directories(mmc_rpi3b_lib_diskio PUBLIC include/)
+target_include_directories(mmc_rpi3b_lib_diskio PUBLIC src/lib_fatfs/)
 target_link_libraries(
         mmc_rpi3b_lib_diskio
         mmc_rpi3b_lib_ff
 )
 
 add_library(mmc_rpi3b_lib_diskio_test src/lib_fatfs/diskio_test.c)
-target_include_directories(mmc_rpi3b_lib_diskio_test PUBLIC include/)
+target_include_directories(mmc_rpi3b_lib_diskio_test PUBLIC src/lib_fatfs/)
 target_link_libraries(
         mmc_rpi3b_lib_diskio_test
         mmc_rpi3b_lib_ff
         mmc_rpi3b_lib_diskio
+        mmc_rpi3b_lib_printf
 )
 
 add_library(mmc_rpi3b_lib_ff src/lib_fatfs/ff.c)
-target_include_directories(mmc_rpi3b_lib_ff PUBLIC include/)
+target_include_directories(mmc_rpi3b_lib_ff PUBLIC src/lib_fatfs/)
 target_link_libraries(
         mmc_rpi3b_lib_ff
         mmc_rpi3b_lib_diskio
 )
 
 add_library(mmc_rpi3b_lib_ffconf INTERFACE)
-target_include_directories(mmc_rpi3b_lib_ffconf INTERFACE include/)
+target_include_directories(mmc_rpi3b_lib_ffconf INTERFACE src/lib_fatfs/)
 
 add_library(mmc_rpi3b_lib_ffsystem src/lib_fatfs/ffsystem.c)
 target_link_libraries(
