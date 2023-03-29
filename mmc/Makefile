@@ -152,6 +152,7 @@ directories:
 	mkdir -p $(BUILD_DIR)/lib_assert
 	mkdir -p $(BUILD_DIR)/lib_clock
 	mkdir -p $(BUILD_DIR)/lib_result
+	mkdir -p $(BUILD_DIR)/lib_fatfs
 	mkdir -p $(BUILD_DIR)/common
 	mkdir -p $(BUILD_DIR)/mmc_driver
 	mkdir -p $(BUILD_DIR)/mmc_driver/sdhci

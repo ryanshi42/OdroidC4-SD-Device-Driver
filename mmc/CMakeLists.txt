@@ -406,4 +406,33 @@ target_link_libraries(
         mmc_rpi3b_lib_sdhci
 )
 
+add_library(mmc_rpi3b_lib_diskio src/lib_fatfs/diskio.c)
+target_include_directories(mmc_rpi3b_lib_diskio PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_diskio
+        mmc_rpi3b_lib_ff
+)
+
+add_library(mmc_rpi3b_lib_ff src/lib_fatfs/ff.c)
+target_include_directories(mmc_rpi3b_lib_ff PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_ff
+        mmc_rpi3b_lib_diskio
+)
+
+add_library(mmc_rpi3b_lib_ffconf INTERFACE)
+target_include_directories(mmc_rpi3b_lib_ffconf INTERFACE include/)
+
+add_library(mmc_rpi3b_lib_ffsystem src/lib_fatfs/ffsystem.c)
+target_link_libraries(
+        mmc_rpi3b_lib_ffsystem
+        mmc_rpi3b_lib_ff
+)
+
+add_library(mmc_rpi3b_lib_ffunicode src/lib_fatfs/ffunicode.c)
+target_link_libraries(
+        mmc_rpi3b_lib_ffunicode
+        mmc_rpi3b_lib_ff
+)
+
 
