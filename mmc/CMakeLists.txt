@@ -413,6 +413,14 @@ target_link_libraries(
         mmc_rpi3b_lib_ff
 )
 
+add_library(mmc_rpi3b_lib_diskio_test src/lib_fatfs/diskio_test.c)
+target_include_directories(mmc_rpi3b_lib_diskio_test PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_diskio_test
+        mmc_rpi3b_lib_ff
+        mmc_rpi3b_lib_diskio
+)
+
 add_library(mmc_rpi3b_lib_ff src/lib_fatfs/ff.c)
 target_include_directories(mmc_rpi3b_lib_ff PUBLIC include/)
 target_link_libraries(
@@ -435,4 +443,8 @@ target_link_libraries(
         mmc_rpi3b_lib_ff
 )
 
-
+add_library(mmc_rpi3b_lib_fatfs src/fatfs.c)
+target_include_directories(mmc_rpi3b_lib_fatfs PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_fatfs
+)
