@@ -18,7 +18,7 @@ result_t sleep_init(timer_client_t *timer_client) {
 
 #if !MMC_RPI3B_UNIT_TEST
 
-int usleep(useconds_t usec) {
+int usleep(unsigned int usec) {
     timer_client_t *timer_client = &global_sleep_data.timer_client;
     /* Get the number of ticks at beginning. */
     uint64_t start_ticks = 0;

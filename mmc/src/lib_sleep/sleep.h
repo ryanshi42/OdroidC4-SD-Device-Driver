@@ -15,8 +15,6 @@ result_t sleep_init(timer_client_t *timer_client);
 
 #else
 
-typedef unsigned int useconds_t;
-
 /**
 * The usleep() function suspends execution of the calling thread for (at least)
 * usec microseconds.  The sleep may be lengthened slightly by any system
@@ -26,7 +24,7 @@ typedef unsigned int useconds_t;
  * @return The usleep() function returns 0 on success.  On error, -1 is
  * returned.
  */
-int usleep(useconds_t usec);
+int usleep(unsigned int usec);
 
 /**
  * sleep() causes the calling thread to sleep either until the number of
