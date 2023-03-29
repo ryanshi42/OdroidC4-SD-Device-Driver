@@ -91,7 +91,7 @@ MMC_DRIVER_OBJS := \
 	mmc_driver/sdcard/cid.o \
 	mmc_driver/sdcard/scr.o \
 	mmc_driver/sdhci.o \
-	mmc_driver/sdhci_result.o \
+	mmc_driver/sdhci/sdhci_result.o \
 	mmc_driver/sdhci/sdhci_cmd.o \
 	mmc_driver/sdhci/sdhci_cmds.o \
 	mmc_driver/sdhci/sdhci_resp_r1.o \
