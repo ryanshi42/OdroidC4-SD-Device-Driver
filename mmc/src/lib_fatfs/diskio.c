@@ -61,7 +61,7 @@ DSTATUS disk_status(
 DSTATUS disk_initialize(
         BYTE pdrv                /* Physical drive nmuber to identify the drive */
 ) {
-    DSTATUS stat;
+    DSTATUS stat = STA_NOINIT;
     int result;
     (void) result;
 
@@ -77,6 +77,7 @@ DSTATUS disk_initialize(
 //		result = MMC_disk_initialize();
 
             // translate the reslut code here
+            stat = 0;
 
             return stat;
 
