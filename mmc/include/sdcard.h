@@ -5,6 +5,7 @@
 #include "cid.h"
 #include "sdcard_type.h"
 #include "scr.h"
+#include "csd.h"
 
 /* Card Status Mask that indicates APP_CMD was accepted. */
 #define ST_APP_CMD (0x00000020)

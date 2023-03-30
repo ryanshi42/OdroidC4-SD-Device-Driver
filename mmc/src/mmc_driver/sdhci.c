@@ -148,7 +148,7 @@ result_t sdhci_card_init_and_id(
     log_trace("Finished setting SD clock to full-speed frequency (25GHz).");
 
     /* ===================================
-     * Populating `sdcard` with data from SD Card Configuration Register (SCR):
+     * Populating `sdcard` with data from CSD Card Specific Data Register (CSD):
      * =================================== */
 
     /* Get the sdcard's RCA. */
@@ -158,6 +158,22 @@ result_t sdhci_card_init_and_id(
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to get card's RCA in sdhci_card_init_and_id().");
     }
+
+    log_trace("Sending SEND_CSD (CMD9)...");
+    res = sdhci_send_cmd(
+            bcm_emmc_regs,
+            IDX_SEND_CSD,
+            rca,
+            sdcard,
+            sdhci_result
+    );
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to send `IDX_CARD_SELECT` in sdhci_card_init_and_id().");
+    }
+
+    /* ===================================
+     * Populating `sdcard` with data from SD Card Configuration Register (SCR):
+     * =================================== */
 
     /* Call the `IDX_CARD_SELECT` CMD using the RCA. */
     /* TODO: Check card_is_locked status in the R1 response from CMD7 [bit 25],
@@ -1213,6 +1229,8 @@ result_t sdhci_send_cmd(
             }
             if (cmd_index == 0x09) {
                 /* TODO: CSD Stuff here. */
+                printf("I ended up here!");
+
                 *sdhci_result = SD_OK;
                 return result_ok();
             } else {
