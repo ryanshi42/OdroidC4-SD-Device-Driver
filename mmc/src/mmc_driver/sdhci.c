@@ -148,7 +148,7 @@ result_t sdhci_card_init_and_id(
     log_trace("Finished setting SD clock to full-speed frequency (25GHz).");
 
     /* ===================================
-     * Populating `sdcard` with info in SD Card Configuration Register (SCR):
+     * Populating `sdcard` with data from SD Card Configuration Register (SCR):
      * =================================== */
 
     /* Get the sdcard's RCA. */
