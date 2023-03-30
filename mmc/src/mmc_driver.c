@@ -91,17 +91,6 @@ void init(void) {
     }
     log_trace("Finished initialising and identifying the SD card.");
 
-    /* Setting SD Clock Frequency to full-speed. */
-    res = sdhci_set_sd_clock(
-            (bcm_emmc_regs_t *) emmc_base_vaddr,
-            25000000
-    );
-    if (result_is_err(res)) {
-        result_printf(res);
-        return;
-    }
-    log_trace("Finished setting SD clock to full-speed frequency (25GHz).");
-
     /* Setting Bus Width to maximum possible value. */
     res = sdhci_set_max_bus_width(
             (bcm_emmc_regs_t *) emmc_base_vaddr,

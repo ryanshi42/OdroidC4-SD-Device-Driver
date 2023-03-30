@@ -135,26 +135,19 @@ result_t sdhci_card_init_and_id(
     }
     /* SD card will have an RCA at this point. */
 
-    *sdhci_result = SD_OK;
-    return result_ok();
-}
+    /* Setting SD Clock Frequency to full-speed. */
+    res = sdhci_set_sd_clock(
+            bcm_emmc_regs,
+            25000000
+    );
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to set SD clock frequency to full-speed in sdhci_card_init_and_id().");
+    }
+    log_trace("Finished setting SD clock to full-speed frequency (25GHz).");
 
-result_t sdhci_set_max_bus_width(
-        bcm_emmc_regs_t *bcm_emmc_regs,
-        sdcard_t *sdcard,
-        sdhci_result_t *sdhci_result
-) {
-    if (bcm_emmc_regs == NULL) {
-        return result_err("NULL `bcm_emmc_regs` in sdhci_set_max_bus_width().");
-    }
-    if (sdcard == NULL) {
-        return result_err("NULL `sdcard` in sdhci_set_max_bus_width().");
-    }
-    if (sdhci_result == NULL) {
-        return result_err("NULL `sdhci_result` in sdhci_set_max_bus_width().");
-    }
-    *sdhci_result = SD_ERROR;
-    result_t res;
+    /* ===================================
+     * Populating `sdcard` with info in SD Card Configuration Register (SCR):
+     * =================================== */
 
     /* Get the sdcard's RCA. */
     log_trace("Obtaining SD card's Relative Card Address (RCA)...");
@@ -163,6 +156,7 @@ result_t sdhci_set_max_bus_width(
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to get card's RCA in sdhci_card_init_and_id().");
     }
+
     /* Call the `IDX_CARD_SELECT` CMD using the RCA. */
     /* TODO: Check card_is_locked status in the R1 response from CMD7 [bit 25],
      * if so, use CMD42 to unlock CMD42 structure [4.3.7] same as a single block
@@ -260,11 +254,40 @@ result_t sdhci_set_max_bus_width(
         *sdhci_result = SD_TIMEOUT;
         return result_err("Failed to read SCR in sdhci_card_init_and_id().");
     }
+
+    *sdhci_result = SD_OK;
+    return result_ok();
+}
+
+result_t sdhci_set_max_bus_width(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdcard_t *sdcard,
+        sdhci_result_t *sdhci_result
+) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` in sdhci_set_max_bus_width().");
+    }
+    if (sdcard == NULL) {
+        return result_err("NULL `sdcard` in sdhci_set_max_bus_width().");
+    }
+    if (sdhci_result == NULL) {
+        return result_err("NULL `sdhci_result` in sdhci_set_max_bus_width().");
+    }
+    *sdhci_result = SD_ERROR;
+    result_t res;
+
+    /* Get the sdcard's RCA. */
+    log_trace("Obtaining SD card's Relative Card Address (RCA)...");
+    uint32_t rca = 0;
+    res = sdcard_get_rca(sdcard, &rca);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to get card's RCA in sdhci_set_max_bus_width().");
+    }
     /* Check the bus width. */
     bool is_bus_width_4_bit = false;
     res = sdcard_is_bus_width_4(sdcard, &is_bus_width_4_bit);
     if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to check if bus width is 4 bit in sdhci_card_init_and_id().");
+        return result_err_chain(res, "Failed to check if bus width is 4 bit in sdhci_set_max_bus_width().");
     }
     /* Send APP_SET_BUS_WIDTH (ACMD6) command. If supported, set 4 bit bus width
      * and update the CONTROL0 register. */
@@ -278,7 +301,7 @@ result_t sdhci_set_max_bus_width(
                 sdhci_result
         );
         if (result_is_err(res)) {
-            return result_err_chain(res, "Failed to send `IDX_SET_BUS_WIDTH` in sdhci_card_init_and_id().");
+            return result_err_chain(res, "Failed to send `IDX_SET_BUS_WIDTH` in sdhci_set_max_bus_width().");
         }
         /* Sets the bus width to 4 bit. */
         res = bcm_emmc_regs_set_bus_width_4(
@@ -286,7 +309,7 @@ result_t sdhci_set_max_bus_width(
                 true
         );
         if (result_is_err(res)) {
-            return result_err_chain(res, "Failed to use 4 data lines in sdhci_card_init_and_id().");
+            return result_err_chain(res, "Failed to use 4 data lines in sdhci_set_max_bus_width().");
         }
     }
     *sdhci_result = SD_OK;
