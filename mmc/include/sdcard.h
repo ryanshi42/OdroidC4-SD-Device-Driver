@@ -16,6 +16,8 @@ struct sdcard {
     ocr_t ocr;
     /* Relative Card Address. */
     uint32_t rca;
+    /* Card Specific Data. */
+    csd_t csd;
     /* Card Status. */
     uint32_t status;
     /* Card Identification Register. */
