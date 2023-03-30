@@ -57,6 +57,7 @@ FAKE_VALUE_FUNC(result_t, sdcard_has_powered_up, sdcard_t *, bool *)
 FAKE_VALUE_FUNC(result_t, sdcard_is_voltage_3v3, sdcard_t *, bool *)
 FAKE_VALUE_FUNC(result_t, sdcard_is_high_capacity, sdcard_t *, bool *)
 FAKE_VALUE_FUNC(result_t, sdcard_set_cid, sdcard_t *, uint32_t, uint32_t, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(result_t, sdcard_set_csd, sdcard_t *, uint32_t, uint32_t, uint32_t, uint32_t)
 FAKE_VALUE_FUNC(result_t, sdcard_set_type, sdcard_t *, sdcard_type_t)
 FAKE_VALUE_FUNC(result_t, sdcard_set_scr_raw32_lo, sdcard_t *, uint32_t)
 FAKE_VALUE_FUNC(result_t, sdcard_set_scr_raw32_hi, sdcard_t *, uint32_t)
@@ -124,6 +125,7 @@ protected:
         RESET_FAKE(sdcard_is_voltage_3v3);
         RESET_FAKE(sdcard_is_high_capacity);
         RESET_FAKE(sdcard_set_cid);
+        RESET_FAKE(sdcard_set_csd);
         RESET_FAKE(sdcard_set_type);
         RESET_FAKE(sdcard_set_scr_raw32_lo);
         RESET_FAKE(sdcard_set_scr_raw32_hi);

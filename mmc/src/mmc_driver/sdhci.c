@@ -1228,9 +1228,39 @@ result_t sdhci_send_cmd(
                 return result_err_chain(res_get_cmd_index, "Failed to get cmd_index in sdhci_send_cmd().");
             }
             if (cmd_index == 0x09) {
-                /* TODO: CSD Stuff here. */
-                printf("I ended up here!");
-
+                /* `IDX_SEND_CSD` will enter this branch. */
+                /* Get the response from `resp1`. */
+                uint32_t resp1 = 0;
+                res = bcm_emmc_regs_get_resp1(
+                        bcm_emmc_regs,
+                        &resp1
+                );
+                if (result_is_err(res)) {
+                    return result_err_chain(res, "Failed to get resp1 in sdhci_send_cmd().");
+                }
+                /* Get the response from `resp2`. */
+                uint32_t resp2 = 0;
+                res = bcm_emmc_regs_get_resp2(
+                        bcm_emmc_regs,
+                        &resp2
+                );
+                if (result_is_err(res)) {
+                    return result_err_chain(res, "Failed to get resp2 in sdhci_send_cmd().");
+                }
+                /* Get the response from `resp3`. */
+                uint32_t resp3 = 0;
+                res = bcm_emmc_regs_get_resp3(
+                        bcm_emmc_regs,
+                        &resp3
+                );
+                if (result_is_err(res)) {
+                    return result_err_chain(res, "Failed to get resp3 in sdhci_send_cmd().");
+                }
+                /* Save the response as the SD card's CSD. */
+                res = sdcard_set_csd(sdcard, resp0, resp1, resp2, resp3);
+                if (result_is_err(res)) {
+                    return result_err_chain(res, "Failed to set CSD in sdhci_send_cmd().");
+                }
                 *sdhci_result = SD_OK;
                 return result_ok();
             } else {

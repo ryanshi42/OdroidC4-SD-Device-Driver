@@ -134,6 +134,23 @@ result_t sdcard_set_cid(
 );
 
 /**
+ * Saves the CSD register to the SD card.
+ * @param sdcard
+ * @param resp0
+ * @param resp1
+ * @param resp2
+ * @param resp3
+ * @return
+ */
+result_t sdcard_set_csd(
+        sdcard_t *sdcard,
+        uint32_t resp0,
+        uint32_t resp1,
+        uint32_t resp2,
+        uint32_t resp3
+);
+
+/**
  * Sets the SD card type.
  * @param sdcard
  * @param type
