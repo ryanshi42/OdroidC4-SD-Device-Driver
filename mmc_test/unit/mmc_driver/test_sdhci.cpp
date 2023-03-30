@@ -234,7 +234,7 @@ TEST_F(TestSdhci, send_cmd_should_send_non_app_cmds) {
     sdhci_result_t sdhci_result;
     result_t res = sdhci_send_cmd(
             &bcm_emmc_regs,
-            IX_GO_IDLE_STATE,
+            IDX_GO_IDLE_STATE,
             0,
             &sdcard,
             &sdhci_result
@@ -286,7 +286,7 @@ TEST_F(TestSdhci, send_cmd_should_send_app_cmd_and_ignore_status_if_no_rca) {
     sdhci_result_t sdhci_result;
     result_t res = sdhci_send_cmd(
             &bcm_emmc_regs,
-            IX_APP_SEND_OP_COND,
+            IDX_APP_SEND_OP_COND,
             0x51ff8000,
             &sdcard,
             &sdhci_result
@@ -351,7 +351,7 @@ TEST_F(TestSdhci, send_cmd_should_send_app_cmd_and_check_status_if_rca_present) 
     sdhci_result_t sdhci_result;
     result_t res = sdhci_send_cmd(
             &bcm_emmc_regs,
-            IX_APP_SEND_OP_COND,
+            IDX_APP_SEND_OP_COND,
             0x51ff8000,
             &sdcard,
             &sdhci_result
