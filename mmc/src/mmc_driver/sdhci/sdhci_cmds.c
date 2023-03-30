@@ -1,8 +1,8 @@
 #include "sdhci_cmds.h"
 
-/*--------------------------------------------------------------------------}
-{							  SD CARD COMMAND TABLE						    }
-{--------------------------------------------------------------------------*/
+/*
+ * SD CARD COMMAND TABLE
+ */
 sdhci_cmd_t sdhci_cmds[IX_SEND_SCR + 1] = {
         [IX_GO_IDLE_STATE] = {
                 "GO_IDLE_STATE",
