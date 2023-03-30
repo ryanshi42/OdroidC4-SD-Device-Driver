@@ -135,7 +135,9 @@ result_t sdhci_card_init_and_id(
     }
     /* SD card will have an RCA at this point. */
 
-    /* Setting SD Clock Frequency to full-speed. */
+    /* ===================================
+     * Setting SD Clock Frequency to full-speed.
+     * =================================== */
     res = sdhci_set_sd_clock(
             bcm_emmc_regs,
             25000000
