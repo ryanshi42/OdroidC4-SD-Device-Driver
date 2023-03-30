@@ -135,12 +135,26 @@ result_t sdhci_card_init_and_id(
     }
     /* SD card will have an RCA at this point. */
 
-    /* Set the clock to full speed. */
-    log_trace("Setting clock to full-speed frequency (25GHz)...");
-    res = sdhci_set_sd_clock(bcm_emmc_regs, 25000000);
-    if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to set clock to full speed in sdhci_card_init_and_id().");
+    *sdhci_result = SD_OK;
+    return result_ok();
+}
+
+result_t sdhci_set_max_bus_width(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdcard_t *sdcard,
+        sdhci_result_t *sdhci_result
+) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` in sdhci_set_max_bus_width().");
     }
+    if (sdcard == NULL) {
+        return result_err("NULL `sdcard` in sdhci_set_max_bus_width().");
+    }
+    if (sdhci_result == NULL) {
+        return result_err("NULL `sdhci_result` in sdhci_set_max_bus_width().");
+    }
+    *sdhci_result = SD_ERROR;
+    result_t res;
 
     /* Get the sdcard's RCA. */
     log_trace("Obtaining SD card's Relative Card Address (RCA)...");
@@ -275,7 +289,7 @@ result_t sdhci_card_init_and_id(
             return result_err_chain(res, "Failed to use 4 data lines in sdhci_card_init_and_id().");
         }
     }
-
+    *sdhci_result = SD_OK;
     return result_ok();
 }
 
