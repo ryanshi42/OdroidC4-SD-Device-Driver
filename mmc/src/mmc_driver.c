@@ -91,6 +91,18 @@ void init(void) {
     }
     log_trace("Finished initialising and identifying the SD card.");
 
+    /* Setting Bus Width to maximum possible value. */
+    res = sdhci_set_max_bus_width(
+            (bcm_emmc_regs_t *) emmc_base_vaddr,
+            &global_sdcard,
+            &sdhci_result
+    );
+    if (result_is_err(res)) {
+        result_printf(res);
+        return;
+    }
+    log_trace("Finished setting SD bus width to maximum possible value.");
+
     /* Running E2E tests to verify our SD card driver works properly.*/
     res = e2e_test_read_write_simple(
             (bcm_emmc_regs_t *) emmc_base_vaddr,

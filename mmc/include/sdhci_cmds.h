@@ -6,48 +6,48 @@
 /*--------------------------------------------------------------------------}
 {						SD CARD COMMAND INDEX DEFINITIONS				    }
 {--------------------------------------------------------------------------*/
-#define IX_GO_IDLE_STATE    0
-#define IX_ALL_SEND_CID     1
-#define IX_SEND_REL_ADDR    2
-#define IX_SET_DSR          3
-#define IX_SWITCH_FUNC      4
-#define IX_CARD_SELECT      5
-#define IX_SEND_IF_COND     6
-#define IX_SEND_CSD         7
-#define IX_SEND_CID         8
-#define IX_VOLTAGE_SWITCH   9
-#define IX_STOP_TRANS       10
-#define IX_SEND_STATUS      11
-#define IX_GO_INACTIVE      12
-#define IX_SET_BLOCKLEN     13
-#define IX_READ_SINGLE      14
-#define IX_READ_MULTI       15
-#define IX_SEND_TUNING      16
-#define IX_SPEED_CLASS      17
-#define IX_SET_BLOCKCNT     18
-#define IX_WRITE_SINGLE     19
-#define IX_WRITE_MULTI      20
-#define IX_PROGRAM_CSD      21
-#define IX_SET_WRITE_PR     22
-#define IX_CLR_WRITE_PR     23
-#define IX_SND_WRITE_PR     24
-#define IX_ERASE_WR_ST      25
-#define IX_ERASE_WR_END     26
-#define IX_ERASE            27
-#define IX_LOCK_UNLOCK      28
-#define IX_APP_CMD          29
-#define IX_APP_CMD_RCA      30
-#define IX_GEN_CMD          31
+#define IDX_GO_IDLE_STATE    0
+#define IDX_ALL_SEND_CID     1
+#define IDX_SEND_REL_ADDR    2
+#define IDX_SET_DSR          3
+#define IDX_SWITCH_FUNC      4
+#define IDX_CARD_SELECT      5
+#define IDX_SEND_IF_COND     6
+#define IDX_SEND_CSD         7
+#define IDX_SEND_CID         8
+#define IDX_VOLTAGE_SWITCH   9
+#define IDX_STOP_TRANS       10
+#define IDX_SEND_STATUS      11
+#define IDX_GO_INACTIVE      12
+#define IDX_SET_BLOCKLEN     13
+#define IDX_READ_SINGLE      14
+#define IDX_READ_MULTI       15
+#define IDX_SEND_TUNING      16
+#define IDX_SPEED_CLASS      17
+#define IDX_SET_BLOCKCNT     18
+#define IDX_WRITE_SINGLE     19
+#define IDX_WRITE_MULTI      20
+#define IDX_PROGRAM_CSD      21
+#define IDX_SET_WRITE_PR     22
+#define IDX_CLR_WRITE_PR     23
+#define IDX_SND_WRITE_PR     24
+#define IDX_ERASE_WR_ST      25
+#define IDX_ERASE_WR_END     26
+#define IDX_ERASE            27
+#define IDX_LOCK_UNLOCK      28
+#define IDX_APP_CMD          29
+#define IDX_APP_CMD_RCA      30
+#define IDX_GEN_CMD          31
 
 // Commands hereafter require APP_CMD.
-#define IX_APP_CMD_START    32
-#define IX_SET_BUS_WIDTH    32
-#define IX_SD_STATUS        33
-#define IX_SEND_NUM_WRBL    34
-#define IX_SEND_NUM_ERS     35
-#define IX_APP_SEND_OP_COND 36
-#define IX_SET_CLR_DET      37
-#define IX_SEND_SCR         38
+#define IDX_APP_CMD_START    32
+#define IDX_SET_BUS_WIDTH    32
+#define IDX_SD_STATUS        33
+#define IDX_SEND_NUM_WRBL    34
+#define IDX_SEND_NUM_ERS     35
+#define IDX_APP_SEND_OP_COND 36
+#define IDX_SET_CLR_DET      37
+#define IDX_SEND_SCR         38
 
 /**
  * CMD 41 BIT SELECTIONS

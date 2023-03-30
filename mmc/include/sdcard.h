@@ -5,6 +5,7 @@
 #include "cid.h"
 #include "sdcard_type.h"
 #include "scr.h"
+#include "csd.h"
 
 /* Card Status Mask that indicates APP_CMD was accepted. */
 #define ST_APP_CMD (0x00000020)
@@ -15,6 +16,8 @@ struct sdcard {
     ocr_t ocr;
     /* Relative Card Address. */
     uint32_t rca;
+    /* Card Specific Data. */
+    csd_t csd;
     /* Card Status. */
     uint32_t status;
     /* Card Identification Register. */
@@ -123,6 +126,23 @@ result_t sdcard_is_high_capacity(sdcard_t *sdcard, bool *ret_val);
  * @return
  */
 result_t sdcard_set_cid(
+        sdcard_t *sdcard,
+        uint32_t resp0,
+        uint32_t resp1,
+        uint32_t resp2,
+        uint32_t resp3
+);
+
+/**
+ * Saves the CSD register to the SD card.
+ * @param sdcard
+ * @param resp0
+ * @param resp1
+ * @param resp2
+ * @param resp3
+ * @return
+ */
+result_t sdcard_set_csd(
         sdcard_t *sdcard,
         uint32_t resp0,
         uint32_t resp1,

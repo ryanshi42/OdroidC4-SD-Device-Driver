@@ -6,13 +6,13 @@ extern "C" {
 
 TEST(test_sdhci_cmds, is_app_cmd_should_return_true_if_cmd_is_app_cmd) {
     size_t app_cmd_idx[] = {
-            IX_SET_BUS_WIDTH,
-            IX_SD_STATUS,
-            IX_SEND_NUM_WRBL,
-            IX_SEND_NUM_ERS,
-            IX_APP_SEND_OP_COND,
-            IX_SET_CLR_DET,
-            IX_SEND_SCR,
+            IDX_SET_BUS_WIDTH,
+            IDX_SD_STATUS,
+            IDX_SEND_NUM_WRBL,
+            IDX_SEND_NUM_ERS,
+            IDX_APP_SEND_OP_COND,
+            IDX_SET_CLR_DET,
+            IDX_SEND_SCR,
     };
     for (size_t i = 0; i < sizeof(app_cmd_idx) / sizeof(app_cmd_idx[0]); i++) {
         bool is_app_cmd;
@@ -23,38 +23,38 @@ TEST(test_sdhci_cmds, is_app_cmd_should_return_true_if_cmd_is_app_cmd) {
 
 TEST(test_sdhci_cmds, is_app_cmd_should_return_false_if_cmd_is_not_app_cmd) {
     size_t app_cmd_idx[] = {
-            IX_GO_IDLE_STATE,
-            IX_ALL_SEND_CID,
-            IX_SEND_REL_ADDR,
-            IX_SET_DSR,
-            IX_SWITCH_FUNC,
-            IX_CARD_SELECT,
-            IX_SEND_IF_COND,
-            IX_SEND_CSD,
-            IX_SEND_CID,
-            IX_VOLTAGE_SWITCH,
-            IX_STOP_TRANS,
-            IX_SEND_STATUS,
-            IX_GO_INACTIVE,
-            IX_SET_BLOCKLEN,
-            IX_READ_SINGLE,
-            IX_READ_MULTI,
-            IX_SEND_TUNING,
-            IX_SPEED_CLASS,
-            IX_SET_BLOCKCNT,
-            IX_WRITE_SINGLE,
-            IX_WRITE_MULTI,
-            IX_PROGRAM_CSD,
-            IX_SET_WRITE_PR,
-            IX_CLR_WRITE_PR,
-            IX_SND_WRITE_PR,
-            IX_ERASE_WR_ST,
-            IX_ERASE_WR_END,
-            IX_ERASE,
-            IX_LOCK_UNLOCK,
-            IX_APP_CMD,
-            IX_APP_CMD_RCA,
-            IX_GEN_CMD,
+            IDX_GO_IDLE_STATE,
+            IDX_ALL_SEND_CID,
+            IDX_SEND_REL_ADDR,
+            IDX_SET_DSR,
+            IDX_SWITCH_FUNC,
+            IDX_CARD_SELECT,
+            IDX_SEND_IF_COND,
+            IDX_SEND_CSD,
+            IDX_SEND_CID,
+            IDX_VOLTAGE_SWITCH,
+            IDX_STOP_TRANS,
+            IDX_SEND_STATUS,
+            IDX_GO_INACTIVE,
+            IDX_SET_BLOCKLEN,
+            IDX_READ_SINGLE,
+            IDX_READ_MULTI,
+            IDX_SEND_TUNING,
+            IDX_SPEED_CLASS,
+            IDX_SET_BLOCKCNT,
+            IDX_WRITE_SINGLE,
+            IDX_WRITE_MULTI,
+            IDX_PROGRAM_CSD,
+            IDX_SET_WRITE_PR,
+            IDX_CLR_WRITE_PR,
+            IDX_SND_WRITE_PR,
+            IDX_ERASE_WR_ST,
+            IDX_ERASE_WR_END,
+            IDX_ERASE,
+            IDX_LOCK_UNLOCK,
+            IDX_APP_CMD,
+            IDX_APP_CMD_RCA,
+            IDX_GEN_CMD,
     };
     for (size_t i = 0; i < sizeof(app_cmd_idx) / sizeof(app_cmd_idx[0]); i++) {
         bool is_app_cmd;
@@ -67,7 +67,7 @@ TEST(test_sdhci_cmds, is_app_cmd_should_return_false_if_cmd_is_not_app_cmd) {
 
 TEST(test_sdhci_cmds, get_cmd_should_return_the_correct_cmd) {
     sdhci_cmd_t *cmd;
-    for (size_t i = 0; i < IX_SEND_SCR; i++) {
+    for (size_t i = 0; i < IDX_SEND_SCR; i++) {
         result_t result = sdhci_cmds_get_cmd(
                 i,
                 &cmd
@@ -78,7 +78,7 @@ TEST(test_sdhci_cmds, get_cmd_should_return_the_correct_cmd) {
 
 TEST(test_sdhci_cmds, get_cmd_should_return_err_if_cmd_idx_is_invalid) {
     sdhci_cmd_t *cmd;
-    for (size_t i = IX_SEND_SCR + 1; i < IX_SEND_SCR * 2; i++) {
+    for (size_t i = IDX_SEND_SCR + 1; i < IDX_SEND_SCR * 2; i++) {
         result_t result = sdhci_cmds_get_cmd(
                 i,
                 &cmd
@@ -91,7 +91,7 @@ TEST(test_sdhci_cmds, get_cmd_should_return_err_if_cmd_idx_is_invalid) {
 
 TEST(test_sdhci_cmds, is_app_cmd_should_return_the_correct_cmd) {
     bool is_app_cmd;
-    for (size_t i = 0; i < IX_SEND_SCR; i++) {
+    for (size_t i = 0; i < IDX_SEND_SCR; i++) {
         result_t result = sdhci_cmds_is_app_cmd(
                 i,
                 &is_app_cmd
@@ -102,7 +102,7 @@ TEST(test_sdhci_cmds, is_app_cmd_should_return_the_correct_cmd) {
 
 TEST(test_sdhci_cmds, is_app_cmd_should_return_err_if_cmd_idx_is_invalid) {
     bool is_app_cmd;
-    for (size_t i = IX_SEND_SCR + 1; i < IX_SEND_SCR * 2; i++) {
+    for (size_t i = IDX_SEND_SCR + 1; i < IDX_SEND_SCR * 2; i++) {
         result_t result = sdhci_cmds_is_app_cmd(
                 i,
                 &is_app_cmd

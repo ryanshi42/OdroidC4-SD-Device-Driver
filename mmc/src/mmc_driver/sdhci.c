@@ -22,13 +22,13 @@ result_t sdhci_card_init_and_id(
     sdhci_result_t sdhci_res_go_idle;
     res = sdhci_send_cmd(
             bcm_emmc_regs,
-            IX_GO_IDLE_STATE,
+            IDX_GO_IDLE_STATE,
             0,
             sdcard,
             &sdhci_res_go_idle
     );
     if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to send `IX_GO_IDLE_STATE` in sdhci_card_init_and_id().");
+        return result_err_chain(res, "Failed to send `IDX_GO_IDLE_STATE` in sdhci_card_init_and_id().");
     }
 
     /* Sending SEND_IF_COND,0x000001AA (CMD8) voltage range 0x1 check pattern 0xAA.
@@ -37,30 +37,30 @@ result_t sdhci_card_init_and_id(
     sdhci_result_t sdhci_res_if_cond;
     res = sdhci_send_cmd(
             bcm_emmc_regs,
-            IX_SEND_IF_COND,
+            IDX_SEND_IF_COND,
             0x000001AA,
             sdcard,
             &sdhci_res_if_cond
     );
     if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to send `IX_SEND_IF_COND` in sdhci_card_init_and_id().");
+        return result_err_chain(res, "Failed to send `IDX_SEND_IF_COND` in sdhci_card_init_and_id().");
     }
 
     /* If card responded with voltage and check pattern, resolve voltage and
-     * check for high capacity card with IX_APP_SEND_OP_COND. */
+     * check for high capacity card with IDX_APP_SEND_OP_COND. */
     size_t retries = 7;
     bool has_powered_up = false;
     do {
         usleep(400000);
         res = sdhci_send_cmd(
                 bcm_emmc_regs,
-                IX_APP_SEND_OP_COND,
+                IDX_APP_SEND_OP_COND,
                 ACMD41_ARG_HC,
                 sdcard,
                 sdhci_result
         );
         if (result_is_err(res)) {
-            return result_err_chain(res, "Failed to send `IX_APP_SEND_OP_COND` in sdhci_card_init_and_id().");
+            return result_err_chain(res, "Failed to send `IDX_APP_SEND_OP_COND` in sdhci_card_init_and_id().");
         }
         res = sdcard_has_powered_up(sdcard, &has_powered_up);
         if (result_is_err(res)) {
@@ -111,13 +111,13 @@ result_t sdhci_card_init_and_id(
     log_trace("Sending ALL_SEND_CID (CMD2) command...");
     res = sdhci_send_cmd(
             bcm_emmc_regs,
-            IX_ALL_SEND_CID,
+            IDX_ALL_SEND_CID,
             0,
             sdcard,
             sdhci_result
     );
     if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to send `IX_ALL_SEND_CID` in sdhci_card_init_and_id().");
+        return result_err_chain(res, "Failed to send `IDX_ALL_SEND_CID` in sdhci_card_init_and_id().");
     }
 
     /* Send SEND_REL_ADDR (CMD3). */
@@ -125,22 +125,31 @@ result_t sdhci_card_init_and_id(
     log_trace("Sending SEND_REL_ADDR (CMD3) command...");
     res = sdhci_send_cmd(
             bcm_emmc_regs,
-            IX_SEND_REL_ADDR,
+            IDX_SEND_REL_ADDR,
             0,
             sdcard,
             sdhci_result
     );
     if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to send `IX_SEND_REL_ADDR` in sdhci_card_init_and_id().");
+        return result_err_chain(res, "Failed to send `IDX_SEND_REL_ADDR` in sdhci_card_init_and_id().");
     }
     /* SD card will have an RCA at this point. */
 
-    /* Set the clock to full speed. */
-    log_trace("Setting clock to full-speed frequency (25GHz)...");
-    res = sdhci_set_sd_clock(bcm_emmc_regs, 25000000);
+    /* ===================================
+     * Setting SD Clock Frequency to full-speed.
+     * =================================== */
+    res = sdhci_set_sd_clock(
+            bcm_emmc_regs,
+            25000000
+    );
     if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to set clock to full speed in sdhci_card_init_and_id().");
+        return result_err_chain(res, "Failed to set SD clock frequency to full-speed in sdhci_card_init_and_id().");
     }
+    log_trace("Finished setting SD clock to full-speed frequency (25GHz).");
+
+    /* ===================================
+     * Populating `sdcard` with data from CSD Card Specific Data Register (CSD):
+     * =================================== */
 
     /* Get the sdcard's RCA. */
     log_trace("Obtaining SD card's Relative Card Address (RCA)...");
@@ -149,20 +158,37 @@ result_t sdhci_card_init_and_id(
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to get card's RCA in sdhci_card_init_and_id().");
     }
-    /* Call the `IX_CARD_SELECT` CMD using the RCA. */
+
+    log_trace("Sending SEND_CSD (CMD9)...");
+    res = sdhci_send_cmd(
+            bcm_emmc_regs,
+            IDX_SEND_CSD,
+            rca,
+            sdcard,
+            sdhci_result
+    );
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to send `IDX_CARD_SELECT` in sdhci_card_init_and_id().");
+    }
+
+    /* ===================================
+     * Populating `sdcard` with data from SD Card Configuration Register (SCR):
+     * =================================== */
+
+    /* Call the `IDX_CARD_SELECT` CMD using the RCA. */
     /* TODO: Check card_is_locked status in the R1 response from CMD7 [bit 25],
      * if so, use CMD42 to unlock CMD42 structure [4.3.7] same as a single block
      * write; data block includes PWD setting mode, PWD len, PWD data.*/
     log_trace("Sending CARD_SELECT (CMD7)...");
     res = sdhci_send_cmd(
             bcm_emmc_regs,
-            IX_CARD_SELECT,
+            IDX_CARD_SELECT,
             rca,
             sdcard,
             sdhci_result
     );
     if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to send `IX_CARD_SELECT` in sdhci_card_init_and_id().");
+        return result_err_chain(res, "Failed to send `IDX_CARD_SELECT` in sdhci_card_init_and_id().");
     }
 
     /* Reading from the SD Card Configuration Register (SCR).
@@ -188,13 +214,13 @@ result_t sdhci_card_init_and_id(
     log_trace("Sending SEND_SCR (CMD51) command...");
     res = sdhci_send_cmd(
             bcm_emmc_regs,
-            IX_SEND_SCR,
+            IDX_SEND_SCR,
             0,
             sdcard,
             sdhci_result
     );
     if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to send `IX_SEND_SCR` in sdhci_card_init_and_id().");
+        return result_err_chain(res, "Failed to send `IDX_SEND_SCR` in sdhci_card_init_and_id().");
     }
     /* Wait until we're ready to read. */
     res = sdhci_wait_for_interrupt(
@@ -246,11 +272,40 @@ result_t sdhci_card_init_and_id(
         *sdhci_result = SD_TIMEOUT;
         return result_err("Failed to read SCR in sdhci_card_init_and_id().");
     }
+
+    *sdhci_result = SD_OK;
+    return result_ok();
+}
+
+result_t sdhci_set_max_bus_width(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdcard_t *sdcard,
+        sdhci_result_t *sdhci_result
+) {
+    if (bcm_emmc_regs == NULL) {
+        return result_err("NULL `bcm_emmc_regs` in sdhci_set_max_bus_width().");
+    }
+    if (sdcard == NULL) {
+        return result_err("NULL `sdcard` in sdhci_set_max_bus_width().");
+    }
+    if (sdhci_result == NULL) {
+        return result_err("NULL `sdhci_result` in sdhci_set_max_bus_width().");
+    }
+    *sdhci_result = SD_ERROR;
+    result_t res;
+
+    /* Get the sdcard's RCA. */
+    log_trace("Obtaining SD card's Relative Card Address (RCA)...");
+    uint32_t rca = 0;
+    res = sdcard_get_rca(sdcard, &rca);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to get card's RCA in sdhci_set_max_bus_width().");
+    }
     /* Check the bus width. */
     bool is_bus_width_4_bit = false;
     res = sdcard_is_bus_width_4(sdcard, &is_bus_width_4_bit);
     if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to check if bus width is 4 bit in sdhci_card_init_and_id().");
+        return result_err_chain(res, "Failed to check if bus width is 4 bit in sdhci_set_max_bus_width().");
     }
     /* Send APP_SET_BUS_WIDTH (ACMD6) command. If supported, set 4 bit bus width
      * and update the CONTROL0 register. */
@@ -258,13 +313,13 @@ result_t sdhci_card_init_and_id(
         log_trace("Setting bus width to 4 bit...");
         res = sdhci_send_cmd(
                 bcm_emmc_regs,
-                IX_SET_BUS_WIDTH,
+                IDX_SET_BUS_WIDTH,
                 rca | 2,
                 sdcard,
                 sdhci_result
         );
         if (result_is_err(res)) {
-            return result_err_chain(res, "Failed to send `IX_SET_BUS_WIDTH` in sdhci_card_init_and_id().");
+            return result_err_chain(res, "Failed to send `IDX_SET_BUS_WIDTH` in sdhci_set_max_bus_width().");
         }
         /* Sets the bus width to 4 bit. */
         res = bcm_emmc_regs_set_bus_width_4(
@@ -272,10 +327,10 @@ result_t sdhci_card_init_and_id(
                 true
         );
         if (result_is_err(res)) {
-            return result_err_chain(res, "Failed to use 4 data lines in sdhci_card_init_and_id().");
+            return result_err_chain(res, "Failed to use 4 data lines in sdhci_set_max_bus_width().");
         }
     }
-
+    *sdhci_result = SD_OK;
     return result_ok();
 }
 
@@ -409,16 +464,16 @@ result_t sdhci_transfer_blocks(
     if (is_write) {
         ready_interrupt = INT_WRITE_RDY;
         if (num_blocks == 1) {
-            transfer_cmd = IX_WRITE_SINGLE;
+            transfer_cmd = IDX_WRITE_SINGLE;
         } else {
-            transfer_cmd = IX_WRITE_MULTI;
+            transfer_cmd = IDX_WRITE_MULTI;
         }
     } else {
         ready_interrupt = INT_READ_RDY;
         if (num_blocks == 1) {
-            transfer_cmd = IX_READ_SINGLE;
+            transfer_cmd = IDX_READ_SINGLE;
         } else {
-            transfer_cmd = IX_READ_MULTI;
+            transfer_cmd = IDX_READ_MULTI;
         }
     }
     /* Check to see if the card supports multi block transfers. */
@@ -432,7 +487,7 @@ result_t sdhci_transfer_blocks(
     if (num_blocks > 1 && is_set_block_count_cmd_supported) {
         res = sdhci_send_cmd(
                 bcm_emmc_regs,
-                IX_SET_BLOCKCNT,
+                IDX_SET_BLOCKCNT,
                 num_blocks,
                 sdcard,
                 sdhci_result
@@ -515,7 +570,7 @@ result_t sdhci_transfer_blocks(
         if (!is_write && num_blocks > 1) {
             res = sdhci_send_cmd(
                     bcm_emmc_regs,
-                    IX_STOP_TRANS,
+                    IDX_STOP_TRANS,
                     0,
                     sdcard,
                     sdhci_result
@@ -541,7 +596,7 @@ result_t sdhci_transfer_blocks(
     if (num_blocks > 1 && !is_set_block_count_cmd_supported) {
         res = sdhci_send_cmd(
                 bcm_emmc_regs,
-                IX_STOP_TRANS,
+                IDX_STOP_TRANS,
                 0,
                 sdcard,
                 sdhci_result
@@ -934,11 +989,11 @@ result_t sdhci_send_cmd(
         if (result_is_err(res)) {
             return result_err_chain(res, "Failed to check if sdcard has RCA in sdhci_send_cmd().");
         }
-        size_t app_cmd_index = IX_APP_CMD;
+        size_t app_cmd_index = IDX_APP_CMD;
         uint32_t app_cmd_arg = 0;
         /* If yes, use the RCA as the `app_cmd_arg`. */
         if (has_rca) {
-            app_cmd_index = IX_APP_CMD_RCA;
+            app_cmd_index = IDX_APP_CMD_RCA;
             res = sdcard_get_rca(sdcard, &app_cmd_arg);
             if (result_is_err(res)) {
                 return result_err_chain(res, "Failed to get RCA in sdhci_send_cmd().");
@@ -957,7 +1012,7 @@ result_t sdhci_send_cmd(
             return result_err_chain(res, "Failed to send app command in sdhci_send_cmd().");
         }
         /* When there is an RCA, we should check the status indicates APP_CMD accepted. */
-        if (app_cmd_index == IX_APP_CMD_RCA) {
+        if (app_cmd_index == IDX_APP_CMD_RCA) {
             bool is_app_cmd_accepted;
             res = sdcard_is_app_cmd_accepted(sdcard, &is_app_cmd_accepted);
             if (result_is_err(res)) {
@@ -1057,7 +1112,7 @@ result_t sdhci_send_cmd(
             return result_ok();
         }
         case CMD_BUSY48BIT_RESP: {
-            /* `IX_CARD_SELECT` will enter here. */
+            /* `IDX_CARD_SELECT` will enter here. */
             res = sdcard_set_status(sdcard, resp0);
             if (result_is_err(res)) {
                 return result_err_chain(res, "Failed to set status in sdhci_send_cmd().");
@@ -1085,7 +1140,7 @@ result_t sdhci_send_cmd(
             }
             switch (cmd_index) {
                 case 0x03: {
-                    /* This is the switch-case for `IX_SEND_REL_ADDR`.
+                    /* This is the switch-case for `IDX_SEND_REL_ADDR`.
                      * RESP0 contains the RCA and status bits 23,22,19,12:0. */
                     /* Get the RCA from `resp0`. */
                     uint32_t rca = 0;
@@ -1121,7 +1176,7 @@ result_t sdhci_send_cmd(
                     return result_ok();
                 }
                 case 0x08: {
-                    /* This is the switch-case for `IX_SEND_IF_COND`. RESP0 contains
+                    /* This is the switch-case for `IDX_SEND_IF_COND`. RESP0 contains
                      * voltage acceptance and check pattern, which should match
                      * the argument. */
                     if (resp0 == arg) {
@@ -1133,7 +1188,7 @@ result_t sdhci_send_cmd(
                     }
                 }
                 case 0x29: {
-                    /* Response handling for `IX_APP_SEND_OP_COND`. Save the
+                    /* Response handling for `IDX_APP_SEND_OP_COND`. Save the
                      * RESP0 register as the Operation Conditions Register (OCR)
                      * for the `sdcard`. */
                     res = sdcard_set_ocr_raw32(sdcard, resp0);
@@ -1173,11 +1228,43 @@ result_t sdhci_send_cmd(
                 return result_err_chain(res_get_cmd_index, "Failed to get cmd_index in sdhci_send_cmd().");
             }
             if (cmd_index == 0x09) {
-                /* TODO: CSD Stuff here. */
+                /* `IDX_SEND_CSD` will enter this branch. */
+                /* Get the response from `resp1`. */
+                uint32_t resp1 = 0;
+                res = bcm_emmc_regs_get_resp1(
+                        bcm_emmc_regs,
+                        &resp1
+                );
+                if (result_is_err(res)) {
+                    return result_err_chain(res, "Failed to get resp1 in sdhci_send_cmd().");
+                }
+                /* Get the response from `resp2`. */
+                uint32_t resp2 = 0;
+                res = bcm_emmc_regs_get_resp2(
+                        bcm_emmc_regs,
+                        &resp2
+                );
+                if (result_is_err(res)) {
+                    return result_err_chain(res, "Failed to get resp2 in sdhci_send_cmd().");
+                }
+                /* Get the response from `resp3`. */
+                uint32_t resp3 = 0;
+                res = bcm_emmc_regs_get_resp3(
+                        bcm_emmc_regs,
+                        &resp3
+                );
+                if (result_is_err(res)) {
+                    return result_err_chain(res, "Failed to get resp3 in sdhci_send_cmd().");
+                }
+                /* Save the response as the SD card's CSD. */
+                res = sdcard_set_csd(sdcard, resp0, resp1, resp2, resp3);
+                if (result_is_err(res)) {
+                    return result_err_chain(res, "Failed to set CSD in sdhci_send_cmd().");
+                }
                 *sdhci_result = SD_OK;
                 return result_ok();
             } else {
-                /* `IX_ALL_SEND_CID` will enter this branch. */
+                /* `IDX_ALL_SEND_CID` will enter this branch. */
                 /* Get the response from `resp1`. */
                 uint32_t resp1 = 0;
                 res = bcm_emmc_regs_get_resp1(

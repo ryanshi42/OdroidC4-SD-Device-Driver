@@ -267,6 +267,13 @@ target_link_libraries(
         mmc_rpi3b_lib_blksizecnt
 )
 
+add_library(mmc_rpi3b_lib_csd src/mmc_driver/sdcard/csd.c)
+target_include_directories(mmc_rpi3b_lib_csd PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_csd
+        mmc_rpi3b_lib_result
+)
+
 add_library(mmc_rpi3b_lib_ocr src/mmc_driver/sdcard/ocr.c)
 target_include_directories(mmc_rpi3b_lib_ocr PUBLIC include/)
 target_link_libraries(
@@ -304,6 +311,7 @@ target_link_libraries(
         mmc_rpi3b_lib_cid
         mmc_rpi3b_lib_sdcard_type
         mmc_rpi3b_lib_scr
+        mmc_rpi3b_lib_csd
 )
 
 add_library(mmc_rpi3b_lib_sdhci_cmd src/mmc_driver/sdhci/sdhci_cmd.c)

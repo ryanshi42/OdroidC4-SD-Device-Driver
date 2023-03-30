@@ -28,6 +28,21 @@ result_t sdhci_card_init_and_id(
 );
 
 /**
+ * Sets the Bus Width to its maximum value as specified by the SD Card
+ * Configuration Register (SCR), which is stored in our `sdcard`.
+ * @param bcm_emmc_regs
+ * @param sdcard
+ * @param sd_clock_freq_hz
+ * @param sdhci_result
+ * @return
+ */
+result_t sdhci_set_max_bus_width(
+        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdcard_t *sdcard,
+        sdhci_result_t *sdhci_result
+);
+
+/**
  * Reads the specified number of blocks from the SD card.
  * @param bcm_emmc_regs
  * @param sdcard
