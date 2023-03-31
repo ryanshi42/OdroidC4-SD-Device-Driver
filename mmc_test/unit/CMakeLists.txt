@@ -53,3 +53,7 @@ target_link_libraries(
         test_mmc_rpi3b_lib_sdhci
         lib_fff
 )
+target_link_libraries(
+        test_mmc_rpi3b_lib_sdcard
+        lib_fff
+)

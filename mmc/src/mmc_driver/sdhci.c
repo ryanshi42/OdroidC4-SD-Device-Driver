@@ -1257,7 +1257,7 @@ result_t sdhci_send_cmd(
                     return result_err_chain(res, "Failed to get resp3 in sdhci_send_cmd().");
                 }
                 /* Save the response as the SD card's CSD. */
-                res = sdcard_set_csd(sdcard, resp0, resp1, resp2, resp3);
+                res = sdcard_set_sdcard_data(sdcard, resp0, resp1, resp2, resp3);
                 if (result_is_err(res)) {
                     return result_err_chain(res, "Failed to set CSD in sdhci_send_cmd().");
                 }

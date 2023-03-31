@@ -120,6 +120,11 @@ void init(void) {
         result_printf(res);
         return;
     }
+    res = e2e_test_sdcard_card_specific_data(&global_sdcard);
+    if (result_is_err(res)) {
+        result_printf(res);
+        return;
+    }
     log_info("Successfully finished E2E tests.");
 
     int rc;

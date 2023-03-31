@@ -37,3 +37,11 @@ result_t e2e_test_read_write_multiple_blocks(
         bcm_emmc_regs_t *bcm_emmc_regs,
         sdcard_t *sdcard
 );
+
+/**
+ * Tests the SD card CSD register.
+ * @param sdcard
+ * @return
+ */
+result_t e2e_test_sdcard_card_specific_data(sdcard_t *sdcard);
+

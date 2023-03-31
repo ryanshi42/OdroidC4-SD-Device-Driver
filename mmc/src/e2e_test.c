@@ -183,3 +183,42 @@ result_t e2e_test_read_write_multiple_blocks(
     return result_ok();
 }
 
+result_t e2e_test_sdcard_card_specific_data(sdcard_t *sdcard) {
+    log_info("Starting e2e_test_sdcard_card_specific_data().");
+
+    /* Get the memory capacity of SD card. */
+    uint64_t memory_capacity = 0;
+    result_t res = sdcard_get_memory_capacity(sdcard, &memory_capacity);
+    if (result_is_err(res)) {
+        log_info("Failed to get memory capacity of SD card.");
+        result_printf(res);
+        return result_ok();
+    }
+    log_info("Memory capacity of SD card is %ld bytes.", memory_capacity);
+    assert(64021856256 == memory_capacity);
+
+    /* Get number of blocks of SD card. */
+    uint64_t num_blocks = 0;
+    res = sdcard_get_num_blocks(sdcard, &num_blocks);
+    if (result_is_err(res)) {
+        log_info("Failed to get num blocks from SD card.");
+        result_printf(res);
+        return result_ok();
+    }
+    log_info("Num blocks on SD card is %ld.", num_blocks);
+    assert(125042688 == num_blocks);
+
+    /* Get block size of SD card. */
+    uint16_t block_size = 0;
+    res = sdcard_get_block_size(sdcard, &block_size);
+    if (result_is_err(res)) {
+        log_info("Failed to get block size from SD card.");
+        result_printf(res);
+        return result_ok();
+    }
+    log_info("Block size of SD card is %d bytes.", block_size);
+    assert(512 == block_size);
+
+    log_info("Finished e2e_test_sdcard_card_specific_data().");
+    return result_ok();
+}

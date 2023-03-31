@@ -1,8 +1,15 @@
 #include "gtest/gtest.h"
+#include <fff/fff.h>
 
 extern "C" {
 #include "sdcard.h"
 }
+
+DEFINE_FFF_GLOBALS;
+
+FAKE_VALUE_FUNC(result_t, sdcard_data_init, sdcard_data_t *, uint32_t, uint32_t, uint32_t, uint32_t);
+FAKE_VALUE_FUNC(result_t, sdcard_data_get_c_size, sdcard_data_t *, uint32_t*);
+FAKE_VALUE_FUNC(result_t, sdcard_data_get_block_size, sdcard_data_t *, uint16_t*);
 
 /* set_ocr */
 
@@ -85,3 +92,38 @@ TEST(test_sdcard, is_type_unknown_should_return_false_if_type_known) {
     ASSERT_TRUE(result_is_ok(res));
     ASSERT_TRUE(!is_type_unknown);
 }
+
+/* get_memory_capacity. */
+
+TEST(test_sdcard, get_memory_capacity_should_return_correct_memory_capacity_given_csize) {
+    sdcard_t sdcard = {};
+
+    sdcard_data_get_c_size_fake.custom_fake = [](sdcard_data_t *sdcard_data, uint32_t *ret_val) {
+        *ret_val = 122111;
+        return result_ok();
+    };
+
+    uint64_t actual_capacity;
+    result_t res = sdcard_get_memory_capacity(&sdcard, &actual_capacity);
+    ASSERT_TRUE(result_is_ok(res));
+    ASSERT_EQ(64021856256, actual_capacity);
+}
+
+/* get_num_blocks. */
+
+TEST(test_sdcard, get_num_blocks_should_return_correct_num_blocks) {
+    sdcard_t sdcard = {};
+
+    sdcard_data_get_c_size_fake.custom_fake = [](sdcard_data_t *sdcard_data, uint32_t *ret_val) {
+        *ret_val = 122111;
+        return result_ok();
+    };
+
+    uint64_t actual_capacity;
+    result_t res = sdcard_get_num_blocks(&sdcard, &actual_capacity);
+    ASSERT_TRUE(result_is_ok(res));
+    ASSERT_EQ(125042688, actual_capacity);
+}
+
+
+

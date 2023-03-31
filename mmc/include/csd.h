@@ -86,3 +86,51 @@ struct __attribute__((__packed__, aligned(4))) csd {
         uint32_t raw32_3;                     // @0-31	Union to access 32 bits as a uint32_t
     };
 };
+
+result_t csd_init(
+        csd_t *csd,
+        uint32_t resp0,
+        uint32_t resp1,
+        uint32_t resp2,
+        uint32_t resp3
+);
+
+/**
+ * Gets CSD Structure from CSD
+ * @param csd
+ * @param ret_val
+ * @return
+ */
+result_t csd_get_csd_structure(csd_t *csd, csd_structure_t *ret_val);
+
+/**
+ * Gets Version 1 C_Size from CSD
+ * @param csd
+ * @param ret_val
+ * @return
+ */
+result_t csd_get_c_size(csd_t *csd, uint32_t *ret_val);
+
+/**
+ * Gets Version 2 C_Size from CSD
+ * @param csd
+ * @param ret_val
+ * @return
+ */
+result_t csd_get_ver2_c_size(csd_t *csd, uint32_t *ret_val);
+
+/**
+ * Gets the size of the read block length.
+ * @param csd
+ * @param ret_val
+ * @return
+ */
+result_t csd_get_read_bl_len(csd_t *csd, uint8_t *ret_val);
+
+/**
+ * Gets the size of the write block length.
+ * @param csd
+ * @param ret_val
+ * @return
+ */
+result_t csd_get_write_bl_len(csd_t *csd, uint8_t *ret_val);

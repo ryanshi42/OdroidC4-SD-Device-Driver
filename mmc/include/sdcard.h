@@ -5,7 +5,8 @@
 #include "cid.h"
 #include "sdcard_type.h"
 #include "scr.h"
-#include "csd.h"
+#include "log.h"
+#include "sdcard_data.h"
 
 /* Card Status Mask that indicates APP_CMD was accepted. */
 #define ST_APP_CMD (0x00000020)
@@ -17,7 +18,7 @@ struct sdcard {
     /* Relative Card Address. */
     uint32_t rca;
     /* Card Specific Data. */
-    csd_t csd;
+    sdcard_data_t sdcard_data;
     /* Card Status. */
     uint32_t status;
     /* Card Identification Register. */
@@ -142,13 +143,37 @@ result_t sdcard_set_cid(
  * @param resp3
  * @return
  */
-result_t sdcard_set_csd(
+result_t sdcard_set_sdcard_data(
         sdcard_t *sdcard,
         uint32_t resp0,
         uint32_t resp1,
         uint32_t resp2,
         uint32_t resp3
 );
+
+/**
+ * Gets the SD card's memory capacity in bytes.
+ * @param sdcard
+ * @param ret_val Memory capacity in bytes.
+ * @return
+ */
+result_t sdcard_get_memory_capacity(sdcard_t *sdcard, uint64_t *ret_val);
+
+/**
+ * Gets the SD card's number of blocks.
+ * @param sdcard
+ * @param ret_val
+ * @return
+ */
+result_t sdcard_get_num_blocks(sdcard_t *sdcard, uint64_t *ret_val);
+
+/**
+ * Gets the SD card's block size.
+ * @param sdcard
+ * @param ret_val
+ * @return
+ */
+result_t sdcard_get_block_size(sdcard_t *sdcard, uint16_t *ret_val);
 
 /**
  * Sets the SD card type.
