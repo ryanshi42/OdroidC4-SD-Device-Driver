@@ -201,7 +201,7 @@ DRESULT disk_ioctl(
         BYTE cmd,        /* Control code */
         void *buff        /* Buffer to send/receive control data */
 ) {
-    DRESULT res;
+    DRESULT res = RES_ERROR;
     int result;
     (void) result;
 
@@ -213,7 +213,32 @@ DRESULT disk_ioctl(
             return res;
 
         case DEV_MMC :
-
+            switch (cmd) {
+                case GET_SECTOR_COUNT: {
+                    uint64_t *num_blocks = (uint64_t *) buff;
+                    result_t res_mmc = mmc_driver_get_num_blocks(num_blocks);
+                    if (result_is_err(res_mmc)) {
+                        break;
+                    }
+                    res = RES_OK;
+                    break;
+                }
+                case GET_SECTOR_SIZE: {
+                    break;
+                }
+                case GET_BLOCK_SIZE: {
+                    break;
+                }
+                case CTRL_SYNC: {
+                    break;
+                }
+                case CTRL_TRIM: {
+                    break;
+                }
+                default: {
+                    break;
+                }
+            }
             // Process of the command for the MMC/SD card
 
             return res;
