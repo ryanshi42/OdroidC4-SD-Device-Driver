@@ -24,10 +24,12 @@ result_t sdcard_data_init(
     if (csd_structure == CSD_VERSION_1) {
         sdcard_data->sdcard_data_impl_get_c_size = sdcard_data_v1_get_c_size;
         sdcard_data->sdcard_data_impl_get_memory_capacity = sdcard_data_v1_get_memory_capacity;
+        sdcard_data->sdcard_data_impl_get_block_size = sdcard_data_v1_get_block_size;
         sdcard_data->sdcard_data_impl_get_num_blocks = sdcard_data_v1_get_num_blocks;
     } else if (csd_structure == CSD_VERSION_2) {
         sdcard_data->sdcard_data_impl_get_c_size = sdcard_data_v2_get_c_size;
         sdcard_data->sdcard_data_impl_get_memory_capacity = sdcard_data_v2_get_memory_capacity;
+        sdcard_data->sdcard_data_impl_get_block_size = sdcard_data_v2_get_block_size;
         sdcard_data->sdcard_data_impl_get_num_blocks = sdcard_data_v2_get_num_blocks;
     } else {
         return result_err("Unknown CSD structure.");
@@ -59,21 +61,7 @@ result_t sdcard_data_get_block_size(
     if (ret_val == NULL) {
         return result_err("NULL `ret_val` passed to sdcard_data_get_block_size().");
     }
-    uint8_t read_bl_len;
-    result_t res = csd_get_read_bl_len(&sdcard_data->csd, &read_bl_len);
-    if (result_is_err(res)) {
-        return result_err("Failed to get read block length in sdcard_data_get_block_size().");
-    }
-    uint8_t write_bl_len;
-    res = csd_get_write_bl_len(&sdcard_data->csd, &write_bl_len);
-    if (result_is_err(res)) {
-        return result_err("Failed to get write block length in sdcard_data_get_block_size().");
-    }
-    if (read_bl_len != write_bl_len) {
-        return result_err("Read block length and write block length are not equal in sdcard_data_get_block_size().");
-    }
-    *ret_val = 1 << read_bl_len;
-    return result_ok();
+    return sdcard_data->sdcard_data_impl_get_block_size(&sdcard_data->csd, ret_val);
 }
 
 result_t sdcard_data_get_memory_capacity(

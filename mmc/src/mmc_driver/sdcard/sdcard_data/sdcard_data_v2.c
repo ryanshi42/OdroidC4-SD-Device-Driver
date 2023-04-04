@@ -28,6 +28,33 @@ result_t sdcard_data_v2_get_memory_capacity(csd_t *csd, uint64_t *ret_val) {
     return result_ok();
 }
 
+result_t sdcard_data_v2_get_block_size(csd_t *csd, uint16_t *ret_val) {
+    if (csd == NULL) {
+        return result_err("NULL `csd` passed to sdcard_data_v2_get_block_size().");
+    }
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` passed to sdcard_data_v2_get_block_size().");
+    }
+    uint8_t read_bl_len;
+    result_t res = csd_get_read_bl_len(csd, &read_bl_len);
+    if (result_is_err(res)) {
+        return result_err("Failed to get read block length in sdcard_data_v2_get_block_size().");
+    }
+    uint8_t write_bl_len;
+    res = csd_get_write_bl_len(csd, &write_bl_len);
+    if (result_is_err(res)) {
+        return result_err("Failed to get write block length in sdcard_data_v2_get_block_size().");
+    }
+    if (read_bl_len != write_bl_len) {
+        return result_err("Read block length and write block length are not equal in sdcard_data_v2_get_block_size().");
+    }
+    if (read_bl_len != 9) {
+        return result_err("Read block length is not 512 bytes in sdcard_data_v2_get_block_size().");
+    }
+    *ret_val = 512;
+    return result_ok();
+}
+
 result_t sdcard_data_v2_get_num_blocks(csd_t *csd, uint64_t *ret_val) {
     if (csd == NULL) {
         return result_err("NULL `csd` passed to sdcard_data_v2_get_num_blocks().");
