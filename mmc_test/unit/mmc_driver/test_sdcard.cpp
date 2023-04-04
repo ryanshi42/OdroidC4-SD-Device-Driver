@@ -11,10 +11,31 @@ FAKE_VALUE_FUNC(result_t, sdcard_data_init, sdcard_data_t *, uint32_t, uint32_t,
 FAKE_VALUE_FUNC(result_t, sdcard_data_get_c_size, sdcard_data_t *, uint32_t*);
 FAKE_VALUE_FUNC(result_t, sdcard_data_get_block_size, sdcard_data_t *, uint16_t*);
 FAKE_VALUE_FUNC(result_t, sdcard_data_get_memory_capacity, sdcard_data_t *, uint64_t*);
+FAKE_VALUE_FUNC(result_t, sdcard_data_get_num_blocks, sdcard_data_t *, uint64_t*);
+
+/* Resets all Fakes for each unit test. */
+class TestSdcard : public testing::Test {
+protected:
+    // You can define per-test set-up logic as usual.
+    void SetUp() override {
+        FFF_RESET_HISTORY();
+
+        RESET_FAKE(sdcard_data_init);
+        RESET_FAKE(sdcard_data_get_c_size);
+        RESET_FAKE(sdcard_data_get_block_size);
+        RESET_FAKE(sdcard_data_get_memory_capacity);
+        RESET_FAKE(sdcard_data_get_num_blocks);
+    }
+
+    // You can define per-test tear-down logic as usual.
+    void TearDown() override {
+
+    }
+};
 
 /* set_ocr */
 
-TEST(test_sdcard, sdcard_set_ocr_should_set_ocr) {
+TEST_F(TestSdcard, sdcard_set_ocr_should_set_ocr) {
     sdcard_t sdcard = {};
     result_t res = sdcard_set_ocr_raw32(
             &sdcard,
@@ -27,7 +48,7 @@ TEST(test_sdcard, sdcard_set_ocr_should_set_ocr) {
 
 /* has_rca */
 
-TEST(test_sdcard, has_rca_should_return_false_if_no_rca) {
+TEST_F(TestSdcard, has_rca_should_return_false_if_no_rca) {
     sdcard_t sdcard = {};
     result_t res = sdcard_init(&sdcard);
     ASSERT_TRUE(result_is_ok(res));
@@ -40,7 +61,7 @@ TEST(test_sdcard, has_rca_should_return_false_if_no_rca) {
     ASSERT_FALSE(has_rca);
 }
 
-TEST(test_sdcard, has_rca_should_return_true_if_rca_present) {
+TEST_F(TestSdcard, has_rca_should_return_true_if_rca_present) {
     sdcard_t sdcard = {};
     result_t res = sdcard_init(&sdcard);
     ASSERT_TRUE(result_is_ok(res));
@@ -62,7 +83,7 @@ TEST(test_sdcard, has_rca_should_return_true_if_rca_present) {
 
 /* is_type_unknown */
 
-TEST(test_sdcard, is_type_unknown_should_return_true_if_type_unknown) {
+TEST_F(TestSdcard, is_type_unknown_should_return_true_if_type_unknown) {
     sdcard_t sdcard = {};
     result_t res = sdcard_init(&sdcard);
     ASSERT_TRUE(result_is_ok(res));
@@ -78,7 +99,7 @@ TEST(test_sdcard, is_type_unknown_should_return_true_if_type_unknown) {
     ASSERT_TRUE(is_type_unknown);
 }
 
-TEST(test_sdcard, is_type_unknown_should_return_false_if_type_known) {
+TEST_F(TestSdcard, is_type_unknown_should_return_false_if_type_known) {
     sdcard_t sdcard = {};
     result_t res = sdcard_init(&sdcard);
     ASSERT_TRUE(result_is_ok(res));
@@ -96,7 +117,7 @@ TEST(test_sdcard, is_type_unknown_should_return_false_if_type_known) {
 
 /* get_memory_capacity. */
 
-TEST(test_sdcard, get_memory_capacity_should_return_correct_memory_capacity_given_csize) {
+TEST_F(TestSdcard, get_memory_capacity_should_return_correct_memory_capacity_given_csize) {
     sdcard_t sdcard = {};
 
     sdcard_data_get_memory_capacity_fake.custom_fake = [](sdcard_data_t *sdcard_data, uint64_t *ret_val) {
@@ -112,11 +133,11 @@ TEST(test_sdcard, get_memory_capacity_should_return_correct_memory_capacity_give
 
 /* get_num_blocks. */
 
-TEST(test_sdcard, get_num_blocks_should_return_correct_num_blocks) {
+TEST_F(TestSdcard, get_num_blocks_should_return_correct_num_blocks) {
     sdcard_t sdcard = {};
 
-    sdcard_data_get_c_size_fake.custom_fake = [](sdcard_data_t *sdcard_data, uint32_t *ret_val) {
-        *ret_val = 122111;
+    sdcard_data_get_num_blocks_fake.custom_fake = [](sdcard_data_t *sdcard_data, uint64_t *ret_val) {
+        *ret_val = 125042688;
         return result_ok();
     };
 

@@ -24,9 +24,11 @@ result_t sdcard_data_init(
     if (csd_structure == CSD_VERSION_1) {
         sdcard_data->sdcard_data_impl_get_c_size = sdcard_data_v1_get_c_size;
         sdcard_data->sdcard_data_impl_get_memory_capacity = sdcard_data_v1_get_memory_capacity;
+        sdcard_data->sdcard_data_impl_get_num_blocks = sdcard_data_v1_get_num_blocks;
     } else if (csd_structure == CSD_VERSION_2) {
         sdcard_data->sdcard_data_impl_get_c_size = sdcard_data_v2_get_c_size;
         sdcard_data->sdcard_data_impl_get_memory_capacity = sdcard_data_v2_get_memory_capacity;
+        sdcard_data->sdcard_data_impl_get_num_blocks = sdcard_data_v2_get_num_blocks;
     } else {
         return result_err("Unknown CSD structure.");
     }
@@ -85,5 +87,18 @@ result_t sdcard_data_get_memory_capacity(
         return result_err("NULL `ret_val` passed to sdcard_data_get_memory_capacity().");
     }
     return sdcard_data->sdcard_data_impl_get_memory_capacity(&sdcard_data->csd, ret_val);
+}
+
+result_t sdcard_data_get_num_blocks(
+        sdcard_data_t *sdcard_data,
+        uint64_t *ret_val
+) {
+    if (sdcard_data == NULL) {
+        return result_err("NULL `sdcard_data` passed to sdcard_data_get_num_blocks().");
+    }
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` passed to sdcard_data_get_num_blocks().");
+    }
+    return sdcard_data->sdcard_data_impl_get_num_blocks(&sdcard_data->csd, ret_val);
 }
 
