@@ -227,6 +227,12 @@ DRESULT disk_ioctl(
                     break;
                 }
                 case GET_BLOCK_SIZE: {
+                    uint16_t *block_size = (uint16_t *) buff;
+                    result_t res_mmc = mmc_driver_get_block_size(block_size);
+                    if (result_is_err(res_mmc)) {
+                        break;
+                    }
+                    res = RES_OK;
                     break;
                 }
                 case CTRL_SYNC: {

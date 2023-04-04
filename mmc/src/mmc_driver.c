@@ -147,6 +147,13 @@ result_t mmc_driver_get_num_blocks(uint64_t *ret_val) {
     return sdcard_get_num_blocks(&global_sdcard, ret_val);
 }
 
+result_t mmc_driver_get_block_size(uint16_t *ret_val) {
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` in mmc_driver_get_block_size().");
+    }
+    return sdcard_get_block_size(&global_sdcard, ret_val);
+}
+
 void notified(sel4cp_channel ch) {
 
 }

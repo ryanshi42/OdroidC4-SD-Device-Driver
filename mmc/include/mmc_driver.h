@@ -22,3 +22,10 @@
  * @return
  */
 result_t mmc_driver_get_num_blocks(uint64_t *ret_val);
+
+/**
+ * Returns the SD cards's block size.
+ * @param ret_val
+ * @return
+ */
+result_t mmc_driver_get_block_size(uint16_t *ret_val);
