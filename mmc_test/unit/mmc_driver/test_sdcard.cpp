@@ -10,6 +10,7 @@ DEFINE_FFF_GLOBALS;
 FAKE_VALUE_FUNC(result_t, sdcard_data_init, sdcard_data_t *, uint32_t, uint32_t, uint32_t, uint32_t);
 FAKE_VALUE_FUNC(result_t, sdcard_data_get_c_size, sdcard_data_t *, uint32_t*);
 FAKE_VALUE_FUNC(result_t, sdcard_data_get_block_size, sdcard_data_t *, uint16_t*);
+FAKE_VALUE_FUNC(result_t, sdcard_data_get_memory_capacity, sdcard_data_t *, uint64_t*);
 
 /* set_ocr */
 
@@ -98,8 +99,8 @@ TEST(test_sdcard, is_type_unknown_should_return_false_if_type_known) {
 TEST(test_sdcard, get_memory_capacity_should_return_correct_memory_capacity_given_csize) {
     sdcard_t sdcard = {};
 
-    sdcard_data_get_c_size_fake.custom_fake = [](sdcard_data_t *sdcard_data, uint32_t *ret_val) {
-        *ret_val = 122111;
+    sdcard_data_get_memory_capacity_fake.custom_fake = [](sdcard_data_t *sdcard_data, uint64_t *ret_val) {
+        *ret_val = 64021856256;
         return result_ok();
     };
 

@@ -11,6 +11,7 @@ struct sdcard_data {
     csd_t csd;
     /* Function Pointers for different ways to compute values from the CSD.  */
     result_t (*sdcard_data_impl_get_c_size)(csd_t *csd, uint32_t *ret_val);
+    result_t (*sdcard_data_impl_get_memory_capacity)(csd_t *csd, uint64_t *ret_val);
 };
 
 /**
@@ -51,4 +52,16 @@ result_t sdcard_data_get_block_size(
         sdcard_data_t *sdcard_data,
         uint16_t *ret_val
 );
+
+/**
+ * Returns the memory capacity of the SD card.
+ * @param sdcard_data
+ * @param ret_val
+ * @return
+ */
+result_t sdcard_data_get_memory_capacity(
+        sdcard_data_t *sdcard_data,
+        uint64_t *ret_val
+);
+
 

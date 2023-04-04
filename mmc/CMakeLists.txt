@@ -315,7 +315,7 @@ target_include_directories(mmc_rpi3b_lib_sdcard_data_v2 PUBLIC include/)
 target_link_libraries(
         mmc_rpi3b_lib_sdcard_data_v2
         mmc_rpi3b_lib_result
-        mmc_rpi3b_lib_scr
+        mmc_rpi3b_lib_csd
 )
 
 add_library(mmc_rpi3b_lib_sdcard_data src/mmc_driver/sdcard/sdcard_data.c)

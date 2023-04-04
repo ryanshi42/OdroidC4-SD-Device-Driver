@@ -160,16 +160,7 @@ result_t sdcard_get_memory_capacity(sdcard_t *sdcard, uint64_t *ret_val) {
     if (ret_val == NULL) {
         return result_err("NULL `ret_val` passed to sdcard_get_memory_capacity().");
     }
-    /* TODO: Refactor this because how you compute memory capacity different for v1.0. */
-    /* Get Card Size. */
-    uint32_t c_size = 0;
-    result_t res = sdcard_data_get_c_size(&sdcard->sdcard_data, &c_size);
-    if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to get C_SIZE from CSD in sdcard_get_memory_capacity().");
-    }
-    /* Compute memory capacity. */
-    *ret_val = (c_size + 1) * ((uint64_t) 512) * ((uint64_t) 1024);
-    return result_ok();
+    return sdcard_data_get_memory_capacity(&sdcard->sdcard_data, ret_val);
 }
 
 result_t sdcard_get_num_blocks(sdcard_t *sdcard, uint64_t *ret_val) {
