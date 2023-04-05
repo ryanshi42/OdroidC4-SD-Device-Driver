@@ -127,7 +127,9 @@ result_t e2e_test_read_write_multiple_blocks(
     result_t res;
     sdhci_result_t sdhci_result;
 
-    /* Initialise our buffer to zero. */
+    /* Initialise our buffer to zero. We use the largest possible buffer without
+     * overflowing the Core Platform's stack space, hence the strange buffer
+     * size. */
     char buf[4608] = {0};
     size_t buf_len = sizeof(buf);
     size_t num_blocks = 9;
@@ -136,7 +138,7 @@ result_t e2e_test_read_write_multiple_blocks(
     assert(buf_len == num_blocks * block_size);
     /* Do not use the first sector (lba 0), could render your card unbootable
      * choose a sector which is unused by your partitions */
-    size_t lba_counter = 2;
+    size_t lba = 2;
 
     /* Fill our buffer to all 'a'. */
     memset(buf, 'a', buf_len);
@@ -145,7 +147,7 @@ result_t e2e_test_read_write_multiple_blocks(
     res = sdhci_write_blocks(
             bcm_emmc_regs,
             sdcard,
-            lba_counter,
+            lba,
             num_blocks,
             block_size,
             buf,
@@ -163,7 +165,7 @@ result_t e2e_test_read_write_multiple_blocks(
     res = sdhci_read_blocks(
             bcm_emmc_regs,
             sdcard,
-            lba_counter,
+            lba,
             num_blocks,
             block_size,
             buf,
