@@ -154,6 +154,15 @@ result_t mmc_driver_get_block_size(uint16_t *ret_val) {
     return sdcard_get_block_size(&global_sdcard, ret_val);
 }
 
+result_t mmc_driver_write_flush(void) {
+    /* Our current write implementation waits for the write operation to
+     * complete before returning to the client. Therefore, this flush operation
+     * is presently a noop. However, if the write implementation changes to use
+     * some form of write-back cache, this function should be implemented to
+     * flush any cached writes to the SD card accordingly. */
+    return result_ok();
+}
+
 void notified(sel4cp_channel ch) {
 
 }

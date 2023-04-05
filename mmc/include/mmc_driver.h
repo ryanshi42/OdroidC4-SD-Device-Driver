@@ -29,3 +29,9 @@ result_t mmc_driver_get_num_blocks(uint64_t *ret_val);
  * @return
  */
 result_t mmc_driver_get_block_size(uint16_t *ret_val);
+
+/**
+ * Flushes any writes to the SD card.
+ * @return
+ */
+result_t mmc_driver_write_flush(void);

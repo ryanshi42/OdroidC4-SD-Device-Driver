@@ -218,6 +218,7 @@ DRESULT disk_ioctl(
                     uint64_t *num_blocks = (uint64_t *) buff;
                     result_t res_mmc = mmc_driver_get_num_blocks(num_blocks);
                     if (result_is_err(res_mmc)) {
+                        res = RES_ERROR;
                         break;
                     }
                     res = RES_OK;
@@ -230,12 +231,19 @@ DRESULT disk_ioctl(
                     uint16_t *block_size = (uint16_t *) buff;
                     result_t res_mmc = mmc_driver_get_block_size(block_size);
                     if (result_is_err(res_mmc)) {
+                        res = RES_ERROR;
                         break;
                     }
                     res = RES_OK;
                     break;
                 }
                 case CTRL_SYNC: {
+                    result_t res_mmc = mmc_driver_write_flush();
+                    if (result_is_err(res_mmc)) {
+                        res = RES_ERROR;
+                        break;
+                    }
+                    res = RES_OK;
                     break;
                 }
                 case CTRL_TRIM: {
