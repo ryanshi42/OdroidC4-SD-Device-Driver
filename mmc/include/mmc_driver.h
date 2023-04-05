@@ -11,6 +11,7 @@
 #include "timer_client.h"
 #include "sdcard.h"
 #include "e2e_test.h"
+#include "sdhci.h"
 #include "diskio_test.h"
 
 #define MMC_DRIVER_TO_SERIAL_CLIENT_PUTCHAR_CHANNEL (7)
@@ -35,3 +36,38 @@ result_t mmc_driver_get_block_size(uint16_t *ret_val);
  * @return
  */
 result_t mmc_driver_write_flush(void);
+
+/**
+ * Writes blocks to the SD card.
+ * @param lba
+ * @param num_blocks
+ * @param block_size
+ * @param dst_buffer
+ * @param dst_buffer_len
+ * @return
+ */
+result_t mmc_driver_write_blocks(
+        size_t lba,
+        size_t num_blocks,
+        size_t block_size,
+        char *src_buffer,
+        size_t src_buffer_len
+);
+
+/**
+ * Reads blocks from the SD card.
+ * @param lba
+ * @param num_blocks
+ * @param block_size
+ * @param dst_buffer
+ * @param dst_buffer_len
+ * @return
+ */
+result_t mmc_driver_read_blocks(
+        size_t lba,
+        size_t num_blocks,
+        size_t block_size,
+        char *dst_buffer,
+        size_t dst_buffer_len
+);
+

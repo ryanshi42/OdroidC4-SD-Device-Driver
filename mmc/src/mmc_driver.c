@@ -163,6 +163,52 @@ result_t mmc_driver_write_flush(void) {
     return result_ok();
 }
 
+result_t mmc_driver_write_blocks(
+        size_t lba,
+        size_t num_blocks,
+        size_t block_size,
+        char *src_buffer,
+        size_t src_buffer_len
+) {
+    if (src_buffer == NULL) {
+        return result_err("NULL `src_buffer` in mmc_driver_write_blocks().");
+    }
+    sdhci_result_t sdhci_result;
+    return sdhci_write_blocks(
+            (bcm_emmc_regs_t *) emmc_base_vaddr,
+            &global_sdcard,
+            lba,
+            num_blocks,
+            block_size,
+            src_buffer,
+            src_buffer_len,
+            &sdhci_result
+    );
+}
+
+result_t mmc_driver_read_blocks(
+        size_t lba,
+        size_t num_blocks,
+        size_t block_size,
+        char *dst_buffer,
+        size_t dst_buffer_len
+) {
+    if (dst_buffer == NULL) {
+        return result_err("NULL `dst_buffer` in mmc_driver_read_blocks().");
+    }
+    sdhci_result_t sdhci_result;
+    return sdhci_read_blocks(
+            (bcm_emmc_regs_t *) emmc_base_vaddr,
+            &global_sdcard,
+            lba,
+            num_blocks,
+            block_size,
+            dst_buffer,
+            dst_buffer_len,
+            &sdhci_result
+    );
+}
+
 void notified(sel4cp_channel ch) {
 
 }

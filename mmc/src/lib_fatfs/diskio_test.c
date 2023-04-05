@@ -112,7 +112,7 @@ int test_diskio (
 
         /* Single sector write test */
         printf("**** Single sector write test ****\n");
-        lba = 0;
+        lba = 1; /* Changed this to 1 to avoid overwriting MBR. */
         for (n = 0, pn(pns); n < sz_sect; n++) pbuff[n] = (BYTE)pn(0);
         printf(" disk_write(%u, 0x%lX, %u, 1)", pdrv, (uintptr_t)pbuff, lba);
         dr = disk_write(pdrv, pbuff, lba, 1);

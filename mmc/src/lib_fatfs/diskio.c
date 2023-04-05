@@ -103,7 +103,7 @@ DRESULT disk_read(
         LBA_t sector,    /* Start sector in LBA */
         UINT count        /* Number of sectors to read */
 ) {
-    DRESULT res;
+    DRESULT res = RES_ERROR;
     int result;
     (void) result;
 
@@ -117,15 +117,22 @@ DRESULT disk_read(
 
             return res;
 
-        case DEV_MMC :
+        case DEV_MMC : {
             // translate the arguments here
-
-//		result = MMC_disk_read(buff, sector, count);
-
-            // translate the reslut code here
-
+            result_t res_mmc = mmc_driver_read_blocks(
+                    sector,
+                    count,
+                    512,
+                    (char *) buff,
+                    count * 512
+            );
+            if (result_is_err(res_mmc)) {
+                res = RES_ERROR;
+            } else {
+                res = RES_OK;
+            }
             return res;
-
+        }
         case DEV_USB :
             // translate the arguments here
 
@@ -153,7 +160,7 @@ DRESULT disk_write(
         LBA_t sector,        /* Start sector in LBA */
         UINT count            /* Number of sectors to write */
 ) {
-    DRESULT res;
+    DRESULT res = RES_ERROR;
     int result;
     (void) result;
 
@@ -167,15 +174,22 @@ DRESULT disk_write(
 
             return res;
 
-        case DEV_MMC :
+        case DEV_MMC : {
             // translate the arguments here
-
-//		result = MMC_disk_write(buff, sector, count);
-
-            // translate the reslut code here
-
+            result_t res_mmc = mmc_driver_write_blocks(
+                    sector,
+                    count,
+                    512,
+                    (char *) buff,
+                    count * 512
+            );
+            if (result_is_err(res_mmc)) {
+                res = RES_ERROR;
+            } else {
+                res = RES_OK;
+            }
             return res;
-
+        }
         case DEV_USB :
             // translate the arguments here
 
