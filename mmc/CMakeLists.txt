@@ -439,7 +439,7 @@ target_link_libraries(
         mmc_rpi3b_lib_sdcard
         mmc_rpi3b_lib_e2e_test
         mmc_rpi3b_lib_sdhci
-        mmc_rpi3b_lib_diskio_test
+        mmc_rpi3b_lib_fatfs_e2e
 )
 
 add_library(mmc_rpi3b_lib_diskio src/lib_fatfs/diskio.c)
@@ -479,6 +479,17 @@ add_library(mmc_rpi3b_lib_ffunicode src/lib_fatfs/ffunicode.c)
 target_link_libraries(
         mmc_rpi3b_lib_ffunicode
         mmc_rpi3b_lib_ff
+)
+
+add_library(mmc_rpi3b_lib_fatfs_e2e src/fatfs_e2e.c)
+target_include_directories(mmc_rpi3b_lib_fatfs_e2e PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_fatfs_e2e
+        mmc_rpi3b_lib_result
+        mmc_rpi3b_lib_diskio_test
+        mmc_rpi3b_lib_ff
+        mmc_rpi3b_lib_assert
+        mmc_rpi3b_lib_log
 )
 
 add_library(mmc_rpi3b_lib_fatfs src/fatfs.c)

@@ -127,14 +127,16 @@ void init(void) {
     }
     log_info("Successfully finished E2E tests.");
 
-    int rc;
-    DWORD buff[FF_MAX_SS];  /* Working buffer (4 sector in size) */
-    /* Check function/compatibility of the physical drive #1 */
-    rc = test_diskio(1, 3, buff, sizeof buff);
-    if (rc) {
-        printf("Sorry the function/compatibility test failed. (rc=%d)\nFatFs will not work with this disk driver.\n", rc);
-    } else {
-        printf("Congratulations! The disk driver works well.\n");
+    res = fatfs_e2e_diskio_test();
+    if (result_is_err(res)) {
+        result_printf(res);
+        return;
+    }
+
+    res = fatfs_e2e_write_close_read_simple();
+    if (result_is_err(res)) {
+        result_printf(res);
+        return;
     }
 }
 

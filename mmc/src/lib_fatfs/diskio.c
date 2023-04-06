@@ -11,8 +11,8 @@
 #include "diskio.h"        /* Declarations of disk functions */
 
 /* Definitions of physical drive number for each drive */
-#define DEV_RAM        0    /* Example: Map Ramdisk to physical drive 0 */
-#define DEV_MMC        1    /* Example: Map MMC/SD card to physical drive 1 */
+#define DEV_MMC        0    /* Example: Map MMC/SD card to physical drive 0 */
+#define DEV_RAM        1    /* Example: Map Ramdisk to physical drive 1 */
 #define DEV_USB        2    /* Example: Map USB MSD to physical drive 2 */
 
 
@@ -23,7 +23,7 @@
 DSTATUS disk_status(
         BYTE pdrv        /* Physical drive nmuber to identify the drive */
 ) {
-    DSTATUS stat;
+    DSTATUS stat = STA_NOINIT;
     int result;
     (void) result;
 
@@ -39,6 +39,7 @@ DSTATUS disk_status(
 //		result = MMC_disk_status();
 
             // translate the reslut code here
+            stat = 0;
 
             return stat;
 

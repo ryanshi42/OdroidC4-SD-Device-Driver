@@ -12,7 +12,7 @@
 #include "sdcard.h"
 #include "e2e_test.h"
 #include "sdhci.h"
-#include "diskio_test.h"
+#include "fatfs_e2e.h"
 
 #define MMC_DRIVER_TO_SERIAL_CLIENT_PUTCHAR_CHANNEL (7)
 #define MMC_DRIVER_TO_TIMER_DRIVER_GET_NUM_TICKS_CHANNEL (11)

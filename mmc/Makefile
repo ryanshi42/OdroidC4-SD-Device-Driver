@@ -133,6 +133,7 @@ MMC_DRIVER_OBJS := \
 	lib_fatfs/diskio.o \
 	lib_fatfs/ff.o \
 	lib_fatfs/diskio_test.o \
+	fatfs_e2e.o \
 
 TIMER_DRIVER_OBJS := \
 	timer_driver.o \
