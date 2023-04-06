@@ -39,7 +39,7 @@ result_t fatfs_e2e_write_close_read_simple(void) {
     }
     assert(FR_OK == res);
 
-    int bytes_written;
+    unsigned int bytes_written;
     res = f_write(&fp, str, str_len, (UINT *) &bytes_written);
     if (res != FR_OK) {
         log_info("Error writing to file with res of %d.", res);
@@ -60,7 +60,7 @@ result_t fatfs_e2e_write_close_read_simple(void) {
     }
     assert(FR_OK == res);
 
-    int bytes_read;
+    unsigned int bytes_read;
     char read_buf[100] = {0};
     res = f_read(&fp, read_buf, str_len, (UINT *) &bytes_read);
     if (res != FR_OK) {
