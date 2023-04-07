@@ -71,6 +71,12 @@ result_t fatfs_e2e_write_close_read_simple(void) {
     assert(str_len == bytes_read);
     log_info("Read string: %s", read_buf);
 
+    res = f_close(&fp);
+    if (res != FR_OK) {
+        log_info("Error closing file with res of %d.", res);
+    }
+    assert(FR_OK == res);
+
     log_info("Finished fatfs_e2e_read_write_simple().");
     return result_ok();
 }
