@@ -23,7 +23,7 @@ result_t fatfs_e2e_write_close_read_simple(void) {
     FATFS fs;
     FRESULT res;
     FIL fp = {0};
-    const char *path = "test.txt";
+    const char *path = "fatfs_e2e_read_write_simple.txt";
     char str[] = "Hello World!";
     size_t str_len = sizeof(str);
 
