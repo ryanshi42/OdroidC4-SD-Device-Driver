@@ -145,11 +145,18 @@ TIMER_DRIVER_OBJS := \
 	timer_driver/bcm_timer_regs.o \
 	lib_printf/printf.o \
 
+FATFS_OBJS := \
+	fatfs.o \
+	lib_printf/printf.o \
+	common/log.o \
+	lib_result/result.o \
+
 IMAGES := \
 	serial_driver.elf \
 	serial_client.elf \
 	mmc_driver.elf \
 	timer_driver.elf \
+	fatfs.elf \
 
 .PHONY: all
 all: directories $(IMAGE_FILE)
@@ -201,6 +208,9 @@ $(BUILD_DIR)/mmc_driver.elf: $(addprefix $(BUILD_DIR)/, $(MMC_DRIVER_OBJS))
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
 $(BUILD_DIR)/timer_driver.elf: $(addprefix $(BUILD_DIR)/, $(TIMER_DRIVER_OBJS))
+	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
+
+$(BUILD_DIR)/fatfs.elf: $(addprefix $(BUILD_DIR)/, $(FATFS_OBJS))
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
 # ======================================

@@ -496,4 +496,8 @@ add_library(mmc_rpi3b_lib_fatfs src/fatfs.c)
 target_include_directories(mmc_rpi3b_lib_fatfs PUBLIC include/)
 target_link_libraries(
         mmc_rpi3b_lib_fatfs
+        mmc_rpi3b_lib_sel4cp_facade
+        mmc_rpi3b_lib_printf
+        mmc_rpi3b_lib_log
+        mmc_rpi3b_lib_result
 )

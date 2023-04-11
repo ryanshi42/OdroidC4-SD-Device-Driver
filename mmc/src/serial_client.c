@@ -40,6 +40,9 @@ uintptr_t mmc_to_serial_client_putchar_buf;
 /* Used for transporting chars from `timer_driver` to `serial_client`. */
 uintptr_t timer_driver_to_serial_client_putchar_buf;
 
+/* Used for transporting chars from `fatfs` to `serial_client`. */
+uintptr_t fatfs_to_serial_client_putchar_buf;
+
 /**
  * Initialises the `serial_client` struct and sets up the serial client.
  * @param serial_client
@@ -338,11 +341,20 @@ void notified(sel4cp_channel channel) {
             serial_client_printf(str_tmp);
             break;
         }
-        case SERIAL_CLIENT_TO_MMC_PUTCHAR_CHANNEL: {
+        case SERIAL_CLIENT_TO_MMC_DRIVER_PUTCHAR_CHANNEL: {
             /* Create a temporary zero-ed string to be passed into `serial_client_printf()`. */
             char str_tmp[2] = {0};
             /* Obtain the character to print from the `mmc_to_serial_client_putchar_buf`. */
             str_tmp[0] = ((char *) mmc_to_serial_client_putchar_buf)[0];
+            /* Print out the character. */
+            serial_client_printf(str_tmp);
+            break;
+        }
+        case SERIAL_CLIENT_TO_FATFS_PUTCHAR_CHANNEL: {
+            /* Create a temporary zero-ed string to be passed into `serial_client_printf()`. */
+            char str_tmp[2] = {0};
+            /* Obtain the character to print from the `mmc_to_serial_client_putchar_buf`. */
+            str_tmp[0] = ((char *) fatfs_to_serial_client_putchar_buf)[0];
             /* Print out the character. */
             serial_client_printf(str_tmp);
             break;

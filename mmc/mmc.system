@@ -85,6 +85,11 @@
             name="mmc_to_serial_client_putchar_buf"
             size="0x1_000"
             page_size="0x1_000"/>
+    <!-- A shared buffer to pass chars from `fatfs.c` to `serial_client.c`. -->
+    <memory_region
+            name="fatfs_to_serial_client_putchar_buf"
+            size="0x1_000"
+            page_size="0x1_000"/>
     <!-- The `serial_driver` PD must have a higher priority than the
     `serial_client` PD so that it doesn't get preempted by `serial_client` when
     it is busy writing to the UART device. -->
@@ -222,6 +227,12 @@
                 perms="rw"
                 cached="true"
                 setvar_vaddr="timer_driver_to_serial_client_putchar_buf"/>
+        <map
+                mr="fatfs_to_serial_client_putchar_buf"
+                vaddr="0x7_200_000"
+                perms="rw"
+                cached="true"
+                setvar_vaddr="fatfs_to_serial_client_putchar_buf"/>
     </protection_domain>
     <!-- Channel between `serial_client` and `serial_driver` for printf() calls
     by `serial_client`. -->
@@ -288,7 +299,7 @@
                 perms="rw"
                 cached="true"
                 setvar_vaddr="timer_driver_to_mmc_driver_numticks_buf"/>
-        <!-- Shared memory region for `mmc` PD to pass characters to
+        <!-- Shared memory region for `mmc_driver` PD to pass characters to
         `serial_client` to print. -->
         <map
                 mr="mmc_to_serial_client_putchar_buf"
@@ -325,6 +336,24 @@
         <end pd="mmc_driver" id="11"/>
         <end pd="timer_driver" id="12"/>
     </channel>
-
+    <!-- Protection Domain for FAT File System. -->
+    <protection_domain
+            name="fatfs"
+            priority="97"
+            pp="true">
+        <program_image path="fatfs.elf"/>
+        <!-- Shared memory region for `fatfs` PD to pass characters to
+        `serial_client` to print. -->
+        <map
+                mr="fatfs_to_serial_client_putchar_buf"
+                vaddr="0x2_600_000"
+                perms="rw"
+                cached="true"
+                setvar_vaddr="fatfs_to_serial_client_putchar_buf"/>
+    </protection_domain>
+    <channel>
+        <end pd="fatfs" id="13" />
+        <end pd="serial_client" id="14" />
+    </channel>
 </system>
 
