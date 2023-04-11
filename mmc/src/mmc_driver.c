@@ -138,6 +138,13 @@ void init(void) {
         result_printf(res);
         return;
     }
+
+    res = fatfs_e2e_write_fsync_read_close_simple();
+    if (result_is_err(res)) {
+        result_printf(res);
+        return;
+    }
+
 }
 
 result_t mmc_driver_get_num_blocks(uint64_t *ret_val) {
