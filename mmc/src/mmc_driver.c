@@ -145,6 +145,7 @@ void init(void) {
         return;
     }
 
+    log_trace("Finished running E2E tests in MMC Driver Protection Domain!");
 }
 
 result_t mmc_driver_get_num_blocks(uint64_t *ret_val) {
