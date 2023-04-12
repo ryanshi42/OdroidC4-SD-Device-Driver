@@ -125,7 +125,7 @@ DRESULT disk_read(
                     count,
                     FF_MAX_SS,
                     (char *) buff,
-                    count * 512
+                    count * FF_MAX_SS
             );
             if (result_is_err(res_mmc)) {
                 res = RES_ERROR;
@@ -182,7 +182,7 @@ DRESULT disk_write(
                     count,
                     FF_MAX_SS,
                     (char *) buff,
-                    count * 512
+                    count * FF_MAX_SS
             );
             if (result_is_err(res_mmc)) {
                 res = RES_ERROR;
