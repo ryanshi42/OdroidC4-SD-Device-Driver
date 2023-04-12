@@ -123,7 +123,7 @@ DRESULT disk_read(
             result_t res_mmc = mmc_driver_read_blocks(
                     sector,
                     count,
-                    512,
+                    FF_MAX_SS,
                     (char *) buff,
                     count * 512
             );
@@ -180,7 +180,7 @@ DRESULT disk_write(
             result_t res_mmc = mmc_driver_write_blocks(
                     sector,
                     count,
-                    512,
+                    FF_MAX_SS,
                     (char *) buff,
                     count * 512
             );
