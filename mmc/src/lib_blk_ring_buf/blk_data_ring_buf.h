@@ -39,3 +39,14 @@ int blk_data_ring_buf_capacity(
         blk_data_ring_buf_t *ring_buf,
         size_t *ret_val
 );
+
+int blk_data_ring_buf_enqueue(
+        blk_data_ring_buf_t *ring_buf,
+        uintptr_t buf
+);
+
+int blk_data_ring_buf_dequeue(
+        blk_data_ring_buf_t *ring_buf,
+        uintptr_t *ret_val
+);
+
