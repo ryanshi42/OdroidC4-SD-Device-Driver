@@ -442,6 +442,25 @@ target_link_libraries(
         mmc_rpi3b_lib_fatfs_e2e
 )
 
+add_library(mmc_rpi3b_lib_blk_req_buf src/lib_blk_ring_buf/blk_req_buf.c)
+target_include_directories(mmc_rpi3b_lib_blk_req_buf PUBLIC src/lib_blk_ring_buf/)
+target_link_libraries(
+        mmc_rpi3b_lib_blk_req_buf
+)
+
+add_library(mmc_rpi3b_lib_blk_res_buf src/lib_blk_ring_buf/blk_res_buf.c)
+target_include_directories(mmc_rpi3b_lib_blk_res_buf PUBLIC src/lib_blk_ring_buf/)
+target_link_libraries(
+        mmc_rpi3b_lib_blk_res_buf
+)
+
+add_library(mmc_rpi3b_lib_blk_req_ring_buf src/lib_blk_ring_buf/blk_req_ring_buf.c)
+target_include_directories(mmc_rpi3b_lib_blk_req_ring_buf PUBLIC src/lib_blk_ring_buf/)
+target_link_libraries(
+        mmc_rpi3b_lib_blk_req_ring_buf
+        mmc_rpi3b_lib_blk_req_buf
+)
+
 add_library(mmc_rpi3b_lib_diskio src/lib_fatfs/diskio.c)
 target_include_directories(mmc_rpi3b_lib_diskio PUBLIC src/lib_fatfs/)
 target_link_libraries(
