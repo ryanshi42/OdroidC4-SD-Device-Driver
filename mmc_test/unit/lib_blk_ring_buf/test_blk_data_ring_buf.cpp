@@ -10,7 +10,7 @@ TEST(test_blk_data_ring_buf, init_should_compute_correct_capacity) {
     blk_data_ring_buf_t ring_buf = {0};
     char data_region[100] = {0};
     ASSERT_EQ(
-            0,
+            OK_BLK_DATA_RING_BUF,
             blk_data_ring_buf_init(
                     &ring_buf,
                     (uintptr_t) data_region,
@@ -27,7 +27,7 @@ TEST(test_blk_data_ring_buf, init_should_reject_data_regions_that_are_not_divisi
     blk_data_ring_buf_t ring_buf = {0};
     char data_region[100] = {0};
     ASSERT_EQ(
-            -1,
+            ERR_BLK_DATA_BUF_SIZE_MISALIGNED,
             blk_data_ring_buf_init(
                     &ring_buf,
                     (uintptr_t) data_region,
@@ -41,7 +41,7 @@ TEST(test_blk_data_ring_buf, init_should_reject_invalid_buffer_sizes) {
     blk_data_ring_buf_t ring_buf = {0};
     char data_region[100] = {0};
     ASSERT_EQ(
-            -1,
+            ERR_BLK_DATA_BUF_SIZE_TOO_LARGE,
             blk_data_ring_buf_init(
                     &ring_buf,
                     (uintptr_t) data_region,
@@ -54,7 +54,7 @@ TEST(test_blk_data_ring_buf, init_should_reject_invalid_buffer_sizes) {
 TEST(test_blk_data_ring_buf, init_should_reject_invalid_shared_data_region_vaddr) {
     blk_data_ring_buf_t ring_buf = {0};
     ASSERT_EQ(
-            -1,
+            ERR_INVALID_BLK_DATA_REGION,
             blk_data_ring_buf_init(
                     &ring_buf,
                     0,
@@ -64,4 +64,43 @@ TEST(test_blk_data_ring_buf, init_should_reject_invalid_shared_data_region_vaddr
     );
 }
 
+TEST(test_blk_data_ring_buf, init_should_reject_null_ring_buf) {
+    char data_region[100] = {0};
+    ASSERT_EQ(
+            ERR_NULL_BLK_DATA_RING_BUF,
+            blk_data_ring_buf_init(
+                    NULL,
+                    (uintptr_t) data_region,
+                    100,
+                    10
+            )
+    );
+}
 
+TEST(test_blk_data_ring_buf, init_should_throw_error_if_data_bufs_is_not_large_enough) {
+    blk_data_ring_buf_t ring_buf = {0};
+    char data_region[100] = {0};
+    ASSERT_EQ(
+            ERR_INCREASE_MAX_NUM_BLK_DATA_BUFS,
+            blk_data_ring_buf_init(
+                    &ring_buf,
+                    (uintptr_t) data_region,
+                    MAX_NUM_BLK_DATA_BUFS,
+                    1
+            )
+    );
+}
+
+TEST(test_blk_data_ring_buf, init_should_not_throw_error_if_data_bufs_is_large_enough) {
+    blk_data_ring_buf_t ring_buf = {0};
+    char data_region[100] = {0};
+    ASSERT_EQ(
+            OK_BLK_DATA_RING_BUF,
+            blk_data_ring_buf_init(
+                    &ring_buf,
+                    (uintptr_t) data_region,
+                    MAX_NUM_BLK_DATA_BUFS - 1,
+                    1
+            )
+    );
+}

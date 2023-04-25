@@ -3,16 +3,34 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
+#include <stdbool.h>
+
+#include "blk_data_buf.h"
+
+#define MAX_NUM_BLK_DATA_BUFS (512)
 
 typedef struct blk_data_ring_buf blk_data_ring_buf_t;
 struct blk_data_ring_buf {
-    size_t head;
-    size_t tail;
     uint8_t *data_region;
     size_t data_region_size;
     size_t data_buf_size;
     size_t num_data_bufs;
+    blk_data_buf_t data_bufs[MAX_NUM_BLK_DATA_BUFS];
+    size_t num_empty_slots;
+    size_t head_idx;
+    size_t tail_idx;
 };
+
+/* Possible responses from the following functions. */
+enum blk_data_ring_buf_result {
+    OK_BLK_DATA_RING_BUF = 0,
+    ERR_INCREASE_MAX_NUM_BLK_DATA_BUFS = -1,
+    ERR_NULL_BLK_DATA_RING_BUF = -2,
+    ERR_BLK_DATA_BUF_SIZE_TOO_LARGE = -3,
+    ERR_BLK_DATA_BUF_SIZE_MISALIGNED = -4,
+    ERR_INVALID_BLK_DATA_REGION = -5,
+};
+typedef enum blk_data_ring_buf_result blk_data_ring_buf_result_t;
 
 /**
  * Initializes a Shared Data Ring Buffer.
@@ -22,7 +40,7 @@ struct blk_data_ring_buf {
  * @param shared_data_buf_size Size of each shared data buffer in bytes.
  * @return 0 on success, -1 on failure.
  */
-int blk_data_ring_buf_init(
+blk_data_ring_buf_result_t blk_data_ring_buf_init(
         blk_data_ring_buf_t *ring_buf,
         uintptr_t shared_data_region_vaddr,
         size_t shared_data_region_size,
@@ -35,17 +53,28 @@ int blk_data_ring_buf_init(
  * @param ret_val The number of buffers this ring buffer holds.
  * @return
  */
-int blk_data_ring_buf_capacity(
+blk_data_ring_buf_result_t blk_data_ring_buf_capacity(
         blk_data_ring_buf_t *ring_buf,
         size_t *ret_val
 );
 
-int blk_data_ring_buf_enqueue(
+/**
+ * Returns True if the ring buffer is empty, False otherwise.
+ * @param ring_buf
+ * @param ret_val
+ * @return
+ */
+blk_data_ring_buf_result_t blk_data_ring_buf_is_empty(
+        blk_data_ring_buf_t *ring_buf,
+        bool *ret_val
+);
+
+blk_data_ring_buf_result_t blk_data_ring_buf_enqueue(
         blk_data_ring_buf_t *ring_buf,
         uintptr_t buf
 );
 
-int blk_data_ring_buf_dequeue(
+blk_data_ring_buf_result_t blk_data_ring_buf_dequeue(
         blk_data_ring_buf_t *ring_buf,
         uintptr_t *ret_val
 );
