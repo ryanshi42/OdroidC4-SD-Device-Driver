@@ -43,6 +43,17 @@ blk_data_ring_buf_result_t blk_data_ring_buf_init(
     return OK_BLK_DATA_RING_BUF;
 }
 
+blk_data_ring_buf_result_t blk_data_ring_buf_capacity(
+        blk_data_ring_buf_t *ring_buf,
+        size_t *ret_val
+) {
+    if (ring_buf == NULL) {
+        return ERR_NULL_BLK_DATA_RING_BUF;
+    }
+    *ret_val = ring_buf->num_data_bufs;
+    return OK_BLK_DATA_RING_BUF;
+}
+
 blk_data_ring_buf_result_t blk_data_ring_buf_is_empty(
         blk_data_ring_buf_t *ring_buf,
         bool *ret_val
@@ -62,16 +73,5 @@ blk_data_ring_buf_result_t blk_data_ring_buf_is_full(
         return ERR_NULL_BLK_DATA_RING_BUF;
     }
     *ret_val = (ring_buf->head_idx == (ring_buf->tail_idx + ring_buf->num_empty_slots) % MAX_NUM_BLK_DATA_BUFS);
-    return OK_BLK_DATA_RING_BUF;
-}
-
-blk_data_ring_buf_result_t blk_data_ring_buf_capacity(
-        blk_data_ring_buf_t *ring_buf,
-        size_t *ret_val
-) {
-    if (ring_buf == NULL) {
-        return ERR_NULL_BLK_DATA_RING_BUF;
-    }
-    *ret_val = ring_buf->num_data_bufs;
     return OK_BLK_DATA_RING_BUF;
 }
