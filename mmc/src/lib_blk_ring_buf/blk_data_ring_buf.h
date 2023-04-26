@@ -69,6 +69,17 @@ blk_data_ring_buf_result_t blk_data_ring_buf_is_empty(
         bool *ret_val
 );
 
+/**
+ * Returns True if the ring buffer is full, False otherwise.
+ * @param ring_buf
+ * @param ret_val
+ * @return
+ */
+blk_data_ring_buf_result_t blk_data_ring_buf_is_full(
+        blk_data_ring_buf_t *ring_buf,
+        bool *ret_val
+);
+
 blk_data_ring_buf_result_t blk_data_ring_buf_enqueue(
         blk_data_ring_buf_t *ring_buf,
         uintptr_t buf
