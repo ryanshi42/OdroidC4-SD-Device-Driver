@@ -12,7 +12,7 @@
 
 typedef struct blk_data_ring_buf blk_data_ring_buf_t;
 struct blk_data_ring_buf {
-    uint8_t *data_region;
+    uintptr_t data_region;
     size_t data_region_size;
     size_t data_buf_size;
     size_t num_data_bufs;

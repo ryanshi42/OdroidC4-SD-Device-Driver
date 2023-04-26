@@ -20,7 +20,7 @@ blk_data_ring_buf_result_t blk_data_ring_buf_init(
     }
     /* Clear the `ring_buf` data structure. */
     memset(ring_buf, 0, sizeof(*ring_buf));
-    ring_buf->data_region = (uint8_t *) shared_data_region_vaddr;
+    ring_buf->data_region = shared_data_region_vaddr;
     ring_buf->data_region_size = shared_data_region_size;
     ring_buf->data_buf_size = shared_data_buf_size;
     ring_buf->num_data_bufs = (shared_data_region_size / shared_data_buf_size);
