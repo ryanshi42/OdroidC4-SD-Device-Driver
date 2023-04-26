@@ -17,9 +17,12 @@ struct blk_data_ring_buf {
     size_t data_buf_size;
     size_t num_data_bufs;
     blk_data_buf_t data_bufs[MAX_NUM_BLK_DATA_BUFS];
-    size_t num_empty_slots;
-    size_t head_idx;
-    size_t tail_idx;
+    size_t num_unused_slots; /* This value is simply (MAX_NUM_BLK_DATA_BUFS -
+    ring_buf->num_data_bufs). We precompute the number of unused slots to avoid
+    recomputing this value every time we need to check if the ring buffer is
+    full or not. */
+    size_t head_idx; /* We dequeue from the head. */
+    size_t tail_idx; /* We enqueue onto the tail. */
 };
 
 /* Possible responses from the following functions. */

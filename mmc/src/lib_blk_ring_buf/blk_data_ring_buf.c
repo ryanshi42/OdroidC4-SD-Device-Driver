@@ -32,10 +32,10 @@ blk_data_ring_buf_result_t blk_data_ring_buf_init(
     if (MAX_NUM_BLK_DATA_BUFS < ring_buf->num_data_bufs + 1) {
         return ERR_INCREASE_MAX_NUM_BLK_DATA_BUFS;
     }
-    /* We precompute the number of empty slots to avoid re-computing this value
+    /* We precompute the number of unused slots to avoid recomputing this value
      * every time we need to check if the ring buffer is full or not for
      * performance reasons. */
-    ring_buf->num_empty_slots = (MAX_NUM_BLK_DATA_BUFS - ring_buf->num_data_bufs);
+    ring_buf->num_unused_slots = (MAX_NUM_BLK_DATA_BUFS - ring_buf->num_data_bufs);
     /* Initialise the head and tail index to empty. */
     ring_buf->head_idx = 0;
     ring_buf->tail_idx = 0;
@@ -72,7 +72,10 @@ blk_data_ring_buf_result_t blk_data_ring_buf_is_full(
     if (ring_buf == NULL) {
         return ERR_NULL_BLK_DATA_RING_BUF;
     }
-    *ret_val = (ring_buf->head_idx == (ring_buf->tail_idx + ring_buf->num_empty_slots) % MAX_NUM_BLK_DATA_BUFS);
+    size_t const head = ring_buf->head_idx;
+    size_t const tail = ring_buf->tail_idx;
+    size_t const unused_slots = ring_buf->num_unused_slots;
+    *ret_val = (head == ((tail + unused_slots) % MAX_NUM_BLK_DATA_BUFS));
     return OK_BLK_DATA_RING_BUF;
 }
 
