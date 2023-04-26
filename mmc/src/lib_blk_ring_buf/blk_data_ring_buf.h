@@ -33,6 +33,7 @@ enum blk_data_ring_buf_result {
     ERR_NULL_BLK_DATA_BUF_VAL = -6,
     ERR_NULL_BLK_DATA_BUF_RET_VAL = -7,
     ERR_BLK_DATA_RING_BUF_FULL = -8,
+    ERR_BLK_DATA_RING_BUF_EMPTY = -9,
 };
 typedef enum blk_data_ring_buf_result blk_data_ring_buf_result_t;
 

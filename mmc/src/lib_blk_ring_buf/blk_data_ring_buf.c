@@ -86,6 +86,8 @@ blk_data_ring_buf_result_t blk_data_ring_buf_enqueue(
     if (val == NULL) {
         return ERR_NULL_BLK_DATA_BUF_VAL;
     }
+    /* Return an error if the ring buffer is full and there is no space to
+     * enqueue. */
     bool is_full = false;
     blk_data_ring_buf_result_t res = blk_data_ring_buf_is_full(ring_buf, &is_full);
     if (res != OK_BLK_DATA_RING_BUF) {
@@ -115,6 +117,26 @@ blk_data_ring_buf_result_t blk_data_ring_buf_dequeue(
     if (ret_val == NULL) {
         return ERR_NULL_BLK_DATA_BUF_RET_VAL;
     }
-    /* TODO: Implement. */
+    /* Return an error if the ring buffer is empty and there is nothing to
+     * dequeue. */
+    bool is_empty = false;
+    blk_data_ring_buf_result_t res = blk_data_ring_buf_is_empty(ring_buf, &is_empty);
+    if (res != OK_BLK_DATA_RING_BUF) {
+        return res;
+    }
+    if (is_empty) {
+        return ERR_BLK_DATA_RING_BUF_EMPTY;
+    }
+    /* Copy everything from `ring_buf->data_bufs[ring_buf->head_idx]` into `ret_val`. */
+    memcpy(ret_val, &ring_buf->data_bufs[ring_buf->head_idx], sizeof(*ret_val));
+    /* We place a memory barrier here to ensure that the instructions that
+     * update the head index are guaranteed to occur after the buffer has been
+     * dequeued from `ring_buf->data_bufs`. */
+    THREAD_MEMORY_RELEASE();
+    /* Update the head index. */
+    ring_buf->head_idx = (ring_buf->head_idx + 1) % MAX_NUM_BLK_DATA_BUFS;
     return OK_BLK_DATA_RING_BUF;
 }
+
+
+
