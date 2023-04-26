@@ -75,3 +75,31 @@ blk_data_ring_buf_result_t blk_data_ring_buf_is_full(
     *ret_val = (ring_buf->head_idx == (ring_buf->tail_idx + ring_buf->num_empty_slots) % MAX_NUM_BLK_DATA_BUFS);
     return OK_BLK_DATA_RING_BUF;
 }
+
+blk_data_ring_buf_result_t blk_data_ring_buf_enqueue(
+        blk_data_ring_buf_t *ring_buf,
+        blk_data_buf_t *val
+) {
+    if (ring_buf == NULL) {
+        return ERR_NULL_BLK_DATA_RING_BUF;
+    }
+    if (val == NULL) {
+        return ERR_NULL_BLK_DATA_BUF_VAL;
+    }
+    /* TODO: Implement. */
+    return OK_BLK_DATA_RING_BUF;
+}
+
+blk_data_ring_buf_result_t blk_data_ring_buf_dequeue(
+        blk_data_ring_buf_t *ring_buf,
+        blk_data_buf_t *ret_val
+) {
+    if (ring_buf == NULL) {
+        return ERR_NULL_BLK_DATA_RING_BUF;
+    }
+    if (ret_val == NULL) {
+        return ERR_NULL_BLK_DATA_BUF_RET_VAL;
+    }
+    /* TODO: Implement. */
+    return OK_BLK_DATA_RING_BUF;
+}

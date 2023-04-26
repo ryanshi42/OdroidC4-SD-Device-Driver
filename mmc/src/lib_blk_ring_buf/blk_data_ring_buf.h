@@ -29,6 +29,8 @@ enum blk_data_ring_buf_result {
     ERR_BLK_DATA_BUF_SIZE_TOO_LARGE = -3,
     ERR_BLK_DATA_BUF_SIZE_MISALIGNED = -4,
     ERR_INVALID_BLK_DATA_REGION = -5,
+    ERR_NULL_BLK_DATA_BUF_VAL = -6,
+    ERR_NULL_BLK_DATA_BUF_RET_VAL = -7,
 };
 typedef enum blk_data_ring_buf_result blk_data_ring_buf_result_t;
 
@@ -80,13 +82,25 @@ blk_data_ring_buf_result_t blk_data_ring_buf_is_full(
         bool *ret_val
 );
 
+/**
+ * Enqueues the `blk_data_buf` onto the ring buffer.
+ * @param ring_buf
+ * @param val
+ * @return
+ */
 blk_data_ring_buf_result_t blk_data_ring_buf_enqueue(
         blk_data_ring_buf_t *ring_buf,
-        uintptr_t buf
+        blk_data_buf_t *val
 );
 
+/**
+ * Dequeues the `blk_data_buf` from the ring buffer.
+ * @param ring_buf
+ * @param ret_val The dequeued `blk_data_buf` is saved to `ret_val`.
+ * @return
+ */
 blk_data_ring_buf_result_t blk_data_ring_buf_dequeue(
         blk_data_ring_buf_t *ring_buf,
-        uintptr_t *ret_val
+        blk_data_buf_t *ret_val
 );
 
