@@ -6,6 +6,7 @@
 #include <stdbool.h>
 
 #include "blk_data_buf.h"
+#include "fence.h"
 
 #define MAX_NUM_BLK_DATA_BUFS (512)
 
@@ -31,6 +32,7 @@ enum blk_data_ring_buf_result {
     ERR_INVALID_BLK_DATA_REGION = -5,
     ERR_NULL_BLK_DATA_BUF_VAL = -6,
     ERR_NULL_BLK_DATA_BUF_RET_VAL = -7,
+    ERR_BLK_DATA_RING_BUF_FULL = -8,
 };
 typedef enum blk_data_ring_buf_result blk_data_ring_buf_result_t;
 

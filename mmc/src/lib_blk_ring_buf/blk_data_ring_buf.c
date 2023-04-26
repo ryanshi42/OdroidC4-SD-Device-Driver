@@ -86,7 +86,22 @@ blk_data_ring_buf_result_t blk_data_ring_buf_enqueue(
     if (val == NULL) {
         return ERR_NULL_BLK_DATA_BUF_VAL;
     }
-    /* TODO: Implement. */
+    bool is_full = false;
+    blk_data_ring_buf_result_t res = blk_data_ring_buf_is_full(ring_buf, &is_full);
+    if (res != OK_BLK_DATA_RING_BUF) {
+        return res;
+    }
+    if (is_full) {
+        return ERR_BLK_DATA_RING_BUF_FULL;
+    }
+    /* Copy everything from `val` into `ring_buf->data_bufs[ring_buf->tail_idx]`. */
+    memcpy(&ring_buf->data_bufs[ring_buf->tail_idx], val, sizeof(*val));
+    /* We place a memory barrier here to ensure that the instructions that
+     * update the tail index are guaranteed to occur after the buffer has been
+     * enqueued onto `ring_buf->data_bufs`. */
+    THREAD_MEMORY_RELEASE();
+    /* Update the tail index. */
+    ring_buf->tail_idx = (ring_buf->tail_idx + 1) % MAX_NUM_BLK_DATA_BUFS;
     return OK_BLK_DATA_RING_BUF;
 }
 

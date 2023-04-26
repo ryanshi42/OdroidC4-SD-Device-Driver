@@ -453,6 +453,7 @@ target_include_directories(mmc_rpi3b_lib_blk_data_ring_buf PUBLIC src/lib_blk_ri
 target_link_libraries(
         mmc_rpi3b_lib_blk_data_ring_buf
         mmc_rpi3b_lib_blk_data_buf
+        mmc_rpi3b_lib_fence
 )
 
 add_library(mmc_rpi3b_lib_blk_req_buf src/lib_blk_ring_buf/blk_req_buf.c)
