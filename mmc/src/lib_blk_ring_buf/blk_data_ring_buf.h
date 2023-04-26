@@ -22,8 +22,10 @@ struct blk_data_ring_buf {
     ring_buf->num_data_bufs). We precompute the number of unused slots to avoid
     recomputing it every time we need to check if the ring buffer is full or
     not. */
-    size_t head_idx; /* We dequeue from the head. */
-    size_t tail_idx; /* We enqueue onto the tail. */
+    size_t head_idx; /* We dequeue from the head. This is also known as the
+    "read index". */
+    size_t tail_idx; /* We enqueue onto the tail. This is also known as the
+    "write index". */
 };
 
 /* Possible responses from the following functions. */
@@ -63,6 +65,17 @@ blk_data_ring_buf_result_t blk_data_ring_buf_init(
  * @return
  */
 blk_data_ring_buf_result_t blk_data_ring_buf_capacity(
+        blk_data_ring_buf_t *ring_buf,
+        size_t *ret_val
+);
+
+/**
+ * Returns the number of buffers this ring buffer currently holds.
+ * @param ring_buf
+ * @param ret_val
+ * @return
+ */
+blk_data_ring_buf_result_t blk_data_ring_buf_size(
         blk_data_ring_buf_t *ring_buf,
         size_t *ret_val
 );

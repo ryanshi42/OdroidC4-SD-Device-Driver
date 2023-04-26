@@ -40,6 +40,10 @@ TEST(test_blk_data_ring_buf, init_should_completely_fill_ring_buffer) {
     bool is_full;
     ASSERT_EQ(0, blk_data_ring_buf_is_full(&ring_buf, &is_full));
     ASSERT_TRUE(is_full);
+    /* Second check the Queue is full. */
+    size_t num_data_bufs;
+    ASSERT_EQ(0, blk_data_ring_buf_size(&ring_buf, &num_data_bufs));
+    ASSERT_EQ(num_data_bufs, 10);
     /* There should only be 10 buffers in the queue. */
     for (size_t i = 0; i < 10; i++) {
         blk_data_buf_t data_buf = {0};
@@ -51,6 +55,9 @@ TEST(test_blk_data_ring_buf, init_should_completely_fill_ring_buffer) {
     bool is_empty;
     ASSERT_EQ(0, blk_data_ring_buf_is_empty(&ring_buf, &is_empty));
     ASSERT_TRUE(is_empty);
+    /* Second check the Queue is empty. */
+    ASSERT_EQ(0, blk_data_ring_buf_size(&ring_buf, &num_data_bufs));
+    ASSERT_EQ(num_data_bufs, 0);
 }
 
 TEST(test_blk_data_ring_buf, init_should_reject_data_regions_that_are_not_divisible_by_data_buf_size) {
@@ -140,3 +147,14 @@ TEST(test_blk_data_ring_buf, init_should_not_throw_error_if_data_bufs_is_large_e
 /* TODO: Write test for blk_data_ring_buf_enqueue(). */
 
 /* TODO: Write test for blk_data_ring_buf_dequeue(). */
+
+/* size() */
+
+TEST(test_blk_data_ring_buf, size_should_return_correct_size_if_tail_less_than_head) {
+    blk_data_ring_buf_t ring_buf = {0};
+    ring_buf.head_idx = MAX_NUM_BLK_DATA_BUFS - 5;
+    ring_buf.tail_idx = 5;
+    size_t size;
+    ASSERT_EQ(0, blk_data_ring_buf_size(&ring_buf, &size));
+    ASSERT_EQ(size, 10);
+}

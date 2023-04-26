@@ -67,6 +67,23 @@ blk_data_ring_buf_result_t blk_data_ring_buf_capacity(
     return OK_BLK_DATA_RING_BUF;
 }
 
+blk_data_ring_buf_result_t blk_data_ring_buf_size(
+        blk_data_ring_buf_t *ring_buf,
+        size_t *ret_val
+) {
+    if (ring_buf == NULL) {
+        return ERR_NULL_BLK_DATA_RING_BUF;
+    }
+    size_t const head = ring_buf->head_idx;
+    size_t const tail = ring_buf->tail_idx;
+    if (tail >= head) {
+        *ret_val = (tail - head);
+    } else {
+        *ret_val = ((tail + MAX_NUM_BLK_DATA_BUFS) - head);
+    }
+    return OK_BLK_DATA_RING_BUF;
+}
+
 blk_data_ring_buf_result_t blk_data_ring_buf_is_empty(
         blk_data_ring_buf_t *ring_buf,
         bool *ret_val
