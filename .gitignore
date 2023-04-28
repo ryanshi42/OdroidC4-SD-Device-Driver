@@ -3,3 +3,7 @@ build-unit-test/
 *.o
 *.elf
 *.depend
+
+.vscode
+.idea
+cmake-build*
