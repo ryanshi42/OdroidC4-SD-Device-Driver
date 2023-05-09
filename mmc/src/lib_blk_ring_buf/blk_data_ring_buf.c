@@ -153,7 +153,7 @@ blk_data_ring_buf_result_t blk_data_ring_buf_dequeue(
     /* Return an error if the ring buffer is empty and there is nothing to
      * dequeue. */
     bool is_empty = false;
-    blk_data_ring_buf_result_t res = blk_data_ring_buf_is_empty(ring_buf, &is_empty);
+    blk_data_ring_buf_result_t const res = blk_data_ring_buf_is_empty(ring_buf, &is_empty);
     if (res != OK_BLK_DATA_RING_BUF) {
         return res;
     }
