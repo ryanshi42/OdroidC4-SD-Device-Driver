@@ -122,7 +122,7 @@ blk_data_ring_buf_result_t blk_data_ring_buf_enqueue(
     /* Return an error if the ring buffer is full and there is no space to
      * enqueue. */
     bool is_full = false;
-    blk_data_ring_buf_result_t res = blk_data_ring_buf_is_full(ring_buf, &is_full);
+    blk_data_ring_buf_result_t const res = blk_data_ring_buf_is_full(ring_buf, &is_full);
     if (res != OK_BLK_DATA_RING_BUF) {
         return res;
     }
