@@ -223,6 +223,16 @@ TEST(test_blk_req_ring_buf, dequeue_should_be_able_to_dequeue_capacity_number_of
                         &req_buf
                 )
         );
+        /* Checking the state of the ring buffer is correct. */
+        size_t size = 0;
+        ASSERT_EQ(
+                OK_BLK_REQ_RING_BUF,
+                blk_req_ring_buf_size(
+                        &ring_buf,
+                        &size
+                )
+        );
+        ASSERT_EQ(capacity - i - 1, size);
     }
     /* Checking the state of the ring buffer after we've filled it is correct. */
     bool is_empty = false;
