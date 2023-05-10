@@ -28,7 +28,7 @@ struct blk_data_ring_buf {
     "write index". */
 };
 
-/* Possible responses from the following functions. */
+/* Possible return values from the following functions. */
 enum blk_data_ring_buf_result {
     OK_BLK_DATA_RING_BUF = 0,
     ERR_INCREASE_MAX_NUM_BLK_DATA_BUFS = -1,
