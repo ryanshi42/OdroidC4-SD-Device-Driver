@@ -164,7 +164,7 @@ TEST(test_blk_req_ring_buf, enqueue_should_only_allow_user_to_enqueue_capacity_n
     );
 }
 
-/* dequeue */
+/* dequeue() */
 
 TEST(test_blk_req_ring_buf, dequeue_should_prevent_user_from_dequeueing_from_empty_ring_buf) {
     blk_req_ring_buf_t ring_buf = {0};
