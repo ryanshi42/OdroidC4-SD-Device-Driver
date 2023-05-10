@@ -1,10 +1,11 @@
 #pragma once
 
+/* Request Buffer. */
+
 #include <stddef.h>
 #include <stdint.h>
-#include "blk_data_buf.h"
 
-/* Request Buffer. */
+#include "blk_data_buf.h"
 
 enum blk_req_operation {
     READ,
@@ -18,8 +19,10 @@ struct blk_req_buf {
     blk_req_operation_t operation;
     /* Parameters used by Read/Write operations. */
     size_t lba; /* Logical Block Address. */
-    size_t num_blocks; /* Number of Blocks. */
-    blk_data_buf_t shared_data_buf; /* The shared data buffer. */
+    size_t num_blocks; /* Number of blocks of data used by the client in its
+    request to the driver. */
+    blk_data_buf_t shared_data_buf; /* The shared data buffer carrying any
+    request data. */
 };
 
 
