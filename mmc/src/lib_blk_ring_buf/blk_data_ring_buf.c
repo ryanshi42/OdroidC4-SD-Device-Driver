@@ -77,6 +77,9 @@ blk_data_ring_buf_result_t blk_data_ring_buf_size(
     if (ring_buf == NULL) {
         return ERR_NULL_BLK_DATA_RING_BUF;
     }
+    if (ret_val == NULL) {
+        return ERR_NULL_RET_VAL_PTR_PASSED_TO_BLK_DATA_RING_BUF_FN;
+    }
     size_t const head = ring_buf->head_idx;
     size_t const tail = ring_buf->tail_idx;
     if (tail >= head) {
@@ -94,6 +97,9 @@ blk_data_ring_buf_result_t blk_data_ring_buf_is_empty(
     if (ring_buf == NULL) {
         return ERR_NULL_BLK_DATA_RING_BUF;
     }
+    if (ret_val == NULL) {
+        return ERR_NULL_RET_VAL_PTR_PASSED_TO_BLK_DATA_RING_BUF_FN;
+    }
     *ret_val = (ring_buf->head_idx == ring_buf->tail_idx);
     return OK_BLK_DATA_RING_BUF;
 }
@@ -104,6 +110,9 @@ blk_data_ring_buf_result_t blk_data_ring_buf_is_full(
 ) {
     if (ring_buf == NULL) {
         return ERR_NULL_BLK_DATA_RING_BUF;
+    }
+    if (ret_val == NULL) {
+        return ERR_NULL_RET_VAL_PTR_PASSED_TO_BLK_DATA_RING_BUF_FN;
     }
     size_t const head = ring_buf->head_idx;
     size_t const tail = ring_buf->tail_idx;
@@ -151,7 +160,7 @@ blk_data_ring_buf_result_t blk_data_ring_buf_dequeue(
         return ERR_NULL_BLK_DATA_RING_BUF;
     }
     if (ret_val == NULL) {
-        return ERR_NULL_BLK_DATA_BUF_RET_VAL;
+        return ERR_NULL_RET_VAL_PTR_PASSED_TO_BLK_DATA_RING_BUF_FN;
     }
     /* Return an error if the ring buffer is empty and there is nothing to
      * dequeue. */
