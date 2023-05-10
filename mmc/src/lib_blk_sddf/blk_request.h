@@ -7,16 +7,16 @@
 
 #include "blk_shared_data_buf.h"
 
-enum blk_req_operation {
+enum blk_request_operation {
     READ,
     WRITE,
 };
-typedef enum blk_req_operation blk_req_operation_t;
+typedef enum blk_request_operation blk_request_operation_t;
 
-typedef struct blk_req blk_req_t;
-struct blk_req {
+typedef struct blk_request blk_request_t;
+struct blk_request {
     /* The MMC driver operation. */
-    blk_req_operation_t operation;
+    blk_request_operation_t operation;
     /* Parameters used by Read/Write operations. */
     size_t lba; /* Logical Block Address. */
     size_t num_blocks; /* Number of blocks of data used by the client in its
