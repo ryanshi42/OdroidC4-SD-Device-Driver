@@ -28,6 +28,8 @@ enum blk_req_ring_buf_result {
     reserved for this ring buffer is wastefully large. To remedy this, you can
     either reduce the shared memory region reserved for the `blk_req_ring_buf`
     or increase the size of `MAX_NUM_BLK_REQ_BUFS`. */
+    ERR_NULL_RET_VAL_FROM_BLK_REQ_RING_BUF_FN = -4, /* A NULL `ret_val` pointer
+    was passed into a `blk_req_ring_buf` function. */
 };
 typedef enum blk_req_ring_buf_result blk_req_ring_buf_result_t;
 
@@ -41,6 +43,17 @@ typedef enum blk_req_ring_buf_result blk_req_ring_buf_result_t;
 blk_req_ring_buf_result_t blk_req_ring_buf_init(
         blk_req_ring_buf_t *ring_buf,
         size_t req_ring_buf_region_size
+);
+
+/**
+ * Returns the number of Requests that can be enqueued onto the Request Ring.
+ * @param ring_buf
+ * @param ret_val
+ * @return
+ */
+blk_req_ring_buf_result_t blk_req_ring_buf_capacity(
+        blk_req_ring_buf_t *ring_buf,
+        size_t *ret_val
 );
 
 /**
