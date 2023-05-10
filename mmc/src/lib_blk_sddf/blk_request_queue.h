@@ -1,7 +1,7 @@
 #pragma once
 
 /*
- * A queue of Requests. The queue is implemented as a ring buffer.
+ * A Queue of Requests. The Queue is implemented as a Ring Buffer.
  */
 
 #include <string.h>
@@ -124,7 +124,7 @@ blk_request_queue_result_t blk_request_queue_is_full(
 );
 
 /**
- * Enqueues the `blk_req` onto the ring buffer.
+ * Enqueues the `blk_request` onto the ring buffer.
  * @param queue
  * @param val
  * @return
@@ -135,7 +135,7 @@ blk_request_queue_result_t blk_request_queue_enqueue(
 );
 
 /**
- * Dequeues the `blk_req` from the ring buffer.
+ * Dequeues the `blk_request` from the ring buffer.
  * @param queue
  * @param ret_val
  * @return

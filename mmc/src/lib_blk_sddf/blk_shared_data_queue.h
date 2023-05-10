@@ -1,7 +1,7 @@
 #pragma once
 
 /*
- * A queue of Shared Data buffers. The queue is implemented as a ring buffer.
+ * A Queue of Shared Data Buffers. The Queue is implemented as a Ring Buffer.
  */
 
 #include <stddef.h>
