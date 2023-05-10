@@ -1,6 +1,6 @@
 #pragma once
 
-/* Response Buffer. */
+/* A Response. */
 
 #include <stddef.h>
 
@@ -13,8 +13,8 @@ enum blk_res_result {
 };
 typedef enum blk_res_result blk_res_result_t;
 
-typedef struct blk_res_buf blk_res_buf_t;
-struct blk_res_buf {
+typedef struct blk_res blk_res_t;
+struct blk_res {
     blk_res_result_t result; /* The response result. */
     size_t num_blocks; /* Number of blocks of data returned to the client from
     the driver. */

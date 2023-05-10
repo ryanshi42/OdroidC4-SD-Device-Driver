@@ -12,7 +12,7 @@ blk_req_queue_result_t blk_req_queue_init(
         return ERR_BLK_REQ_QUEUE_REGION_TOO_SMALL;
     }
     size_t const num_unused_bytes = (req_queue_region_size - sizeof(*queue));
-    if ((num_unused_bytes / sizeof(blk_req_buf_t)) > 0) {
+    if ((num_unused_bytes / sizeof(blk_req_t)) > 0) {
         return ERR_BLK_REQ_QUEUE_REGION_TOO_LARGE;
     }
     /* Clear the `queue` data structure, which initialises `head_idx` and
@@ -31,7 +31,7 @@ blk_req_queue_result_t blk_req_queue_capacity(
     if (ret_val == NULL) {
         return ERR_NULL_RET_VAL_PTR_PASSED_TO_BLK_REQ_QUEUE_FN;
     }
-    *ret_val = MAX_NUM_BLK_REQ_BUFS - 1;
+    *ret_val = MAX_NUM_BLK_REQUESTS - 1;
     return OK_BLK_REQ_QUEUE;
 }
 
@@ -50,7 +50,7 @@ blk_req_queue_result_t blk_req_queue_size(
     if (tail >= head) {
         *ret_val = (tail - head);
     } else {
-        *ret_val = ((tail + MAX_NUM_BLK_REQ_BUFS) - head);
+        *ret_val = ((tail + MAX_NUM_BLK_REQUESTS) - head);
     }
     return OK_BLK_REQ_QUEUE;
 }
@@ -82,13 +82,13 @@ blk_req_queue_result_t blk_req_queue_is_full(
     size_t const head = queue->head_idx;
     size_t const tail = queue->tail_idx;
     size_t const unused_slots = 1;
-    *ret_val = (head == ((tail + unused_slots) % MAX_NUM_BLK_REQ_BUFS));
+    *ret_val = (head == ((tail + unused_slots) % MAX_NUM_BLK_REQUESTS));
     return OK_BLK_REQ_QUEUE;
 }
 
 blk_req_queue_result_t blk_req_queue_enqueue(
         blk_req_queue_t *queue,
-        blk_req_buf_t *val
+        blk_req_t *val
 ) {
     if (queue == NULL) {
         return ERR_NULL_BLK_REQ_QUEUE;
@@ -112,13 +112,13 @@ blk_req_queue_result_t blk_req_queue_enqueue(
      * enqueued onto `queue->req_bufs`. */
     THREAD_MEMORY_RELEASE();
     /* Update the tail index. */
-    queue->tail_idx = (queue->tail_idx + 1) % MAX_NUM_BLK_REQ_BUFS;
+    queue->tail_idx = (queue->tail_idx + 1) % MAX_NUM_BLK_REQUESTS;
     return OK_BLK_REQ_QUEUE;
 }
 
 blk_req_queue_result_t blk_req_queue_dequeue(
         blk_req_queue_t *queue,
-        blk_req_buf_t *ret_val
+        blk_req_t *ret_val
 ) {
     if (queue == NULL) {
         return ERR_NULL_BLK_REQ_QUEUE;
@@ -143,7 +143,7 @@ blk_req_queue_result_t blk_req_queue_dequeue(
      * dequeued from `queue->req_bufs`. */
     THREAD_MEMORY_RELEASE();
     /* Update the head index. */
-    queue->head_idx = (queue->head_idx + 1) % MAX_NUM_BLK_REQ_BUFS;
+    queue->head_idx = (queue->head_idx + 1) % MAX_NUM_BLK_REQUESTS;
     return OK_BLK_REQ_QUEUE;
 }
 

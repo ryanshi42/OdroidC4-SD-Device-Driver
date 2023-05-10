@@ -9,9 +9,9 @@
 #include <stdbool.h>
 
 #include "fence.h"
-#include "blk_req_buf.h"
+#include "blk_req.h"
 
-#define MAX_NUM_BLK_REQ_BUFS (512)
+#define MAX_NUM_BLK_REQUESTS (512)
 
 typedef struct blk_req_queue blk_req_queue_t;
 struct blk_req_queue {
@@ -19,7 +19,7 @@ struct blk_req_queue {
     "read index". */
     size_t tail_idx; /* We enqueue onto the tail. This is also known as the
     "write index". */
-    blk_req_buf_t req_bufs[MAX_NUM_BLK_REQ_BUFS];
+    blk_req_t req_bufs[MAX_NUM_BLK_REQUESTS];
 };
 
 enum blk_req_queue_result {
@@ -28,11 +28,11 @@ enum blk_req_queue_result {
     ERR_BLK_REQ_QUEUE_REGION_TOO_SMALL = -2, /* The shared memory region
     reserved for this ring buffer is too small. To remedy this, you can either
     increase the shared memory region reserved for the `blk_req_queue` data
-    structure or reduce the size of `MAX_NUM_BLK_REQ_BUFS`. */
+    structure or reduce the size of `MAX_NUM_BLK_REQUESTS`. */
     ERR_BLK_REQ_QUEUE_REGION_TOO_LARGE = -3, /* The shared memory region
     reserved for this ring buffer is wastefully large. To remedy this, you can
     either reduce the shared memory region reserved for the `blk_req_queue`
-    or increase the size of `MAX_NUM_BLK_REQ_BUFS`. */
+    or increase the size of `MAX_NUM_BLK_REQUESTS`. */
     ERR_NULL_RET_VAL_PTR_PASSED_TO_BLK_REQ_QUEUE_FN = -4, /* A NULL `ret_val` pointer
     was passed into a `blk_req_queue` function. */
     ERR_NULL_BLK_REQ_BUF = -5, /* A NULL `req_buf` pointer was passed into
@@ -86,7 +86,7 @@ blk_req_queue_result_t blk_req_queue_size(
  */
 blk_req_queue_result_t blk_req_queue_enqueue(
         blk_req_queue_t *queue,
-        blk_req_buf_t *req
+        blk_req_t *req
 );
 
 /**
@@ -97,7 +97,7 @@ blk_req_queue_result_t blk_req_queue_enqueue(
  */
 blk_req_queue_result_t blk_req_queue_dequeue(
         blk_req_queue_t *queue,
-        blk_req_buf_t *ret_val
+        blk_req_t *ret_val
 );
 
 
@@ -124,25 +124,25 @@ blk_req_queue_result_t blk_req_queue_is_full(
 );
 
 /**
- * Enqueues the `blk_req_buf` onto the ring buffer.
+ * Enqueues the `blk_req` onto the ring buffer.
  * @param queue
  * @param val
  * @return
  */
 blk_req_queue_result_t blk_req_queue_enqueue(
         blk_req_queue_t *queue,
-        blk_req_buf_t *val
+        blk_req_t *val
 );
 
 /**
- * Dequeues the `blk_req_buf` from the ring buffer.
+ * Dequeues the `blk_req` from the ring buffer.
  * @param queue
  * @param ret_val
  * @return
  */
 blk_req_queue_result_t blk_req_queue_dequeue(
         blk_req_queue_t *queue,
-        blk_req_buf_t *ret_val
+        blk_req_t *ret_val
 );
 
 

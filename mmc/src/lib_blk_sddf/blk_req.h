@@ -1,6 +1,6 @@
 #pragma once
 
-/* Request Buffer. */
+/* A Request. */
 
 #include <stddef.h>
 #include <stdint.h>
@@ -13,8 +13,8 @@ enum blk_req_operation {
 };
 typedef enum blk_req_operation blk_req_operation_t;
 
-typedef struct blk_req_buf blk_req_buf_t;
-struct blk_req_buf {
+typedef struct blk_req blk_req_t;
+struct blk_req {
     /* The MMC driver operation. */
     blk_req_operation_t operation;
     /* Parameters used by Read/Write operations. */

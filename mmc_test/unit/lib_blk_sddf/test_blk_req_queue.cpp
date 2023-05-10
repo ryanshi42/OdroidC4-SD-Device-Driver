@@ -47,7 +47,7 @@ TEST(test_blk_req_queue, init_should_accept_shared_memory_regions_that_are_sligh
             OK_BLK_REQ_QUEUE,
             blk_req_queue_init(
                     &queue,
-                    sizeof(blk_req_queue_t) + sizeof(blk_req_buf_t) - 1
+                    sizeof(blk_req_queue_t) + sizeof(blk_req_t) - 1
             )
     );
     /* Entire ring buffer should be zeroed. */
@@ -61,7 +61,7 @@ TEST(test_blk_req_queue, init_should_reject_shared_memory_regions_that_are_too_o
             ERR_BLK_REQ_QUEUE_REGION_TOO_LARGE,
             blk_req_queue_init(
                     &queue,
-                    sizeof(blk_req_queue_t) + sizeof(blk_req_buf_t)
+                    sizeof(blk_req_queue_t) + sizeof(blk_req_t)
             )
     );
 }
@@ -100,7 +100,7 @@ TEST(test_blk_req_queue, blk_req_queue_capacity_should_return_capacity_of_queue)
                     &capacity
             )
     );
-    ASSERT_EQ(MAX_NUM_BLK_REQ_BUFS - 1, capacity);
+    ASSERT_EQ(MAX_NUM_BLK_REQUESTS - 1, capacity);
 }
 
 /* enqueue() */
@@ -124,13 +124,13 @@ TEST(test_blk_req_queue, enqueue_should_only_allow_user_to_enqueue_capacity_numb
             )
     );
     /* Enqueue ring buffers. */
-    blk_req_buf_t req_buf = {};
+    blk_req_t req = {};
     for (size_t i = 0; i < capacity; i++) {
         ASSERT_EQ(
                 OK_BLK_REQ_QUEUE,
                 blk_req_queue_enqueue(
                         &queue,
-                        &req_buf
+                        &req
                 )
         );
         /* Checking the state of the ring buffer is correct. */
@@ -159,7 +159,7 @@ TEST(test_blk_req_queue, enqueue_should_only_allow_user_to_enqueue_capacity_numb
             ERR_BLK_REQ_QUEUE_FULL,
             blk_req_queue_enqueue(
                     &queue,
-                    &req_buf
+                    &req
             )
     );
 }
@@ -175,12 +175,12 @@ TEST(test_blk_req_queue, dequeue_should_prevent_user_from_dequeueing_from_empty_
                     sizeof(blk_req_queue_t)
             )
     );
-    blk_req_buf_t req_buf = {};
+    blk_req_t req = {};
     ASSERT_EQ(
             ERR_BLK_REQ_QUEUE_EMPTY,
             blk_req_queue_dequeue(
                     &queue,
-                    &req_buf
+                    &req
             )
     );
 }
@@ -204,13 +204,13 @@ TEST(test_blk_req_queue, dequeue_should_be_able_to_dequeue_capacity_number_of_ti
             )
     );
     /* Enqueuing ring buffers until the buffer is full. */
-    blk_req_buf_t req_buf = {};
+    blk_req_t req = {};
     for (size_t i = 0; i < capacity; i++) {
         ASSERT_EQ(
                 OK_BLK_REQ_QUEUE,
                 blk_req_queue_enqueue(
                         &queue,
-                        &req_buf
+                        &req
                 )
         );
     }
@@ -220,7 +220,7 @@ TEST(test_blk_req_queue, dequeue_should_be_able_to_dequeue_capacity_number_of_ti
                 OK_BLK_REQ_QUEUE,
                 blk_req_queue_dequeue(
                         &queue,
-                        &req_buf
+                        &req
                 )
         );
         /* Checking the state of the ring buffer is correct. */
