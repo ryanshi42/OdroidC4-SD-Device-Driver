@@ -469,10 +469,10 @@ target_link_libraries(
         mmc_rpi3b_lib_blk_res_buf
 )
 
-add_library(mmc_rpi3b_lib_blk_req_ring_buf src/lib_blk_ring_buf/blk_req_ring_buf.c)
-target_include_directories(mmc_rpi3b_lib_blk_req_ring_buf PUBLIC src/lib_blk_ring_buf/)
+add_library(mmc_rpi3b_lib_blk_req_queue src/lib_blk_ring_buf/blk_req_queue.c)
+target_include_directories(mmc_rpi3b_lib_blk_req_queue PUBLIC src/lib_blk_ring_buf/)
 target_link_libraries(
-        mmc_rpi3b_lib_blk_req_ring_buf
+        mmc_rpi3b_lib_blk_req_queue
         mmc_rpi3b_lib_blk_req_buf
         mmc_rpi3b_lib_fence
 )

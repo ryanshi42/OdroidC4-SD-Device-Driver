@@ -19,7 +19,7 @@ add_executable(test_mmc_rpi3b_lib_bcm_timer_regs timer_driver/test_bcm_timer_reg
 add_executable(test_mmc_rpi3b_lib_bcm_timer timer_driver/test_bcm_timer.cpp)
 add_executable(test_mmc_rpi3b_lib_scr mmc_driver/sdcard/test_scr.cpp)
 add_executable(test_mmc_rpi3b_lib_blk_data_queue lib_blk_ring_buf/test_blk_data_queue.cpp)
-add_executable(test_mmc_rpi3b_lib_blk_req_ring_buf lib_blk_ring_buf/test_blk_req_ring_buf.cpp)
+add_executable(test_mmc_rpi3b_lib_blk_req_queue lib_blk_ring_buf/test_blk_req_queue.cpp)
 
 add_google_test(test_mmc_rpi3b_lib_arith mmc_rpi3b_lib_arith)
 add_google_test(test_mmc_rpi3b_lib_control0 mmc_rpi3b_lib_control0)
@@ -41,7 +41,7 @@ add_google_test(test_mmc_rpi3b_lib_bcm_timer_regs mmc_rpi3b_lib_bcm_timer_regs)
 add_google_test(test_mmc_rpi3b_lib_bcm_timer mmc_rpi3b_lib_bcm_timer)
 add_google_test(test_mmc_rpi3b_lib_scr mmc_rpi3b_lib_scr)
 add_google_test(test_mmc_rpi3b_lib_blk_data_queue mmc_rpi3b_lib_blk_data_queue)
-add_google_test(test_mmc_rpi3b_lib_blk_req_ring_buf mmc_rpi3b_lib_blk_req_ring_buf)
+add_google_test(test_mmc_rpi3b_lib_blk_req_queue mmc_rpi3b_lib_blk_req_queue)
 
 target_link_libraries(
         test_mmc_rpi3b_lib_bcm_emmc
