@@ -477,6 +477,14 @@ target_link_libraries(
         mmc_rpi3b_lib_fence
 )
 
+add_library(mmc_rpi3b_lib_blk_response_queue src/lib_blk_sddf/blk_response_queue.c)
+target_include_directories(mmc_rpi3b_lib_blk_response_queue PUBLIC src/lib_blk_sddf/)
+target_link_libraries(
+        mmc_rpi3b_lib_blk_response_queue
+        mmc_rpi3b_lib_blk_response
+        mmc_rpi3b_lib_fence
+)
+
 add_library(mmc_rpi3b_lib_diskio src/lib_fatfs/diskio.c)
 target_include_directories(mmc_rpi3b_lib_diskio PUBLIC src/lib_fatfs/)
 target_link_libraries(
