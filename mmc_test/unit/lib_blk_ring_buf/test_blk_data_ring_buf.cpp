@@ -142,6 +142,30 @@ TEST(test_blk_data_ring_buf, init_should_not_throw_error_if_data_bufs_is_large_e
     );
 }
 
+/* capacity() */
+
+TEST(test_blk_data_ring_buf, capacity_should_reject_null_ring_buf) {
+    size_t capacity = 0;
+    ASSERT_EQ(
+            ERR_NULL_BLK_DATA_RING_BUF,
+            blk_data_ring_buf_capacity(
+                    NULL,
+                    &capacity
+            )
+    );
+}
+
+TEST(test_blk_data_ring_buf, capacity_should_reject_null_capacity) {
+    blk_data_ring_buf_t ring_buf = {0};
+    ASSERT_EQ(
+            ERR_NULL_RET_VAL_PTR_PASSED_TO_BLK_DATA_RING_BUF_FN,
+            blk_data_ring_buf_capacity(
+                    &ring_buf,
+                    NULL
+            )
+    );
+}
+
 /* TODO: Write test for blk_data_ring_buf_is_full(). */
 
 /* TODO: Write test for blk_data_ring_buf_enqueue(). */

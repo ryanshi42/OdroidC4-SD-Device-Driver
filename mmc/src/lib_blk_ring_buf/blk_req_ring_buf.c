@@ -29,7 +29,7 @@ blk_req_ring_buf_result_t blk_req_ring_buf_capacity(
         return ERR_NULL_BLK_REQ_RING_BUF;
     }
     if (ret_val == NULL) {
-        return ERR_NULL_RET_VAL_FROM_BLK_REQ_RING_BUF_FN;
+        return ERR_NULL_RET_VAL_PTR_PASSED_TO_BLK_REQ_RING_BUF_FN;
     }
     *ret_val = MAX_NUM_BLK_REQ_BUFS - 1;
     return OK_BLK_REQ_RING_BUF;

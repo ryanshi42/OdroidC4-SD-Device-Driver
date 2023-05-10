@@ -82,7 +82,7 @@ TEST(test_blk_req_ring_buf, blk_req_ring_buf_capacity_should_reject_null_ring_bu
 TEST(test_blk_req_ring_buf, blk_req_ring_buf_capacity_should_reject_null_ret_val) {
     blk_req_ring_buf_t ring_buf = {0};
     ASSERT_EQ(
-            ERR_NULL_RET_VAL_FROM_BLK_REQ_RING_BUF_FN,
+            ERR_NULL_RET_VAL_PTR_PASSED_TO_BLK_REQ_RING_BUF_FN,
             blk_req_ring_buf_capacity(
                     &ring_buf,
                     NULL

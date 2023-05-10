@@ -63,6 +63,9 @@ blk_data_ring_buf_result_t blk_data_ring_buf_capacity(
     if (ring_buf == NULL) {
         return ERR_NULL_BLK_DATA_RING_BUF;
     }
+    if (ret_val == NULL) {
+        return ERR_NULL_RET_VAL_PTR_PASSED_TO_BLK_DATA_RING_BUF_FN;
+    }
     *ret_val = ring_buf->num_data_bufs;
     return OK_BLK_DATA_RING_BUF;
 }

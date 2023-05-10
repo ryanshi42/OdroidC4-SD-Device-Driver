@@ -28,7 +28,7 @@ enum blk_req_ring_buf_result {
     reserved for this ring buffer is wastefully large. To remedy this, you can
     either reduce the shared memory region reserved for the `blk_req_ring_buf`
     or increase the size of `MAX_NUM_BLK_REQ_BUFS`. */
-    ERR_NULL_RET_VAL_FROM_BLK_REQ_RING_BUF_FN = -4, /* A NULL `ret_val` pointer
+    ERR_NULL_RET_VAL_PTR_PASSED_TO_BLK_REQ_RING_BUF_FN = -4, /* A NULL `ret_val` pointer
     was passed into a `blk_req_ring_buf` function. */
 };
 typedef enum blk_req_ring_buf_result blk_req_ring_buf_result_t;
