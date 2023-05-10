@@ -1,10 +1,13 @@
 #pragma once
 
-/* Request Ring Buffer. */
+/*
+ * A queue of Requests. The queue is implemented as a ring buffer.
+ */
 
 #include <string.h>
 #include <stddef.h>
 #include <stdbool.h>
+
 #include "fence.h"
 #include "blk_req_buf.h"
 
