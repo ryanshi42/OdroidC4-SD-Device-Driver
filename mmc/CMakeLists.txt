@@ -473,6 +473,7 @@ target_include_directories(mmc_rpi3b_lib_blk_req_ring_buf PUBLIC src/lib_blk_rin
 target_link_libraries(
         mmc_rpi3b_lib_blk_req_ring_buf
         mmc_rpi3b_lib_blk_req_buf
+        mmc_rpi3b_lib_fence
 )
 
 add_library(mmc_rpi3b_lib_diskio src/lib_fatfs/diskio.c)

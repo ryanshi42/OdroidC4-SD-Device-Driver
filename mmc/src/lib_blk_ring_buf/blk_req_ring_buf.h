@@ -4,6 +4,8 @@
 
 #include <string.h>
 #include <stddef.h>
+#include <stdbool.h>
+#include "fence.h"
 #include "blk_req_buf.h"
 
 #define MAX_NUM_BLK_REQ_BUFS (512)
@@ -30,6 +32,10 @@ enum blk_req_ring_buf_result {
     or increase the size of `MAX_NUM_BLK_REQ_BUFS`. */
     ERR_NULL_RET_VAL_PTR_PASSED_TO_BLK_REQ_RING_BUF_FN = -4, /* A NULL `ret_val` pointer
     was passed into a `blk_req_ring_buf` function. */
+    ERR_NULL_BLK_REQ_BUF = -5, /* A NULL `req_buf` pointer was passed into
+    blk_req_ring_buf_enqueue */
+    ERR_BLK_REQ_RING_BUF_FULL = -6, /* The ring buffer is full. */
+    ERR_BLK_REQ_RING_BUF_EMPTY = -7, /* The ring buffer is empty. */
 };
 typedef enum blk_req_ring_buf_result blk_req_ring_buf_result_t;
 
@@ -46,12 +52,25 @@ blk_req_ring_buf_result_t blk_req_ring_buf_init(
 );
 
 /**
- * Returns the number of Requests that can be enqueued onto the Request Ring.
+ * Returns the number of Requests that can be enqueued onto the Request Ring
+ * Buffer.
  * @param ring_buf
  * @param ret_val
  * @return
  */
 blk_req_ring_buf_result_t blk_req_ring_buf_capacity(
+        blk_req_ring_buf_t *ring_buf,
+        size_t *ret_val
+);
+
+/**
+ * Returns the number of Requests that are currently enqueued onto the Request
+ * Ring Buffer.
+ * @param ring_buf
+ * @param ret_val
+ * @return
+ */
+blk_req_ring_buf_result_t blk_req_ring_buf_size(
         blk_req_ring_buf_t *ring_buf,
         size_t *ret_val
 );
@@ -71,6 +90,51 @@ blk_req_ring_buf_result_t blk_req_ring_buf_enqueue(
  * Dequeues a Request from the Request Ring Buffer.
  * @param ring_buf
  * @param ret_val The dequeued Request.
+ * @return
+ */
+blk_req_ring_buf_result_t blk_req_ring_buf_dequeue(
+        blk_req_ring_buf_t *ring_buf,
+        blk_req_buf_t *ret_val
+);
+
+
+/**
+ * Returns True if the ring buffer is empty, False otherwise.
+ * @param ring_buf
+ * @param ret_val
+ * @return
+ */
+blk_req_ring_buf_result_t blk_req_ring_buf_is_empty(
+        blk_req_ring_buf_t *ring_buf,
+        bool *ret_val
+);
+
+/**
+ * Returns True if the ring buffer is full, False otherwise.
+ * @param ring_buf
+ * @param ret_val
+ * @return
+ */
+blk_req_ring_buf_result_t blk_req_ring_buf_is_full(
+        blk_req_ring_buf_t *ring_buf,
+        bool *ret_val
+);
+
+/**
+ * Enqueues the `blk_req_buf` onto the ring buffer.
+ * @param ring_buf
+ * @param val
+ * @return
+ */
+blk_req_ring_buf_result_t blk_req_ring_buf_enqueue(
+        blk_req_ring_buf_t *ring_buf,
+        blk_req_buf_t *val
+);
+
+/**
+ * Dequeues the `blk_req_buf` from the ring buffer.
+ * @param ring_buf
+ * @param ret_val
  * @return
  */
 blk_req_ring_buf_result_t blk_req_ring_buf_dequeue(
