@@ -5,6 +5,6 @@
 
 typedef struct blk_data_buf blk_data_buf_t;
 struct blk_data_buf {
-    uintptr_t buf;
+    uintptr_t buf_vaddr;
     size_t buf_size;
 };

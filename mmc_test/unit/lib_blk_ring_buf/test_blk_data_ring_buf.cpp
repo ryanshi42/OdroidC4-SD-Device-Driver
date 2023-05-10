@@ -60,7 +60,7 @@ TEST(test_blk_data_ring_buf, init_should_completely_fill_ring_buffer) {
                 OK_BLK_DATA_RING_BUF,
                 blk_data_ring_buf_dequeue(&ring_buf, &data_buf)
         );
-        ASSERT_EQ(data_buf.buf, data_region_vaddr + (i * 10));
+        ASSERT_EQ(data_buf.buf_vaddr, data_region_vaddr + (i * 10));
         ASSERT_EQ(data_buf.buf_size, 10);
     }
     /* Queue should be empty. */

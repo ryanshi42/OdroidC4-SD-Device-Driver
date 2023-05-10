@@ -2,6 +2,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include "blk_data_buf.h"
 
 /* Request Buffer. */
 
@@ -18,7 +19,7 @@ struct blk_req_buf {
     /* Parameters used by Read/Write operations. */
     size_t lba; /* Logical Block Address. */
     size_t num_blocks; /* Number of Blocks. */
-    uintptr_t shared_data_buf; /* Virtual address of shared data buffer. */
+    blk_data_buf_t shared_data_buf; /* The shared data buffer. */
 };
 
 

@@ -42,7 +42,7 @@ blk_data_ring_buf_result_t blk_data_ring_buf_init(
     /* Enqueue all shared data buffers onto `data_bufs`. */
     for (size_t i = 0; i < ring_buf->num_data_bufs; i++) {
         blk_data_buf_t data_buf = {
-                .buf = ring_buf->data_region + (i * ring_buf->data_buf_size),
+                .buf_vaddr = ring_buf->data_region + (i * ring_buf->data_buf_size),
                 .buf_size = ring_buf->data_buf_size,
         };
         blk_data_ring_buf_result_t res = blk_data_ring_buf_enqueue(
