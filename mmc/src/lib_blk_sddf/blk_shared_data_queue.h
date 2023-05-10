@@ -9,20 +9,20 @@
 #include <string.h>
 #include <stdbool.h>
 
-#include "blk_data_buf.h"
+#include "blk_shared_data_buf.h"
 #include "fence.h"
 
-#define MAX_NUM_BLK_DATA_BUFS (512)
+#define MAX_NUM_BLK_SHARED_DATA_BUFS (512)
 
-typedef struct blk_data_queue blk_data_queue_t;
-struct blk_data_queue {
+typedef struct blk_shared_data_queue blk_shared_data_queue_t;
+struct blk_shared_data_queue {
     uintptr_t data_region;
     size_t data_region_size;
     size_t data_buf_size;
     size_t num_data_bufs;
-    blk_data_buf_t data_bufs[MAX_NUM_BLK_DATA_BUFS];
+    blk_shared_data_buf_t data_bufs[MAX_NUM_BLK_SHARED_DATA_BUFS];
     size_t num_unused_slots; /* This is the number of unused slots in
-    `data_bufs` and its value is simply (MAX_NUM_BLK_DATA_BUFS -
+    `data_bufs` and its value is simply (MAX_NUM_BLK_SHARED_DATA_BUFS -
     queue->num_data_bufs). We precompute the number of unused slots to avoid
     recomputing it every time we need to check if the ring buffer is full or
     not. */
@@ -33,20 +33,20 @@ struct blk_data_queue {
 };
 
 /* Possible return values from the following functions. */
-enum blk_data_queue_result {
-    OK_BLK_DATA_QUEUE = 0,
-    ERR_INCREASE_MAX_NUM_BLK_DATA_BUFS = -1,
-    ERR_NULL_BLK_DATA_QUEUE = -2,
-    ERR_BLK_DATA_BUF_SIZE_TOO_LARGE = -3,
-    ERR_BLK_DATA_BUF_SIZE_MISALIGNED = -4,
-    ERR_INVALID_BLK_DATA_REGION = -5,
-    ERR_NULL_BLK_DATA_BUF_VAL = -6,
-    ERR_BLK_DATA_QUEUE_FULL = -7,
-    ERR_BLK_DATA_QUEUE_EMPTY = -8,
-    ERR_NULL_RET_VAL_PTR_PASSED_TO_BLK_DATA_QUEUE_FN = -9, /* A NULL
-    `ret_val` pointer was passed into a `blk_data_queue` function. */
+enum blk_shared_data_queue_result {
+    OK_BLK_SHARED_DATA_QUEUE = 0,
+    ERR_INCREASE_MAX_NUM_BLK_SHARED_DATA_BUFS = -1,
+    ERR_NULL_BLK_SHARED_DATA_QUEUE = -2,
+    ERR_BLK_SHARED_DATA_BUF_SIZE_TOO_LARGE = -3,
+    ERR_BLK_SHARED_DATA_BUF_SIZE_MISALIGNED = -4,
+    ERR_INVALID_BLK_SHARED_DATA_REGION = -5,
+    ERR_NULL_BLK_SHARED_DATA_BUF_VAL = -6,
+    ERR_BLK_SHARED_DATA_QUEUE_FULL = -7,
+    ERR_BLK_SHARED_DATA_QUEUE_EMPTY = -8,
+    ERR_NULL_RET_VAL_PTR_PASSED_TO_BLK_SHARED_DATA_QUEUE_FN = -9, /* A NULL
+    `ret_val` pointer was passed into a `blk_shared_data_queue` function. */
 };
-typedef enum blk_data_queue_result blk_data_queue_result_t;
+typedef enum blk_shared_data_queue_result blk_shared_data_queue_result_t;
 
 /**
  * Initializes a Shared Data Ring Buffer.
@@ -56,8 +56,8 @@ typedef enum blk_data_queue_result blk_data_queue_result_t;
  * @param shared_data_buf_size Size of each shared data buffer in bytes.
  * @return 0 on success, -1 on failure.
  */
-blk_data_queue_result_t blk_data_queue_init(
-        blk_data_queue_t *queue,
+blk_shared_data_queue_result_t blk_shared_data_queue_init(
+        blk_shared_data_queue_t *queue,
         uintptr_t shared_data_region_vaddr,
         size_t shared_data_region_size,
         size_t shared_data_buf_size
@@ -69,8 +69,8 @@ blk_data_queue_result_t blk_data_queue_init(
  * @param ret_val The number of buffers this ring buffer holds.
  * @return
  */
-blk_data_queue_result_t blk_data_queue_capacity(
-        blk_data_queue_t *queue,
+blk_shared_data_queue_result_t blk_shared_data_queue_capacity(
+        blk_shared_data_queue_t *queue,
         size_t *ret_val
 );
 
@@ -80,8 +80,8 @@ blk_data_queue_result_t blk_data_queue_capacity(
  * @param ret_val
  * @return
  */
-blk_data_queue_result_t blk_data_queue_size(
-        blk_data_queue_t *queue,
+blk_shared_data_queue_result_t blk_shared_data_queue_size(
+        blk_shared_data_queue_t *queue,
         size_t *ret_val
 );
 
@@ -91,8 +91,8 @@ blk_data_queue_result_t blk_data_queue_size(
  * @param ret_val
  * @return
  */
-blk_data_queue_result_t blk_data_queue_is_empty(
-        blk_data_queue_t *queue,
+blk_shared_data_queue_result_t blk_shared_data_queue_is_empty(
+        blk_shared_data_queue_t *queue,
         bool *ret_val
 );
 
@@ -102,30 +102,30 @@ blk_data_queue_result_t blk_data_queue_is_empty(
  * @param ret_val
  * @return
  */
-blk_data_queue_result_t blk_data_queue_is_full(
-        blk_data_queue_t *queue,
+blk_shared_data_queue_result_t blk_shared_data_queue_is_full(
+        blk_shared_data_queue_t *queue,
         bool *ret_val
 );
 
 /**
- * Enqueues the `blk_data_buf` onto the ring buffer.
+ * Enqueues the `blk_shared_data_buf` onto the ring buffer.
  * @param queue
  * @param val
  * @return
  */
-blk_data_queue_result_t blk_data_queue_enqueue(
-        blk_data_queue_t *queue,
-        blk_data_buf_t *val
+blk_shared_data_queue_result_t blk_shared_data_queue_enqueue(
+        blk_shared_data_queue_t *queue,
+        blk_shared_data_buf_t *val
 );
 
 /**
- * Dequeues the `blk_data_buf` from the ring buffer.
+ * Dequeues the `blk_shared_data_buf` from the ring buffer.
  * @param queue
- * @param ret_val The dequeued `blk_data_buf` is saved to `ret_val`.
+ * @param ret_val The dequeued `blk_shared_data_buf` is saved to `ret_val`.
  * @return
  */
-blk_data_queue_result_t blk_data_queue_dequeue(
-        blk_data_queue_t *queue,
-        blk_data_buf_t *ret_val
+blk_shared_data_queue_result_t blk_shared_data_queue_dequeue(
+        blk_shared_data_queue_t *queue,
+        blk_shared_data_buf_t *ret_val
 );
 

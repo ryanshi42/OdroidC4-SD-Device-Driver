@@ -4,7 +4,7 @@
 
 #include <stddef.h>
 
-#include "blk_data_buf.h"
+#include "blk_shared_data_buf.h"
 
 enum blk_res_result {
     OK,
@@ -18,6 +18,6 @@ struct blk_res_buf {
     blk_res_result_t result; /* The response result. */
     size_t num_blocks; /* Number of blocks of data returned to the client from
     the driver. */
-    blk_data_buf_t shared_data_buf; /* The shared data buffer carrying any
+    blk_shared_data_buf_t shared_data_buf; /* The shared data buffer carrying any
     response data. */
 };
