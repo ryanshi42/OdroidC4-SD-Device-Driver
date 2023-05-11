@@ -23,7 +23,7 @@ void init(void) {
             fatfs_to_serial_client_putchar_buf,
             FATFS_TO_SERIAL_CLIENT_PUTCHAR_CHANNEL
     );
-    log_trace("Starting init() in FatFS Protection Domain...");
+    log_trace("Starting init() in FatFs Protection Domain...");
 
     /* We're initialising all the following data structures required to
      * interface with our MMC driver here so there is no need to re-initialise
@@ -31,7 +31,7 @@ void init(void) {
 
     blk_request_queue_result_t request_queue_init_result = blk_request_queue_init(
             (blk_request_queue_t *) mmc_driver_request_queue,
-            MAX_SEL4CP_PAGE_SIZE
+            SEL4CP_MAX_PAGE_SIZE
     );
     if (request_queue_init_result != OK_BLK_REQUEST_QUEUE) {
         log_error("Failed to initialise `mmc_driver_request_queue` with code %d.", request_queue_init_result);
@@ -40,7 +40,7 @@ void init(void) {
 
     blk_response_queue_result_t response_queue_init_result = blk_response_queue_init(
             (blk_response_queue_t *) mmc_driver_response_queue,
-            MAX_SEL4CP_PAGE_SIZE
+            SEL4CP_MAX_PAGE_SIZE
     );
     if (response_queue_init_result != OK_BLK_RESPONSE_QUEUE) {
         log_error("Failed to initialise `mmc_driver_response_queue` with code %d.", response_queue_init_result);
@@ -50,7 +50,7 @@ void init(void) {
     blk_shared_data_queue_result_t shared_data_queue_init_result = blk_shared_data_queue_init(
             &shared_data_queue,
             mmc_driver_shared_data,
-            MAX_SEL4CP_PAGE_SIZE,
+            SEL4CP_MAX_PAGE_SIZE,
             FAT_CLUSTER_SIZE /* TODO: Figure out how to obtain this info dynamically. */
     );
     if (shared_data_queue_init_result != OK_BLK_SHARED_DATA_QUEUE) {
