@@ -8,6 +8,9 @@
 #include "blk_request_queue.h"
 #include "blk_response_queue.h"
 #include "blk_shared_data_queue.h"
+#include "blk_request.h"
+#include "blk_response.h"
+#include "blk_shared_data_buf.h"
 
 /* Initialises FatFs by passing it the data structures it requires access to for
  * low-level disk I/O functions. */

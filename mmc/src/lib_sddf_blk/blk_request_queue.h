@@ -39,7 +39,7 @@ enum blk_request_queue_result {
     the memory region as possible. */
     ERR_NULL_RET_VAL_PTR_PASSED_TO_BLK_REQUEST_QUEUE_FN = -4, /* A NULL `ret_val` pointer
     was passed into a `blk_request_queue` function. */
-    ERR_NULL_BLK_REQUEST = -5, /* A NULL `request
+    ERR_NULL_BLK_REQUEST_IN_BLK_REQUEST_QUEUE = -5, /* A NULL `request
     blk_request_queue_enqueue */
     ERR_BLK_REQUEST_QUEUE_FULL = -6, /* The ring buffer is full. */
     ERR_BLK_REQUEST_QUEUE_EMPTY = -7, /* The ring buffer is empty. */

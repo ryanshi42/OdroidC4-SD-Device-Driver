@@ -547,6 +547,9 @@ target_link_libraries(
         mmc_rpi3b_lib_blk_request_queue
         mmc_rpi3b_lib_blk_response_queue
         mmc_rpi3b_lib_blk_shared_data_queue
+        mmc_rpi3b_lib_blk_request
+        mmc_rpi3b_lib_blk_response
+        mmc_rpi3b_lib_blk_shared_data_buf
         mmc_rpi3b_lib_fatfs_e2e
         mmc_rpi3b_lib_diskio
 )

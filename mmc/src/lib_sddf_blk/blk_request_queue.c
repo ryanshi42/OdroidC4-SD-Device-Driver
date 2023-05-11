@@ -94,7 +94,7 @@ blk_request_queue_result_t blk_request_queue_enqueue(
         return ERR_NULL_BLK_REQUEST_QUEUE;
     }
     if (val == NULL) {
-        return ERR_NULL_BLK_REQUEST;
+        return ERR_NULL_BLK_REQUEST_IN_BLK_REQUEST_QUEUE;
     }
     bool is_full = false;
     blk_request_queue_result_t const res = blk_request_queue_is_full(queue, &is_full);
