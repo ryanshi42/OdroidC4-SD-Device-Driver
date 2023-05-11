@@ -15,6 +15,19 @@
 #define DEV_RAM        1    /* Example: Map Ramdisk to physical drive 1 */
 #define DEV_USB        2    /* Example: Map USB MSD to physical drive 2 */
 
+blk_request_queue_t *disk_request_queue = NULL;
+blk_response_queue_t *disk_response_queue = NULL;
+blk_shared_data_queue_t *disk_shared_data_queue = NULL;
+
+void disk_init(
+        blk_request_queue_t *request_queue,
+        blk_response_queue_t *response_queue,
+        blk_shared_data_queue_t *shared_data_queue
+) {
+    disk_request_queue = request_queue;
+    disk_response_queue = response_queue;
+    disk_shared_data_queue = shared_data_queue;
+}
 
 /*-----------------------------------------------------------------------*/
 /* Get Drive Status                                                      */

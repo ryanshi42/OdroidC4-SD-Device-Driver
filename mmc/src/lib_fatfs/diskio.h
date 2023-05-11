@@ -5,7 +5,17 @@
 #ifndef _DISKIO_DEFINED
 #define _DISKIO_DEFINED
 
-//#include "mmc_driver.h"
+#include "blk_request_queue.h"
+#include "blk_response_queue.h"
+#include "blk_shared_data_queue.h"
+
+/* Initialises FatFs by passing it the data structures it requires access to for
+ * low-level disk I/O functions. */
+void disk_init(
+        blk_request_queue_t *request_queue,
+        blk_response_queue_t *response_queue,
+        blk_shared_data_queue_t *shared_data_queue
+);
 
 #ifdef __cplusplus
 extern "C" {

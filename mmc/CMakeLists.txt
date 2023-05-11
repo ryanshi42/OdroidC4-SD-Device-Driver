@@ -489,7 +489,9 @@ target_include_directories(mmc_rpi3b_lib_diskio PUBLIC src/lib_fatfs/)
 target_link_libraries(
         mmc_rpi3b_lib_diskio
         mmc_rpi3b_lib_ff
-#        mmc_rpi3b_lib_mmc_driver
+        mmc_rpi3b_lib_blk_request_queue
+        mmc_rpi3b_lib_blk_response_queue
+        mmc_rpi3b_lib_blk_shared_data_queue
 )
 
 add_library(mmc_rpi3b_lib_diskio_test src/lib_fatfs/diskio_test.c)
@@ -546,4 +548,5 @@ target_link_libraries(
         mmc_rpi3b_lib_blk_response_queue
         mmc_rpi3b_lib_blk_shared_data_queue
         mmc_rpi3b_lib_fatfs_e2e
+        mmc_rpi3b_lib_diskio
 )

@@ -8,6 +8,7 @@
 #include "blk_response_queue.h"
 #include "blk_shared_data_queue.h"
 #include "fatfs_e2e.h"
+#include "diskio.h"
 
 #define FATFS_TO_SERIAL_CLIENT_PUTCHAR_CHANNEL (13)
 #define FAT_CLUSTER_SIZE (0x10000)

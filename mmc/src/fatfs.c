@@ -14,7 +14,7 @@ uintptr_t mmc_driver_shared_data;
 
 /* The global shared data queue that manages the buffers within the
  * `mmc_driver_shared_data` shared memory region. */
-blk_shared_data_queue_t shared_data_queue;
+blk_shared_data_queue_t global_shared_data_queue = {0};
 
 void init(void) {
     /* Initialise `printf`. The `log.h` library depends on `printf` being
@@ -29,8 +29,9 @@ void init(void) {
      * interface with our MMC driver here so there is no need to re-initialise
      * these data structures in the MMC driver. */
 
+    blk_request_queue_t *request_queue = (blk_request_queue_t *) mmc_driver_request_queue;
     blk_request_queue_result_t request_queue_init_result = blk_request_queue_init(
-            (blk_request_queue_t *) mmc_driver_request_queue,
+            request_queue,
             SEL4CP_MAX_PAGE_SIZE
     );
     if (request_queue_init_result != OK_BLK_REQUEST_QUEUE) {
@@ -38,8 +39,9 @@ void init(void) {
         return;
     }
 
+    blk_response_queue_t *response_queue = (blk_response_queue_t *) mmc_driver_response_queue;
     blk_response_queue_result_t response_queue_init_result = blk_response_queue_init(
-            (blk_response_queue_t *) mmc_driver_response_queue,
+            response_queue,
             SEL4CP_MAX_PAGE_SIZE
     );
     if (response_queue_init_result != OK_BLK_RESPONSE_QUEUE) {
@@ -48,7 +50,7 @@ void init(void) {
     }
 
     blk_shared_data_queue_result_t shared_data_queue_init_result = blk_shared_data_queue_init(
-            &shared_data_queue,
+            &global_shared_data_queue,
             mmc_driver_shared_data,
             SEL4CP_MAX_PAGE_SIZE,
             FAT_CLUSTER_SIZE /* TODO: Figure out how to obtain this info dynamically. */
@@ -57,6 +59,14 @@ void init(void) {
         log_error("Failed to initialise `mmc_driver_shared_data_queue` with code %d.", shared_data_queue_init_result);
         return;
     }
+
+    /* Initialises FatFs by passing it the data structures it requires access to
+     * for low-level disk I/O functions. */
+    disk_init(
+            request_queue,
+            response_queue,
+            &global_shared_data_queue
+    );
 
     /* TODO: E2E test the state of the above data structures. */
 //    result_t res;

@@ -8,6 +8,10 @@
 #include "blk_shared_data_buf.h"
 
 enum blk_request_operation {
+    GET_SECTOR_COUNT,
+    GET_SECTOR_SIZE,
+    GET_BLOCK_SIZE,
+    CTRL_SYNC,
     READ,
     WRITE,
 };
