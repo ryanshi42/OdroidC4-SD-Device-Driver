@@ -11,7 +11,10 @@
 #include "fence.h"
 #include "blk_response.h"
 
-#define MAX_NUM_BLK_RESPONSES (512)
+/* We've specified `MAX_NUM_BLK_RESPONSES` assuming the memory region has a size
+ * of 0x200000 bytes. 0x200000 is the maximum page size in seL4 and is therefore
+ * the largest chunk of contiguous memory you can reserve in seL4CP. */
+#define MAX_NUM_BLK_RESPONSES (65535)
 
 typedef struct blk_response_queue blk_response_queue_t;
 struct blk_response_queue {

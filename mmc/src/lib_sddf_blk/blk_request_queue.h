@@ -11,7 +11,10 @@
 #include "fence.h"
 #include "blk_request.h"
 
-#define MAX_NUM_BLK_REQUESTS (512)
+/* We've specified `MAX_NUM_BLK_REQUESTS` assuming the memory region has a size
+ * of 0x200000 bytes. 0x200000 is the maximum page size in seL4 and is therefore
+ * the largest chunk of contiguous memory you can reserve in seL4CP. */
+#define MAX_NUM_BLK_REQUESTS (52428)
 
 typedef struct blk_request_queue blk_request_queue_t;
 struct blk_request_queue {
@@ -32,7 +35,8 @@ enum blk_request_queue_result {
     ERR_BLK_REQUEST_QUEUE_REGION_TOO_LARGE = -3, /* The shared memory region
     reserved for this ring buffer is wastefully large. To remedy this, you can
     either reduce the shared memory region reserved for the `blk_request
-    or increase the size of `MAX_NUM_BLK_REQUESTS`. */
+    or increase the size of `MAX_NUM_BLK_REQUESTS` so that it uses up as much of
+    the memory region as possible. */
     ERR_NULL_RET_VAL_PTR_PASSED_TO_BLK_REQUEST_QUEUE_FN = -4, /* A NULL `ret_val` pointer
     was passed into a `blk_request_queue` function. */
     ERR_NULL_BLK_REQUEST = -5, /* A NULL `request
