@@ -260,4 +260,26 @@ TEST(test_blk_response_queue, dequeue_should_be_able_to_dequeue_capacity_number_
     ASSERT_EQ(true, is_empty);
 }
 
+/* capacity() */
+
+TEST(test_blk_response_queue, capacity_should_return_the_capacity_of_the_queue) {
+    blk_response_queue_t queue = {0};
+    ASSERT_EQ(
+            OK_BLK_RESPONSE_QUEUE,
+            blk_response_queue_init(
+                    &queue,
+                    0x200000
+            )
+    );
+    /* Get the capacity of the ring buffer. */
+    size_t capacity = 0;
+    ASSERT_EQ(
+            OK_BLK_RESPONSE_QUEUE,
+            blk_response_queue_capacity(
+                    &queue,
+                    &capacity
+            )
+    );
+    ASSERT_EQ(65534, capacity);
+}
 
