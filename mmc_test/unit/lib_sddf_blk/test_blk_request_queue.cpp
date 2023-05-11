@@ -66,6 +66,20 @@ TEST(test_blk_request_queue, init_should_reject_shared_memory_regions_that_are_t
     );
 }
 
+TEST(test_blk_request_queue, init_should_accept_shared_memory_regions_set_to_sel4s_maximum_page_size) {
+    blk_request_queue_t queue = {1};
+    ASSERT_EQ(
+            OK_BLK_REQUEST_QUEUE,
+            blk_request_queue_init(
+                    &queue,
+                    0x200000
+            )
+    );
+    /* Entire ring buffer should be zeroed. */
+    blk_request_queue_t expected = {0};
+    ASSERT_EQ(0, memcmp(&expected, &queue, sizeof(queue)));
+}
+
 /* blk_request_queue_capacity */
 
 TEST(test_blk_request_queue, blk_request_queue_capacity_should_reject_null_queue) {

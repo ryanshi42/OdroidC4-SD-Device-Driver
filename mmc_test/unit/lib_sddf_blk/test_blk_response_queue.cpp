@@ -103,6 +103,20 @@ TEST(test_blk_response_queue, blk_response_queue_capacity_should_return_capacity
     ASSERT_EQ(MAX_NUM_BLK_RESPONSES - 1, capacity);
 }
 
+TEST(test_blk_response_queue, init_should_accept_shared_memory_regions_set_to_sel4s_maximum_page_size) {
+    blk_response_queue_t queue = {1};
+    ASSERT_EQ(
+            OK_BLK_RESPONSE_QUEUE,
+            blk_response_queue_init(
+                    &queue,
+                    0x200000
+            )
+    );
+    /* Entire ring buffer should be zeroed. */
+    blk_response_queue_t expected = {0};
+    ASSERT_EQ(0, memcmp(&expected, &queue, sizeof(queue)));
+}
+
 /* enqueue() */
 
 TEST(test_blk_response_queue, enqueue_should_only_allow_user_to_enqueue_capacity_number_of_bufs) {
