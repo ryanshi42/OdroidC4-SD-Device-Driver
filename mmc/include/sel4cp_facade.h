@@ -1,5 +1,7 @@
 #pragma once
 
+#define MAX_SEL4CP_PAGE_SIZE (0x200000)
+
 #if MMC_RPI3B_UNIT_TEST
 
 #include <stdlib.h>

@@ -39,6 +39,7 @@ LIB_ASSERT_DIR := $(SRC_DIR)/lib_assert
 LIB_CLOCK_DIR := $(SRC_DIR)/lib_clock
 LIB_RESULT_DIR := $(SRC_DIR)/lib_result
 LIB_FATFS_DIR := $(SRC_DIR)/lib_fatfs
+LIB_SDDF_BLK_DIR := $(SRC_DIR)/lib_sddf_blk
 
 BOARD_DIR := $(SEL4CP_SDK)/board/$(SEL4CP_BOARD)/$(SEL4CP_CONFIG)
 
@@ -67,6 +68,7 @@ CFLAGS += \
 	-I$(LIB_CLOCK_DIR) \
 	-I$(LIB_RESULT_DIR) \
 	-I$(LIB_FATFS_DIR) \
+	-I$(LIB_SDDF_BLK_DIR) \
 
 # Specifies which Object files in $(BUILD_DIR) should be linked.
 SERIAL_DRIVER_OBJS := \
@@ -150,6 +152,12 @@ FATFS_OBJS := \
 	lib_printf/printf.o \
 	common/log.o \
 	lib_result/result.o \
+	lib_sddf_blk/blk_request.o \
+	lib_sddf_blk/blk_request_queue.o \
+	lib_sddf_blk/blk_response.o \
+	lib_sddf_blk/blk_response_queue.o \
+	lib_sddf_blk/blk_shared_data_buf.o \
+	lib_sddf_blk/blk_shared_data_queue.o \
 
 IMAGES := \
 	serial_driver.elf \
@@ -171,6 +179,7 @@ directories:
 	mkdir -p $(BUILD_DIR)/lib_clock
 	mkdir -p $(BUILD_DIR)/lib_result
 	mkdir -p $(BUILD_DIR)/lib_fatfs
+	mkdir -p $(BUILD_DIR)/lib_sddf_blk
 	mkdir -p $(BUILD_DIR)/common
 	mkdir -p $(BUILD_DIR)/mmc_driver
 	mkdir -p $(BUILD_DIR)/mmc_driver/sdhci

@@ -442,43 +442,43 @@ target_link_libraries(
         mmc_rpi3b_lib_fatfs_e2e
 )
 
-add_library(mmc_rpi3b_lib_blk_shared_data_buf src/lib_blk_sddf/blk_shared_data_buf.c)
-target_include_directories(mmc_rpi3b_lib_blk_shared_data_buf PUBLIC src/lib_blk_sddf/)
+add_library(mmc_rpi3b_lib_blk_shared_data_buf src/lib_sddf_blk/blk_shared_data_buf.c)
+target_include_directories(mmc_rpi3b_lib_blk_shared_data_buf PUBLIC src/lib_sddf_blk/)
 target_link_libraries(
         mmc_rpi3b_lib_blk_shared_data_buf
 )
 
-add_library(mmc_rpi3b_lib_blk_shared_data_queue src/lib_blk_sddf/blk_shared_data_queue.c)
-target_include_directories(mmc_rpi3b_lib_blk_shared_data_queue PUBLIC src/lib_blk_sddf/)
+add_library(mmc_rpi3b_lib_blk_shared_data_queue src/lib_sddf_blk/blk_shared_data_queue.c)
+target_include_directories(mmc_rpi3b_lib_blk_shared_data_queue PUBLIC src/lib_sddf_blk/)
 target_link_libraries(
         mmc_rpi3b_lib_blk_shared_data_queue
         mmc_rpi3b_lib_blk_shared_data_buf
         mmc_rpi3b_lib_fence
 )
 
-add_library(mmc_rpi3b_lib_blk_request src/lib_blk_sddf/blk_request.c)
-target_include_directories(mmc_rpi3b_lib_blk_request PUBLIC src/lib_blk_sddf/)
+add_library(mmc_rpi3b_lib_blk_request src/lib_sddf_blk/blk_request.c)
+target_include_directories(mmc_rpi3b_lib_blk_request PUBLIC src/lib_sddf_blk/)
 target_link_libraries(
         mmc_rpi3b_lib_blk_request
         mmc_rpi3b_lib_blk_shared_data_buf
 )
 
-add_library(mmc_rpi3b_lib_blk_response src/lib_blk_sddf/blk_response.c)
-target_include_directories(mmc_rpi3b_lib_blk_response PUBLIC src/lib_blk_sddf/)
+add_library(mmc_rpi3b_lib_blk_response src/lib_sddf_blk/blk_response.c)
+target_include_directories(mmc_rpi3b_lib_blk_response PUBLIC src/lib_sddf_blk/)
 target_link_libraries(
         mmc_rpi3b_lib_blk_response
 )
 
-add_library(mmc_rpi3b_lib_blk_request_queue src/lib_blk_sddf/blk_request_queue.c)
-target_include_directories(mmc_rpi3b_lib_blk_request_queue PUBLIC src/lib_blk_sddf/)
+add_library(mmc_rpi3b_lib_blk_request_queue src/lib_sddf_blk/blk_request_queue.c)
+target_include_directories(mmc_rpi3b_lib_blk_request_queue PUBLIC src/lib_sddf_blk/)
 target_link_libraries(
         mmc_rpi3b_lib_blk_request_queue
         mmc_rpi3b_lib_blk_request
         mmc_rpi3b_lib_fence
 )
 
-add_library(mmc_rpi3b_lib_blk_response_queue src/lib_blk_sddf/blk_response_queue.c)
-target_include_directories(mmc_rpi3b_lib_blk_response_queue PUBLIC src/lib_blk_sddf/)
+add_library(mmc_rpi3b_lib_blk_response_queue src/lib_sddf_blk/blk_response_queue.c)
+target_include_directories(mmc_rpi3b_lib_blk_response_queue PUBLIC src/lib_sddf_blk/)
 target_link_libraries(
         mmc_rpi3b_lib_blk_response_queue
         mmc_rpi3b_lib_blk_response
@@ -543,4 +543,7 @@ target_link_libraries(
         mmc_rpi3b_lib_printf
         mmc_rpi3b_lib_log
         mmc_rpi3b_lib_result
+        mmc_rpi3b_lib_blk_request_queue
+        mmc_rpi3b_lib_blk_response_queue
+        mmc_rpi3b_lib_blk_shared_data_queue
 )

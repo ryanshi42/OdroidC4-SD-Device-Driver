@@ -12,6 +12,15 @@ uintptr_t gpio_base_vaddr;
 /* Base virtual address for the EMMC registers. */
 uintptr_t emmc_base_vaddr;
 
+/* Shared memory region for passing requests from `fatfs` to `mmc_driver`. */
+uintptr_t mmc_driver_request_queue;
+
+/* Shared memory region for passing responses from `mmc_driver` to `fatfs`. */
+uintptr_t mmc_driver_response_queue;
+
+/* Shared memory region for passing data between `mmc_driver` and `fatfs`. */
+uintptr_t mmc_driver_shared_data;
+
 /* Global `timer_client`. */
 timer_client_t global_timer_client = {0};
 

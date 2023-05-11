@@ -90,6 +90,24 @@
             name="fatfs_to_serial_client_putchar_buf"
             size="0x1_000"
             page_size="0x1_000"/>
+    <!-- A 2MB shared data region for passing data between `mmc_driver` and
+    `fatfs`. -->
+    <memory_region
+            name="mmc_driver_shared_data"
+            size="0x200_000"
+            page_size="0x200_000"/>
+    <!-- A 2MB shared data region for sending requests from `fatfs` to
+    `mmc_driver`. -->
+    <memory_region
+            name="mmc_driver_request_queue"
+            size="0x200_000"
+            page_size="0x200_000"/>
+    <!-- A 2MB shared data region for sending responses from `mmc_driver` to
+    `fatfs`. -->
+    <memory_region
+            name="mmc_driver_response_queue"
+            size="0x200_000"
+            page_size="0x200_000"/>
     <!-- The `serial_driver` PD must have a higher priority than the
     `serial_client` PD so that it doesn't get preempted by `serial_client` when
     it is busy writing to the UART device. -->
@@ -323,6 +341,30 @@
                 perms="rw"
                 cached="false"
                 setvar_vaddr="emmc_base_vaddr"/>
+        <!-- A shared memory region for passing requests from `fatfs` to
+        `mmc_driver`. -->
+        <map
+                mr="mmc_driver_request_queue"
+                vaddr="0x3_200_000"
+                perms="rw"
+                cached="true"
+                setvar_vaddr="mmc_driver_request_queue" />
+        <!-- A shared memory region for passing responses from `mmc_driver` to
+        `fatfs`. -->
+        <map
+                mr="mmc_driver_response_queue"
+                vaddr="0x3_400_000"
+                perms="rw"
+                cached="true"
+                setvar_vaddr="mmc_driver_response_queue" />
+        <!-- A shared memory region for passing data between `mmc_driver` and
+        `fatfs`. -->
+        <map
+                mr="mmc_driver_shared_data"
+                vaddr="0x4_000_000"
+                perms="rw"
+                cached="true"
+                setvar_vaddr="mmc_driver_shared_data" />
     </protection_domain>
     <!-- Channel between `mmc_driver` and `serial_client` for printf()
     calls by `mmc_driver`. -->
@@ -350,6 +392,30 @@
                 perms="rw"
                 cached="true"
                 setvar_vaddr="fatfs_to_serial_client_putchar_buf"/>
+        <!-- A shared memory region for passing requests from `fatfs` to
+        `mmc_driver`. -->
+        <map
+                mr="mmc_driver_request_queue"
+                vaddr="0x2_800_000"
+                perms="rw"
+                cached="true"
+                setvar_vaddr="mmc_driver_request_queue" />
+        <!-- A shared memory region for passing responses from `mmc_driver` to
+        `fatfs`. -->
+        <map
+                mr="mmc_driver_response_queue"
+                vaddr="0x3_000_000"
+                perms="rw"
+                cached="true"
+                setvar_vaddr="mmc_driver_response_queue" />
+        <!-- A shared memory region for passing data between `mmc_driver` and
+        `fatfs`. -->
+        <map
+                mr="mmc_driver_shared_data"
+                vaddr="0x4_000_000"
+                perms="rw"
+                cached="true"
+                setvar_vaddr="mmc_driver_shared_data" />
     </protection_domain>
     <channel>
         <end pd="fatfs" id="13" />
