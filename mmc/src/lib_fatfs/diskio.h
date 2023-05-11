@@ -5,7 +5,7 @@
 #ifndef _DISKIO_DEFINED
 #define _DISKIO_DEFINED
 
-#include "mmc_driver.h"
+//#include "mmc_driver.h"
 
 #ifdef __cplusplus
 extern "C" {

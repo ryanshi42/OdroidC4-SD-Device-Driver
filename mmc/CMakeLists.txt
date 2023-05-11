@@ -439,7 +439,6 @@ target_link_libraries(
         mmc_rpi3b_lib_sdcard
         mmc_rpi3b_lib_e2e_test
         mmc_rpi3b_lib_sdhci
-        mmc_rpi3b_lib_fatfs_e2e
 )
 
 add_library(mmc_rpi3b_lib_blk_shared_data_buf src/lib_sddf_blk/blk_shared_data_buf.c)
@@ -490,7 +489,7 @@ target_include_directories(mmc_rpi3b_lib_diskio PUBLIC src/lib_fatfs/)
 target_link_libraries(
         mmc_rpi3b_lib_diskio
         mmc_rpi3b_lib_ff
-        mmc_rpi3b_lib_mmc_driver
+#        mmc_rpi3b_lib_mmc_driver
 )
 
 add_library(mmc_rpi3b_lib_diskio_test src/lib_fatfs/diskio_test.c)
@@ -546,4 +545,5 @@ target_link_libraries(
         mmc_rpi3b_lib_blk_request_queue
         mmc_rpi3b_lib_blk_response_queue
         mmc_rpi3b_lib_blk_shared_data_queue
+        mmc_rpi3b_lib_fatfs_e2e
 )

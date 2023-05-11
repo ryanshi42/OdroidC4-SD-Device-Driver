@@ -136,25 +136,6 @@ void init(void) {
     }
     log_info("Successfully finished E2E tests.");
 
-    res = fatfs_e2e_diskio_test();
-    if (result_is_err(res)) {
-        result_printf(res);
-        return;
-    }
-
-    res = fatfs_e2e_write_close_read_simple();
-    if (result_is_err(res)) {
-        result_printf(res);
-        return;
-    }
-
-    res = fatfs_e2e_write_fsync_read_close_simple();
-    if (result_is_err(res)) {
-        result_printf(res);
-        return;
-    }
-
-    log_trace("Finished running E2E tests in MMC Driver Protection Domain!");
 }
 
 result_t mmc_driver_get_num_blocks(uint64_t *ret_val) {

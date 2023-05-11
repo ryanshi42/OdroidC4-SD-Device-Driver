@@ -132,11 +132,6 @@ MMC_DRIVER_OBJS := \
 	gpio_driver/bcm_gpio_regs.o \
 	gpio_driver/gpio_mode.o \
 	gpio_driver/gpio_fix_resistor.o \
-	lib_fatfs/diskio.o \
-	lib_fatfs/ff.o \
-	lib_fatfs/diskio_test.o \
-	lib_fatfs/ffunicode.o \
-	fatfs_e2e.o \
 
 TIMER_DRIVER_OBJS := \
 	timer_driver.o \
@@ -152,12 +147,18 @@ FATFS_OBJS := \
 	lib_printf/printf.o \
 	common/log.o \
 	lib_result/result.o \
+	lib_result/result_prod.o \
 	lib_sddf_blk/blk_request.o \
 	lib_sddf_blk/blk_request_queue.o \
 	lib_sddf_blk/blk_response.o \
 	lib_sddf_blk/blk_response_queue.o \
 	lib_sddf_blk/blk_shared_data_buf.o \
 	lib_sddf_blk/blk_shared_data_queue.o \
+	lib_fatfs/diskio.o \
+	lib_fatfs/ff.o \
+	lib_fatfs/diskio_test.o \
+	lib_fatfs/ffunicode.o \
+	fatfs_e2e.o \
 
 IMAGES := \
 	serial_driver.elf \

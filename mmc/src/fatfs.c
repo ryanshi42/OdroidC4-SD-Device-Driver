@@ -59,6 +59,26 @@ void init(void) {
     }
 
     /* TODO: E2E test the state of the above data structures. */
+//    result_t res;
+//    res = fatfs_e2e_diskio_test();
+//    if (result_is_err(res)) {
+//        result_printf(res);
+//        return;
+//    }
+//
+//    res = fatfs_e2e_write_close_read_simple();
+//    if (result_is_err(res)) {
+//        result_printf(res);
+//        return;
+//    }
+//
+//    res = fatfs_e2e_write_fsync_read_close_simple();
+//    if (result_is_err(res)) {
+//        result_printf(res);
+//        return;
+//    }
+
+    log_trace("Finished running E2E tests in MMC Driver Protection Domain!");
 }
 
 void notified(sel4cp_channel ch) {

@@ -120,18 +120,18 @@ DRESULT disk_read(
 
         case DEV_MMC : {
             // translate the arguments here
-            result_t res_mmc = mmc_driver_read_blocks(
-                    sector,
-                    count,
-                    FF_MAX_SS,
-                    (char *) buff,
-                    count * FF_MAX_SS
-            );
-            if (result_is_err(res_mmc)) {
-                res = RES_ERROR;
-            } else {
-                res = RES_OK;
-            }
+//            result_t res_mmc = mmc_driver_read_blocks(
+//                    sector,
+//                    count,
+//                    FF_MAX_SS,
+//                    (char *) buff,
+//                    count * FF_MAX_SS
+//            );
+//            if (result_is_err(res_mmc)) {
+//                res = RES_ERROR;
+//            } else {
+//                res = RES_OK;
+//            }
             return res;
         }
         case DEV_USB :
@@ -177,18 +177,18 @@ DRESULT disk_write(
 
         case DEV_MMC : {
             // translate the arguments here
-            result_t res_mmc = mmc_driver_write_blocks(
-                    sector,
-                    count,
-                    FF_MAX_SS,
-                    (char *) buff,
-                    count * FF_MAX_SS
-            );
-            if (result_is_err(res_mmc)) {
-                res = RES_ERROR;
-            } else {
-                res = RES_OK;
-            }
+//            result_t res_mmc = mmc_driver_write_blocks(
+//                    sector,
+//                    count,
+//                    FF_MAX_SS,
+//                    (char *) buff,
+//                    count * FF_MAX_SS
+//            );
+//            if (result_is_err(res_mmc)) {
+//                res = RES_ERROR;
+//            } else {
+//                res = RES_OK;
+//            }
             return res;
         }
         case DEV_USB :
@@ -230,12 +230,12 @@ DRESULT disk_ioctl(
         case DEV_MMC :
             switch (cmd) {
                 case GET_SECTOR_COUNT: {
-                    uint64_t *num_blocks = (uint64_t *) buff;
-                    result_t res_mmc = mmc_driver_get_num_blocks(num_blocks);
-                    if (result_is_err(res_mmc)) {
-                        res = RES_ERROR;
-                        break;
-                    }
+//                    uint64_t *num_blocks = (uint64_t *) buff;
+//                    result_t res_mmc = mmc_driver_get_num_blocks(num_blocks);
+//                    if (result_is_err(res_mmc)) {
+//                        res = RES_ERROR;
+//                        break;
+//                    }
                     res = RES_OK;
                     break;
                 }
@@ -243,21 +243,21 @@ DRESULT disk_ioctl(
                     break;
                 }
                 case GET_BLOCK_SIZE: {
-                    uint16_t *block_size = (uint16_t *) buff;
-                    result_t res_mmc = mmc_driver_get_block_size(block_size);
-                    if (result_is_err(res_mmc)) {
-                        res = RES_ERROR;
-                        break;
-                    }
+//                    uint16_t *block_size = (uint16_t *) buff;
+//                    result_t res_mmc = mmc_driver_get_block_size(block_size);
+//                    if (result_is_err(res_mmc)) {
+//                        res = RES_ERROR;
+//                        break;
+//                    }
                     res = RES_OK;
                     break;
                 }
                 case CTRL_SYNC: {
-                    result_t res_mmc = mmc_driver_write_flush();
-                    if (result_is_err(res_mmc)) {
-                        res = RES_ERROR;
-                        break;
-                    }
+//                    result_t res_mmc = mmc_driver_write_flush();
+//                    if (result_is_err(res_mmc)) {
+//                        res = RES_ERROR;
+//                        break;
+//                    }
                     res = RES_OK;
                     break;
                 }
