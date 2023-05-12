@@ -26,3 +26,21 @@ blk_shared_data_buf_result_t blk_shared_data_buf_equals(
     return OK_BLK_SHARED_DATA_BUF;
 }
 
+blk_shared_data_buf_result_t blk_shared_data_buf_insert_data(
+        blk_shared_data_buf_t *shared_data_buf,
+        void *data,
+        size_t data_size
+) {
+    if (shared_data_buf == NULL) {
+        return ERR_NULL_BLK_SHARED_DATA_BUF;
+    }
+    if (data_size > shared_data_buf->buf_size) {
+        return ERR_BLK_SHARED_DATA_BUF_DATA_TOO_LARGE;
+    }
+    /* Copy the data into the memory region represented by a `shared_data_buf`. */
+    memcpy((void *) shared_data_buf->buf_vaddr, data, data_size);
+    return OK_BLK_SHARED_DATA_BUF;
+}
+
+
+

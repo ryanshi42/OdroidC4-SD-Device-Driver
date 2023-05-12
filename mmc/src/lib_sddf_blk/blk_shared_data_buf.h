@@ -3,6 +3,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <string.h>
 
 typedef struct blk_shared_data_buf blk_shared_data_buf_t;
 struct blk_shared_data_buf {
@@ -13,6 +14,7 @@ struct blk_shared_data_buf {
 enum blk_shared_data_buf_result {
     OK_BLK_SHARED_DATA_BUF = 0,
     ERR_NULL_BLK_SHARED_DATA_BUF = -1,
+    ERR_BLK_SHARED_DATA_BUF_DATA_TOO_LARGE = -2,
 };
 typedef enum blk_shared_data_buf_result blk_shared_data_buf_result_t;
 
@@ -40,4 +42,17 @@ blk_shared_data_buf_result_t blk_shared_data_buf_equals(
         blk_shared_data_buf_t *shared_data_buf_1,
         blk_shared_data_buf_t *shared_data_buf_2,
         bool *ret_val
+);
+
+/**
+ * Inserts data into the memory region represented by a `shared_data_buf`.
+ * @param shared_data_buf
+ * @param data
+ * @param data_size
+ * @return
+ */
+blk_shared_data_buf_result_t blk_shared_data_buf_insert_data(
+        blk_shared_data_buf_t *shared_data_buf,
+        void *data,
+        size_t data_size
 );
