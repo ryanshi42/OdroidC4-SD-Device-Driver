@@ -285,15 +285,15 @@ void notified(sel4cp_channel ch) {
                                 log_error("Failed to insert data into shared data buffer for `GET_NUM_BLOCKS`.");
                                 break;
                             }
-//                            /* Initialise an "ok" response to be sent back to
-//                             * client. */
-//                            if (blk_response_init_ok_get_num_blocks(
-//                                    &response,
-//                                    &request.shared_data_buf
-//                            ) != OK_BLK_RESPONSE) {
-//                                log_error("Failed to initialise ok response for `GET_NUM_BLOCKS`.");
-//                                break;
-//                            }
+                            /* Initialise an "ok" response to be sent back to
+                             * client. */
+                            if (blk_response_init_ok_get_num_blocks(
+                                    &response,
+                                    &request.shared_data_buf
+                            ) != OK_BLK_RESPONSE) {
+                                log_error("Failed to initialise ok response for `GET_NUM_BLOCKS`.");
+                                break;
+                            }
                         }
                         /* Enqueue the `response` onto the `response_queue` for
                          * the client. */
