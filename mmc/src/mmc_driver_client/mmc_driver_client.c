@@ -56,14 +56,14 @@ result_t mmc_driver_client_get_num_blocks(
             &request,
             &shared_data_buf
     ) != OK_BLK_REQUEST) {
-        return result_err("Failed to initialise a request for enqueuing onto the Request queue.");
+        return result_err("Failed to initialise a Request for enqueuing onto the Request queue.");
     }
     /* Enqueue our Request onto the Request queue. */
     if (blk_request_queue_enqueue(
             mmc_driver_client->request_queue,
             &request
     ) != OK_BLK_REQUEST_QUEUE) {
-        return result_err("Failed to enqueue our request onto the request queue.");
+        return result_err("Failed to enqueue our Request onto the Request queue.");
     }
     /* Notify `mmc_driver` of our new Request. */
     sel4cp_notify(mmc_driver_client->sel4cp_channel_id_request);
@@ -80,7 +80,7 @@ result_t mmc_driver_client_get_num_blocks(
             &response,
             &is_response_ok
     ) != OK_BLK_RESPONSE) {
-        return result_err("Failed to check if the response is success or failure in mmc_driver_client_get_num_blocks().");
+        return result_err("Failed to check if the Response is success or failure in mmc_driver_client_get_num_blocks().");
     }
     /* Get the virtual address of the Shared Data buffer. */
     uintptr_t buf_vaddr = 0;
