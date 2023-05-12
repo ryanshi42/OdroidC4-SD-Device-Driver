@@ -37,10 +37,10 @@ result_t mmc_driver_client_get_num_blocks(
         uint64_t *ret_val
 ) {
     if (mmc_driver_client == NULL) {
-        return result_err("NULL `mmc_driver_client` passed to mmc_driver_client_get_sector_count().");
+        return result_err("NULL `mmc_driver_client` passed to mmc_driver_client_get_num_blocks().");
     }
     if (ret_val == NULL) {
-        return result_err("NULL `ret_val` passed to mmc_driver_client_get_sector_count().");
+        return result_err("NULL `ret_val` passed to mmc_driver_client_get_num_blocks().");
     }
     /* Dequeue a Shared Data Buffer from the Shared Data Buffer queue. */
     blk_shared_data_buf_t shared_data_buf = {0};
@@ -50,7 +50,7 @@ result_t mmc_driver_client_get_num_blocks(
     ) != OK_BLK_SHARED_DATA_QUEUE) {
         return result_err("Failed to dequeue a Shared Data Buffer from the Shared Data Buffer queue.");
     }
-    /* Initialise a Request for enqueuing onto the Request queue.. */
+    /* Initialise a Request for enqueuing onto the Request queue. */
     blk_request_t request = {0};
     if (blk_request_init_get_num_blocks(
             &request,
@@ -73,9 +73,7 @@ result_t mmc_driver_client_get_num_blocks(
     while (blk_response_queue_dequeue(
             mmc_driver_client->response_queue,
             &response
-    ) != OK_BLK_RESPONSE_QUEUE) {
-
-    }
+    ) != OK_BLK_RESPONSE_QUEUE) {}
     /* Check if the Response is success or failure. */
     bool is_response_ok = false;
     if (blk_response_is_ok(
