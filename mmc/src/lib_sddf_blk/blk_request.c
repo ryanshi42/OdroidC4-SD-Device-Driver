@@ -22,7 +22,7 @@ static inline blk_request_result_t blk_request_init_no_args(
         return ERR_NULL_BLK_REQUEST;
     }
     if (shared_data_buf == NULL) {
-        return ERR_NULL_BLK_SHARED_DATA_REGION;
+        return ERR_NULL_BLK_SHARED_DATA_REGION_IN_BLK_REQUEST;
     }
     memset(request, 0, sizeof(*request));
     request->operation = operation;

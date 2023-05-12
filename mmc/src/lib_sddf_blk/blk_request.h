@@ -32,7 +32,7 @@ struct blk_request {
 enum blk_request_result {
     OK_BLK_REQUEST = 0,
     ERR_NULL_BLK_REQUEST = -1, /* A NULL `blk_request` pointer was passed in. */
-    ERR_NULL_BLK_SHARED_DATA_REGION = -2, /* A NULL `blk_shared_data_region` */
+    ERR_NULL_BLK_SHARED_DATA_REGION_IN_BLK_REQUEST = -2, /* A NULL `blk_shared_data_region` */
 };
 typedef enum blk_request_result blk_request_result_t;
 
