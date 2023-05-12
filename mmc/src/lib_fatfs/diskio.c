@@ -247,11 +247,6 @@ DRESULT disk_ioctl(
                         res = RES_ERROR;
                         break;
                     }
-//                    result_t res_mmc = mmc_driver_get_num_blocks(num_blocks);
-//                    if (result_is_err(res_mmc)) {
-//                        res = RES_ERROR;
-//                        break;
-//                    }
                     res = RES_OK;
                     break;
                 }
