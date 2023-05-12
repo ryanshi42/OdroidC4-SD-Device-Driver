@@ -47,8 +47,8 @@ blk_shared_data_buf_result_t blk_shared_data_buf_equals(
 /**
  * Inserts data into the memory region represented by a `shared_data_buf`.
  * @param shared_data_buf
- * @param data
- * @param data_size
+ * @param data The data you wish to insert into `shared_data_buf`.
+ * @param data_size The size of the data you wish to insert into `shared_data_buf`.
  * @return
  */
 blk_shared_data_buf_result_t blk_shared_data_buf_insert_data(
