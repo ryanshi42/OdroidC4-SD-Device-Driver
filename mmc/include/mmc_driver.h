@@ -15,6 +15,7 @@
 
 #define MMC_DRIVER_TO_SERIAL_CLIENT_PUTCHAR_CHANNEL (7)
 #define MMC_DRIVER_TO_TIMER_DRIVER_GET_NUM_TICKS_CHANNEL (11)
+#define MMC_DRIVER_TO_FATFS_REQUEST_CHANNEL (16)
 
 /**
  * Returns the number of blocks on the SD card.

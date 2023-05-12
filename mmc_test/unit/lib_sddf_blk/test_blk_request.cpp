@@ -30,7 +30,7 @@ TEST(test_blk_request, init_get_sector_count_should_set_internal_values_correctl
     );
     ASSERT_EQ(
             OK_BLK_REQUEST,
-            blk_request_init_get_sector_count(
+            blk_request_init_get_num_blocks(
                     &req,
                     &shared_data_buf
             )

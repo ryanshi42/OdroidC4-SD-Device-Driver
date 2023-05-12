@@ -489,9 +489,7 @@ target_include_directories(mmc_rpi3b_lib_diskio PUBLIC src/lib_fatfs/)
 target_link_libraries(
         mmc_rpi3b_lib_diskio
         mmc_rpi3b_lib_ff
-        mmc_rpi3b_lib_blk_request_queue
-        mmc_rpi3b_lib_blk_response_queue
-        mmc_rpi3b_lib_blk_shared_data_queue
+        mmc_rpi3b_lib_mmc_driver_client
 )
 
 add_library(mmc_rpi3b_lib_diskio_test src/lib_fatfs/diskio_test.c)
@@ -552,4 +550,21 @@ target_link_libraries(
         mmc_rpi3b_lib_blk_shared_data_buf
         mmc_rpi3b_lib_fatfs_e2e
         mmc_rpi3b_lib_diskio
+        mmc_rpi3b_lib_mmc_driver_client
 )
+
+add_library(mmc_rpi3b_lib_mmc_driver_client src/mmc_driver_client/mmc_driver_client.c)
+target_include_directories(mmc_rpi3b_lib_mmc_driver_client PUBLIC include/)
+target_link_libraries(
+        mmc_rpi3b_lib_mmc_driver_client
+        mmc_rpi3b_lib_sel4cp_facade
+        mmc_rpi3b_lib_blk_request_queue
+        mmc_rpi3b_lib_blk_response_queue
+        mmc_rpi3b_lib_blk_shared_data_queue
+        mmc_rpi3b_lib_blk_request
+        mmc_rpi3b_lib_blk_response
+        mmc_rpi3b_lib_blk_shared_data_buf
+        mmc_rpi3b_lib_result
+)
+
+

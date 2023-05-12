@@ -208,5 +208,13 @@ result_t mmc_driver_read_blocks(
 }
 
 void notified(sel4cp_channel ch) {
-
+    switch(ch) {
+        case MMC_DRIVER_TO_FATFS_REQUEST_CHANNEL: {
+            printf("Received something on MMC_DRIVER_TO_FATFS_REQUEST_CHANNEL\n");
+            break;
+        }
+        default:
+            printf("MMC Driver: received notification on unexpected channel\n");
+            break;
+    }
 }

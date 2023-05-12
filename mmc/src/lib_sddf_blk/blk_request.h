@@ -9,8 +9,7 @@
 #include "blk_shared_data_buf.h"
 
 enum blk_request_operation {
-    GET_SECTOR_COUNT,
-    GET_SECTOR_SIZE,
+    GET_NUM_BLOCKS,
     GET_BLOCK_SIZE,
     CTRL_SYNC,
     READ,
@@ -38,23 +37,12 @@ enum blk_request_result {
 typedef enum blk_request_result blk_request_result_t;
 
 /**
- * Initialises a `GET_SECTOR_COUNT` request.
+ * Initialises a `GET_NUM_BLOCKS` request.
  * @param request
  * @param shared_data_buf
  * @return
  */
-blk_request_result_t blk_request_init_get_sector_count(
-        blk_request_t *request,
-        blk_shared_data_buf_t *shared_data_buf
-);
-
-/**
- * Initialises a `GET_SECTOR_SIZE` request.
- * @param request
- * @param shared_data_buf
- * @return
- */
-blk_request_result_t blk_request_init_get_sector_size(
+blk_request_result_t blk_request_init_get_num_blocks(
         blk_request_t *request,
         blk_shared_data_buf_t *shared_data_buf
 );

@@ -129,3 +129,12 @@ blk_shared_data_queue_result_t blk_shared_data_queue_dequeue(
         blk_shared_data_buf_t *ret_val
 );
 
+/**
+ * Copies the contents of `src_queue` into `dst_queue`.
+ * @param dst_queue
+ * @param src_queue
+ */
+blk_shared_data_queue_result_t blk_shared_data_queue_copy(
+        blk_shared_data_queue_t *dst_queue,
+        blk_shared_data_queue_t *src_queue
+);

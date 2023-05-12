@@ -159,6 +159,7 @@ FATFS_OBJS := \
 	lib_fatfs/diskio_test.o \
 	lib_fatfs/ffunicode.o \
 	fatfs_e2e.o \
+	mmc_driver_client/mmc_driver_client.o \
 
 IMAGES := \
 	serial_driver.elf \
@@ -183,6 +184,7 @@ directories:
 	mkdir -p $(BUILD_DIR)/lib_sddf_blk
 	mkdir -p $(BUILD_DIR)/common
 	mkdir -p $(BUILD_DIR)/mmc_driver
+	mkdir -p $(BUILD_DIR)/mmc_driver_client
 	mkdir -p $(BUILD_DIR)/mmc_driver/sdhci
 	mkdir -p $(BUILD_DIR)/mmc_driver/bcm_emmc_regs
 	mkdir -p $(BUILD_DIR)/mmc_driver/bcm_emmc_regs/cmdtm

@@ -15,18 +15,12 @@
 #define DEV_RAM        1    /* Example: Map Ramdisk to physical drive 1 */
 #define DEV_USB        2    /* Example: Map USB MSD to physical drive 2 */
 
-blk_request_queue_t *disk_request_queue = NULL;
-blk_response_queue_t *disk_response_queue = NULL;
-blk_shared_data_queue_t *disk_shared_data_queue = NULL;
+mmc_driver_client_t *fatfs_mmc_driver_client = NULL;
 
 void disk_init(
-        blk_request_queue_t *request_queue,
-        blk_response_queue_t *response_queue,
-        blk_shared_data_queue_t *shared_data_queue
+        mmc_driver_client_t *mmc_driver_client
 ) {
-    disk_request_queue = request_queue;
-    disk_response_queue = response_queue;
-    disk_shared_data_queue = shared_data_queue;
+    fatfs_mmc_driver_client = mmc_driver_client;
 }
 
 /*-----------------------------------------------------------------------*/
@@ -243,7 +237,16 @@ DRESULT disk_ioctl(
         case DEV_MMC :
             switch (cmd) {
                 case GET_SECTOR_COUNT: {
-//                    uint64_t *num_blocks = (uint64_t *) buff;
+                    uint64_t *num_blocks = (uint64_t *) buff;
+                    if (result_is_err(
+                            mmc_driver_client_get_num_blocks(
+                                    fatfs_mmc_driver_client,
+                                    num_blocks
+                            )
+                    )) {
+                        res = RES_ERROR;
+                        break;
+                    }
 //                    result_t res_mmc = mmc_driver_get_num_blocks(num_blocks);
 //                    if (result_is_err(res_mmc)) {
 //                        res = RES_ERROR;

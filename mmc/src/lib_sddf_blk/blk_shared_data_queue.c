@@ -142,6 +142,7 @@ blk_shared_data_queue_result_t blk_shared_data_queue_enqueue(
         return ERR_BLK_SHARED_DATA_QUEUE_FULL;
     }
     /* Copy everything from `val` into `queue->data_bufs[queue->tail_idx]`. */
+    /* TODO: Encapsulate into a function call. */
     memcpy(&queue->data_bufs[queue->tail_idx], val, sizeof(*val));
     /* We place a memory barrier here to ensure that the instructions that
      * update the tail index are guaranteed to occur after the buffer has been
@@ -173,6 +174,7 @@ blk_shared_data_queue_result_t blk_shared_data_queue_dequeue(
         return ERR_BLK_SHARED_DATA_QUEUE_EMPTY;
     }
     /* Copy everything from `queue->data_bufs[queue->head_idx]` into `ret_val`. */
+    /* TODO: Encapsulate into a function call. */
     memcpy(ret_val, &queue->data_bufs[queue->head_idx], sizeof(*ret_val));
     /* We place a memory barrier here to ensure that the instructions that
      * update the head index are guaranteed to occur after the buffer has been
@@ -183,5 +185,14 @@ blk_shared_data_queue_result_t blk_shared_data_queue_dequeue(
     return OK_BLK_SHARED_DATA_QUEUE;
 }
 
-
+blk_shared_data_queue_result_t blk_shared_data_queue_copy(
+        blk_shared_data_queue_t *dst_queue,
+        blk_shared_data_queue_t *src_queue
+) {
+    if (dst_queue == NULL || src_queue == NULL) {
+        return ERR_NULL_BLK_SHARED_DATA_QUEUE;
+    }
+    memcpy(dst_queue, src_queue, sizeof(*dst_queue));
+    return OK_BLK_SHARED_DATA_QUEUE;
+}
 

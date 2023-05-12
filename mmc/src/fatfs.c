@@ -12,9 +12,9 @@ uintptr_t mmc_driver_response_queue;
 /* Shared memory region for passing data between `mmc_driver` and `fatfs`. */
 uintptr_t mmc_driver_shared_data;
 
-/* The global shared data queue that manages the buffers within the
- * `mmc_driver_shared_data` shared memory region. */
-blk_shared_data_queue_t global_shared_data_queue = {0};
+/* The global MMC driver client that uses the sDDF data structures (above) to
+ * interact with the `mmc_driver`. */
+mmc_driver_client_t global_mmc_driver_client = {0};
 
 void init(void) {
     /* Initialise `printf`. The `log.h` library depends on `printf` being
@@ -49,8 +49,9 @@ void init(void) {
         return;
     }
 
+    blk_shared_data_queue_t shared_data_queue = {0};
     blk_shared_data_queue_result_t shared_data_queue_init_result = blk_shared_data_queue_init(
-            &global_shared_data_queue,
+            &shared_data_queue,
             mmc_driver_shared_data,
             SEL4CP_MAX_PAGE_SIZE,
             FAT_CLUSTER_SIZE /* TODO: Figure out how to obtain this info dynamically. */
@@ -60,22 +61,31 @@ void init(void) {
         return;
     }
 
-    /* Initialises FatFs by passing it the data structures it requires access to
-     * for low-level disk I/O functions. */
-    disk_init(
+    /* Initialise the `mmc_driver_client` library that FatFs relies on. */
+    result_t res;
+    res = mmc_driver_client_init(
+            &global_mmc_driver_client,
+            FATFS_TO_MMC_DRIVER_REQUEST_CHANNEL,
             request_queue,
             response_queue,
-            &global_shared_data_queue
+            &shared_data_queue
     );
+    if (result_is_err(res)) {
+        result_printf(res);
+        return;
+    }
+
+    /* Initialises FatFs by passing it the `mmc_driver_client`, which uses sDDF
+     * data structures to interact with the `mmc_driver`. */
+    disk_init(&global_mmc_driver_client);
 
     /* TODO: E2E test the state of the above data structures. */
-//    result_t res;
-//    res = fatfs_e2e_diskio_test();
-//    if (result_is_err(res)) {
-//        result_printf(res);
-//        return;
-//    }
-//
+    res = fatfs_e2e_diskio_test();
+    if (result_is_err(res)) {
+        result_printf(res);
+        return;
+    }
+
 //    res = fatfs_e2e_write_close_read_simple();
 //    if (result_is_err(res)) {
 //        result_printf(res);

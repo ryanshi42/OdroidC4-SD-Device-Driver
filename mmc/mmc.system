@@ -418,8 +418,12 @@
                 setvar_vaddr="mmc_driver_shared_data" />
     </protection_domain>
     <channel>
-        <end pd="fatfs" id="13" />
-        <end pd="serial_client" id="14" />
+        <end pd="fatfs" id="13"/>
+        <end pd="serial_client" id="14"/>
+    </channel>
+    <channel>
+        <end pd="fatfs" id="15"/>
+        <end pd="mmc_driver" id="16"/>
     </channel>
 </system>
 
