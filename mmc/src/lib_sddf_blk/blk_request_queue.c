@@ -3,15 +3,15 @@
 
 blk_request_queue_result_t blk_request_queue_init(
         blk_request_queue_t *queue,
-        size_t req_queue_region_size
+        size_t request_queue_region_size
 ) {
     if (queue == NULL) {
         return ERR_NULL_BLK_REQUEST_QUEUE;
     }
-    if (req_queue_region_size < sizeof(*queue)) {
+    if (request_queue_region_size < sizeof(*queue)) {
         return ERR_BLK_REQUEST_QUEUE_REGION_TOO_SMALL;
     }
-    size_t const num_unused_bytes = (req_queue_region_size - sizeof(*queue));
+    size_t const num_unused_bytes = (request_queue_region_size - sizeof(*queue));
     if ((num_unused_bytes / sizeof(blk_request_t)) > 0) {
         return ERR_BLK_REQUEST_QUEUE_REGION_TOO_LARGE;
     }

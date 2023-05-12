@@ -48,13 +48,13 @@ typedef enum blk_response_queue_result blk_response_queue_result_t;
 /**
  * Initializes a Request Ring Buffer.
  * @param queue
- * @param request_queue_region_size Size of the shared memory region reserved for
+ * @param response_queue_region_size Size of the shared memory region reserved for
  * this Request Ring Buffer in bytes.
  * @return
  */
 blk_response_queue_result_t blk_response_queue_init(
         blk_response_queue_t *queue,
-        size_t request_queue_region_size
+        size_t response_queue_region_size
 );
 
 /**

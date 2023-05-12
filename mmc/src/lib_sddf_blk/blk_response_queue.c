@@ -2,15 +2,15 @@
 
 blk_response_queue_result_t blk_response_queue_init(
         blk_response_queue_t *queue,
-        size_t req_queue_region_size
+        size_t response_queue_region_size
 ) {
     if (queue == NULL) {
         return ERR_NULL_BLK_RESPONSE_QUEUE;
     }
-    if (req_queue_region_size < sizeof(*queue)) {
+    if (response_queue_region_size < sizeof(*queue)) {
         return ERR_BLK_RESPONSE_QUEUE_REGION_TOO_SMALL;
     }
-    size_t const num_unused_bytes = (req_queue_region_size - sizeof(*queue));
+    size_t const num_unused_bytes = (response_queue_region_size - sizeof(*queue));
     if ((num_unused_bytes / sizeof(blk_response_t)) > 0) {
         return ERR_BLK_RESPONSE_QUEUE_REGION_TOO_LARGE;
     }
