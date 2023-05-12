@@ -66,3 +66,28 @@ TEST(test_blk_shared_data_buf, insert_data_should_insert_size_ts) {
     ASSERT_EQ(data, *(size_t *) shared_data_buf.buf_vaddr);
 }
 
+TEST(test_blk_shared_data_buf, insert_data_should_reject_data_that_is_too_large) {
+    char buf[100] = {0};
+    blk_shared_data_buf_t shared_data_buf = {0};
+    ASSERT_EQ(
+            OK_BLK_SHARED_DATA_BUF,
+            blk_shared_data_buf_init(
+                    &shared_data_buf,
+                    (uintptr_t) buf,
+                    sizeof(buf)
+            )
+    );
+    char data[101] = {0};
+    memset(data, 'a', sizeof(data));
+    ASSERT_EQ(
+            ERR_BLK_SHARED_DATA_BUF_DATA_TOO_LARGE,
+            blk_shared_data_buf_insert_data(
+                    &shared_data_buf,
+                    data,
+                    sizeof(data)
+            )
+    );
+    /* The original `buf` should still have nothing in it. */
+    ASSERT_EQ(0, strcmp("", (char *) shared_data_buf.buf_vaddr));
+    ASSERT_EQ(0, strcmp("", buf));
+}
