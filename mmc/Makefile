@@ -132,6 +132,11 @@ MMC_DRIVER_OBJS := \
 	gpio_driver/bcm_gpio_regs.o \
 	gpio_driver/gpio_mode.o \
 	gpio_driver/gpio_fix_resistor.o \
+	lib_sddf_blk/blk_request.o \
+	lib_sddf_blk/blk_request_queue.o \
+	lib_sddf_blk/blk_response.o \
+	lib_sddf_blk/blk_response_queue.o \
+	lib_sddf_blk/blk_shared_data_buf.o \
 
 TIMER_DRIVER_OBJS := \
 	timer_driver.o \

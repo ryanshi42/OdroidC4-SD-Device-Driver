@@ -70,3 +70,18 @@ blk_shared_data_buf_result_t blk_shared_data_buf_get_buf_size(
         blk_shared_data_buf_t *shared_data_buf,
         size_t *ret_val
 );
+
+/**
+ * Gets the virtual address of the memory region represented by a
+ * `shared_data_buf`.
+ * @param shared_data_buf
+ * @param ret_val
+ * @return
+ */
+blk_shared_data_buf_result_t blk_shared_data_buf_get_buf_vaddr(
+        blk_shared_data_buf_t *shared_data_buf,
+        uintptr_t *ret_val
+);
+
+
+

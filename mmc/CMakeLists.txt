@@ -439,6 +439,11 @@ target_link_libraries(
         mmc_rpi3b_lib_sdcard
         mmc_rpi3b_lib_e2e_test
         mmc_rpi3b_lib_sdhci
+        mmc_rpi3b_lib_blk_request_queue
+        mmc_rpi3b_lib_blk_request
+        mmc_rpi3b_lib_blk_response_queue
+        mmc_rpi3b_lib_blk_response
+        mmc_rpi3b_lib_blk_shared_data_buf
 )
 
 add_library(mmc_rpi3b_lib_blk_shared_data_buf src/lib_sddf_blk/blk_shared_data_buf.c)

@@ -210,7 +210,112 @@ result_t mmc_driver_read_blocks(
 void notified(sel4cp_channel ch) {
     switch(ch) {
         case MMC_DRIVER_TO_FATFS_REQUEST_CHANNEL: {
-            printf("Received something on MMC_DRIVER_TO_FATFS_REQUEST_CHANNEL\n");
+            blk_request_queue_t *request_queue = (blk_request_queue_t *) mmc_driver_request_queue;
+            blk_response_queue_t *response_queue = (blk_response_queue_t *) mmc_driver_response_queue;
+            /* The while-loop continues to dequeue requests until there are no
+             * requests left in the Requests queue. In our current setup (no
+             * scheduling budget or period set), this while-loop is unnecessary
+             * since this PD will never be preempted, which means there will
+             * never be more than 1 request in the Request queue. However, this
+             * while-loop becomes necessary if we eventually ascribe a
+             * scheduling budget and period to this PD (which we do for the
+             * ethernet driver), which would open the possibility for this PD to
+             * be preempted before we've finished processing the buffer in the
+             * Request queue. As such, by the time this PD is rescheduled, the
+             * lower-priority `fatfs` PD may have added a new buffer to the
+             * Request queue, which we may as well just dequeue and process once
+             * we are restarted by the kernel. */
+            blk_request_t request = {0};
+            while (blk_request_queue_dequeue(
+                    request_queue,
+                    &request
+            ) == OK_BLK_REQUEST_QUEUE) {
+                result_t res;
+                switch (request.operation) {
+                    case GET_NUM_BLOCKS: {
+                        uint64_t num_blocks = 0;
+                        /* Get the number of blocks on the MMC. */
+                        res = mmc_driver_get_num_blocks(&num_blocks);
+                        blk_response_t response = {0};
+                        /* If there is an error, we send the full error message
+                         * in `res` back to the client. Otherwise, we send the
+                         * number of blocks on the MMC back to the client. */
+                        if (result_is_err(res)) {
+                            /* Get the size of the Shared Data Buffer. */
+                            size_t buf_size = 0;
+                            if (blk_shared_data_buf_get_buf_size(
+                                    &request.shared_data_buf,
+                                    &buf_size
+                            ) != OK_BLK_SHARED_DATA_BUF) {
+                                log_error("Failed to get size of shared data buffer for `GET_NUM_BLOCKS`.");
+                                break;
+                            }
+                            /* Get the virtual address of the Shared Data Buffer. */
+                            uintptr_t buf_vaddr = 0;
+                            if (blk_shared_data_buf_get_buf_vaddr(
+                                    &request.shared_data_buf,
+                                    &buf_vaddr
+                            ) != OK_BLK_SHARED_DATA_BUF) {
+                                log_error("Failed to get virtual address of shared data buffer for `GET_NUM_BLOCKS`.");
+                                break;
+                            }
+                            /* Get the error message associated with `res` and
+                             * copy it into our Shared Data Buffer. */
+                            result_get_err_msg(
+                                    res,
+                                    (char *) buf_vaddr,
+                                    buf_size
+                            );
+                            /* Initialise an "error" response to be sent back to
+                             * client. */
+                            if (blk_response_init_error_get_num_blocks(
+                                    &response,
+                                    &request.shared_data_buf
+                            ) != OK_BLK_RESPONSE) {
+                                log_error("Failed to initialise error response for `GET_NUM_BLOCKS`.");
+                            }
+                        } else {
+                            /* Copy the data in `num_blocks` into our Shared
+                             * Data Buffer. */
+                            if (blk_shared_data_buf_insert_data(
+                                    &request.shared_data_buf,
+                                    (void *) &num_blocks,
+                                    sizeof(num_blocks)
+                            ) != OK_BLK_SHARED_DATA_BUF) {
+                                log_error("Failed to insert data into shared data buffer for `GET_NUM_BLOCKS`.");
+                                break;
+                            }
+//                            /* Initialise an "ok" response to be sent back to
+//                             * client. */
+//                            if (blk_response_init_ok_get_num_blocks(
+//                                    &response,
+//                                    &request.shared_data_buf
+//                            ) != OK_BLK_RESPONSE) {
+//                                log_error("Failed to initialise ok response for `GET_NUM_BLOCKS`.");
+//                                break;
+//                            }
+                        }
+                        /* Enqueue the `response` onto the `response_queue` for
+                         * the client. */
+                        if (blk_response_queue_enqueue(
+                                response_queue,
+                                &response
+                        ) != OK_BLK_RESPONSE_QUEUE) {
+                            log_error("Failed to enqueue response for `GET_NUM_BLOCKS`.");
+                            break;
+                        }
+                        break;
+                    }
+                    case GET_BLOCK_SIZE:
+                        break;
+                    case CTRL_SYNC:
+                        break;
+                    case READ:
+                        break;
+                    case WRITE:
+                        break;
+                }
+            }
             break;
         }
         default:

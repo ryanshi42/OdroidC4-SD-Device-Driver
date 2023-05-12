@@ -19,7 +19,7 @@ result_t mmc_driver_client_init(
     if (shared_data_queue == NULL) {
         return result_err("NULL `shared_data_queue` passed to mmc_driver_client_init().");
     }
-    /* Save all variables passed into this initialiser. */
+    /* Save all variables passed into this constructor. */
     mmc_driver_client->sel4cp_channel_id_request = sel4cp_channel_id_request;
     mmc_driver_client->request_queue = request_queue;
     mmc_driver_client->response_queue = response_queue;
@@ -65,9 +65,39 @@ result_t mmc_driver_client_get_num_blocks(
     ) != OK_BLK_REQUEST_QUEUE) {
         return result_err("Failed to enqueue our request onto the request queue.");
     }
-    /* Notify `mmc_driver` of our new request. */
+    /* Notify `mmc_driver` of our new Request. */
     sel4cp_notify(mmc_driver_client->sel4cp_channel_id_request);
 
+    /* Keep trying to dequeue from the Response queue for a Response */
+    blk_response_t response = {0};
+    while (blk_response_queue_dequeue(
+            mmc_driver_client->response_queue,
+            &response
+    ) != OK_BLK_RESPONSE_QUEUE) {
 
+    }
+    /* Check if the Response is success or failure. */
+    bool is_response_ok = false;
+    if (blk_response_is_ok(
+            &response,
+            &is_response_ok
+    ) != OK_BLK_RESPONSE) {
+        return result_err("Failed to check if the response is success or failure in mmc_driver_client_get_num_blocks().");
+    }
+    /* Get the virtual address of the Shared Data buffer. */
+    uintptr_t buf_vaddr = 0;
+    if (blk_shared_data_buf_get_buf_vaddr(
+            &request.shared_data_buf,
+            &buf_vaddr
+    ) != OK_BLK_SHARED_DATA_BUF) {
+        return result_err("Failed to get virtual address of shared data buffer in mmc_driver_client_get_num_blocks().");
+    }
+    /* If the Response was a success, get the number of blocks from the Shared
+     * Data buffer. Otherwise, return an error. */
+    if (is_response_ok) {
+        *ret_val = *((uint64_t *) buf_vaddr);
+    } else {
+        return result_err("Response was not OK in mmc_driver_client_get_num_blocks().");
+    }
     return result_ok();
 }
