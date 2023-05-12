@@ -15,6 +15,7 @@ enum blk_shared_data_buf_result {
     OK_BLK_SHARED_DATA_BUF = 0,
     ERR_NULL_BLK_SHARED_DATA_BUF = -1,
     ERR_BLK_SHARED_DATA_BUF_DATA_TOO_LARGE = -2,
+    ERR_NULL_RET_VAL_IN_BLK_SHARED_DATA_BUF = -3,
 };
 typedef enum blk_shared_data_buf_result blk_shared_data_buf_result_t;
 
@@ -48,11 +49,24 @@ blk_shared_data_buf_result_t blk_shared_data_buf_equals(
  * Inserts data into the memory region represented by a `shared_data_buf`.
  * @param shared_data_buf
  * @param data The data you wish to insert into `shared_data_buf`.
- * @param data_size The size of the data you wish to insert into `shared_data_buf`.
+ * @param data_size The size of the data you wish to insert into
+ * `shared_data_buf` in bytes.
  * @return
  */
 blk_shared_data_buf_result_t blk_shared_data_buf_insert_data(
         blk_shared_data_buf_t *shared_data_buf,
         void *data,
         size_t data_size
+);
+
+/**
+ * Gets the size of the memory region represented by a `shared_data_buf`.
+ * @param shared_data_buf
+ * @param ret_val Size of the data you wish to insert into `shared_data_buf` in
+ * bytes.
+ * @return
+ */
+blk_shared_data_buf_result_t blk_shared_data_buf_get_buf_size(
+        blk_shared_data_buf_t *shared_data_buf,
+        size_t *ret_val
 );

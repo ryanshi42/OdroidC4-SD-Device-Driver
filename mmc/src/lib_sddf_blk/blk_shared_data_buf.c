@@ -42,5 +42,16 @@ blk_shared_data_buf_result_t blk_shared_data_buf_insert_data(
     return OK_BLK_SHARED_DATA_BUF;
 }
 
-
-
+blk_shared_data_buf_result_t blk_shared_data_buf_get_buf_size(
+        blk_shared_data_buf_t *shared_data_buf,
+        size_t *ret_val
+) {
+    if (shared_data_buf == NULL) {
+        return ERR_NULL_BLK_SHARED_DATA_BUF;
+    }
+    if (ret_val == NULL) {
+        return ERR_NULL_RET_VAL_IN_BLK_SHARED_DATA_BUF;
+    }
+    *ret_val = shared_data_buf->buf_size;
+    return OK_BLK_SHARED_DATA_BUF;
+}
