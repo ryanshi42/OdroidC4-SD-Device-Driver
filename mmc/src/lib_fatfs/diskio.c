@@ -237,11 +237,10 @@ DRESULT disk_ioctl(
         case DEV_MMC :
             switch (cmd) {
                 case GET_SECTOR_COUNT: {
-                    uint64_t *num_blocks = (uint64_t *) buff;
                     if (result_is_err(
                             mmc_driver_client_get_num_blocks(
                                     fatfs_mmc_driver_client,
-                                    num_blocks
+                                    (uint64_t *) buff
                             )
                     )) {
                         res = RES_ERROR;
@@ -254,6 +253,15 @@ DRESULT disk_ioctl(
                     break;
                 }
                 case GET_BLOCK_SIZE: {
+                    if (result_is_err(
+                            mmc_driver_client_get_block_size(
+                                    fatfs_mmc_driver_client,
+                                    (uint16_t *) buff
+                            )
+                    )) {
+                        res = RES_ERROR;
+                        break;
+                    }
 //                    uint16_t *block_size = (uint16_t *) buff;
 //                    result_t res_mmc = mmc_driver_get_block_size(block_size);
 //                    if (result_is_err(res_mmc)) {

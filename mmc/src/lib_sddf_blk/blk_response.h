@@ -33,25 +33,23 @@ enum blk_response_result {
 typedef enum blk_response_result blk_response_result_t;
 
 /**
- * Responses initialised by this function indicate a successful `GET_NUM_BLOCKS`
- * request.
+ * Responses initialised by this function indicate a successful request.
  * @param response
  * @param shared_data_buf
  * @return
  */
-blk_response_result_t blk_response_init_ok_get_num_blocks(
+blk_response_result_t blk_response_init_ok(
         blk_response_t *response,
         blk_shared_data_buf_t *shared_data_buf
 );
 
 /**
- * Responses initialised by this function indicate an unsuccessful
- * `GET_NUM_BLOCKS` request.
+ * Responses initialised by this function indicate an unsuccessful request.
  * @param response
  * @param shared_data_buf
  * @return
  */
-blk_response_result_t blk_response_init_error_get_num_blocks(
+blk_response_result_t blk_response_init_error(
         blk_response_t *response,
         blk_shared_data_buf_t *shared_data_buf
 );

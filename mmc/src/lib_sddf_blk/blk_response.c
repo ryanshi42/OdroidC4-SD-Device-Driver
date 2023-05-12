@@ -23,7 +23,7 @@ static inline blk_response_result_t blk_response_init_no_args(
     return OK_BLK_RESPONSE;
 }
 
-blk_response_result_t blk_response_init_ok_get_num_blocks(
+blk_response_result_t blk_response_init_ok(
         blk_response_t *response,
         blk_shared_data_buf_t *shared_data_buf
 ) {
@@ -34,7 +34,7 @@ blk_response_result_t blk_response_init_ok_get_num_blocks(
     );
 }
 
-blk_response_result_t blk_response_init_error_get_num_blocks(
+blk_response_result_t blk_response_init_error(
         blk_response_t *response,
         blk_shared_data_buf_t *shared_data_buf
 ) {

@@ -48,3 +48,13 @@ result_t mmc_driver_client_get_num_blocks(
         uint64_t *ret_val
 );
 
+/**
+ * Services the `GET_BLOCK_SIZE` FatFs request.
+ * @param mmc_driver_client
+ * @param ret_val
+ * @return
+ */
+result_t mmc_driver_client_get_block_size(
+        mmc_driver_client_t *mmc_driver_client,
+        uint16_t *ret_val
+);

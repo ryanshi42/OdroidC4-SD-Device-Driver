@@ -268,7 +268,7 @@ void notified(sel4cp_channel ch) {
                             );
                             /* Initialise an "error" response to be sent back to
                              * client. */
-                            if (blk_response_init_error_get_num_blocks(
+                            if (blk_response_init_error(
                                     &response,
                                     &request.shared_data_buf
                             ) != OK_BLK_RESPONSE) {
@@ -287,7 +287,7 @@ void notified(sel4cp_channel ch) {
                             }
                             /* Initialise an "ok" response to be sent back to
                              * client. */
-                            if (blk_response_init_ok_get_num_blocks(
+                            if (blk_response_init_ok(
                                     &response,
                                     &request.shared_data_buf
                             ) != OK_BLK_RESPONSE) {
@@ -306,8 +306,80 @@ void notified(sel4cp_channel ch) {
                         }
                         break;
                     }
-                    case GET_BLOCK_SIZE:
+                    case GET_BLOCK_SIZE: {
+                        uint16_t block_size = 0;
+                        /* Get the number of blocks on the MMC. */
+                        res = mmc_driver_get_block_size(&block_size);
+                        blk_response_t response = {0};
+                        /* If there is an error, we send the full error message
+                         * in `res` back to the client. Otherwise, we send the
+                         * number of blocks on the MMC back to the client. */
+                        if (result_is_err(res)) {
+                            /* Get the size of the Shared Data Buffer. */
+                            size_t buf_size = 0;
+                            if (blk_shared_data_buf_get_buf_size(
+                                    &request.shared_data_buf,
+                                    &buf_size
+                            ) != OK_BLK_SHARED_DATA_BUF) {
+                                log_error("Failed to get size of shared data buffer for `GET_BLOCK_SIZE`.");
+                                break;
+                            }
+                            /* Get the virtual address of the Shared Data Buffer. */
+                            uintptr_t buf_vaddr = 0;
+                            if (blk_shared_data_buf_get_buf_vaddr(
+                                    &request.shared_data_buf,
+                                    &buf_vaddr
+                            ) != OK_BLK_SHARED_DATA_BUF) {
+                                log_error("Failed to get virtual address of shared data buffer for `GET_BLOCK_SIZE`.");
+                                break;
+                            }
+                            /* Get the error message associated with `res` and
+                             * copy it into our Shared Data Buffer. */
+                            result_get_err_msg(
+                                    res,
+                                    (char *) buf_vaddr,
+                                    buf_size
+                            );
+                            /* Initialise an "error" response to be sent back to
+                             * client. */
+                            if (blk_response_init_error(
+                                    &response,
+                                    &request.shared_data_buf
+                            ) != OK_BLK_RESPONSE) {
+                                log_error("Failed to initialise error response for `GET_BLOCK_SIZE`.");
+                            }
+                        } else {
+                            /* Copy the data in `num_blocks` into our Shared
+                             * Data Buffer. */
+                            if (blk_shared_data_buf_insert_data(
+                                    &request.shared_data_buf,
+                                    (void *) &block_size,
+                                    sizeof(block_size)
+                            ) != OK_BLK_SHARED_DATA_BUF) {
+                                log_error("Failed to insert data into shared data buffer for `GET_BLOCK_SIZE`.");
+                                break;
+                            }
+                            /* Initialise an "ok" response to be sent back to
+                             * client. */
+                            if (blk_response_init_ok(
+                                    &response,
+                                    &request.shared_data_buf
+                            ) != OK_BLK_RESPONSE) {
+                                log_error("Failed to initialise ok response for `GET_BLOCK_SIZE`.");
+                                break;
+                            }
+                        }
+                        /* Enqueue the `response` onto the `response_queue` for
+                         * the client. */
+                        if (blk_response_queue_enqueue(
+                                response_queue,
+                                &response
+                        ) != OK_BLK_RESPONSE_QUEUE) {
+                            log_error("Failed to enqueue response for `GET_BLOCK_SIZE`.");
+                            break;
+                        }
                         break;
+                    }
                     case CTRL_SYNC:
                         break;
                     case READ:
