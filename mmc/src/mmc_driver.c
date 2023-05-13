@@ -27,11 +27,6 @@ timer_client_t global_timer_client = {0};
 /* Global `sdcard`. */
 sdcard_t global_sdcard = {0};
 
-/* Since the Block Size of the SD card is used quite often and doesn't change
- * throughout the lifecycle of the driver, we obtain it `init()` and save it
- * globally here. */
-size_t global_block_size = 0;
-
 void init(void) {
     result_t res;
 
@@ -116,13 +111,6 @@ void init(void) {
         return;
     }
     log_trace("Finished setting SD bus width to maximum possible value.");
-
-    /* Save the SD card's block size to `global_block_size`. */
-    res = mmc_driver_get_block_size((uint16_t *) &global_block_size);
-    if (result_is_err(res)) {
-        result_printf(res);
-        return;
-    }
 
     /* Running E2E tests to verify our SD card driver works properly.*/
     res = e2e_test_read_write_simple(
@@ -220,6 +208,15 @@ result_t mmc_driver_read_blocks(
 }
 
 void notified(sel4cp_channel ch) {
+
+    size_t block_size = 0;
+    /* Save the SD card's block size to `block_size`. */
+    result_t res = mmc_driver_get_block_size((uint16_t *) &block_size);
+    if (result_is_err(res)) {
+        result_printf(res);
+        return;
+    }
+
     switch(ch) {
         case MMC_DRIVER_TO_FATFS_REQUEST_CHANNEL: {
             blk_request_queue_t *request_queue = (blk_request_queue_t *) mmc_driver_request_queue;
@@ -260,7 +257,7 @@ void notified(sel4cp_channel ch) {
                     log_error("Failed to get virtual address of shared data buffer.");
                     break;
                 }
-                result_t res = result_ok();
+                res = result_ok();
                 blk_request_operation_t const request_operation = request.operation;
                 switch (request_operation) {
                     case GET_NUM_BLOCKS: {
@@ -281,14 +278,14 @@ void notified(sel4cp_channel ch) {
                             log_error("Invalid Shared Data buffer size for `GET_NUM_BLOCKS`.");
                             break;
                         }
-                        *((size_t *) buf_vaddr) = global_block_size;
+                        *((size_t *) buf_vaddr) = block_size;
                         break;
                     }
                     case CTRL_SYNC: {
                         break;
                     }
                     case READ: {
-                        size_t const request_size = request.num_blocks * global_block_size;
+                        size_t const request_size = request.num_blocks * block_size;
                         /* Sanity check the buffer size. */
                         if (buf_size < request_size) {
                             log_error("Invalid Shared Data buffer size for `READ`.");
@@ -297,14 +294,14 @@ void notified(sel4cp_channel ch) {
                         res = mmc_driver_read_blocks(
                                 request.lba,
                                 request.num_blocks,
-                                global_block_size,
+                                block_size,
                                 (char *) buf_vaddr,
                                 request_size
                         );
                         break;
                     }
                     case WRITE: {
-                        size_t const request_size = request.num_blocks * global_block_size;
+                        size_t const request_size = request.num_blocks * block_size;
                         /* Sanity check the buffer size. */
                         if (buf_size < request_size) {
                             log_error("Invalid Shared Data buffer size for `WRITE`.");
@@ -313,7 +310,7 @@ void notified(sel4cp_channel ch) {
                         res = mmc_driver_write_blocks(
                                 request.lba,
                                 request.num_blocks,
-                                global_block_size,
+                                block_size,
                                 (char *) buf_vaddr,
                                 request_size
                         );
