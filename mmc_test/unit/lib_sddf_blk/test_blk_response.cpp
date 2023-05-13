@@ -22,7 +22,7 @@ TEST(test_blk_response, is_ok_should_return_true_if_result_is_ok) {
     blk_shared_data_buf_t shared_data_buf = {0};
     ASSERT_EQ(
             OK_BLK_SHARED_DATA_BUF,
-            blk_response_init_ok_get_num_blocks(
+            blk_response_init_ok(
                     &response,
                     &shared_data_buf
             )
@@ -43,7 +43,7 @@ TEST(test_blk_response, is_ok_should_return_false_if_result_is_not_ok) {
     blk_shared_data_buf_t shared_data_buf = {0};
     ASSERT_EQ(
             OK_BLK_SHARED_DATA_BUF,
-            blk_response_init_error_get_num_blocks(
+            blk_response_init_error(
                     &response,
                     &shared_data_buf
             )

@@ -27,6 +27,11 @@ timer_client_t global_timer_client = {0};
 /* Global `sdcard`. */
 sdcard_t global_sdcard = {0};
 
+/* Since the Block Size of the SD card is used quite often and doesn't change
+ * throughout the lifecycle of the driver, we obtain it `init()` and save it
+ * globally here. */
+size_t global_block_size = 0;
+
 void init(void) {
     result_t res;
 
@@ -111,6 +116,13 @@ void init(void) {
         return;
     }
     log_trace("Finished setting SD bus width to maximum possible value.");
+
+    /* Save the SD card's block size to `global_block_size`. */
+    res = mmc_driver_get_block_size((uint16_t *) &global_block_size);
+    if (result_is_err(res)) {
+        result_printf(res);
+        return;
+    }
 
     /* Running E2E tests to verify our SD card driver works properly.*/
     res = e2e_test_read_write_simple(
@@ -249,7 +261,8 @@ void notified(sel4cp_channel ch) {
                     break;
                 }
                 result_t res = result_ok();
-                switch (request.operation) {
+                blk_request_operation_t const request_operation = request.operation;
+                switch (request_operation) {
                     case GET_NUM_BLOCKS: {
                         /* Sanity check the buffer size. */
                         if (buf_size < sizeof(uint64_t)) {
@@ -264,30 +277,53 @@ void notified(sel4cp_channel ch) {
                     }
                     case GET_BLOCK_SIZE: {
                         /* Sanity check the buffer size. */
-                        if (buf_size < sizeof(uint16_t)) {
+                        if (buf_size < sizeof(size_t)) {
                             log_error("Invalid Shared Data buffer size for `GET_NUM_BLOCKS`.");
                             break;
                         }
-                        /* Get the number of blocks on the MMC. */
-                        res = mmc_driver_get_block_size(
-                                (uint16_t *) buf_vaddr
-                        );
+                        *((size_t *) buf_vaddr) = global_block_size;
                         break;
                     }
                     case CTRL_SYNC: {
                         break;
                     }
                     case READ: {
+                        size_t const request_size = request.num_blocks * global_block_size;
+                        /* Sanity check the buffer size. */
+                        if (buf_size < request_size) {
+                            log_error("Invalid Shared Data buffer size for `READ`.");
+                            break;
+                        }
+                        res = mmc_driver_read_blocks(
+                                request.lba,
+                                request.num_blocks,
+                                global_block_size,
+                                (char *) request.shared_data_buf.buf_vaddr,
+                                request_size
+                        );
                         break;
                     }
                     case WRITE: {
+                        size_t const request_size = request.num_blocks * global_block_size;
+                        /* Sanity check the buffer size. */
+                        if (buf_size < request_size) {
+                            log_error("Invalid Shared Data buffer size for `WRITE`.");
+                            break;
+                        }
+                        res = mmc_driver_write_blocks(
+                                request.lba,
+                                request.num_blocks,
+                                global_block_size,
+                                (char *) request.shared_data_buf.buf_vaddr,
+                                request_size
+                        );
                         break;
                     }
                 }
                 blk_response_t response = {0};
                 /* If there is an error, we send the full error message
                  * in `res` back to the client. Otherwise, we send the
-                 * number of blocks on the MMC back to the client. */
+                 * response back to the client. */
                 if (result_is_err(res)) {
                     /* Get the error message associated with `res` and
                      * copy it into our Shared Data Buffer. */

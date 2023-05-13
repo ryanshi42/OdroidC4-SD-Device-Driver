@@ -77,7 +77,7 @@ void init(void) {
 
     /* Initialises FatFs by passing it the `mmc_driver_client`, which uses sDDF
      * data structures to interact with the `mmc_driver`. */
-    disk_init(&global_mmc_driver_client);
+    disk_sddf_init(&global_mmc_driver_client);
 
     /* TODO: E2E test the state of the above data structures. */
     res = fatfs_e2e_diskio_test();
@@ -86,17 +86,17 @@ void init(void) {
         return;
     }
 
-//    res = fatfs_e2e_write_close_read_simple();
-//    if (result_is_err(res)) {
-//        result_printf(res);
-//        return;
-//    }
-//
-//    res = fatfs_e2e_write_fsync_read_close_simple();
-//    if (result_is_err(res)) {
-//        result_printf(res);
-//        return;
-//    }
+    res = fatfs_e2e_write_close_read_simple();
+    if (result_is_err(res)) {
+        result_printf(res);
+        return;
+    }
+
+    res = fatfs_e2e_write_fsync_read_close_simple();
+    if (result_is_err(res)) {
+        result_printf(res);
+        return;
+    }
 
     log_trace("Finished running E2E tests in MMC Driver Protection Domain!");
 }

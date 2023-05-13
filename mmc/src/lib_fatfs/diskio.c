@@ -16,11 +16,18 @@
 #define DEV_USB        2    /* Example: Map USB MSD to physical drive 2 */
 
 mmc_driver_client_t *fatfs_mmc_driver_client = NULL;
+uint16_t global_mmc_block_size = 0;
 
-void disk_init(
+DRESULT disk_sddf_init(
         mmc_driver_client_t *mmc_driver_client
 ) {
     fatfs_mmc_driver_client = mmc_driver_client;
+    /* Get the block size from the device. */
+    return disk_ioctl(
+            DEV_MMC,
+            GET_BLOCK_SIZE,
+            &global_mmc_block_size
+    );
 }
 
 /*-----------------------------------------------------------------------*/
@@ -127,18 +134,18 @@ DRESULT disk_read(
 
         case DEV_MMC : {
             // translate the arguments here
-//            result_t res_mmc = mmc_driver_read_blocks(
-//                    sector,
-//                    count,
-//                    FF_MAX_SS,
-//                    (char *) buff,
-//                    count * FF_MAX_SS
-//            );
-//            if (result_is_err(res_mmc)) {
-//                res = RES_ERROR;
-//            } else {
-//                res = RES_OK;
-//            }
+            result_t res_mmc = mmc_driver_client_read(
+                    fatfs_mmc_driver_client,
+                    sector,
+                    count,
+                    global_mmc_block_size,
+                    (char *) buff
+            );
+            if (result_is_err(res_mmc)) {
+                res = RES_ERROR;
+            } else {
+                res = RES_OK;
+            }
             return res;
         }
         case DEV_USB :
@@ -184,18 +191,18 @@ DRESULT disk_write(
 
         case DEV_MMC : {
             // translate the arguments here
-//            result_t res_mmc = mmc_driver_write_blocks(
-//                    sector,
-//                    count,
-//                    FF_MAX_SS,
-//                    (char *) buff,
-//                    count * FF_MAX_SS
-//            );
-//            if (result_is_err(res_mmc)) {
-//                res = RES_ERROR;
-//            } else {
-//                res = RES_OK;
-//            }
+            result_t res_mmc = mmc_driver_client_write(
+                    fatfs_mmc_driver_client,
+                    sector,
+                    count,
+                    global_mmc_block_size,
+                    (char *) buff
+            );
+            if (result_is_err(res_mmc)) {
+                res = RES_ERROR;
+            } else {
+                res = RES_OK;
+            }
             return res;
         }
         case DEV_USB :
@@ -262,12 +269,6 @@ DRESULT disk_ioctl(
                         res = RES_ERROR;
                         break;
                     }
-//                    uint16_t *block_size = (uint16_t *) buff;
-//                    result_t res_mmc = mmc_driver_get_block_size(block_size);
-//                    if (result_is_err(res_mmc)) {
-//                        res = RES_ERROR;
-//                        break;
-//                    }
                     res = RES_OK;
                     break;
                 }

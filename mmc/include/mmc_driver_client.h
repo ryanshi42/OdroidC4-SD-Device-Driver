@@ -58,3 +58,37 @@ result_t mmc_driver_client_get_block_size(
         mmc_driver_client_t *mmc_driver_client,
         uint16_t *ret_val
 );
+
+/**
+ * Services the `READ` FatFs request.
+ * @param mmc_driver_client
+ * @param lba
+ * @param num_blocks
+ * @param block_size
+ * @param dst_buf
+ * @return
+ */
+result_t mmc_driver_client_read(
+        mmc_driver_client_t *mmc_driver_client,
+        size_t lba,
+        size_t num_blocks,
+        size_t block_size,
+        char *dst_buf
+);
+
+/**
+ * Services the `WRITE` FatFs request.
+ * @param mmc_driver_client
+ * @param lba
+ * @param num_blocks
+ * @param block_size
+ * @param src_buf
+ * @return
+ */
+result_t mmc_driver_client_write(
+        mmc_driver_client_t *mmc_driver_client,
+        size_t lba,
+        size_t num_blocks,
+        size_t block_size,
+        char *src_buf
+);

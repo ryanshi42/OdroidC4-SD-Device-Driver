@@ -7,12 +7,6 @@
 
 #include "mmc_driver_client.h"
 
-/* Initialises FatFs by passing it the `mmc_driver_client`, which uses sDDF data
- * structures to interact with the `mmc_driver`. */
-void disk_init(
-    mmc_driver_client_t *mmc_driver_client
-);
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -29,6 +23,11 @@ typedef enum {
 	RES_PARERR		/* 4: Invalid Parameter */
 } DRESULT;
 
+/* Initialises FatFs by passing it the `mmc_driver_client`, which uses sDDF data
+ * structures to interact with the `mmc_driver`. */
+DRESULT disk_sddf_init(
+        mmc_driver_client_t *mmc_driver_client
+);
 
 /*---------------------------------------*/
 /* Prototypes for disk control functions */

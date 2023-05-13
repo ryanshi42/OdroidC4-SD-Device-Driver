@@ -68,3 +68,36 @@ blk_request_result_t blk_request_init_ctrl_sync(
         blk_request_t *request,
         blk_shared_data_buf_t *shared_data_buf
 );
+
+/**
+ * Initialises a `READ` request.
+ * @param request
+ * @param shared_data_buf
+ * @param lba
+ * @param num_blocks
+ * @return
+ */
+blk_request_result_t blk_request_init_read(
+        blk_request_t *request,
+        blk_shared_data_buf_t *shared_data_buf,
+        size_t lba,
+        size_t num_blocks
+);
+
+/**
+ * Initialises a `WRITE` request.
+ * @param request
+ * @param shared_data_buf
+ * @param lba
+ * @param num_blocks
+ * @return
+ */
+blk_request_result_t blk_request_init_write(
+        blk_request_t *request,
+        blk_shared_data_buf_t *shared_data_buf,
+        size_t lba,
+        size_t num_blocks
+);
+
+
+
