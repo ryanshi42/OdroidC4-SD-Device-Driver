@@ -131,3 +131,59 @@ blk_request_result_t blk_request_init_write(
     );
 }
 
+blk_request_result_t blk_request_get_operation(
+        blk_request_t *request,
+        blk_request_operation_t *ret_val
+) {
+    if (request == NULL) {
+        return ERR_NULL_BLK_REQUEST;
+    }
+    if (ret_val == NULL) {
+        return ERR_NULL_RET_VAL_IN_BLK_REQUEST;
+    }
+    *ret_val = request->operation;
+    return OK_BLK_REQUEST;
+}
+
+blk_request_result_t blk_request_get_lba(
+        blk_request_t *request,
+        size_t *ret_val
+) {
+    if (request == NULL) {
+        return ERR_NULL_BLK_REQUEST;
+    }
+    if (ret_val == NULL) {
+        return ERR_NULL_RET_VAL_IN_BLK_REQUEST;
+    }
+    *ret_val = request->lba;
+    return OK_BLK_REQUEST;
+}
+
+blk_request_result_t blk_request_get_num_blocks(
+        blk_request_t *request,
+        size_t *ret_val
+) {
+    if (request == NULL) {
+        return ERR_NULL_BLK_REQUEST;
+    }
+    if (ret_val == NULL) {
+        return ERR_NULL_RET_VAL_IN_BLK_REQUEST;
+    }
+    *ret_val = request->num_blocks;
+    return OK_BLK_REQUEST;
+}
+
+blk_request_result_t blk_request_get_shared_data_buf(
+        blk_request_t *request,
+        blk_shared_data_buf_t *ret_val
+) {
+    if (request == NULL) {
+        return ERR_NULL_BLK_REQUEST;
+    }
+    if (ret_val == NULL) {
+        return ERR_NULL_RET_VAL_IN_BLK_REQUEST;
+    }
+    *ret_val = request->shared_data_buf;
+    return OK_BLK_REQUEST;
+}
+

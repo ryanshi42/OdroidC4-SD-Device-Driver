@@ -237,21 +237,28 @@ void notified(sel4cp_channel ch) {
                     request_queue,
                     &request
             ) == OK_BLK_REQUEST_QUEUE) {
-                /* TODO: Use getter for `shared_data_buf`. */
-
-                /* Get the size of the Shared Data Buffer. */
+                /* Get `shared_data_buf` from `request`. */
+                blk_shared_data_buf_t shared_data_buf = {0};
+                if (blk_request_get_shared_data_buf(
+                        &request,
+                        &shared_data_buf
+                ) != OK_BLK_REQUEST) {
+                    log_error("Failed to get shared data buffer from request.");
+                    break;
+                }
+                /* Get the size of the `shared_data_buf`. */
                 size_t buf_size = 0;
                 if (blk_shared_data_buf_get_buf_size(
-                        &request.shared_data_buf,
+                        &shared_data_buf,
                         &buf_size
                 ) != OK_BLK_SHARED_DATA_BUF) {
                     log_error("Failed to get size of shared data buffer.");
                     break;
                 }
-                /* Get the virtual address of the Shared Data Buffer. */
+                /* Get the virtual address of `shared_data_buf`. */
                 uintptr_t buf_vaddr = 0;
                 if (blk_shared_data_buf_get_buf_vaddr(
-                        &request.shared_data_buf,
+                        &shared_data_buf,
                         &buf_vaddr
                 ) != OK_BLK_SHARED_DATA_BUF) {
                     log_error("Failed to get virtual address of shared data buffer.");
@@ -333,7 +340,7 @@ void notified(sel4cp_channel ch) {
                      * client. */
                     if (blk_response_init_error(
                             &response,
-                            &request.shared_data_buf
+                            &shared_data_buf
                     ) != OK_BLK_RESPONSE) {
                         log_error("Failed to initialise error response.");
                     }
@@ -342,7 +349,7 @@ void notified(sel4cp_channel ch) {
                      * client. */
                     if (blk_response_init_ok(
                             &response,
-                            &request.shared_data_buf
+                            &shared_data_buf
                     ) != OK_BLK_RESPONSE) {
                         log_error("Failed to initialise ok response.");
                         break;
