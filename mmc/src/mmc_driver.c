@@ -264,8 +264,17 @@ void notified(sel4cp_channel ch) {
                     log_error("Failed to get virtual address of shared data buffer.");
                     break;
                 }
+                /* Get the Request's operation. */
+                blk_request_operation_t request_operation = 0;
+                if (blk_request_get_operation(
+                        &request,
+                        &request_operation
+                ) != OK_BLK_REQUEST) {
+                    log_error("Failed to get request operation.");
+                    break;
+                }
                 res = result_ok();
-                blk_request_operation_t const request_operation = request.operation;
+                /* We call a different `mmc_driver` function depending on the operation. */
                 switch (request_operation) {
                     case GET_NUM_BLOCKS: {
                         /* Sanity check the buffer size. */
