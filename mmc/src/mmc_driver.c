@@ -298,7 +298,7 @@ void notified(sel4cp_channel ch) {
                                 request.lba,
                                 request.num_blocks,
                                 global_block_size,
-                                (char *) request.shared_data_buf.buf_vaddr,
+                                (char *) buf_vaddr,
                                 request_size
                         );
                         break;
@@ -314,7 +314,7 @@ void notified(sel4cp_channel ch) {
                                 request.lba,
                                 request.num_blocks,
                                 global_block_size,
-                                (char *) request.shared_data_buf.buf_vaddr,
+                                (char *) buf_vaddr,
                                 request_size
                         );
                         break;
