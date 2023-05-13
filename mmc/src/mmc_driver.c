@@ -208,19 +208,17 @@ result_t mmc_driver_read_blocks(
 }
 
 void notified(sel4cp_channel ch) {
-
-    size_t block_size = 0;
-    /* Save the SD card's block size to `block_size`. */
-    result_t res = mmc_driver_get_block_size((uint16_t *) &block_size);
-    if (result_is_err(res)) {
-        result_printf(res);
-        return;
-    }
-
     switch(ch) {
         case MMC_DRIVER_TO_FATFS_REQUEST_CHANNEL: {
             blk_request_queue_t *request_queue = (blk_request_queue_t *) mmc_driver_request_queue;
             blk_response_queue_t *response_queue = (blk_response_queue_t *) mmc_driver_response_queue;
+            /* Get the SD card's block size. */
+            size_t block_size = 0;
+            result_t res = mmc_driver_get_block_size((uint16_t *) &block_size);
+            if (result_is_err(res)) {
+                result_printf(res);
+                return;
+            }
             /* The while-loop continues to dequeue requests until there are no
              * requests left in the Requests queue. In our current setup (no
              * scheduling budget or period set), this while-loop is unnecessary
@@ -239,6 +237,8 @@ void notified(sel4cp_channel ch) {
                     request_queue,
                     &request
             ) == OK_BLK_REQUEST_QUEUE) {
+                /* TODO: Use getter for `shared_data_buf`. */
+
                 /* Get the size of the Shared Data Buffer. */
                 size_t buf_size = 0;
                 if (blk_shared_data_buf_get_buf_size(
@@ -318,18 +318,18 @@ void notified(sel4cp_channel ch) {
                     }
                 }
                 blk_response_t response = {0};
-                /* If there is an error, we send the full error message
-                 * in `res` back to the client. Otherwise, we send the
-                 * response back to the client. */
+                /* If there is an error, we send the full error message in `res`
+                 * back to the client in an "error" Response. Otherwise, we send
+                 * an "ok" Response back to the client. */
                 if (result_is_err(res)) {
                     /* Get the error message associated with `res` and
-                     * copy it into our Shared Data Buffer. */
+                     * copy it into the Shared Data Buffer. */
                     result_get_err_msg(
                             res,
                             (char *) buf_vaddr,
                             buf_size
                     );
-                    /* Initialise an "error" response to be sent back to
+                    /* Initialise an "error" Response to be sent back to
                      * client. */
                     if (blk_response_init_error(
                             &response,
@@ -338,7 +338,7 @@ void notified(sel4cp_channel ch) {
                         log_error("Failed to initialise error response.");
                     }
                 } else {
-                    /* Initialise an "ok" response to be sent back to
+                    /* Initialise an "ok" Response to be sent back to
                      * client. */
                     if (blk_response_init_ok(
                             &response,
