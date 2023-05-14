@@ -142,6 +142,7 @@ DRESULT disk_read(
                     (char *) buff
             );
             if (result_is_err(res_mmc)) {
+                result_printf(res_mmc);
                 res = RES_ERROR;
             } else {
                 res = RES_OK;
@@ -199,6 +200,7 @@ DRESULT disk_write(
                     (char *) buff
             );
             if (result_is_err(res_mmc)) {
+                result_printf(res_mmc);
                 res = RES_ERROR;
             } else {
                 res = RES_OK;
@@ -244,12 +246,12 @@ DRESULT disk_ioctl(
         case DEV_MMC :
             switch (cmd) {
                 case GET_SECTOR_COUNT: {
-                    if (result_is_err(
-                            mmc_driver_client_get_num_blocks(
-                                    fatfs_mmc_driver_client,
-                                    (uint64_t *) buff
-                            )
-                    )) {
+                    result_t res_mmc = mmc_driver_client_get_num_blocks(
+                            fatfs_mmc_driver_client,
+                            (uint64_t *) buff
+                    );
+                    if (result_is_err(res_mmc)) {
+                        result_printf(res_mmc);
                         res = RES_ERROR;
                         break;
                     }
@@ -260,12 +262,12 @@ DRESULT disk_ioctl(
                     break;
                 }
                 case GET_BLOCK_SIZE: {
-                    if (result_is_err(
-                            mmc_driver_client_get_block_size(
-                                    fatfs_mmc_driver_client,
-                                    (uint16_t *) buff
-                            )
-                    )) {
+                    result_t res_mmc = mmc_driver_client_get_block_size(
+                            fatfs_mmc_driver_client,
+                            (uint16_t *) buff
+                    );
+                    if (result_is_err(res_mmc)) {
+                        result_printf(res_mmc);
                         res = RES_ERROR;
                         break;
                     }
@@ -273,11 +275,11 @@ DRESULT disk_ioctl(
                     break;
                 }
                 case CTRL_SYNC: {
-                    if (result_is_err(
-                            mmc_driver_client_sync(
-                                    fatfs_mmc_driver_client
-                            )
-                    )) {
+                    result_t res_mmc = mmc_driver_client_sync(
+                            fatfs_mmc_driver_client
+                    );
+                    if (result_is_err(res_mmc)) {
+                        result_printf(res_mmc);
                         res = RES_ERROR;
                         break;
                     }

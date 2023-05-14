@@ -6,6 +6,7 @@
 #define _DISKIO_DEFINED
 
 #include "mmc_driver_client.h"
+#include "printf.h"
 
 #ifdef __cplusplus
 extern "C" {

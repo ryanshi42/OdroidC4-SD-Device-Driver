@@ -495,6 +495,7 @@ target_link_libraries(
         mmc_rpi3b_lib_diskio
         mmc_rpi3b_lib_ff
         mmc_rpi3b_lib_mmc_driver_client
+        mmc_rpi3b_lib_printf
 )
 
 add_library(mmc_rpi3b_lib_diskio_test src/lib_fatfs/diskio_test.c)
