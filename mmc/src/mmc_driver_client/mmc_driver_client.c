@@ -343,12 +343,10 @@ result_t mmc_driver_client_write(
     ) != OK_BLK_SHARED_DATA_QUEUE) {
         return result_err("Failed to enqueue the Shared Data buffer back onto the Shared Data buffer queue.");
     }
-    /* If the Response was a success, get the number of blocks from the Shared
-     * Data buffer. Otherwise, return an error. */
-    if (is_response_ok) {
-        /* TODO: Clean this up. */
-//        memcpy(ret_val, (char *) buf_vaddr, num_blocks * block_size);
-    } else {
+    /* We don't need to do anything with the Shared Data Buffer for a Write. */
+
+    /* If the Response was an error, return an error. */
+    if (!is_response_ok) {
         return result_err("Response was not OK in mmc_driver_client_write().");
     }
     return result_ok();
