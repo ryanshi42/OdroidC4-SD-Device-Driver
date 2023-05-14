@@ -329,14 +329,6 @@ result_t mmc_driver_client_write(
     ) != OK_BLK_RESPONSE) {
         return result_err("Failed to check if the Response is success or failure in mmc_driver_client_write().");
     }
-    /* Get the virtual address of the Shared Data buffer. */
-    uintptr_t buf_vaddr = 0;
-    if (blk_shared_data_buf_get_buf_vaddr(
-            &request.shared_data_buf,
-            &buf_vaddr
-    ) != OK_BLK_SHARED_DATA_BUF) {
-        return result_err("Failed to get virtual address of shared data buffer in mmc_driver_client_write().");
-    }
     /* Enqueue the Shared Data buffer back onto the Shared Data buffer queue for
      * reuse by other Requests. */
     if (blk_shared_data_queue_enqueue(
