@@ -179,7 +179,7 @@ void init(void) {
 }
 
 void notified(sel4cp_channel ch) {
-
+    (void) ch;
 }
 
 
