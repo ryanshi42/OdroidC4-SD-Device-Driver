@@ -301,15 +301,33 @@ void notified(sel4cp_channel ch) {
                         break;
                     }
                     case READ: {
-                        size_t const request_size = request.num_blocks * block_size;
+                        /* Get number of blocks. */
+                        size_t num_blocks = 0;
+                        if (blk_request_get_num_blocks(
+                                &request,
+                                &num_blocks
+                        ) != OK_BLK_REQUEST) {
+                            log_error("Failed to get number of blocks from request.");
+                            break;
+                        }
+                        /* Get lba. */
+                        size_t lba = 0;
+                        if (blk_request_get_lba(
+                                &request,
+                                &lba
+                        ) != OK_BLK_REQUEST) {
+                            log_error("Failed to get lba from request.");
+                            break;
+                        }
+                        size_t const request_size = num_blocks * block_size;
                         /* Sanity check the buffer size. */
                         if (buf_size < request_size) {
                             log_error("Invalid Shared Data buffer size for `READ`.");
                             break;
                         }
                         res = mmc_driver_read_blocks(
-                                request.lba,
-                                request.num_blocks,
+                                lba,
+                                num_blocks,
                                 block_size,
                                 (char *) buf_vaddr,
                                 request_size
@@ -317,15 +335,33 @@ void notified(sel4cp_channel ch) {
                         break;
                     }
                     case WRITE: {
-                        size_t const request_size = request.num_blocks * block_size;
+                        /* Get number of blocks. */
+                        size_t num_blocks = 0;
+                        if (blk_request_get_num_blocks(
+                                &request,
+                                &num_blocks
+                        ) != OK_BLK_REQUEST) {
+                            log_error("Failed to get number of blocks from request.");
+                            break;
+                        }
+                        /* Get lba. */
+                        size_t lba = 0;
+                        if (blk_request_get_lba(
+                                &request,
+                                &lba
+                        ) != OK_BLK_REQUEST) {
+                            log_error("Failed to get lba from request.");
+                            break;
+                        }
+                        size_t const request_size = num_blocks * block_size;
                         /* Sanity check the buffer size. */
                         if (buf_size < request_size) {
                             log_error("Invalid Shared Data buffer size for `WRITE`.");
                             break;
                         }
                         res = mmc_driver_write_blocks(
-                                request.lba,
-                                request.num_blocks,
+                                lba,
+                                num_blocks,
                                 block_size,
                                 (char *) buf_vaddr,
                                 request_size
