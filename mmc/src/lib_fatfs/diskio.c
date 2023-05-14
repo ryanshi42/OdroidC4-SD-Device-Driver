@@ -21,7 +21,10 @@ uint16_t global_mmc_block_size = 0;
 DRESULT disk_sddf_init(
         mmc_driver_client_t *mmc_driver_client
 ) {
+//    printf("======== mmc_driver_client 0x%lx\n", (uintptr_t) mmc_driver_client);
+//    printf("======== fatfs_mmc_driver_client 0x%lx\n", (uintptr_t) fatfs_mmc_driver_client);
     fatfs_mmc_driver_client = mmc_driver_client;
+//    printf("======== fatfs_mmc_driver_client 0x%lx\n", (uintptr_t) fatfs_mmc_driver_client);
     /* Get the block size from the device. */
     return disk_ioctl(
             DEV_MMC,

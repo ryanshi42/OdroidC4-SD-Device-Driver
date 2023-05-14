@@ -16,6 +16,28 @@ uintptr_t mmc_driver_shared_data;
  * interact with the `mmc_driver`. */
 mmc_driver_client_t global_mmc_driver_client = {0};
 
+result_t fatfs_get_cluster_size_in_bytes(
+        mmc_driver_client_t *mmc_driver_client,
+        size_t *ret_val
+) {
+    /* Get the size of the cluster in blocks from FatFs. */
+    result_t res;
+    FATFS fs = {0};
+    res = f_mount(&fs, "", 1);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to get cluster size from FatFs.");
+    }
+    size_t const cluster_size_in_blocks = fs.csize;
+    /* Get the size of each block in bytes using `global_mmc_driver_client`. */
+    uint16_t block_size_in_bytes = 0;
+    res = mmc_driver_client_get_block_size(
+            mmc_driver_client,
+            &block_size_in_bytes
+    );
+    *ret_val = cluster_size_in_blocks * block_size_in_bytes;
+    return result_ok_or(res, "Failed to get cluster size in bytes.");
+}
+
 void init(void) {
     /* Initialise `printf`. The `log.h` library depends on `printf` being
      * initialised first. */
@@ -49,12 +71,18 @@ void init(void) {
         return;
     }
 
+    /* We create a Shared Data queue with buffers sized by
+     * `MAX_FAT_CLUSTER_SIZE`. However, this is only so that we can compute the
+     * actual cluster size of the file system below using
+     * `fatfs_get_cluster_size_in_bytes()`. We later create a Shared Data queue
+     * with buffers sized by the actual cluster size of the file system and save
+     * this to `global_mmc_driver_client`. */
     blk_shared_data_queue_t shared_data_queue = {0};
     blk_shared_data_queue_result_t shared_data_queue_init_result = blk_shared_data_queue_init(
             &shared_data_queue,
             mmc_driver_shared_data,
             SEL4CP_MAX_PAGE_SIZE,
-            FAT_CLUSTER_SIZE /* TODO: Figure out how to obtain this info dynamically. */
+            MAX_FAT_CLUSTER_SIZE
     );
     if (shared_data_queue_init_result != OK_BLK_SHARED_DATA_QUEUE) {
         log_error("Failed to initialise `mmc_driver_shared_data_queue` with code %d.", shared_data_queue_init_result);
@@ -79,7 +107,56 @@ void init(void) {
      * data structures to interact with the `mmc_driver`. */
     disk_sddf_init(&global_mmc_driver_client);
 
-    /* TODO: E2E test the state of the above data structures. */
+    /* Get the size of the FatFs I/O cluster in bytes. */
+    size_t cluster_size_in_bytes = 0;
+    res = fatfs_get_cluster_size_in_bytes(
+            &global_mmc_driver_client,
+            &cluster_size_in_bytes
+    );
+    if (result_is_err(res)) {
+        result_printf(res);
+        return;
+    }
+    log_trace("Cluster size in bytes: 0x%lx", cluster_size_in_bytes);
+
+    /* Now we create a `shared_data_queue` with buffers sized as
+     * `cluster_size_in_bytes`. */
+    shared_data_queue_init_result = blk_shared_data_queue_init(
+            &shared_data_queue,
+            mmc_driver_shared_data,
+            SEL4CP_MAX_PAGE_SIZE,
+            cluster_size_in_bytes
+    );
+    if (shared_data_queue_init_result != OK_BLK_SHARED_DATA_QUEUE) {
+        log_error("Failed to initialise `mmc_driver_shared_data_queue` with code %d.", shared_data_queue_init_result);
+        return;
+    }
+    /* Set the `shared_data_queue` field in `global_mmc_driver_client` to our
+     * new `shared_data_queue`.  */
+    res = mmc_driver_client_set_shared_data_queue(
+            &global_mmc_driver_client,
+            &shared_data_queue
+    );
+    if (result_is_err(res)) {
+        result_printf(res);
+        return;
+    }
+
+    /* Obtain the capacity of `shared_data_queue` to print out.*/
+    size_t capacity = 0;
+    blk_shared_data_queue_result_t capacity_result = blk_shared_data_queue_capacity(
+            &shared_data_queue,
+            &capacity
+    );
+    if (capacity_result != OK_BLK_SHARED_DATA_QUEUE) {
+        log_error("Failed to get capacity of `mmc_driver_shared_data_queue` with code %d.", capacity_result);
+        return;
+    }
+    log_trace("Shared data queue capacity: %ld", capacity);
+
+    /* TODO: Remove this second init(). */
+    disk_sddf_init(&global_mmc_driver_client);
+
     res = fatfs_e2e_diskio_test();
     if (result_is_err(res)) {
         result_printf(res);

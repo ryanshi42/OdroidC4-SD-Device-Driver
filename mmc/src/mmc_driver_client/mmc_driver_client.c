@@ -23,12 +23,21 @@ result_t mmc_driver_client_init(
     mmc_driver_client->sel4cp_channel_id_request = sel4cp_channel_id_request;
     mmc_driver_client->request_queue = request_queue;
     mmc_driver_client->response_queue = response_queue;
-    if (blk_shared_data_queue_copy(
-            &mmc_driver_client->shared_data_queue,
-            shared_data_queue
-    ) != OK_BLK_SHARED_DATA_QUEUE) {
-        return result_err("Failed to copy `shared_data_queue` to `mmc_driver_client->shared_data_queue`.");
+    mmc_driver_client->shared_data_queue = *shared_data_queue;
+    return result_ok();
+}
+
+result_t mmc_driver_client_set_shared_data_queue(
+        mmc_driver_client_t *mmc_driver_client,
+        blk_shared_data_queue_t *shared_data_queue
+) {
+    if (mmc_driver_client == NULL) {
+        return result_err("NULL `mmc_driver_client` passed to mmc_driver_client_set_shared_data_queue().");
     }
+    if (shared_data_queue == NULL) {
+        return result_err("NULL `shared_data_queue` passed to mmc_driver_client_set_shared_data_queue().");
+    }
+    mmc_driver_client->shared_data_queue = *shared_data_queue;
     return result_ok();
 }
 

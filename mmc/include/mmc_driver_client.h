@@ -38,6 +38,17 @@ result_t mmc_driver_client_init(
 );
 
 /**
+ * Sets the `shared_data_queue` field of `mmc_driver_client`.
+ * @param mmc_driver_client
+ * @param shared_data_queue
+ * @return
+ */
+result_t mmc_driver_client_set_shared_data_queue(
+        mmc_driver_client_t *mmc_driver_client,
+        blk_shared_data_queue_t *shared_data_queue
+);
+
+/**
  * Services the `GET_SECTOR_COUNT` FatFs request.
  * @param mmc_driver_client
  * @param ret_val
