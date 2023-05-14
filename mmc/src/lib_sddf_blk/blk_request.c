@@ -90,14 +90,14 @@ blk_request_result_t blk_request_init_get_block_size(
     );
 }
 
-blk_request_result_t blk_request_init_ctrl_sync(
+blk_request_result_t blk_request_init_flush(
         blk_request_t *request,
         blk_shared_data_buf_t *shared_data_buf
 ) {
     return blk_request_init_no_args(
             request,
             shared_data_buf,
-            CTRL_SYNC
+            FLUSH
     );
 }
 

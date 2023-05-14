@@ -297,7 +297,7 @@ void notified(sel4cp_channel ch) {
                         *((size_t *) buf_vaddr) = block_size;
                         break;
                     }
-                    case CTRL_SYNC: {
+                    case FLUSH: {
                         break;
                     }
                     case READ: {

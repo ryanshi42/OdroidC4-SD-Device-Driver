@@ -11,7 +11,7 @@
 enum blk_request_operation {
     GET_NUM_BLOCKS,
     GET_BLOCK_SIZE,
-    CTRL_SYNC,
+    FLUSH,
     READ,
     WRITE,
 };
@@ -60,12 +60,12 @@ blk_request_result_t blk_request_init_get_block_size(
 );
 
 /**
- * Initialises a `CTRL_SYNC` request.
+ * Initialises a `FLUSH` request.
  * @param request
  * @param shared_data_buf
  * @return
  */
-blk_request_result_t blk_request_init_ctrl_sync(
+blk_request_result_t blk_request_init_flush(
         blk_request_t *request,
         blk_shared_data_buf_t *shared_data_buf
 );
