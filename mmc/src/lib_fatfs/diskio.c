@@ -273,11 +273,14 @@ DRESULT disk_ioctl(
                     break;
                 }
                 case CTRL_SYNC: {
-//                    result_t res_mmc = mmc_driver_write_flush();
-//                    if (result_is_err(res_mmc)) {
-//                        res = RES_ERROR;
-//                        break;
-//                    }
+                    if (result_is_err(
+                            mmc_driver_client_sync(
+                                    fatfs_mmc_driver_client
+                            )
+                    )) {
+                        res = RES_ERROR;
+                        break;
+                    }
                     res = RES_OK;
                     break;
                 }

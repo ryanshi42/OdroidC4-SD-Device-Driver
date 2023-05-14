@@ -297,7 +297,8 @@ void notified(sel4cp_channel ch) {
                         *((size_t *) buf_vaddr) = block_size;
                         break;
                     }
-                    case FLUSH: {
+                    case SYNC: {
+                        res = mmc_driver_write_flush();
                         break;
                     }
                     case READ: {

@@ -60,6 +60,15 @@ result_t mmc_driver_client_get_block_size(
 );
 
 /**
+ * Services the `CTRL_SYNC` FatFs request.
+ * @param mmc_driver_client
+ * @return
+ */
+result_t mmc_driver_client_sync(
+        mmc_driver_client_t *mmc_driver_client
+);
+
+/**
  * Services the `READ` FatFs request.
  * @param mmc_driver_client
  * @param lba

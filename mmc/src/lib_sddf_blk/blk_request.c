@@ -90,15 +90,15 @@ blk_request_result_t blk_request_init_get_block_size(
     );
 }
 
-blk_request_result_t blk_request_init_flush(
-        blk_request_t *request,
-        blk_shared_data_buf_t *shared_data_buf
+blk_request_result_t blk_request_init_sync(
+        blk_request_t *request
 ) {
-    return blk_request_init_no_args(
-            request,
-            shared_data_buf,
-            FLUSH
-    );
+    if (request == NULL) {
+        return ERR_NULL_BLK_REQUEST;
+    }
+    memset(request, 0, sizeof(*request));
+    request->operation = SYNC;
+    return OK_BLK_REQUEST;
 }
 
 blk_request_result_t blk_request_init_read(
