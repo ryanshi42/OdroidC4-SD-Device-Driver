@@ -251,6 +251,12 @@ result_t mmc_driver_client_read(
     ) != OK_BLK_SHARED_DATA_BUF) {
         return result_err("Failed to get virtual address of shared data buffer in mmc_driver_client_read().");
     }
+    /* If the Response was a success, get the number of blocks from the Shared
+     * Data buffer. */
+    if (is_response_ok) {
+        /* Copy data from the Shared Data buffer into the user's buffer. */
+        memcpy(dst_buf, (char *) buf_vaddr, num_blocks * block_size);
+    }
     /* Enqueue the Shared Data buffer back onto the Shared Data buffer queue for
      * reuse by other Requests. */
     if (blk_shared_data_queue_enqueue(
@@ -259,12 +265,8 @@ result_t mmc_driver_client_read(
     ) != OK_BLK_SHARED_DATA_QUEUE) {
         return result_err("Failed to enqueue the Shared Data buffer back onto the Shared Data buffer queue.");
     }
-    /* If the Response was a success, get the number of blocks from the Shared
-     * Data buffer. Otherwise, return an error. */
-    if (is_response_ok) {
-        /* Copy data from the Shared Data buffer into the user's buffer. */
-        memcpy(dst_buf, (char *) buf_vaddr, num_blocks * block_size);
-    } else {
+    /* If the Response was an error, return an error. */
+    if (!is_response_ok) {
         return result_err("Response was not OK in mmc_driver_client_read().");
     }
     return result_ok();
