@@ -21,16 +21,16 @@ result_t fatfs_get_cluster_size_in_bytes(
         size_t *ret_val
 ) {
     /* Get the size of the cluster in blocks from FatFs. */
-    result_t res;
+    FRESULT res_f_mount;
     FATFS fs = {0};
-    res = f_mount(&fs, "", 1);
-    if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to get cluster size from FatFs.");
+    res_f_mount = f_mount(&fs, "", 1);
+    if (res_f_mount != FR_OK) {
+        return result_err("Failed to get cluster size from FatFs.");
     }
     size_t const cluster_size_in_blocks = fs.csize;
     /* Get the size of each block in bytes using `global_mmc_driver_client`. */
     uint16_t block_size_in_bytes = 0;
-    res = mmc_driver_client_get_block_size(
+    result_t res = mmc_driver_client_get_block_size(
             mmc_driver_client,
             &block_size_in_bytes
     );
