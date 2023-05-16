@@ -74,7 +74,7 @@ void init(void) {
 
     /* Run E2E tests to verify sleep works properly, which our SD card driver
      * depends upon.*/
-    e2e_test_sleep();
+    mmc_driver_e2e_sleep();
 
     /* Initialise and reset the Pi's SD card Host Controller. */
     res = bcm_emmc_init(
@@ -113,7 +113,7 @@ void init(void) {
     log_trace("Finished setting SD bus width to maximum possible value.");
 
     /* Running E2E tests to verify our SD card driver works properly.*/
-    res = e2e_test_read_write_simple(
+    res = mmc_driver_e2e_read_write_simple(
             (bcm_emmc_regs_t *) emmc_base_vaddr,
             &global_sdcard
     );
@@ -122,7 +122,7 @@ void init(void) {
         return;
     }
 
-    res = e2e_test_read_write_multiple_blocks(
+    res = mmc_driver_e2e_read_write_multiple_blocks(
             (bcm_emmc_regs_t *) emmc_base_vaddr,
             &global_sdcard
     );
@@ -131,7 +131,7 @@ void init(void) {
         return;
     }
 
-    res = e2e_test_sdcard_card_specific_data(&global_sdcard);
+    res = mmc_driver_e2e_sdcard_card_specific_data(&global_sdcard);
     if (result_is_err(res)) {
         result_printf(res);
         return;

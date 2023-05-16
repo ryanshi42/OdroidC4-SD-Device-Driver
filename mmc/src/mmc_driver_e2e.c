@@ -1,7 +1,7 @@
 #include "mmc_driver_e2e.h"
 
-result_t e2e_test_sleep() {
-    log_info("Starting e2e_test_sleep().");
+result_t mmc_driver_e2e_sleep() {
+    log_info("Starting mmc_driver_e2e_sleep().");
 
     uint64_t start_ticks, finish_ticks, delta_ticks;
     start_ticks = clock_getticks();
@@ -18,15 +18,15 @@ result_t e2e_test_sleep() {
     log_info("delta_ticks (sleep_cyc): %lu", delta_ticks);
     assert(delta_ticks <= 10);
 
-    log_info("Finished e2e_test_sleep().");
+    log_info("Finished mmc_driver_e2e_sleep().");
     return result_ok();
 }
 
-result_t e2e_test_read_write_simple(
+result_t mmc_driver_e2e_read_write_simple(
         bcm_emmc_regs_t *bcm_emmc_regs,
         sdcard_t *sdcard
 ) {
-    log_info("Starting e2e_test_read_write_simple().");
+    log_info("Starting mmc_driver_e2e_read_write_simple().");
     result_t res;
     sdhci_result_t sdhci_result;
 
@@ -115,15 +115,15 @@ result_t e2e_test_read_write_simple(
     /* Assert the counter equals `num_iterations`. */
     assert(num_iterations == *counter);
 
-    log_info("Finished e2e_test_read_write_simple().");
+    log_info("Finished mmc_driver_e2e_read_write_simple().");
     return result_ok();
 }
 
-result_t e2e_test_read_write_multiple_blocks(
+result_t mmc_driver_e2e_read_write_multiple_blocks(
         bcm_emmc_regs_t *bcm_emmc_regs,
         sdcard_t *sdcard
 ) {
-    log_info("Starting e2e_test_read_write_multiple_blocks().");
+    log_info("Starting mmc_driver_e2e_read_write_multiple_blocks().");
     result_t res;
     sdhci_result_t sdhci_result;
 
@@ -181,12 +181,12 @@ result_t e2e_test_read_write_multiple_blocks(
         /* Assert that the buffer is filled with 'a'. */
         assert(buf[i] == 'a');
     }
-    log_info("Finished e2e_test_read_write_multiple_blocks().");
+    log_info("Finished mmc_driver_e2e_read_write_multiple_blocks().");
     return result_ok();
 }
 
-result_t e2e_test_sdcard_card_specific_data(sdcard_t *sdcard) {
-    log_info("Starting e2e_test_sdcard_card_specific_data().");
+result_t mmc_driver_e2e_sdcard_card_specific_data(sdcard_t *sdcard) {
+    log_info("Starting mmc_driver_e2e_sdcard_card_specific_data().");
 
     /* Get the memory capacity of SD card. */
     uint64_t memory_capacity = 0;
@@ -221,6 +221,6 @@ result_t e2e_test_sdcard_card_specific_data(sdcard_t *sdcard) {
     log_info("Block size of SD card is %d bytes.", block_size);
     assert(512 == block_size);
 
-    log_info("Finished e2e_test_sdcard_card_specific_data().");
+    log_info("Finished mmc_driver_e2e_sdcard_card_specific_data().");
     return result_ok();
 }

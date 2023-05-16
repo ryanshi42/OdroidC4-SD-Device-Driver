@@ -15,13 +15,13 @@
  * Tests if sleep is working.
  * @return
  */
-result_t e2e_test_sleep();
+result_t mmc_driver_e2e_sleep();
 
 /**
  * Simple read/write test on the SD card.
  * @return
  */
-result_t e2e_test_read_write_simple(
+result_t mmc_driver_e2e_read_write_simple(
         bcm_emmc_regs_t *bcm_emmc_regs,
         sdcard_t *sdcard
 );
@@ -33,7 +33,7 @@ result_t e2e_test_read_write_simple(
  * @param sdcard
  * @return
  */
-result_t e2e_test_read_write_multiple_blocks(
+result_t mmc_driver_e2e_read_write_multiple_blocks(
         bcm_emmc_regs_t *bcm_emmc_regs,
         sdcard_t *sdcard
 );
@@ -43,5 +43,5 @@ result_t e2e_test_read_write_multiple_blocks(
  * @param sdcard
  * @return
  */
-result_t e2e_test_sdcard_card_specific_data(sdcard_t *sdcard);
+result_t mmc_driver_e2e_sdcard_card_specific_data(sdcard_t *sdcard);
 
