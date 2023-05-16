@@ -27,7 +27,7 @@ result_t fatfs_e2e_write_fsync_read_close_simple(void);
 
 
 /**
- * Tests writing a large file.
+ * Tests writing/reading a large amount to/from file.
  * @param cluster_size_in_bytes
  * @return
  */

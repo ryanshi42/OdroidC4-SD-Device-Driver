@@ -87,9 +87,9 @@ result_t fatfs_e2e_write_fsync_read_close_simple(void) {
     FATFS fs;
     FRESULT res;
     FIL fp = {0};
-    const char *path = "fatfs_e2e_write_fsync_read_close_simple.txt";
-    const char str[] = "Hello World!";
-    const size_t str_len = sizeof(str);
+    char const *path = "fatfs_e2e_write_fsync_read_close_simple.txt";
+    char const str[] = "Hello World!";
+    size_t const str_len = sizeof(str);
 
     res = f_mount(&fs, "", 0);
     if (res != FR_OK) {
@@ -146,10 +146,7 @@ result_t fatfs_e2e_write_fsync_read_close_simple(void) {
 }
 
 result_t fatfs_e2e_write_read_large(size_t cluster_size_in_bytes) {
-    char *buf = (char *) malloc(cluster_size_in_bytes * sizeof(char));
-    assert(buf != NULL);
-
-    free(buf);
+    log_info("Starting fatfs_e2e_write_read_large().");
 
     FATFS fs;
     FRESULT res = f_mount(&fs, "", 0);
@@ -158,7 +155,65 @@ result_t fatfs_e2e_write_read_large(size_t cluster_size_in_bytes) {
     }
     assert(FR_OK == res);
 
+    /* Create a buffer twice the size of a cluster. */
+    size_t const buf_size = 2 * cluster_size_in_bytes * sizeof(char);
+    char *buf_write = (char *) malloc(buf_size);
+    assert(buf_write != NULL);
+    /* Make the buffer all 'a'. */
+    memset(buf_write, 'a', buf_size);
 
+    /* Create a new file for testing. */
+    FIL fp = {0};
+    char const *path = "fatfs_e2e_write_read_large.txt";
+    res = f_open(&fp, path, FA_WRITE | FA_READ | FA_CREATE_ALWAYS);
+    if (res != FR_OK) {
+        log_info("Error opening file with res of %d.", res);
+    }
+    assert(FR_OK == res);
 
+    /* Write the entire buffer to the file. */
+    unsigned int bytes_written;
+    res = f_write(&fp, buf_write, buf_size, (UINT *) &bytes_written);
+    if (res != FR_OK) {
+        log_info("Error writing to file with res of %d.", res);
+    }
+    assert(FR_OK == res);
+    log_info("Wrote %d bytes to file.", bytes_written);
+    assert(buf_size == bytes_written);
+
+    /* Move file pointer to beginning of file. */
+    res = f_lseek(&fp, 0);
+    if (res != FR_OK) {
+        log_info("Error seeking file with res of %d.", res);
+    }
+
+    /* We allocate another buffer for reading. */
+    char *buf_read = (char *) malloc(buf_size);
+    assert(buf_read != NULL);
+    /* Make the buffer all 'b'. */
+    memset(buf_read, 'b', buf_size);
+
+    /* Now we try to read the buffer we just wrote. */
+    unsigned int bytes_read;
+    res = f_read(&fp, buf_read, buf_size, (UINT *) &bytes_read);
+    if (res != FR_OK) {
+        log_info("Error reading file with res of %d.", res);
+    }
+    assert(FR_OK == res);
+    log_info("Read %d bytes from file.", bytes_read);
+    assert(buf_size == bytes_read);
+
+    /* We must also check the buffers are identical. */
+    assert(memcmp(buf_write, buf_read, buf_size) == 0);
+
+    /* Then we close the file. */
+    res = f_close(&fp);
+    if (res != FR_OK) {
+        log_info("Error closing file with res of %d.", res);
+    }
+    assert(FR_OK == res);
+
+    log_info("Finished fatfs_e2e_write_read_large().");
     return result_ok();
 }
+
