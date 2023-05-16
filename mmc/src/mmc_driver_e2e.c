@@ -1,4 +1,4 @@
-#include "e2e_test.h"
+#include "mmc_driver_e2e.h"
 
 result_t e2e_test_sleep() {
     log_info("Starting e2e_test_sleep().");

@@ -10,7 +10,7 @@
 #include "printf.h"
 #include "timer_client.h"
 #include "sdcard.h"
-#include "e2e_test.h"
+#include "mmc_driver_e2e.h"
 #include "sdhci.h"
 #include "blk_request_queue.h"
 #include "blk_request.h"

@@ -121,6 +121,7 @@ void init(void) {
         result_printf(res);
         return;
     }
+
     res = e2e_test_read_write_multiple_blocks(
             (bcm_emmc_regs_t *) emmc_base_vaddr,
             &global_sdcard
@@ -129,13 +130,13 @@ void init(void) {
         result_printf(res);
         return;
     }
+
     res = e2e_test_sdcard_card_specific_data(&global_sdcard);
     if (result_is_err(res)) {
         result_printf(res);
         return;
     }
-    log_info("Successfully finished E2E tests.");
-
+    log_info("Successfully finished E2E tests for MMC Driver.");
 }
 
 result_t mmc_driver_get_num_blocks(uint64_t *ret_val) {

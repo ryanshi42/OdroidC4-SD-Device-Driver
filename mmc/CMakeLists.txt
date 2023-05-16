@@ -425,10 +425,10 @@ target_link_libraries(
         mmc_rpi3b_lib_gpio_driver
 )
 
-add_library(mmc_rpi3b_lib_e2e_test src/e2e_test.c)
-target_include_directories(mmc_rpi3b_lib_e2e_test PUBLIC include/)
+add_library(mmc_rpi3b_lib_mmc_driver_e2e src/mmc_driver_e2e.c)
+target_include_directories(mmc_rpi3b_lib_mmc_driver_e2e PUBLIC include/)
 target_link_libraries(
-        mmc_rpi3b_lib_e2e_test
+        mmc_rpi3b_lib_mmc_driver_e2e
         mmc_rpi3b_lib_result
         mmc_rpi3b_lib_sleep
         mmc_rpi3b_lib_assert
@@ -449,7 +449,7 @@ target_link_libraries(
         mmc_rpi3b_lib_log
         mmc_rpi3b_lib_timer_client
         mmc_rpi3b_lib_sdcard
-        mmc_rpi3b_lib_e2e_test
+        mmc_rpi3b_lib_mmc_driver_e2e
         mmc_rpi3b_lib_sdhci
         mmc_rpi3b_lib_blk_request_queue
         mmc_rpi3b_lib_blk_request
