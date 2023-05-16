@@ -145,8 +145,8 @@ result_t fatfs_e2e_write_fsync_read_close_simple(void) {
     return result_ok();
 }
 
-result_t fatfs_e2e_write_read_large(size_t cluster_size_in_bytes) {
-    log_info("Starting fatfs_e2e_write_read_large().");
+result_t fatfs_e2e_write_read_custom(size_t const buf_size_in_bytes) {
+    log_info("Starting fatfs_e2e_write_read_large() with %ld bytes.", buf_size_in_bytes);
 
     FATFS fs;
     FRESULT res = f_mount(&fs, "", 0);
@@ -156,11 +156,10 @@ result_t fatfs_e2e_write_read_large(size_t cluster_size_in_bytes) {
     assert(FR_OK == res);
 
     /* Create a buffer twice the size of a cluster. */
-    size_t const buf_size = 2 * cluster_size_in_bytes * sizeof(char);
-    char *buf_write = (char *) malloc(buf_size);
+    char *buf_write = (char *) malloc(buf_size_in_bytes);
     assert(buf_write != NULL);
     /* Make the buffer all 'a'. */
-    memset(buf_write, 'a', buf_size);
+    memset(buf_write, 'a', buf_size_in_bytes);
 
     /* Create a new file for testing. */
     FIL fp = {0};
@@ -173,13 +172,13 @@ result_t fatfs_e2e_write_read_large(size_t cluster_size_in_bytes) {
 
     /* Write the entire buffer to the file. */
     unsigned int bytes_written;
-    res = f_write(&fp, buf_write, buf_size, (UINT *) &bytes_written);
+    res = f_write(&fp, buf_write, buf_size_in_bytes, (UINT *) &bytes_written);
     if (res != FR_OK) {
         log_info("Error writing to file with res of %d.", res);
     }
     assert(FR_OK == res);
     log_info("Wrote %d bytes to file.", bytes_written);
-    assert(buf_size == bytes_written);
+    assert(buf_size_in_bytes == bytes_written);
 
     /* Move file pointer to beginning of file. */
     res = f_lseek(&fp, 0);
@@ -188,23 +187,23 @@ result_t fatfs_e2e_write_read_large(size_t cluster_size_in_bytes) {
     }
 
     /* We allocate another buffer for reading. */
-    char *buf_read = (char *) malloc(buf_size);
+    char *buf_read = (char *) malloc(buf_size_in_bytes);
     assert(buf_read != NULL);
     /* Make the buffer all 'b'. */
-    memset(buf_read, 'b', buf_size);
+    memset(buf_read, 'b', buf_size_in_bytes);
 
     /* Now we try to read the buffer we just wrote. */
     unsigned int bytes_read;
-    res = f_read(&fp, buf_read, buf_size, (UINT *) &bytes_read);
+    res = f_read(&fp, buf_read, buf_size_in_bytes, (UINT *) &bytes_read);
     if (res != FR_OK) {
         log_info("Error reading file with res of %d.", res);
     }
     assert(FR_OK == res);
     log_info("Read %d bytes from file.", bytes_read);
-    assert(buf_size == bytes_read);
+    assert(buf_size_in_bytes == bytes_read);
 
     /* We must also check the buffers are identical. */
-    assert(memcmp(buf_write, buf_read, buf_size) == 0);
+    assert(memcmp(buf_write, buf_read, buf_size_in_bytes) == 0);
 
     /* Then we close the file. */
     res = f_close(&fp);
@@ -212,6 +211,10 @@ result_t fatfs_e2e_write_read_large(size_t cluster_size_in_bytes) {
         log_info("Error closing file with res of %d.", res);
     }
     assert(FR_OK == res);
+
+    /* We must free both of the buffers we dynamically allocated. */
+    free(buf_write);
+    free(buf_read);
 
     log_info("Finished fatfs_e2e_write_read_large().");
     return result_ok();

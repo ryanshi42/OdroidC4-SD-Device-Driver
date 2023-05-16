@@ -25,10 +25,9 @@ result_t fatfs_e2e_write_close_read_simple(void);
  */
 result_t fatfs_e2e_write_fsync_read_close_simple(void);
 
-
 /**
- * Tests writing/reading a large amount to/from file.
- * @param cluster_size_in_bytes
+ * Tests writing/reading a user-specified amount to/from file.
+ * @param buf_size_in_bytes
  * @return
  */
-result_t fatfs_e2e_write_read_large(size_t cluster_size_in_bytes);
+result_t fatfs_e2e_write_read_custom(size_t buf_size_in_bytes);

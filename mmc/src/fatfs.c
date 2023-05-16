@@ -163,6 +163,8 @@ void init(void) {
     /* TODO: Remove this second init(). */
     disk_sddf_init(&global_mmc_driver_client);
 
+    /* End-to-end tests to verify FatFs functionality. */
+
     res = fatfs_e2e_diskio_test();
     if (result_is_err(res)) {
         result_printf(res);
@@ -181,7 +183,13 @@ void init(void) {
         return;
     }
 
-    res = fatfs_e2e_write_read_large(cluster_size_in_bytes);
+    res = fatfs_e2e_write_read_custom(2 * cluster_size_in_bytes);
+    if (result_is_err(res)) {
+        result_printf(res);
+        return;
+    }
+
+    res = fatfs_e2e_write_read_custom(10 * cluster_size_in_bytes);
     if (result_is_err(res)) {
         result_printf(res);
         return;
