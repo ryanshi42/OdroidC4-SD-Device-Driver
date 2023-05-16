@@ -26,9 +26,9 @@ blk_shared_data_queue_result_t blk_shared_data_queue_init(
     queue->num_data_bufs = (shared_data_region_size / shared_data_buf_size);
     /* We need at least one slot in `num_data_bufs` to be empty to ensure the
      * head and tail of our ring buffer do not point to the same element in the
-     * ring buffer when our ring buffer is full. This breaks the ambiguity that
-     * arises from the head and tail pointer pointing to the same element, which
-     * occurs when the ring buffer is empty. */
+     * ring buffer when our ring buffer is full. Otherwise, we'll have ambiguity
+     * from the head and tail pointer pointing to the same element, which
+     * already occurs when the ring buffer is empty. */
     if (MAX_NUM_BLK_SHARED_DATA_BUFS < queue->num_data_bufs + 1) {
         return ERR_INCREASE_MAX_NUM_BLK_SHARED_DATA_BUFS;
     }
