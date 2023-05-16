@@ -31,6 +31,8 @@ SEL4CP_TOOL ?= $(SEL4CP_SDK)/bin/sel4cp
 
 # Specifies where the source files are.
 SRC_DIR := src
+# Specifies where the library files are.
+LIB_DIR := lib
 # Specifies where the ring buffer files are.
 LIB_SHARED_RINGBUFFER_DIR := $(SRC_DIR)/libsharedringbuffer
 LIB_PRINTF_DIR := $(SRC_DIR)/lib_printf
@@ -40,6 +42,7 @@ LIB_CLOCK_DIR := $(SRC_DIR)/lib_clock
 LIB_RESULT_DIR := $(SRC_DIR)/lib_result
 LIB_FATFS_DIR := $(SRC_DIR)/lib_fatfs
 LIB_SDDF_BLK_DIR := $(SRC_DIR)/lib_sddf_blk
+LIB_MEMORY := $(SRC_DIR)/lib_memory
 
 BOARD_DIR := $(SEL4CP_SDK)/board/$(SEL4CP_BOARD)/$(SEL4CP_CONFIG)
 
@@ -52,8 +55,17 @@ CFLAGS := \
 	-Wall \
 	-Werror \
 	-Wno-unused-function
-LDFLAGS := -L$(BOARD_DIR)/lib
-LIBS := -lsel4cp -Tsel4cp.ld -lc
+
+LDFLAGS := \
+	-L$(BOARD_DIR)/lib \
+	-L$(LIB_DIR)/libc \
+	-L$(LIB_DIR)/libmemory \
+
+LIBS := \
+	-lsel4cp \
+	-Tsel4cp.ld \
+	-lc \
+	-lmemory_freelist \
 
 IMAGE_FILE = $(BUILD_DIR)/loader.img
 REPORT_FILE = $(BUILD_DIR)/report.txt
@@ -69,6 +81,7 @@ CFLAGS += \
 	-I$(LIB_RESULT_DIR) \
 	-I$(LIB_FATFS_DIR) \
 	-I$(LIB_SDDF_BLK_DIR) \
+	-I$(LIB_MEMORY) \
 
 # Specifies which Object files in $(BUILD_DIR) should be linked.
 SERIAL_DRIVER_OBJS := \
@@ -187,6 +200,7 @@ directories:
 	mkdir -p $(BUILD_DIR)/lib_result
 	mkdir -p $(BUILD_DIR)/lib_fatfs
 	mkdir -p $(BUILD_DIR)/lib_sddf_blk
+	mkdir -p $(BUILD_DIR)/lib_memory
 	mkdir -p $(BUILD_DIR)/common
 	mkdir -p $(BUILD_DIR)/mmc_driver
 	mkdir -p $(BUILD_DIR)/mmc_driver_client

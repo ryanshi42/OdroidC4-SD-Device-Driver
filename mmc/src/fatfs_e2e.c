@@ -145,4 +145,20 @@ result_t fatfs_e2e_write_fsync_read_close_simple(void) {
     return result_ok();
 }
 
+result_t fatfs_e2e_write_read_large(size_t cluster_size_in_bytes) {
+    char *buf = (char *) malloc(cluster_size_in_bytes * sizeof(char));
+    assert(buf != NULL);
 
+    free(buf);
+
+    FATFS fs;
+    FRESULT res = f_mount(&fs, "", 0);
+    if (res != FR_OK) {
+        log_info("Error mounting FS with res of %d.", res);
+    }
+    assert(FR_OK == res);
+
+
+
+    return result_ok();
+}

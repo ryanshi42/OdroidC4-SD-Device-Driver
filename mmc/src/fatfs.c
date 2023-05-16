@@ -16,6 +16,9 @@ uintptr_t mmc_driver_shared_data;
  * interact with the `mmc_driver`. */
 mmc_driver_client_t global_mmc_driver_client = {0};
 
+/* Global static space allocated for the heap. */
+uint8_t heap[0x100000] = {0};
+
 result_t fatfs_get_cluster_size_in_bytes(
         mmc_driver_client_t *mmc_driver_client,
         size_t *ret_val
@@ -46,6 +49,9 @@ void init(void) {
             FATFS_TO_SERIAL_CLIENT_PUTCHAR_CHANNEL
     );
     log_trace("Starting init() in FatFs Protection Domain...");
+
+    /* Initialising the heap. */
+    malloc_addblock(heap, sizeof(heap));
 
     /* We're initialising all the following data structures required to
      * interface with our MMC driver here so there is no need to re-initialise
@@ -170,6 +176,12 @@ void init(void) {
     }
 
     res = fatfs_e2e_write_fsync_read_close_simple();
+    if (result_is_err(res)) {
+        result_printf(res);
+        return;
+    }
+
+    res = fatfs_e2e_write_read_large(cluster_size_in_bytes);
     if (result_is_err(res)) {
         result_printf(res);
         return;
