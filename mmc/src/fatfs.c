@@ -160,7 +160,7 @@ void init(void) {
     }
     log_trace("Shared data queue capacity: %ld", capacity);
 
-    /* TODO: Remove this second init(). */
+    /* TODO: Look into this. */
     disk_sddf_init(&global_mmc_driver_client);
 
     /* End-to-end tests to verify FatFs functionality. */
