@@ -54,8 +54,8 @@ void init(void) {
     malloc_addblock(heap, sizeof(heap));
 
     /* We're initialising all the following data structures required to
-     * interface with our MMC driver here so there is no need to re-initialise
-     * these data structures in the MMC driver. */
+     * interface with `mmc_driver` here so there is no need to re-initialise
+     * these data structures in `mmc_driver` again. */
 
     blk_request_queue_t *request_queue = (blk_request_queue_t *) mmc_driver_request_queue;
     blk_request_queue_result_t request_queue_init_result = blk_request_queue_init(
