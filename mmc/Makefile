@@ -164,6 +164,7 @@ FATFS_OBJS := \
 	fatfs.o \
 	lib_printf/printf.o \
 	common/log.o \
+	common/memory_facade.o \
 	lib_result/result.o \
 	lib_result/result_prod.o \
 	lib_sddf_blk/blk_request.o \

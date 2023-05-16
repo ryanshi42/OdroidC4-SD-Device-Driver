@@ -18,6 +18,15 @@ target_include_directories(mmc_rpi3b_lib_shared_dma PUBLIC include/)
 add_library(mmc_rpi3b_lib_memory INTERFACE)
 target_include_directories(mmc_rpi3b_lib_memory INTERFACE src/lib_memory/)
 
+add_library(mmc_rpi3b_lib_memory_facade src/common/memory_facade.c)
+target_include_directories(mmc_rpi3b_lib_memory_facade PUBLIC include/)
+if (NOT MMC_RPI3B_UNIT_TEST)
+    target_link_libraries(
+            mmc_rpi3b_lib_memory_facade
+            mmc_rpi3b_lib_memory
+    )
+endif ()
+
 add_library(mmc_rpi3b_lib_printf src/lib_printf/printf.c)
 target_include_directories(mmc_rpi3b_lib_printf PUBLIC src/lib_printf/)
 target_link_libraries(
@@ -541,7 +550,7 @@ target_link_libraries(
         mmc_rpi3b_lib_ff
         mmc_rpi3b_lib_assert
         mmc_rpi3b_lib_log
-        mmc_rpi3b_lib_memory
+        mmc_rpi3b_lib_memory_facade
 )
 
 add_library(mmc_rpi3b_lib_fatfs src/fatfs.c)
@@ -575,7 +584,7 @@ target_link_libraries(
         mmc_rpi3b_lib_blk_response
         mmc_rpi3b_lib_blk_shared_data_buf
         mmc_rpi3b_lib_result
-        mmc_rpi3b_lib_memory
+        mmc_rpi3b_lib_memory_facade
 )
 
 

@@ -5,7 +5,7 @@
 #include "ff.h"
 #include "assert.h"
 #include "log.h"
-#include "malloc.h"
+#include "memory_facade.h"
 
 /**
  * Tests the low-level diskio.c glue functions that call into our MMC driver.
