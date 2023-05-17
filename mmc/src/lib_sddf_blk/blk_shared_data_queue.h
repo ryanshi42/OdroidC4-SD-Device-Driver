@@ -43,7 +43,7 @@ enum blk_shared_data_queue_result {
     ERR_NULL_BLK_SHARED_DATA_BUF_VAL = -6,
     ERR_BLK_SHARED_DATA_QUEUE_FULL = -7,
     ERR_BLK_SHARED_DATA_QUEUE_EMPTY = -8,
-    ERR_NULL_RET_VAL_PTR_PASSED_TO_BLK_SHARED_DATA_QUEUE_FN = -9, /* A NULL
+    ERR_NULL_RET_VAL_IN_BLK_SHARED_DATA_QUEUE = -9, /* A NULL
     `ret_val` pointer was passed into a `blk_shared_data_queue` function. */
     ERR_INIT_BLK_SHARED_DATA_BUF_IN_BLK_SHARED_DATA_QUEUE = -10, /* Failed to
     initialise `blk_shared_data_buf`. */

@@ -68,7 +68,7 @@ blk_shared_data_queue_result_t blk_shared_data_queue_capacity(
         return ERR_NULL_BLK_SHARED_DATA_QUEUE;
     }
     if (ret_val == NULL) {
-        return ERR_NULL_RET_VAL_PTR_PASSED_TO_BLK_SHARED_DATA_QUEUE_FN;
+        return ERR_NULL_RET_VAL_IN_BLK_SHARED_DATA_QUEUE;
     }
     *ret_val = queue->num_data_bufs;
     return OK_BLK_SHARED_DATA_QUEUE;
@@ -82,7 +82,7 @@ blk_shared_data_queue_result_t blk_shared_data_queue_size(
         return ERR_NULL_BLK_SHARED_DATA_QUEUE;
     }
     if (ret_val == NULL) {
-        return ERR_NULL_RET_VAL_PTR_PASSED_TO_BLK_SHARED_DATA_QUEUE_FN;
+        return ERR_NULL_RET_VAL_IN_BLK_SHARED_DATA_QUEUE;
     }
     size_t const head = queue->head_idx;
     size_t const tail = queue->tail_idx;
@@ -102,7 +102,7 @@ blk_shared_data_queue_result_t blk_shared_data_queue_is_empty(
         return ERR_NULL_BLK_SHARED_DATA_QUEUE;
     }
     if (ret_val == NULL) {
-        return ERR_NULL_RET_VAL_PTR_PASSED_TO_BLK_SHARED_DATA_QUEUE_FN;
+        return ERR_NULL_RET_VAL_IN_BLK_SHARED_DATA_QUEUE;
     }
     *ret_val = (queue->head_idx == queue->tail_idx);
     return OK_BLK_SHARED_DATA_QUEUE;
@@ -116,7 +116,7 @@ blk_shared_data_queue_result_t blk_shared_data_queue_is_full(
         return ERR_NULL_BLK_SHARED_DATA_QUEUE;
     }
     if (ret_val == NULL) {
-        return ERR_NULL_RET_VAL_PTR_PASSED_TO_BLK_SHARED_DATA_QUEUE_FN;
+        return ERR_NULL_RET_VAL_IN_BLK_SHARED_DATA_QUEUE;
     }
     size_t const head = queue->head_idx;
     size_t const tail = queue->tail_idx;
@@ -165,7 +165,7 @@ blk_shared_data_queue_result_t blk_shared_data_queue_dequeue(
         return ERR_NULL_BLK_SHARED_DATA_QUEUE;
     }
     if (ret_val == NULL) {
-        return ERR_NULL_RET_VAL_PTR_PASSED_TO_BLK_SHARED_DATA_QUEUE_FN;
+        return ERR_NULL_RET_VAL_IN_BLK_SHARED_DATA_QUEUE;
     }
     /* Return an error if the ring buffer is empty and there is nothing to
      * dequeue. */

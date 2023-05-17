@@ -176,7 +176,7 @@ TEST(test_blk_shared_data_queue, capacity_should_reject_null_queue) {
 TEST(test_blk_shared_data_queue, capacity_should_reject_null_capacity) {
     blk_shared_data_queue_t queue = {0};
     ASSERT_EQ(
-            ERR_NULL_RET_VAL_PTR_PASSED_TO_BLK_SHARED_DATA_QUEUE_FN,
+            ERR_NULL_RET_VAL_IN_BLK_SHARED_DATA_QUEUE,
             blk_shared_data_queue_capacity(
                     &queue,
                     NULL
