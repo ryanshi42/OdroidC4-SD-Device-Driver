@@ -41,10 +41,14 @@ blk_shared_data_queue_result_t blk_shared_data_queue_init(
     queue->tail_idx = 0;
     /* Enqueue all shared data buffers onto `data_bufs`. */
     for (size_t i = 0; i < queue->num_data_bufs; i++) {
-        blk_shared_data_buf_t data_buf = {
-                .buf_vaddr = queue->data_region + (i * queue->data_buf_size),
-                .buf_size = queue->data_buf_size,
-        };
+        blk_shared_data_buf_t data_buf = {0};
+        if (blk_shared_data_buf_init(
+                &data_buf,
+                queue->data_region + (i * queue->data_buf_size),
+                queue->data_buf_size
+        ) != OK_BLK_SHARED_DATA_BUF) {
+            return ERR_INIT_BLK_SHARED_DATA_BUF_IN_BLK_SHARED_DATA_QUEUE;
+        }
         blk_shared_data_queue_result_t res = blk_shared_data_queue_enqueue(
                 queue,
                 &data_buf
