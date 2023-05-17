@@ -1,10 +1,10 @@
 #include "blk_shared_data_queue.h"
 
 blk_shared_data_queue_result_t blk_shared_data_queue_init(
-        blk_shared_data_queue_t *queue,
-        uintptr_t shared_data_region_vaddr,
-        size_t shared_data_region_size,
-        size_t shared_data_buf_size
+        blk_shared_data_queue_t *const queue,
+        uintptr_t const shared_data_region_vaddr,
+        size_t const shared_data_region_size,
+        size_t const shared_data_buf_size
 ) {
     if (queue == NULL) {
         return ERR_NULL_BLK_SHARED_DATA_QUEUE;
@@ -61,8 +61,8 @@ blk_shared_data_queue_result_t blk_shared_data_queue_init(
 }
 
 blk_shared_data_queue_result_t blk_shared_data_queue_capacity(
-        blk_shared_data_queue_t *queue,
-        size_t *ret_val
+        blk_shared_data_queue_t *const queue,
+        size_t *const ret_val
 ) {
     if (queue == NULL) {
         return ERR_NULL_BLK_SHARED_DATA_QUEUE;
@@ -75,8 +75,8 @@ blk_shared_data_queue_result_t blk_shared_data_queue_capacity(
 }
 
 blk_shared_data_queue_result_t blk_shared_data_queue_size(
-        blk_shared_data_queue_t *queue,
-        size_t *ret_val
+        blk_shared_data_queue_t *const queue,
+        size_t *const ret_val
 ) {
     if (queue == NULL) {
         return ERR_NULL_BLK_SHARED_DATA_QUEUE;
@@ -95,8 +95,8 @@ blk_shared_data_queue_result_t blk_shared_data_queue_size(
 }
 
 blk_shared_data_queue_result_t blk_shared_data_queue_is_empty(
-        blk_shared_data_queue_t *queue,
-        bool *ret_val
+        blk_shared_data_queue_t *const queue,
+        bool *const ret_val
 ) {
     if (queue == NULL) {
         return ERR_NULL_BLK_SHARED_DATA_QUEUE;
@@ -109,8 +109,8 @@ blk_shared_data_queue_result_t blk_shared_data_queue_is_empty(
 }
 
 blk_shared_data_queue_result_t blk_shared_data_queue_is_full(
-        blk_shared_data_queue_t *queue,
-        bool *ret_val
+        blk_shared_data_queue_t *const queue,
+        bool *const ret_val
 ) {
     if (queue == NULL) {
         return ERR_NULL_BLK_SHARED_DATA_QUEUE;
@@ -126,8 +126,8 @@ blk_shared_data_queue_result_t blk_shared_data_queue_is_full(
 }
 
 blk_shared_data_queue_result_t blk_shared_data_queue_enqueue(
-        blk_shared_data_queue_t *queue,
-        blk_shared_data_buf_t *val
+        blk_shared_data_queue_t *const queue,
+        blk_shared_data_buf_t *const val
 ) {
     if (queue == NULL) {
         return ERR_NULL_BLK_SHARED_DATA_QUEUE;
@@ -158,8 +158,8 @@ blk_shared_data_queue_result_t blk_shared_data_queue_enqueue(
 }
 
 blk_shared_data_queue_result_t blk_shared_data_queue_dequeue(
-        blk_shared_data_queue_t *queue,
-        blk_shared_data_buf_t *ret_val
+        blk_shared_data_queue_t *const queue,
+        blk_shared_data_buf_t *const ret_val
 ) {
     if (queue == NULL) {
         return ERR_NULL_BLK_SHARED_DATA_QUEUE;
@@ -190,8 +190,8 @@ blk_shared_data_queue_result_t blk_shared_data_queue_dequeue(
 }
 
 blk_shared_data_queue_result_t blk_shared_data_queue_copy(
-        blk_shared_data_queue_t *dst_queue,
-        blk_shared_data_queue_t *src_queue
+        blk_shared_data_queue_t *const dst_queue,
+        blk_shared_data_queue_t *const src_queue
 ) {
     if (dst_queue == NULL || src_queue == NULL) {
         return ERR_NULL_BLK_SHARED_DATA_QUEUE;
