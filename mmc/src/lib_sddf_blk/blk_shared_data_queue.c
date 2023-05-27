@@ -148,10 +148,8 @@ blk_shared_data_queue_result_t blk_shared_data_queue_enqueue(
     /* Copy everything from `val` into `queue->data_bufs[queue->tail_idx]`. */
     /* TODO: Encapsulate into a function call. */
     memcpy(&queue->data_bufs[queue->tail_idx], val, sizeof(*val));
-    /* We place a memory barrier here to ensure that the instructions that
-     * update the tail index are guaranteed to occur after the buffer has been
-     * enqueued onto `queue->data_bufs`. */
-    THREAD_MEMORY_RELEASE();
+    /* We don't need a memory barrier here because this queue is only accessible
+     * to the client. */
     /* Update the tail index. */
     queue->tail_idx = (queue->tail_idx + 1) % MAX_NUM_BLK_SHARED_DATA_BUFS;
     return OK_BLK_SHARED_DATA_QUEUE;
@@ -180,10 +178,8 @@ blk_shared_data_queue_result_t blk_shared_data_queue_dequeue(
     /* Copy everything from `queue->data_bufs[queue->head_idx]` into `ret_val`. */
     /* TODO: Encapsulate into a function call. */
     memcpy(ret_val, &queue->data_bufs[queue->head_idx], sizeof(*ret_val));
-    /* We place a memory barrier here to ensure that the instructions that
-     * update the head index are guaranteed to occur after the buffer has been
-     * dequeued from `queue->data_bufs`. */
-    THREAD_MEMORY_RELEASE();
+    /* We don't need a memory barrier here because this queue is only accessible
+     * to the client. */
     /* Update the head index. */
     queue->head_idx = (queue->head_idx + 1) % MAX_NUM_BLK_SHARED_DATA_BUFS;
     return OK_BLK_SHARED_DATA_QUEUE;
