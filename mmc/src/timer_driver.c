@@ -46,10 +46,8 @@ seL4_MessageInfo_t protected(sel4cp_channel ch, sel4cp_msginfo msginfo) {
 }
 
 void notified(sel4cp_channel channel) {
-    timer_driver_t *timer_driver = &global_timer_driver; /* Local reference to global serial driver for our convenience. */
-    (void) timer_driver; /* Suppress unused variable warning. */
+    timer_driver_t *timer_driver = &global_timer_driver;
     switch(channel) {
-        /* If MMC has asked the serial client to `putchar`, then print out a character. */
         case TIMER_DRIVER_TO_MMC_DRIVER_GET_NUM_TICKS_CHANNEL: {
             uint64_t num_ticks;
             result_t res = bcm_timer_get_num_ticks(&timer_driver->bcm_timer, &num_ticks);
