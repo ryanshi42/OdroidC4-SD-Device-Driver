@@ -2,11 +2,11 @@
 
 
 result_t bcm_emmc_init(
-        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdhci_regs_t *sdhci_regs,
         bcm_gpio_regs_t *bcm_gpio_regs
 ) {
-    if (bcm_emmc_regs == NULL) {
-        return result_err("NULL `bcm_emmc_regs` passed to bcm_emmc_init().");
+    if (sdhci_regs == NULL) {
+        return result_err("NULL `sdhci_regs` passed to bcm_emmc_init().");
     }
     if (bcm_gpio_regs == NULL) {
         return result_err("NULL `bcm_gpio_regs` passed to bcm_emmc_init().");
@@ -133,17 +133,17 @@ result_t bcm_emmc_init(
      * Initialising the SDHCI SD card controller on the Pi.
      * ============================ */
     /* Set control0 to zero. */
-    res = bcm_emmc_regs_zero_control0(bcm_emmc_regs);
+    res = sdhci_regs_zero_control0(sdhci_regs);
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to zero `control0` in bcm_emmc_init().");
     }
     /* Set control1 to zero. */
-    res = bcm_emmc_regs_zero_control1(bcm_emmc_regs);
+    res = sdhci_regs_zero_control1(sdhci_regs);
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to zero `control1` in bcm_emmc_init().");
     }
     /* Reset the complete host circuit */
-    res = bcm_emmc_regs_reset_host_circuit(bcm_emmc_regs);
+    res = sdhci_regs_reset_host_circuit(sdhci_regs);
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to reset host circuit in bcm_emmc_init().");
     }
@@ -152,8 +152,8 @@ result_t bcm_emmc_init(
     bool is_host_circuit_reset = false;
     do {
         usleep(10); /* Wait for 10 microseconds. */
-        res = bcm_emmc_regs_is_host_circuit_reset(
-                bcm_emmc_regs,
+        res = sdhci_regs_is_host_circuit_reset(
+                sdhci_regs,
                 &is_host_circuit_reset
         );
         if (result_is_err(res)) {
@@ -164,12 +164,12 @@ result_t bcm_emmc_init(
         return result_err("Host circuit did not reset in bcm_emmc_init().");
     }
     /* Set the Data Timeout to the maximum value. */
-    res = bcm_emmc_regs_set_max_data_timeout(bcm_emmc_regs);
+    res = sdhci_regs_set_max_data_timeout(sdhci_regs);
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to set max data timeout in bcm_emmc_init().");
     }
     /* Enable the Internal Clock. */
-    res = bcm_emmc_regs_enable_internal_clock(bcm_emmc_regs);
+    res = sdhci_regs_enable_internal_clock(sdhci_regs);
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to enable internal clock in bcm_emmc_init().");
     }
@@ -178,14 +178,14 @@ result_t bcm_emmc_init(
 
     /* Set clock to low-speed setup frequency (400KHz). */
     log_trace("Setting clock to low-speed setup frequency (400KHz).");
-    res = sdhci_set_sd_clock(bcm_emmc_regs, 400000);
+    res = sdhci_set_sd_clock(sdhci_regs, 400000);
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to set clock to low-speed setup frequency in bcm_emmc_init().");
     }
 
     /* Enable interrupts. */
     log_trace("Enabling interrupts.");
-    res = bcm_emmc_regs_enable_interrupts(bcm_emmc_regs);
+    res = sdhci_regs_enable_interrupts(sdhci_regs);
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to enable interrupts in bcm_emmc_init().");
     }

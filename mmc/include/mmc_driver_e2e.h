@@ -8,7 +8,7 @@
 #include "clock.h"
 #include "log.h"
 #include "sdhci.h"
-#include "bcm_emmc_regs.h"
+#include "sdhci_regs.h"
 #include "sdcard.h"
 
 /**
@@ -19,22 +19,23 @@ result_t mmc_driver_e2e_sleep();
 
 /**
  * Simple read/write test on the SD card.
+ * @param sdhci_regs
+ * @param sdcard
  * @return
  */
 result_t mmc_driver_e2e_read_write_simple(
-        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdhci_regs_t *sdhci_regs,
         sdcard_t *sdcard
 );
 
 /**
  * Read/write test on the SD card.
- * @return
- * @param bcm_emmc_regs
+ * @param sdhci_regs
  * @param sdcard
  * @return
  */
 result_t mmc_driver_e2e_read_write_multiple_blocks(
-        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdhci_regs_t *sdhci_regs,
         sdcard_t *sdcard
 );
 

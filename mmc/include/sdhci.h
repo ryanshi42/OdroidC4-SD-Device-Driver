@@ -1,7 +1,8 @@
 #pragma once
 
 #include "result.h"
-#include "bcm_emmc_regs.h"
+#include "sdhci_regs.h"
+//#include "sdhci_regs.h"
 #include "sleep.h"
 #include "log.h"
 #include "arith.h"
@@ -17,12 +18,12 @@
 
 /**
  * Initialises an SD card.
- * @param bcm_emmc_regs
+ * @param sdhci_regs
  * @param sdcard
  * @return
  */
 result_t sdhci_card_init_and_id(
-        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdhci_regs_t *sdhci_regs,
         sdcard_t *sdcard,
         sdhci_result_t *sdhci_result
 );
@@ -30,21 +31,21 @@ result_t sdhci_card_init_and_id(
 /**
  * Sets the Bus Width to its maximum value as specified by the SD Card
  * Configuration Register (SCR), which is stored in our `sdcard`.
- * @param bcm_emmc_regs
+ * @param sdhci_regs
  * @param sdcard
  * @param sd_clock_freq_hz
  * @param sdhci_result
  * @return
  */
 result_t sdhci_set_max_bus_width(
-        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdhci_regs_t *sdhci_regs,
         sdcard_t *sdcard,
         sdhci_result_t *sdhci_result
 );
 
 /**
  * Reads the specified number of blocks from the SD card.
- * @param bcm_emmc_regs
+ * @param sdhci_regs
  * @param sdcard
  * @param lba
  * @param num_blocks
@@ -55,7 +56,7 @@ result_t sdhci_set_max_bus_width(
  * @return
  */
 result_t sdhci_read_blocks(
-        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdhci_regs_t *sdhci_regs,
         sdcard_t *sdcard,
         size_t lba,
         size_t num_blocks,
@@ -67,7 +68,7 @@ result_t sdhci_read_blocks(
 
 /**
  * Writes the specified number of blocks to the SD card.
- * @param bcm_emmc_regs
+ * @param sdhci_regs
  * @param sdcard
  * @param lba
  * @param num_blocks
@@ -78,7 +79,7 @@ result_t sdhci_read_blocks(
  * @return
  */
 result_t sdhci_write_blocks(
-        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdhci_regs_t *sdhci_regs,
         sdcard_t *sdcard,
         size_t lba,
         size_t num_blocks,
@@ -90,7 +91,7 @@ result_t sdhci_write_blocks(
 
 /**
  * Transfers specified number of blocks to/from the SD card.
- * @param bcm_emmc_regs
+ * @param sdhci_regs
  * @param sdcard
  * @param lba
  * @param num_blocks
@@ -102,7 +103,7 @@ result_t sdhci_write_blocks(
  * @return
  */
 result_t sdhci_transfer_blocks(
-        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdhci_regs_t *sdhci_regs,
         sdcard_t *sdcard,
         size_t lba,
         size_t num_blocks,
@@ -122,7 +123,7 @@ result_t sdhci_transfer_blocks(
  * @return
  */
 result_t sdhci_get_sd_clock_divisor(
-        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdhci_regs_t *sdhci_regs,
         uint32_t freq,
         uint32_t *ret_val
 );
@@ -134,48 +135,48 @@ result_t sdhci_get_sd_clock_divisor(
  * @return
  */
 result_t sdhci_set_sd_clock(
-        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdhci_regs_t *sdhci_regs,
         uint32_t freq
 );
 
 /**
  * Waits for the specified interrupt to be set.
- * @param bcm_emmc_regs
+ * @param sdhci_regs
  * @param interrupt_mask
  * @param sdhci_result
  * @return
  */
 result_t sdhci_wait_for_interrupt(
-        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdhci_regs_t *sdhci_regs,
         uint32_t interrupt_mask,
         sdhci_result_t *sdhci_result
 );
 
 /**
  * Waits for cmd_in_progress to be cleared.
- * @param bcm_emmc_regs
+ * @param sdhci_regs
  * @param sdhci_result
  * @return
  */
 result_t sdhci_wait_for_cmd_in_progress(
-        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdhci_regs_t *sdhci_regs,
         sdhci_result_t *sdhci_result
 );
 
 /**
  * Waits for data_in_progress to be cleared.
- * @param bcm_emmc_regs
+ * @param sdhci_regs
  * @param sdhci_result
  * @return
  */
 result_t sdhci_wait_for_data_in_progress(
-        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdhci_regs_t *sdhci_regs,
         sdhci_result_t *sdhci_result
 );
 
 /**
  * Sends the specified command to the SD card.
- * @param bcm_emmc_regs
+ * @param sdhci_regs
  * @param sdhci_cmd_index
  * @param arg
  * @param sdcard
@@ -183,7 +184,7 @@ result_t sdhci_wait_for_data_in_progress(
  * @return
  */
 result_t sdhci_send_cmd(
-        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdhci_regs_t *sdhci_regs,
         size_t sdhci_cmd_index,
         uint32_t arg,
         sdcard_t *sdcard,

@@ -23,7 +23,7 @@ result_t mmc_driver_e2e_sleep() {
 }
 
 result_t mmc_driver_e2e_read_write_simple(
-        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdhci_regs_t *sdhci_regs,
         sdcard_t *sdcard
 ) {
     log_info("Starting mmc_driver_e2e_read_write_simple().");
@@ -44,7 +44,7 @@ result_t mmc_driver_e2e_read_write_simple(
     uint32_t *counter = (uint32_t *) (buf + 508);
     /* Write a single zeroed block to the SD card. */
     res = sdhci_write_blocks(
-            bcm_emmc_regs,
+            sdhci_regs,
             sdcard,
             lba_counter,
             num_blocks,
@@ -62,7 +62,7 @@ result_t mmc_driver_e2e_read_write_simple(
     for (int i = 0; i < num_iterations; i++) {
         /* Read the block. */
         res = sdhci_read_blocks(
-                bcm_emmc_regs,
+                sdhci_regs,
                 sdcard,
                 lba_counter,
                 num_blocks,
@@ -80,7 +80,7 @@ result_t mmc_driver_e2e_read_write_simple(
         (*counter)++;
         /* Write the block to disk. */
         res = sdhci_write_blocks(
-                bcm_emmc_regs,
+                sdhci_regs,
                 sdcard,
                 lba_counter,
                 num_blocks,
@@ -97,7 +97,7 @@ result_t mmc_driver_e2e_read_write_simple(
     }
     /* Read the block. */
     res = sdhci_read_blocks(
-            bcm_emmc_regs,
+            sdhci_regs,
             sdcard,
             lba_counter,
             num_blocks,
@@ -120,7 +120,7 @@ result_t mmc_driver_e2e_read_write_simple(
 }
 
 result_t mmc_driver_e2e_read_write_multiple_blocks(
-        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdhci_regs_t *sdhci_regs,
         sdcard_t *sdcard
 ) {
     log_info("Starting mmc_driver_e2e_read_write_multiple_blocks().");
@@ -145,7 +145,7 @@ result_t mmc_driver_e2e_read_write_multiple_blocks(
 
     /* Write our buffer to the SD card. */
     res = sdhci_write_blocks(
-            bcm_emmc_regs,
+            sdhci_regs,
             sdcard,
             lba,
             num_blocks,
@@ -163,7 +163,7 @@ result_t mmc_driver_e2e_read_write_multiple_blocks(
     memset(buf, 0, buf_len);
     /* Read the block into our cleared out buffer. */
     res = sdhci_read_blocks(
-            bcm_emmc_regs,
+            sdhci_regs,
             sdcard,
             lba,
             num_blocks,

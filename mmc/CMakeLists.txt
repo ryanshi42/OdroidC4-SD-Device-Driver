@@ -403,7 +403,7 @@ add_library(mmc_rpi3b_lib_sdhci src/mmc_driver/sdhci.c)
 target_include_directories(mmc_rpi3b_lib_sdhci PUBLIC include/)
 target_link_libraries(
         mmc_rpi3b_lib_sdhci
-        mmc_rpi3b_lib_bcm_emmc_regs
+        mmc_rpi3b_lib_sdhci_regs
         mmc_rpi3b_lib_result
         mmc_rpi3b_lib_sleep
         mmc_rpi3b_lib_log
@@ -424,7 +424,7 @@ target_include_directories(mmc_rpi3b_lib_bcm_emmc PUBLIC include/)
 target_link_libraries(
         mmc_rpi3b_lib_bcm_emmc
         mmc_rpi3b_lib_result
-        mmc_rpi3b_lib_bcm_emmc_regs
+        mmc_rpi3b_lib_sdhci_regs
         mmc_rpi3b_lib_sleep
         mmc_rpi3b_lib_sdhci
         mmc_rpi3b_lib_log
@@ -444,6 +444,7 @@ target_link_libraries(
         mmc_rpi3b_lib_log
         mmc_rpi3b_lib_bcm_emmc
         mmc_rpi3b_lib_sdcard
+        mmc_rpi3b_lib_sdhci_regs
 )
 
 add_library(mmc_rpi3b_lib_mmc_driver src/mmc_driver.c)
@@ -452,6 +453,7 @@ target_link_libraries(
         mmc_rpi3b_lib_mmc_driver
         mmc_rpi3b_sel4cp_facade
         mmc_rpi3b_lib_bcm_emmc
+        mmc_rpi3b_lib_bcm_emmc_regs
         mmc_rpi3b_lib_result
         mmc_rpi3b_lib_printf
         mmc_rpi3b_lib_log

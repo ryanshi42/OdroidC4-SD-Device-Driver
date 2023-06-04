@@ -79,17 +79,6 @@ void init(void) {
      * depends upon.*/
     mmc_driver_e2e_sleep();
 
-    /* Initialise and reset the Pi's SD card Host Controller. */
-    res = bcm_emmc_init(
-            (bcm_emmc_regs_t *) emmc_base_vaddr,
-            (bcm_gpio_regs_t *) gpio_base_vaddr
-    );
-    if (result_is_err(res)) {
-        result_printf(res);
-        return;
-    }
-    log_trace("Finished initialising SD Host Controller.");
-
     /* Initialise SDHCI registers. */
     res = sdhci_regs_init(
             &global_sdhci_regs,
@@ -100,10 +89,21 @@ void init(void) {
         return;
     }
 
+    /* Initialise and reset the Pi's SD card Host Controller. */
+    res = bcm_emmc_init(
+            &global_sdhci_regs,
+            (bcm_gpio_regs_t *) gpio_base_vaddr
+    );
+    if (result_is_err(res)) {
+        result_printf(res);
+        return;
+    }
+    log_trace("Finished initialising SD Host Controller.");
+
     /* Initialise and identify the SD card. */
     sdhci_result_t sdhci_result;
     res = sdhci_card_init_and_id(
-            (bcm_emmc_regs_t *) emmc_base_vaddr,
+            &global_sdhci_regs,
             &global_sdcard,
             &sdhci_result
     );
@@ -115,7 +115,7 @@ void init(void) {
 
     /* Setting Bus Width to maximum possible value. */
     res = sdhci_set_max_bus_width(
-            (bcm_emmc_regs_t *) emmc_base_vaddr,
+            &global_sdhci_regs,
             &global_sdcard,
             &sdhci_result
     );
@@ -127,7 +127,7 @@ void init(void) {
 
     /* Running E2E tests to verify our SD card driver works properly.*/
     res = mmc_driver_e2e_read_write_simple(
-            (bcm_emmc_regs_t *) emmc_base_vaddr,
+            &global_sdhci_regs,
             &global_sdcard
     );
     if (result_is_err(res)) {
@@ -136,7 +136,7 @@ void init(void) {
     }
 
     res = mmc_driver_e2e_read_write_multiple_blocks(
-            (bcm_emmc_regs_t *) emmc_base_vaddr,
+            &global_sdhci_regs,
             &global_sdcard
     );
     if (result_is_err(res)) {
@@ -187,7 +187,7 @@ result_t mmc_driver_write_blocks(
     }
     sdhci_result_t sdhci_result;
     return sdhci_write_blocks(
-            (bcm_emmc_regs_t *) emmc_base_vaddr,
+            &global_sdhci_regs,
             &global_sdcard,
             lba,
             num_blocks,
@@ -210,7 +210,7 @@ result_t mmc_driver_read_blocks(
     }
     sdhci_result_t sdhci_result;
     return sdhci_read_blocks(
-            (bcm_emmc_regs_t *) emmc_base_vaddr,
+            &global_sdhci_regs,
             &global_sdcard,
             lba,
             num_blocks,

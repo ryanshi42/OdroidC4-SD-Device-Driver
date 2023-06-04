@@ -1,12 +1,12 @@
 #include "sdhci.h"
 
 result_t sdhci_card_init_and_id(
-        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdhci_regs_t *sdhci_regs,
         sdcard_t *sdcard,
         sdhci_result_t *sdhci_result
 ) {
-    if (bcm_emmc_regs == NULL) {
-        return result_err("bcm_emmc_regs is NULL in sdhci_card_init_and_id().");
+    if (sdhci_regs == NULL) {
+        return result_err("sdhci_regs is NULL in sdhci_card_init_and_id().");
     }
     if (sdcard == NULL) {
         return result_err("sdcard is NULL in sdhci_card_init_and_id().");
@@ -21,7 +21,7 @@ result_t sdhci_card_init_and_id(
     log_trace("Sending GO_IDLE (CMD0) command...");
     sdhci_result_t sdhci_res_go_idle;
     res = sdhci_send_cmd(
-            bcm_emmc_regs,
+            sdhci_regs,
             IDX_GO_IDLE_STATE,
             0,
             sdcard,
@@ -36,7 +36,7 @@ result_t sdhci_card_init_and_id(
     log_trace("Sending IF_COND (CMD8) command...");
     sdhci_result_t sdhci_res_if_cond;
     res = sdhci_send_cmd(
-            bcm_emmc_regs,
+            sdhci_regs,
             IDX_SEND_IF_COND,
             0x000001AA,
             sdcard,
@@ -53,7 +53,7 @@ result_t sdhci_card_init_and_id(
     do {
         usleep(400000);
         res = sdhci_send_cmd(
-                bcm_emmc_regs,
+                sdhci_regs,
                 IDX_APP_SEND_OP_COND,
                 ACMD41_ARG_HC,
                 sdcard,
@@ -110,7 +110,7 @@ result_t sdhci_card_init_and_id(
     /* Send ALL_SEND_CID (CMD2). */
     log_trace("Sending ALL_SEND_CID (CMD2) command...");
     res = sdhci_send_cmd(
-            bcm_emmc_regs,
+            sdhci_regs,
             IDX_ALL_SEND_CID,
             0,
             sdcard,
@@ -124,7 +124,7 @@ result_t sdhci_card_init_and_id(
     /* TODO: In theory, loop back to SEND_IF_COND to find additional cards. */
     log_trace("Sending SEND_REL_ADDR (CMD3) command...");
     res = sdhci_send_cmd(
-            bcm_emmc_regs,
+            sdhci_regs,
             IDX_SEND_REL_ADDR,
             0,
             sdcard,
@@ -139,7 +139,7 @@ result_t sdhci_card_init_and_id(
      * Setting SD Clock Frequency to full-speed.
      * =================================== */
     res = sdhci_set_sd_clock(
-            bcm_emmc_regs,
+            sdhci_regs,
             25000000
     );
     if (result_is_err(res)) {
@@ -161,7 +161,7 @@ result_t sdhci_card_init_and_id(
 
     log_trace("Sending SEND_CSD (CMD9)...");
     res = sdhci_send_cmd(
-            bcm_emmc_regs,
+            sdhci_regs,
             IDX_SEND_CSD,
             rca,
             sdcard,
@@ -181,7 +181,7 @@ result_t sdhci_card_init_and_id(
      * write; data block includes PWD setting mode, PWD len, PWD data.*/
     log_trace("Sending CARD_SELECT (CMD7)...");
     res = sdhci_send_cmd(
-            bcm_emmc_regs,
+            sdhci_regs,
             IDX_CARD_SELECT,
             rca,
             sdcard,
@@ -195,17 +195,17 @@ result_t sdhci_card_init_and_id(
      * SEND_SCR command is like a READ_SINGLE but for a block of 8 bytes.*/
     log_trace("Reading from the SD Card Configuration Register (SCR)...");
     /* Wait for any data operation that might be in progress before reading the block. */
-    res = sdhci_wait_for_data_in_progress(bcm_emmc_regs, sdhci_result);
+    res = sdhci_wait_for_data_in_progress(sdhci_regs, sdhci_result);
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to wait for data in progress in sdhci_card_init_and_id().");
     }
     /* Set BLKSIZECNT to 1 block of 8 bytes. */
     log_trace("Setting BLKSIZECNT to 1 block of 8 bytes...");
-    res = bcm_emmc_regs_set_block_count(bcm_emmc_regs, 1);
+    res = sdhci_regs_set_block_count(sdhci_regs, 1);
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to set block count to 1 in sdhci_card_init_and_id().");
     }
-    res = bcm_emmc_regs_set_block_size(bcm_emmc_regs, 8);
+    res = sdhci_regs_set_block_size(sdhci_regs, 8);
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to set block size to 8 in sdhci_card_init_and_id().");
     }
@@ -213,7 +213,7 @@ result_t sdhci_card_init_and_id(
      * out what the allowed bus widths are. */
     log_trace("Sending SEND_SCR (CMD51) command...");
     res = sdhci_send_cmd(
-            bcm_emmc_regs,
+            sdhci_regs,
             IDX_SEND_SCR,
             0,
             sdcard,
@@ -224,7 +224,7 @@ result_t sdhci_card_init_and_id(
     }
     /* Wait until we're ready to read. */
     res = sdhci_wait_for_interrupt(
-            bcm_emmc_regs,
+            sdhci_regs,
             INT_READ_RDY,
             sdhci_result
     );
@@ -236,14 +236,14 @@ result_t sdhci_card_init_and_id(
     int num_scr_retries = 100000;
     bool is_read_ready = false;
     do {
-        res = bcm_emmc_regs_is_read_ready(bcm_emmc_regs, &is_read_ready);
+        res = sdhci_regs_is_read_ready(sdhci_regs, &is_read_ready);
         if (result_is_err(res)) {
             return result_err_chain(res, "Failed to check if read ready in sdhci_card_init_and_id().");
         }
         if (is_read_ready) {
             /* Read the SCR from the data register. */
             uint32_t data = 0;
-            res = bcm_emmc_regs_get_data(bcm_emmc_regs, &data);
+            res = sdhci_regs_get_data(sdhci_regs, &data);
             if (result_is_err(res)) {
                 return result_err_chain(res, "Failed to get data in sdhci_card_init_and_id().");
             }
@@ -278,12 +278,12 @@ result_t sdhci_card_init_and_id(
 }
 
 result_t sdhci_set_max_bus_width(
-        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdhci_regs_t *sdhci_regs,
         sdcard_t *sdcard,
         sdhci_result_t *sdhci_result
 ) {
-    if (bcm_emmc_regs == NULL) {
-        return result_err("NULL `bcm_emmc_regs` in sdhci_set_max_bus_width().");
+    if (sdhci_regs == NULL) {
+        return result_err("NULL `sdhci_regs` in sdhci_set_max_bus_width().");
     }
     if (sdcard == NULL) {
         return result_err("NULL `sdcard` in sdhci_set_max_bus_width().");
@@ -312,7 +312,7 @@ result_t sdhci_set_max_bus_width(
     if (is_bus_width_4_bit) {
         log_trace("Setting bus width to 4 bit...");
         res = sdhci_send_cmd(
-                bcm_emmc_regs,
+                sdhci_regs,
                 IDX_SET_BUS_WIDTH,
                 rca | 2,
                 sdcard,
@@ -322,8 +322,8 @@ result_t sdhci_set_max_bus_width(
             return result_err_chain(res, "Failed to send `IDX_SET_BUS_WIDTH` in sdhci_set_max_bus_width().");
         }
         /* Sets the bus width to 4 bit. */
-        res = bcm_emmc_regs_set_bus_width_4(
-                bcm_emmc_regs,
+        res = sdhci_regs_set_bus_width_4(
+                sdhci_regs,
                 true
         );
         if (result_is_err(res)) {
@@ -335,7 +335,7 @@ result_t sdhci_set_max_bus_width(
 }
 
 result_t sdhci_read_blocks(
-        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdhci_regs_t *sdhci_regs,
         sdcard_t *sdcard,
         size_t lba,
         size_t num_blocks,
@@ -344,8 +344,8 @@ result_t sdhci_read_blocks(
         size_t dst_buffer_len,
         sdhci_result_t *sdhci_result
 ) {
-    if (bcm_emmc_regs == NULL) {
-        return result_err("NULL `bcm_emmc_regs` passed to sdhci_read_blocks().");
+    if (sdhci_regs == NULL) {
+        return result_err("NULL `sdhci_regs` passed to sdhci_read_blocks().");
     }
     if (sdcard == NULL) {
         return result_err("NULL `sdcard` passed to sdhci_read_blocks().");
@@ -359,7 +359,7 @@ result_t sdhci_read_blocks(
     *sdhci_result = SD_ERROR;
     /* Transfer blocks for reading from the SD Card. */
     return sdhci_transfer_blocks(
-            bcm_emmc_regs,
+            sdhci_regs,
             sdcard,
             lba,
             num_blocks,
@@ -372,7 +372,7 @@ result_t sdhci_read_blocks(
 }
 
 result_t sdhci_write_blocks(
-        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdhci_regs_t *sdhci_regs,
         sdcard_t *sdcard,
         size_t lba,
         size_t num_blocks,
@@ -381,8 +381,8 @@ result_t sdhci_write_blocks(
         size_t src_buffer_len,
         sdhci_result_t *sdhci_result
 ) {
-    if (bcm_emmc_regs == NULL) {
-        return result_err("NULL `bcm_emmc_regs` passed to sdhci_write_blocks().");
+    if (sdhci_regs == NULL) {
+        return result_err("NULL `sdhci_regs` passed to sdhci_write_blocks().");
     }
     if (sdcard == NULL) {
         return result_err("NULL `sdcard` passed to sdhci_write_blocks().");
@@ -396,7 +396,7 @@ result_t sdhci_write_blocks(
     *sdhci_result = SD_ERROR;
     /* Transfer blocks for writing to the SD Card. */
     return sdhci_transfer_blocks(
-            bcm_emmc_regs,
+            sdhci_regs,
             sdcard,
             lba,
             num_blocks,
@@ -409,7 +409,7 @@ result_t sdhci_write_blocks(
 }
 
 result_t sdhci_transfer_blocks(
-        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdhci_regs_t *sdhci_regs,
         sdcard_t *sdcard,
         size_t lba,
         size_t num_blocks,
@@ -419,8 +419,8 @@ result_t sdhci_transfer_blocks(
         size_t buffer_len,
         sdhci_result_t *sdhci_result
 ) {
-    if (bcm_emmc_regs == NULL) {
-        return result_err("NULL `bcm_emmc_regs` passed to sdhci_transfer_blocks().");
+    if (sdhci_regs == NULL) {
+        return result_err("NULL `sdhci_regs` passed to sdhci_transfer_blocks().");
     }
     if (sdcard == NULL) {
         return result_err("NULL `sdcard` passed to sdhci_transfer_blocks().");
@@ -454,7 +454,7 @@ result_t sdhci_transfer_blocks(
         return result_err("SD Card type is unknown in sdhci_transfer_blocks().");
     }
     /* Wait for any data command in progress. */
-    res = sdhci_wait_for_data_in_progress(bcm_emmc_regs, sdhci_result);
+    res = sdhci_wait_for_data_in_progress(sdhci_regs, sdhci_result);
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to wait for data in progress in sdhci_transfer_blocks().");
     }
@@ -486,7 +486,7 @@ result_t sdhci_transfer_blocks(
      * SET_BLOCK_COUNT command to indicate the number of blocks to transfer. */
     if (num_blocks > 1 && is_set_block_count_cmd_supported) {
         res = sdhci_send_cmd(
-                bcm_emmc_regs,
+                sdhci_regs,
                 IDX_SET_BLOCKCNT,
                 num_blocks,
                 sdcard,
@@ -516,17 +516,17 @@ result_t sdhci_transfer_blocks(
      * as the data blocks are transferred and stops the transfer once BLKCNT
      * reaches 0.
      * TODO: TM_AUTO_CMD12 - is this needed?  What effect does it have? */
-    res = bcm_emmc_regs_set_block_count(bcm_emmc_regs, num_blocks);
+    res = sdhci_regs_set_block_count(sdhci_regs, num_blocks);
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to set block count to 1 in sdhci_card_init_and_id().");
     }
-    res = bcm_emmc_regs_set_block_size(bcm_emmc_regs, block_size);
+    res = sdhci_regs_set_block_size(sdhci_regs, block_size);
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to set block size to 8 in sdhci_card_init_and_id().");
     }
     /* Send the Transfer Command. */
     res = sdhci_send_cmd(
-            bcm_emmc_regs,
+            sdhci_regs,
             transfer_cmd,
             block_addr,
             sdcard,
@@ -540,7 +540,7 @@ result_t sdhci_transfer_blocks(
     while (blocks_done < num_blocks) {
         /* Wait for ready interrupt for the next block. */
         res = sdhci_wait_for_interrupt(
-                bcm_emmc_regs,
+                sdhci_regs,
                 ready_interrupt,
                 sdhci_result
         );
@@ -550,12 +550,12 @@ result_t sdhci_transfer_blocks(
         /* Loop through the block 4 bytes (32 bits) at a time. */
         for (size_t i = 0; i < (block_size / sizeof(uint32_t)); i++) {
             if (is_write) {
-                res = bcm_emmc_regs_set_data(bcm_emmc_regs, ((uint32_t *) buffer)[i]);
+                res = sdhci_regs_set_data(sdhci_regs, ((uint32_t *) buffer)[i]);
                 if (result_is_err(res)) {
                     return result_err_chain(res, "Failed to set data in sdhci_transfer_blocks().");
                 }
             } else {
-                res = bcm_emmc_regs_get_data(bcm_emmc_regs, &((uint32_t *) buffer)[i]);
+                res = sdhci_regs_get_data(sdhci_regs, &((uint32_t *) buffer)[i]);
                 if (result_is_err(res)) {
                     return result_err_chain(res, "Failed to get data in sdhci_transfer_blocks().");
                 }
@@ -569,7 +569,7 @@ result_t sdhci_transfer_blocks(
         *sdhci_result = SD_TIMEOUT;
         if (!is_write && num_blocks > 1) {
             res = sdhci_send_cmd(
-                    bcm_emmc_regs,
+                    sdhci_regs,
                     IDX_STOP_TRANS,
                     0,
                     sdcard,
@@ -583,7 +583,7 @@ result_t sdhci_transfer_blocks(
     /* For a write operation, ensure DATA_DONE interrupt before we stop transmission. */
     if (is_write) {
         res = sdhci_wait_for_interrupt(
-                bcm_emmc_regs,
+                sdhci_regs,
                 INT_DATA_DONE,
                 sdhci_result
         );
@@ -595,7 +595,7 @@ result_t sdhci_transfer_blocks(
      * that there are no more blocks to be transferred. */
     if (num_blocks > 1 && !is_set_block_count_cmd_supported) {
         res = sdhci_send_cmd(
-                bcm_emmc_regs,
+                sdhci_regs,
                 IDX_STOP_TRANS,
                 0,
                 sdcard,
@@ -610,12 +610,12 @@ result_t sdhci_transfer_blocks(
 }
 
 result_t sdhci_get_sd_clock_divisor(
-        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdhci_regs_t *sdhci_regs,
         uint32_t freq,
         uint32_t *ret_val
 ) {
-    if (bcm_emmc_regs == NULL) {
-        return result_err("NULL `bcm_emmc_regs` passed to sdhci_get_sd_clock_divisor().");
+    if (sdhci_regs == NULL) {
+        return result_err("NULL `sdhci_regs` passed to sdhci_get_sd_clock_divisor().");
     }
     if (freq == 0) {
         return result_err("Zero `freq` passed to sdhci_get_sd_clock_divisor().");
@@ -631,8 +631,8 @@ result_t sdhci_get_sd_clock_divisor(
     }
     /* Obtain the controller's Host Controller Spec Version. */
     uint8_t host_controller_spec_version = 0;
-    result_t res = bcm_emmc_regs_get_host_controller_spec_version(
-            bcm_emmc_regs,
+    result_t res = sdhci_regs_get_host_controller_spec_version(
+            sdhci_regs,
             &host_controller_spec_version
     );
     if (result_is_err(res)) {
@@ -657,25 +657,25 @@ result_t sdhci_get_sd_clock_divisor(
     return result_ok();
 }
 
-result_t sdhci_set_sd_clock(bcm_emmc_regs_t *bcm_emmc_regs, uint32_t freq) {
-    if (bcm_emmc_regs == NULL) {
-        return result_err("NULL `bcm_emmc_regs` passed to sdhci_set_sd_clock().");
+result_t sdhci_set_sd_clock(sdhci_regs_t *sdhci_regs, uint32_t freq) {
+    if (sdhci_regs == NULL) {
+        return result_err("NULL `sdhci_regs` passed to sdhci_set_sd_clock().");
     }
     size_t retries_busy = 10000;
     bool cmd_or_data_lines_busy = false;
     do {
         usleep(1);
         bool data_lines_busy = false;
-        result_t res = bcm_emmc_regs_is_data_lines_busy(
-                bcm_emmc_regs,
+        result_t res = sdhci_regs_is_data_lines_busy(
+                sdhci_regs,
                 &data_lines_busy
         );
         if (result_is_err(res)) {
             return result_err_chain(res, "Failed to check if data lines are busy in sdhci_set_sd_clock().");
         }
         bool cmd_line_busy = false;
-        res = bcm_emmc_regs_is_cmd_line_busy(
-                bcm_emmc_regs,
+        res = sdhci_regs_is_cmd_line_busy(
+                sdhci_regs,
                 &cmd_line_busy
         );
         if (result_is_err(res)) {
@@ -687,7 +687,7 @@ result_t sdhci_set_sd_clock(bcm_emmc_regs_t *bcm_emmc_regs, uint32_t freq) {
         return result_err("Timed out waiting for data/cmd lines to be free in sdhci_set_sd_clock().");
     }
     /* Disable SD clock. */
-    result_t res = bcm_emmc_regs_disable_sd_clock(bcm_emmc_regs);
+    result_t res = sdhci_regs_disable_sd_clock(sdhci_regs);
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to disable SD clock in sdhci_set_sd_clock().");
     }
@@ -695,7 +695,7 @@ result_t sdhci_set_sd_clock(bcm_emmc_regs_t *bcm_emmc_regs, uint32_t freq) {
     /* Get the SD clock divisor we want to set. */
     uint32_t sd_clock_divisor = 0;
     res = sdhci_get_sd_clock_divisor(
-            bcm_emmc_regs,
+            sdhci_regs,
             freq,
             &sd_clock_divisor
     );
@@ -703,13 +703,13 @@ result_t sdhci_set_sd_clock(bcm_emmc_regs_t *bcm_emmc_regs, uint32_t freq) {
         return result_err_chain(res, "Failed to get SD clock divisor in sdhci_set_sd_clock().");
     }
     /* Set SD Clock Mode to "Divided". */
-    res = bcm_emmc_regs_set_sd_clock_mode_as_divided(bcm_emmc_regs);
+    res = sdhci_regs_set_sd_clock_mode_as_divided(sdhci_regs);
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to set SD clock mode to \"Divided\" in sdhci_set_sd_clock().");
     }
     /* Set SD Clock Divisor. */
-    res = bcm_emmc_regs_set_sd_clock_divisor(
-            bcm_emmc_regs,
+    res = sdhci_regs_set_sd_clock_divisor(
+            sdhci_regs,
             sd_clock_divisor
     );
     if (result_is_err(res)) {
@@ -717,7 +717,7 @@ result_t sdhci_set_sd_clock(bcm_emmc_regs_t *bcm_emmc_regs, uint32_t freq) {
     }
     usleep(10);
     /* Enable the SD Clock. */
-    res = bcm_emmc_regs_enable_sd_clock(bcm_emmc_regs);
+    res = sdhci_regs_enable_sd_clock(sdhci_regs);
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to enable SD clock in sdhci_set_sd_clock().");
     }
@@ -728,8 +728,8 @@ result_t sdhci_set_sd_clock(bcm_emmc_regs_t *bcm_emmc_regs, uint32_t freq) {
     bool is_sd_clock_stable = false;
     do {
         usleep(10);
-        res = bcm_emmc_regs_is_sd_clock_stable(
-                bcm_emmc_regs,
+        res = sdhci_regs_is_sd_clock_stable(
+                sdhci_regs,
                 &is_sd_clock_stable
         );
         if (result_is_err(res)) {
@@ -744,12 +744,12 @@ result_t sdhci_set_sd_clock(bcm_emmc_regs_t *bcm_emmc_regs, uint32_t freq) {
 }
 
 result_t sdhci_wait_for_interrupt(
-        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdhci_regs_t *sdhci_regs,
         uint32_t interrupt_mask,
         sdhci_result_t *sdhci_result
 ) {
-    if (bcm_emmc_regs == NULL) {
-        return result_err("NULL `bcm_emmc_regs` passed to sdhci_wait_for_interrupt().");
+    if (sdhci_regs == NULL) {
+        return result_err("NULL `sdhci_regs` passed to sdhci_wait_for_interrupt().");
     }
     if (sdhci_result == NULL) {
         return result_err("NULL `sdhci_result` passed to sdhci_wait_for_interrupt().");
@@ -761,8 +761,8 @@ result_t sdhci_wait_for_interrupt(
     bool is_finished_or_error = false;
     do {
         usleep(10);
-        result_t res = bcm_emmc_regs_mask_interrupt(
-                bcm_emmc_regs,
+        result_t res = sdhci_regs_mask_interrupt(
+                sdhci_regs,
                 mask_with_error,
                 &is_finished_or_error
         );
@@ -772,8 +772,8 @@ result_t sdhci_wait_for_interrupt(
     } while (!is_finished_or_error && (retries-- > 0));
     /* Read interrupt. */
     uint32_t interrupt_raw32 = 0;
-    result_t res_get_raw32 = bcm_emmc_regs_get_interrupt_raw32(
-            bcm_emmc_regs,
+    result_t res_get_raw32 = sdhci_regs_get_interrupt_raw32(
+            sdhci_regs,
             &interrupt_raw32
     );
     if (result_is_err(res_get_raw32)) {
@@ -783,24 +783,24 @@ result_t sdhci_wait_for_interrupt(
     if (!is_finished_or_error) {
         *sdhci_result = SD_TIMEOUT;
         bool is_cmd_timeout = false;
-        result_t res = bcm_emmc_regs_is_cmd_timeout_err(
-                bcm_emmc_regs,
+        result_t res = sdhci_regs_is_cmd_timeout_err(
+                sdhci_regs,
                 &is_cmd_timeout
         );
         if (result_is_err(res)) {
             return result_err_chain(res, "Failed to get `interrupt.CTO_ERR` in sdhci_wait_for_interrupt().");
         }
         bool is_data_timeout = false;
-        res = bcm_emmc_regs_is_data_timeout_err(
-                bcm_emmc_regs,
+        res = sdhci_regs_is_data_timeout_err(
+                sdhci_regs,
                 &is_data_timeout
         );
         if (result_is_err(res)) {
             return result_err_chain(res, "Failed to get `interrupt.DTO_ERR` in sdhci_wait_for_interrupt().");
         }
         /* Clear the interrupt register. */
-        res = bcm_emmc_regs_set_interrupt_raw32(
-                bcm_emmc_regs,
+        res = sdhci_regs_set_interrupt_raw32(
+                sdhci_regs,
                 interrupt_raw32
         );
         if (result_is_err(res)) {
@@ -817,20 +817,20 @@ result_t sdhci_wait_for_interrupt(
     }
     /* Error case. */
     bool is_error = false;
-    result_t res = bcm_emmc_regs_mask_interrupt(bcm_emmc_regs, INT_ERROR_MASK, &is_error);
+    result_t res = sdhci_regs_mask_interrupt(sdhci_regs, INT_ERROR_MASK, &is_error);
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to check for error in sdhci_wait_for_interrupt().");
     }
     if (is_error) {
         /* Clear the interrupt register. */
-        res = bcm_emmc_regs_set_interrupt_raw32(bcm_emmc_regs, interrupt_raw32);
+        res = sdhci_regs_set_interrupt_raw32(sdhci_regs, interrupt_raw32);
         if (result_is_err(res)) {
             return result_err_chain(res, "Failed to clear `interrupt` in sdhci_wait_for_interrupt().");
         }
         return result_err("Error interrupt in sdhci_wait_for_interrupt().");
     }
     /* Clear the interrupt register. */
-    res = bcm_emmc_regs_set_interrupt_raw32(bcm_emmc_regs, interrupt_mask);
+    res = sdhci_regs_set_interrupt_raw32(sdhci_regs, interrupt_mask);
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to clear `interrupt` in sdhci_wait_for_interrupt().");
     }
@@ -840,11 +840,11 @@ result_t sdhci_wait_for_interrupt(
 }
 
 result_t sdhci_wait_for_cmd_in_progress(
-        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdhci_regs_t *sdhci_regs,
         sdhci_result_t *sdhci_result
 ) {
-    if (bcm_emmc_regs == NULL) {
-        return result_err("NULL `bcm_emmc_regs` passed to sdhci_wait_for_cmd_in_progress().");
+    if (sdhci_regs == NULL) {
+        return result_err("NULL `sdhci_regs` passed to sdhci_wait_for_cmd_in_progress().");
     }
     if (sdhci_result == NULL) {
         return result_err("NULL `sdhci_result` passed to sdhci_wait_for_cmd_in_progress().");
@@ -855,15 +855,15 @@ result_t sdhci_wait_for_cmd_in_progress(
     size_t retries = 100000;
     do {
         usleep(10);
-        result_t res_cmd = bcm_emmc_regs_is_cmd_in_progress(
-                bcm_emmc_regs,
+        result_t res_cmd = sdhci_regs_is_cmd_in_progress(
+                sdhci_regs,
                 &cmd_in_progress
         );
         if (result_is_err(res_cmd)) {
             return result_err_chain(res_cmd, "Failed to check if command is in progress in sdhci_wait_for_cmd_in_progress().");
         }
-        result_t res_err = bcm_emmc_regs_is_any_err(
-                bcm_emmc_regs,
+        result_t res_err = sdhci_regs_is_any_err(
+                sdhci_regs,
                 &has_any_err
         );
         if (result_is_err(res_err)) {
@@ -882,11 +882,11 @@ result_t sdhci_wait_for_cmd_in_progress(
 }
 
 result_t sdhci_wait_for_data_in_progress(
-        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdhci_regs_t *sdhci_regs,
         sdhci_result_t *sdhci_result
 ) {
-    if (bcm_emmc_regs == NULL) {
-        return result_err("NULL `bcm_emmc_regs` passed to sdhci_wait_for_data_in_progress().");
+    if (sdhci_regs == NULL) {
+        return result_err("NULL `sdhci_regs` passed to sdhci_wait_for_data_in_progress().");
     }
     if (sdhci_result == NULL) {
         return result_err("NULL `sdhci_result` passed to sdhci_wait_for_data_in_progress().");
@@ -897,15 +897,15 @@ result_t sdhci_wait_for_data_in_progress(
     size_t retries = 100000;
     do {
         usleep(10);
-        result_t res_cmd = bcm_emmc_regs_is_data_in_progress(
-                bcm_emmc_regs,
+        result_t res_cmd = sdhci_regs_is_data_in_progress(
+                sdhci_regs,
                 &data_in_progress
         );
         if (result_is_err(res_cmd)) {
             return result_err_chain(res_cmd, "Failed to check if data is in progress in sdhci_wait_for_data_in_progress().");
         }
-        result_t res_err = bcm_emmc_regs_is_any_err(
-                bcm_emmc_regs,
+        result_t res_err = sdhci_regs_is_any_err(
+                sdhci_regs,
                 &has_any_err
         );
         if (result_is_err(res_err)) {
@@ -924,14 +924,14 @@ result_t sdhci_wait_for_data_in_progress(
 }
 
 result_t sdhci_send_cmd(
-        bcm_emmc_regs_t *bcm_emmc_regs,
+        sdhci_regs_t *sdhci_regs,
         size_t sdhci_cmd_index,
         uint32_t arg,
         sdcard_t *sdcard,
         sdhci_result_t *sdhci_result
 ) {
-    if (bcm_emmc_regs == NULL) {
-        return result_err("NULL `bcm_emmc_regs` passed to sdhci_send_cmd().");
+    if (sdhci_regs == NULL) {
+        return result_err("NULL `sdhci_regs` passed to sdhci_send_cmd().");
     }
     if (sdcard == NULL) {
         return result_err("NULL `sdcard` passed to sdhci_send_cmd().");
@@ -1002,7 +1002,7 @@ result_t sdhci_send_cmd(
         /* `app_cmd_arg` will be 0 if no RCA and will be RCA otherwise. This is
          * a recursive call to ourselves. */
         res = sdhci_send_cmd(
-                bcm_emmc_regs,
+                sdhci_regs,
                 app_cmd_index, /* This will change depending on if RCA exists or not. */
                 app_cmd_arg,
                 sdcard,
@@ -1026,20 +1026,20 @@ result_t sdhci_send_cmd(
     }
 
     /* Wait for command in progress. */
-    res = sdhci_wait_for_cmd_in_progress(bcm_emmc_regs, sdhci_result);
+    res = sdhci_wait_for_cmd_in_progress(sdhci_regs, sdhci_result);
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to wait for command in progress in sdhci_send_cmd().");
     }
 
     /* Clear interrupt flags. */
-    res = bcm_emmc_regs_clear_interrupt(bcm_emmc_regs);
+    res = sdhci_regs_clear_interrupt(sdhci_regs);
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to clear interrupt flags in sdhci_send_cmd().");
     }
 
     /* Set the argument register first. */
-    res = bcm_emmc_regs_set_arg1(
-            bcm_emmc_regs,
+    res = sdhci_regs_set_arg1(
+            sdhci_regs,
             arg
     );
     if (result_is_err(res)) {
@@ -1055,8 +1055,8 @@ result_t sdhci_send_cmd(
         return result_err_chain(res, "Failed to get cmdtm in sdhci_send_cmd().");
     }
     /* Set the command register to the value obtained from `sdhci_cmd`. */
-    res = bcm_emmc_regs_set_cmdtm(
-            bcm_emmc_regs,
+    res = sdhci_regs_set_cmdtm(
+            sdhci_regs,
             cmdtm
     );
     if (result_is_err(res)) {
@@ -1078,7 +1078,7 @@ result_t sdhci_send_cmd(
 
     /* Wait until command complete interrupt */
     res = sdhci_wait_for_interrupt(
-            bcm_emmc_regs,
+            sdhci_regs,
             INT_CMD_DONE,
             sdhci_result
     );
@@ -1088,8 +1088,8 @@ result_t sdhci_send_cmd(
 
     /* Get the response from `resp0`. */
     uint32_t resp0;
-    res = bcm_emmc_regs_get_resp0(
-            bcm_emmc_regs,
+    res = sdhci_regs_get_resp0(
+            sdhci_regs,
             &resp0
     );
     if (result_is_err(res)) {
@@ -1231,8 +1231,8 @@ result_t sdhci_send_cmd(
                 /* `IDX_SEND_CSD` will enter this branch. */
                 /* Get the response from `resp1`. */
                 uint32_t resp1 = 0;
-                res = bcm_emmc_regs_get_resp1(
-                        bcm_emmc_regs,
+                res = sdhci_regs_get_resp1(
+                        sdhci_regs,
                         &resp1
                 );
                 if (result_is_err(res)) {
@@ -1240,8 +1240,8 @@ result_t sdhci_send_cmd(
                 }
                 /* Get the response from `resp2`. */
                 uint32_t resp2 = 0;
-                res = bcm_emmc_regs_get_resp2(
-                        bcm_emmc_regs,
+                res = sdhci_regs_get_resp2(
+                        sdhci_regs,
                         &resp2
                 );
                 if (result_is_err(res)) {
@@ -1249,8 +1249,8 @@ result_t sdhci_send_cmd(
                 }
                 /* Get the response from `resp3`. */
                 uint32_t resp3 = 0;
-                res = bcm_emmc_regs_get_resp3(
-                        bcm_emmc_regs,
+                res = sdhci_regs_get_resp3(
+                        sdhci_regs,
                         &resp3
                 );
                 if (result_is_err(res)) {
@@ -1267,8 +1267,8 @@ result_t sdhci_send_cmd(
                 /* `IDX_ALL_SEND_CID` will enter this branch. */
                 /* Get the response from `resp1`. */
                 uint32_t resp1 = 0;
-                res = bcm_emmc_regs_get_resp1(
-                        bcm_emmc_regs,
+                res = sdhci_regs_get_resp1(
+                        sdhci_regs,
                         &resp1
                 );
                 if (result_is_err(res)) {
@@ -1276,8 +1276,8 @@ result_t sdhci_send_cmd(
                 }
                 /* Get the response from `resp2`. */
                 uint32_t resp2 = 0;
-                res = bcm_emmc_regs_get_resp2(
-                        bcm_emmc_regs,
+                res = sdhci_regs_get_resp2(
+                        sdhci_regs,
                         &resp2
                 );
                 if (result_is_err(res)) {
@@ -1285,8 +1285,8 @@ result_t sdhci_send_cmd(
                 }
                 /* Get the response from `resp3`. */
                 uint32_t resp3 = 0;
-                res = bcm_emmc_regs_get_resp3(
-                        bcm_emmc_regs,
+                res = sdhci_regs_get_resp3(
+                        sdhci_regs,
                         &resp3
                 );
                 if (result_is_err(res)) {
