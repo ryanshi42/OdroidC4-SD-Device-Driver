@@ -27,6 +27,9 @@ timer_client_t global_timer_client = {0};
 /* Global `sdcard`. */
 sdcard_t global_sdcard = {0};
 
+/* Global `sdhci_regs`. */
+sdhci_regs_t global_sdhci_regs = {0};
+
 void init(void) {
     result_t res;
 
@@ -86,6 +89,16 @@ void init(void) {
         return;
     }
     log_trace("Finished initialising SD Host Controller.");
+
+    /* Initialise SDHCI registers. */
+    res = sdhci_regs_init(
+            &global_sdhci_regs,
+            (void *) emmc_base_vaddr
+    );
+    if (result_is_err(res)) {
+        result_printf(res);
+        return;
+    }
 
     /* Initialise and identify the SD card. */
     sdhci_result_t sdhci_result;

@@ -12,6 +12,7 @@
 #include "sdcard.h"
 #include "mmc_driver_e2e.h"
 #include "sdhci.h"
+#include "sdhci_regs.h"
 #include "blk_request_queue.h"
 #include "blk_request.h"
 #include "blk_response_queue.h"
