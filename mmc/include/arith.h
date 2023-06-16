@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 
-#define BIT(n) (1ul<<(n))
+#define BIT(n) (1ul << (n))
 
 /*
  * MASK_UNSAFE(3) -> 0b00111
@@ -11,6 +11,13 @@
  * etc...
  */
 #define MASK_UNSAFE(x) ((BIT(x) - 1ul))
+
+/*
+ * GENMASK_UNSAFE(3, 4) -> 0b01000
+ * GENMASK_UNSAFE(0, 4) -> 0b01111
+ * etc...
+ */
+#define GENMASK_UNSAFE(a, b) (MASK_UNSAFE(b) & ~MASK_UNSAFE(a))
 
 /**
  * Find Last Set bit in given uint32_t value i.e. find the bit index of the
