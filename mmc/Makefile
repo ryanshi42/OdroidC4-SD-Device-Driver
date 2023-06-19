@@ -86,8 +86,8 @@ CFLAGS += \
 # Specifies which Object files in $(BUILD_DIR) should be linked.
 SERIAL_DRIVER_OBJS := \
 	serial_driver.o \
-	serial_driver/bcm_uart_regs.o \
-	serial_driver/bcm_uart.o \
+	serial_driver/oc4_uart_regs.o \
+	serial_driver/oc4_uart.o \
 	serial_driver/serial_parity.o \
 	common/arith.o \
 	libsharedringbuffer/shared_ringbuffer.o \
@@ -101,8 +101,8 @@ SERIAL_CLIENT_OBJS := \
 MMC_DRIVER_OBJS := \
 	mmc_driver.o \
 	mmc_driver_e2e.o \
-	mmc_driver/bcm_emmc.o \
-	mmc_driver/bcm_emmc_regs.o \
+	mmc_driver/oc4_emmc.o \
+	mmc_driver/oc4_emmc_regs.o \
 	mmc_driver/sdcard.o \
 	mmc_driver/sdcard/ocr.o \
 	mmc_driver/sdcard/cid.o \
@@ -118,23 +118,23 @@ MMC_DRIVER_OBJS := \
 	mmc_driver/sdhci/sdhci_cmds.o \
 	mmc_driver/sdhci/sdhci_resp_r1.o \
 	mmc_driver/sdhci/sdhci_resp_r6.o \
-	mmc_driver/bcm_emmc_regs/control0.o \
-	mmc_driver/bcm_emmc_regs/control1.o \
-	mmc_driver/bcm_emmc_regs/irpt_en.o \
-	mmc_driver/bcm_emmc_regs/irpt_mask.o \
-	mmc_driver/bcm_emmc_regs/status.o \
-	mmc_driver/bcm_emmc_regs/slotisr_ver.o \
-	mmc_driver/bcm_emmc_regs/cmdtm.o \
-	mmc_driver/bcm_emmc_regs/cmdtm/cmd_index.o \
-	mmc_driver/bcm_emmc_regs/cmdtm/cmd_rspns_type.o \
-	mmc_driver/bcm_emmc_regs/interrupt.o \
-	mmc_driver/bcm_emmc_regs/blksizecnt.o \
+	mmc_driver/oc4_emmc_regs/control0.o \
+	mmc_driver/oc4_emmc_regs/control1.o \
+	mmc_driver/oc4_emmc_regs/irpt_en.o \
+	mmc_driver/oc4_emmc_regs/irpt_mask.o \
+	mmc_driver/oc4_emmc_regs/status.o \
+	mmc_driver/oc4_emmc_regs/slotisr_ver.o \
+	mmc_driver/oc4_emmc_regs/cmdtm.o \
+	mmc_driver/oc4_emmc_regs/cmdtm/cmd_index.o \
+	mmc_driver/oc4_emmc_regs/cmdtm/cmd_rspns_type.o \
+	mmc_driver/oc4_emmc_regs/interrupt.o \
+	mmc_driver/oc4_emmc_regs/blksizecnt.o \
 	lib_printf/printf.o \
 	lib_sleep/sleep.o \
 	lib_assert/assert.o \
 	lib_clock/clock.o \
-	timer_driver/bcm_timer.o \
-	timer_driver/bcm_timer_regs.o \
+	timer_driver/oc4_timer.o \
+	timer_driver/oc4_timer_regs.o \
 	common/arith.o \
 	lib_result/result.o \
 	lib_result/result_prod.o \
@@ -143,7 +143,7 @@ MMC_DRIVER_OBJS := \
 	common/log.o \
 	libsharedringbuffer/shared_ringbuffer.o \
 	gpio_driver.o \
-	gpio_driver/bcm_gpio_regs.o \
+	gpio_driver/oc4_gpio_regs.o \
 	gpio_driver/gpio_mode.o \
 	gpio_driver/gpio_fix_resistor.o \
 	lib_sddf_blk/blk_request.o \
@@ -157,8 +157,8 @@ TIMER_DRIVER_OBJS := \
 	libsharedringbuffer/shared_ringbuffer.o \
 	lib_result/result.o \
 	lib_result/result_prod.o \
-	timer_driver/bcm_timer.o \
-	timer_driver/bcm_timer_regs.o \
+	timer_driver/oc4_timer.o \
+	timer_driver/oc4_timer_regs.o \
 	lib_printf/printf.o \
 
 FATFS_OBJS := \
@@ -207,8 +207,8 @@ directories:
 	mkdir -p $(BUILD_DIR)/mmc_driver
 	mkdir -p $(BUILD_DIR)/mmc_driver_client
 	mkdir -p $(BUILD_DIR)/mmc_driver/sdhci
-	mkdir -p $(BUILD_DIR)/mmc_driver/bcm_emmc_regs
-	mkdir -p $(BUILD_DIR)/mmc_driver/bcm_emmc_regs/cmdtm
+	mkdir -p $(BUILD_DIR)/mmc_driver/oc4_emmc_regs
+	mkdir -p $(BUILD_DIR)/mmc_driver/oc4_emmc_regs/cmdtm
 	mkdir -p $(BUILD_DIR)/mmc_driver/sdcard
 	mkdir -p $(BUILD_DIR)/mmc_driver/sdcard/sdcard_data
 	mkdir -p $(BUILD_DIR)/serial_driver

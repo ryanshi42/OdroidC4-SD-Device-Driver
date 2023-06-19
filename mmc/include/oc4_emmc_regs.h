@@ -16,6 +16,7 @@
 #include "irpt_en.h"
 #include "interrupt.h"
 #include "cmdtm.h"
+#include "arith.h"
 #include "blksizecnt.h"
 
 /**
@@ -31,7 +32,7 @@
 /**
  * Some Linux-defined constants related to the IRQ EN registers below
  */
-#define   IRQ_RXD_ERR_MASK GENMASK_UNSAFE(7, 0)
+#define   IRQ_RXD_ERR_MASK GENMASK_UNSAFE_UNSAFE(7, 0)
 #define   IRQ_TXD_ERR BIT(8)
 #define   IRQ_DESC_ERR BIT(9)
 #define   IRQ_RESP_ERR BIT(10)
@@ -56,6 +57,9 @@ struct __attribute__((__packed__, aligned(4))) sd_emmc_desc {
     uint32_t cmd_resp; /* Command Response */
 };
 
+/**
+ * A struct that stores all the normal registers of the Odroid C4
+ */
 struct __attribute__((__packed__, aligned(4))) oc4_emmc_regs {
 	uint32_t sd_emmc_clock;		    // 0x00 SD_EMMC_CLOCK : // TODO: make own type later
 	uint32_t sd_emmc_delay1;		// 0x04 DELAY1
@@ -97,368 +101,91 @@ struct __attribute__((__packed__, aligned(4))) oc4_emmc_regs {
 	uint32_t sd_emmc_txd;	        // 0x94 TXD
 };
 
-/**
- * Zeros out the `control0` register.
- * @param oc4_emmc_regs
+/* SPDX-License-Identifier: GPL-2.0+ */
+/*
+ * (C) Copyright 2016 Carlo Caione <carlo@caione.org>
  */
-result_t oc4_emmc_regs_zero_control0(oc4_emmc_regs_t *oc4_emmc_regs);
 
-/**
- * Zeros out the `control1` register.
- * @param oc4_emmc_regs
- */
-result_t oc4_emmc_regs_zero_control1(oc4_emmc_regs_t *oc4_emmc_regs);
+enum meson_gx_mmc_compatible {
+	MMC_COMPATIBLE_GX,
+	MMC_COMPATIBLE_SM1,
+};
 
-/**
- * Resets the complete host circuit.
- * @param oc4_emmc_regs
- * @return
- */
-result_t oc4_emmc_regs_reset_host_circuit(oc4_emmc_regs_t *oc4_emmc_regs);
+#define SDIO_PORT_A			0
+#define SDIO_PORT_B			1
+#define SDIO_PORT_C			2
 
-/**
- * Checks if the host circuit is in reset.
- * @param oc4_emmc_regs
- * @param ret_val
- * @return
- */
-result_t oc4_emmc_regs_is_host_circuit_reset(oc4_emmc_regs_t *oc4_emmc_regs, bool *ret_val);
+#define SD_EMMC_CLKSRC_24M		24000000	/* 24 MHz */
+#define SD_EMMC_CLKSRC_DIV2		1000000000	/* 1 GHz */
 
-/**
- * Sets the data timeout to the maximum value.
- * @param oc4_emmc_regs
- * @return
- */
-result_t oc4_emmc_regs_set_max_data_timeout(oc4_emmc_regs_t *oc4_emmc_regs);
+#define MESON_SD_EMMC_CLOCK		    0x00
+#define   CLK_MAX_DIV			    63
+#define   CLK_SRC_24M			    (0 << 6)
+#define   CLK_SRC_DIV2			    (1 << 6)
+#define   CLK_CO_PHASE_000		    (0 << 8)
+#define   CLK_CO_PHASE_090		    (1 << 8)
+#define   CLK_CO_PHASE_180		    (2 << 8)
+#define   CLK_CO_PHASE_270		    (3 << 8)
+#define   CLK_TX_PHASE_000		    (0 << 10)
+#define   CLK_TX_PHASE_090		    (1 << 10)
+#define   CLK_TX_PHASE_180		    (2 << 10)
+#define   CLK_TX_PHASE_270		    (3 << 10)
+#define   CLK_ALWAYS_ON			    BIT(24)
 
-/**
- * Enables the internal clock.
- * @param oc4_emmc_regs
- * @return
- */
-result_t oc4_emmc_regs_enable_internal_clock(oc4_emmc_regs_t *oc4_emmc_regs);
+#define MESON_SD_EMMC_CFG		    0x44
+#define   CFG_BUS_WIDTH_MASK	    GENMASK_UNSAFE(1, 0)
+#define   CFG_BUS_WIDTH_1		    0
+#define   CFG_BUS_WIDTH_4		    1
+#define   CFG_BUS_WIDTH_8		    2
+#define   CFG_BL_LEN_MASK		    GENMASK_UNSAFE(7, 4)
+#define   CFG_BL_LEN_SHIFT		    4
+#define   CFG_BL_LEN_512		    (9 << 4)
+#define   CFG_RESP_TIMEOUT_MASK	    GENMASK_UNSAFE(11, 8)
+#define   CFG_RESP_TIMEOUT_256	    (8 << 8)
+#define   CFG_RC_CC_MASK		    GENMASK_UNSAFE(15, 12)
+#define   CFG_RC_CC_16			    (4 << 12)
+#define   CFG_SDCLK_ALWAYS_ON	    BIT(18)
+#define   CFG_AUTO_CLK			    BIT(23)
 
-/**
- * Returns True if Data Lines are in use and False otherwise.
- * @param oc4_emmc_regs
- * @param ret_val
- * @return
- */
-result_t oc4_emmc_regs_is_data_lines_busy(oc4_emmc_regs_t *oc4_emmc_regs, bool *ret_val);
+#define MESON_SD_EMMC_STATUS	    0x48
+#define   STATUS_MASK			    GENMASK_UNSAFE(15, 0)
+#define   STATUS_ERR_MASK		    GENMASK_UNSAFE(12, 0)
+#define   STATUS_RXD_ERR_MASK	    GENMASK_UNSAFE(7, 0)
+#define   STATUS_TXD_ERR		    BIT(8)
+#define   STATUS_DESC_ERR		    BIT(9)
+#define   STATUS_RESP_ERR		    BIT(10)
+#define   STATUS_RESP_TIMEOUT	    BIT(11)
+#define   STATUS_DESC_TIMEOUT	    BIT(12)
+#define   STATUS_END_OF_CHAIN	    BIT(13)
 
-/**
- * Returns True if Command Line is in use and False otherwise.
- * @param oc4_emmc_regs
- * @param ret_val
- * @return
- */
-result_t oc4_emmc_regs_is_cmd_line_busy(oc4_emmc_regs_t *oc4_emmc_regs, bool *ret_val);
+#define MESON_SD_EMMC_IRQ_EN	    0x4c
 
-/**
- * Disables the SD clock.
- * @param oc4_emmc_regs
- * @return
- */
-result_t oc4_emmc_regs_disable_sd_clock(oc4_emmc_regs_t *oc4_emmc_regs);
+#define MESON_SD_EMMC_CMD_CFG	    0x50
+#define   CMD_CFG_LENGTH_MASK	    GENMASK_UNSAFE(8, 0)
+#define   CMD_CFG_BLOCK_MODE	    BIT(9)
+#define   CMD_CFG_R1B			    BIT(10)
+#define   CMD_CFG_END_OF_CHAIN	    BIT(11)
+#define   CMD_CFG_TIMEOUT_4S	    (12 << 12)
+#define   CMD_CFG_NO_RESP		    BIT(16)
+#define   CMD_CFG_DATA_IO		    BIT(18)
+#define   CMD_CFG_DATA_WR		    BIT(19)
+#define   CMD_CFG_RESP_NOCRC	    BIT(20)
+#define   CMD_CFG_RESP_128		    BIT(21)
+#define   CMD_CFG_CMD_INDEX_SHIFT	24
+#define   CMD_CFG_OWNER			    BIT(31)
 
-/**
- * Enables the SD clock.
- * @param oc4_emmc_regs
- * @return
- */
-result_t oc4_emmc_regs_enable_sd_clock(oc4_emmc_regs_t *oc4_emmc_regs);
+#define MESON_SD_EMMC_CMD_ARG		0x54
+#define MESON_SD_EMMC_CMD_DAT		0x58
+#define MESON_SD_EMMC_CMD_RSP		0x5c
+#define MESON_SD_EMMC_CMD_RSP1		0x60
+#define MESON_SD_EMMC_CMD_RSP2		0x64
+#define MESON_SD_EMMC_CMD_RSP3		0x68
 
+struct meson_mmc_plat {
+	struct mmc_config cfg;
+	struct mmc mmc;
+	void *regbase;
+	void *w_buf;
+};
 
-/**
- * Returns the Host Controller specification version.
- * @param oc4_emmc_regs
- * @param ret_val
- * @return
- */
-result_t oc4_emmc_regs_get_host_controller_spec_version(
-        oc4_emmc_regs_t *oc4_emmc_regs,
-        uint8_t *ret_val
-);
-
-/**
- * Sets the SD clock mode to "Divided".
- * @param oc4_emmc_regs
- * @return
- */
-result_t oc4_emmc_regs_set_sd_clock_mode_as_divided(
-        oc4_emmc_regs_t *oc4_emmc_regs
-);
-
-/**
- * Sets the SD clock's divisor.
- * @param oc4_emmc_regs
- * @param divisor
- * @return
- */
-result_t oc4_emmc_regs_set_sd_clock_divisor(
-        oc4_emmc_regs_t *oc4_emmc_regs,
-        uint16_t divisor
-);
-
-/**
- * Returns True if the SD clock is stable and False otherwise.
- * @param oc4_emmc_regs
- * @param ret_val
- * @return
- */
-result_t oc4_emmc_regs_is_sd_clock_stable(
-        oc4_emmc_regs_t *oc4_emmc_regs,
-        bool *ret_val
-);
-
-/**
- * Enables interrupts.
- * @param oc4_emmc_regs
- * @return
- */
-result_t oc4_emmc_regs_enable_interrupts(
-        oc4_emmc_regs_t *oc4_emmc_regs
-);
-
-/**
- * Masks interrupts.
- * @param oc4_emmc_regs
- * @param mask The interrupt mask.
- * @param ret_val
- * @return
- */
-result_t oc4_emmc_regs_mask_interrupt(
-        oc4_emmc_regs_t *oc4_emmc_regs,
-        uint32_t mask,
-        bool *ret_val
-);
-
-/**
- * Retrieves the interrupt as a raw 32-bit value.
- * @param oc4_emmc_regs
- * @param ret_val
- * @return
- */
-result_t oc4_emmc_regs_get_interrupt_raw32(
-        oc4_emmc_regs_t *oc4_emmc_regs,
-        uint32_t *ret_val
-);
-
-/**
- * Sets the interrupt as a raw 32-bit value.
- * @param oc4_emmc_regs
- * @param val
- * @return
- */
-result_t oc4_emmc_regs_set_interrupt_raw32(
-        oc4_emmc_regs_t *oc4_emmc_regs,
-        uint32_t val
-);
-
-/**
- * Returns true if there is a CMD timeout error and false otherwise.
- * @param oc4_emmc_regs
- * @param ret_val
- * @return
- */
-result_t oc4_emmc_regs_is_cmd_timeout_err(
-        oc4_emmc_regs_t *oc4_emmc_regs,
-        bool *ret_val
-);
-
-/**
- * Returns true if there is a DATA timeout error and false otherwise.
- * @param oc4_emmc_regs
- * @param ret_val
- * @return
- */
-result_t oc4_emmc_regs_is_data_timeout_err(
-        oc4_emmc_regs_t *oc4_emmc_regs,
-        bool *ret_val
-);
-
-/**
- * Returns true if there is any error and false otherwise.
- * @param oc4_emmc_regs
- * @param ret_val
- * @return
- */
-result_t oc4_emmc_regs_is_any_err(
-        oc4_emmc_regs_t *oc4_emmc_regs,
-        bool *ret_val
-);
-
-/**
- * Returns true if there is a CMD in progress and false otherwise.
- * @param oc4_emmc_regs
- * @param ret_val
- * @return
- */
-result_t oc4_emmc_regs_is_cmd_in_progress(
-        oc4_emmc_regs_t *oc4_emmc_regs,
-        bool *ret_val
-);
-
-/**
- * Returns true if there is a DATA in progress and false otherwise.
- * @param oc4_emmc_regs
- * @param ret_val
- * @return
- */
-result_t oc4_emmc_regs_is_data_in_progress(
-        oc4_emmc_regs_t *oc4_emmc_regs,
-        bool *ret_val
-);
-
-/**
- * Clears interrupt flags.
- * @param oc4_emmc_regs
- * @return
- */
-result_t oc4_emmc_regs_clear_interrupt(
-        oc4_emmc_regs_t *oc4_emmc_regs
-);
-
-/**
- * Sets the `arg1` register.
- * @param oc4_emmc_regs
- * @param val
- * @return
- */
-result_t oc4_emmc_regs_set_arg1(
-        oc4_emmc_regs_t *oc4_emmc_regs,
-        uint32_t val
-);
-
-/**
- * Sets the `cmdtm` register.
- * @param oc4_emmc_regs
- * @param val
- * @return
- */
-result_t oc4_emmc_regs_set_cmdtm(
-        oc4_emmc_regs_t *oc4_emmc_regs,
-        cmdtm_t val
-);
-
-/**
- * Gets the `resp0` register.
- * @param oc4_emmc_regs
- * @param ret_val
- * @return
- */
-result_t oc4_emmc_regs_get_resp0(
-        oc4_emmc_regs_t *oc4_emmc_regs,
-        uint32_t *ret_val
-);
-
-/**
- * Gets the `resp1` register.
- * @param oc4_emmc_regs
- * @param ret_val
- * @return
- */
-result_t oc4_emmc_regs_get_resp1(
-        oc4_emmc_regs_t *oc4_emmc_regs,
-        uint32_t *ret_val
-);
-
-/**
- * Gets the `resp2` register.
- * @param oc4_emmc_regs
- * @param ret_val
- * @return
- */
-result_t oc4_emmc_regs_get_resp2(
-        oc4_emmc_regs_t *oc4_emmc_regs,
-        uint32_t *ret_val
-);
-
-/**
- * Gets the `resp3` register.
- * @param oc4_emmc_regs
- * @param ret_val
- * @return
- */
-result_t oc4_emmc_regs_get_resp3(
-        oc4_emmc_regs_t *oc4_emmc_regs,
-        uint32_t *ret_val
-);
-
-/**
- * Sets the block size.
- * @param oc4_emmc_regs
- * @param val
- * @return
- */
-result_t oc4_emmc_regs_set_block_size(
-        oc4_emmc_regs_t *oc4_emmc_regs,
-        uint32_t val
-);
-
-/**
- * Sets the block count.
- * @param oc4_emmc_regs
- * @param val
- * @return
- */
-result_t oc4_emmc_regs_set_block_count(
-        oc4_emmc_regs_t *oc4_emmc_regs,
-        uint32_t val
-);
-
-/**
- * Returns True if new data is available and ready to be read.
- * @param oc4_emmc_regs
- * @param ret_val
- * @return
- */
-result_t oc4_emmc_regs_is_read_ready(
-        oc4_emmc_regs_t *oc4_emmc_regs,
-        bool *ret_val
-);
-
-/**
- * Returns True if new data is available and ready to be written.
- * @param oc4_emmc_regs
- * @param ret_val
- * @return
- */
-result_t oc4_emmc_regs_is_write_ready(
-        oc4_emmc_regs_t *oc4_emmc_regs,
-        bool *ret_val
-);
-
-/**
- * Returns the data as a raw 32-bit value.
- * @param oc4_emmc_regs
- * @param ret_val
- * @return
- */
-result_t oc4_emmc_regs_get_data(
-        oc4_emmc_regs_t *oc4_emmc_regs,
-        uint32_t *ret_val
-);
-
-/**
- * Sets the data as a raw 32-bit value.
- * @param oc4_emmc_regs
- * @param val
- * @return
- */
-result_t oc4_emmc_regs_set_data(
-        oc4_emmc_regs_t *oc4_emmc_regs,
-        uint32_t val
-);
-
-/**
- * Enables or disables the use of 4 data lines.
- * @param oc4_emmc_regs
- * @param val
- * @return
- */
-result_t oc4_emmc_regs_set_bus_width_4(
-        oc4_emmc_regs_t *oc4_emmc_regs,
-        bool val
-);
-
+#endif

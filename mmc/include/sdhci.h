@@ -117,7 +117,7 @@ result_t sdhci_transfer_blocks(
 /**
  * Returns the SD clock divisor for the given requested frequency. This is
  * calculated relative to the SD base clock of 41.66667Mhz
- * @param bcm_emmc
+ * @param oc4_emmc
  * @param freq Frequency in Hz.
  * @param ret_val The range of divisors returned is 0x3 to 0x3FF.
  * @return
@@ -130,7 +130,7 @@ result_t sdhci_get_sd_clock_divisor(
 
 /**
  * Sets the SD clock to the specified frequency..
- * @param bcm_emmc
+ * @param oc4_emmc
  * @param freq Frequency in Hz.
  * @return
  */

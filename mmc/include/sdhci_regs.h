@@ -8,11 +8,11 @@
 #pragma once
 
 #include "result.h"
-#include "bcm_emmc_regs.h"
+#include "oc4_emmc_regs.h"
 
 typedef struct sdhci_regs sdhci_regs_t;
 struct sdhci_regs {
-    bcm_emmc_regs_t *regs;
+    oc4_emmc_regs_t *regs;
 };
 
 /**

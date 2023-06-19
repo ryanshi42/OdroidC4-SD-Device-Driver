@@ -90,7 +90,7 @@ void init(void) {
     }
 
     /* Initialise and reset the Pi's SD card Host Controller. */
-    res = bcm_emmc_init(
+    res = oc4_emmc_init(
             &global_sdhci_regs,
             (bcm_gpio_regs_t *) gpio_base_vaddr
     );
