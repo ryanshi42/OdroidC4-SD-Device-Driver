@@ -1,4 +1,4 @@
-# Odroid C4 MultiMediaCard (MMC) Driver, 
+# Odroid C4 MultiMediaCard (MMC) Driver
 
 ## Context
 
