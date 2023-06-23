@@ -13,11 +13,12 @@
 #define MASK_UNSAFE(x) ((BIT(x) - 1ul))
 
 /*
- * GENMASK_UNSAFE(4, 3) -> 0b01000
- * GENMASK_UNSAFE(4, 0) -> 0b01111
+ * (inclusive, inclusive)
+ * GENMASK_UNSAFE(4, 3) -> 0b11000
+ * GENMASK_UNSAFE(4, 0) -> 0b11111
  * etc...
  */
-#define GENMASK_UNSAFE(a, b) (MASK_UNSAFE(a) & ~MASK_UNSAFE(b))
+#define GENMASK_UNSAFE(a, b) (MASK_UNSAFE(a + 1) & ~MASK_UNSAFE(b))
 
 /**
  * Find Last Set bit in given uint32_t value i.e. find the bit index of the
