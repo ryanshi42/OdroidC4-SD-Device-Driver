@@ -27,6 +27,7 @@ static inline uint32_t oc4_mmc_regs_read_unsafe(struct oc4_emmc_regs *mmc, int o
 }
 
 // Write a value to a certain register
+// Note is uint32_t
 static inline void oc4_mmc_regs_write_unsafe(struct oc4_emmc_regs *mmc, uint32_t val, int offset)
 {
 	writel(val, get_regbase(mmc) + offset);
@@ -350,17 +351,34 @@ result_t oc4_emmc_init(
     //     return result_err("NULL `oc4_gpio_regs` passed to oc4_emmc_init().");
     // }
 
-    /* ============================
-     * Initialising the SDHCI SD card controller on the OC4.
-     * ============================ */
+    // TODO: Zero out Registers
 
-    /* reset all status bits */
-    log_trace("Resetting all status bits.");
-    oc4_mmc_regs_write_unsafe(mmc, STATUS_MASK, SD_EMMC_STATUS);
+    //? To achieve something equivalent to the RPi specific things, we will also zero out all the "default values"
+    //? With the hope that not all registers matter if they are set to 0
+
+    log_trace("Resetting Clock.");
+    oc4_mmc_regs_write_unsafe(mmc, 0, SD_EMMC_CLOCK);
+
+    log_trace("Resetting Delay.");
+    oc4_mmc_regs_write_unsafe(mmc, 0, SD_EMMC_DELAY1);
+
+    log_trace("Resetting Adjust.");
+    oc4_mmc_regs_write_unsafe(mmc, 0, SD_EMMC_ADJUST);
+
+    log_trace("Resetting Start.");
+    oc4_mmc_regs_write_unsafe(mmc, 0, SD_EMMC_START);
+
+    log_trace("Resetting Config.");
+    oc4_mmc_regs_write_unsafe(mmc, 0, SD_EMMC_CFG);
 
     /* disable interrupts */
     log_trace("Disabling interrupts.");
     oc4_mmc_regs_write_unsafe(mmc, 0, SD_EMMC_IRQ_EN);
+
+
+    // TODO: U-Boot Driver Stuff
+
+
 
     /* enable auto clock mode */
     log_trace("Enabling Auto Clock Mode.");
@@ -375,33 +393,65 @@ result_t oc4_emmc_init(
     log_trace("Setting I/Os.");
     oc4_mmc_regs_dm_mmc_set_ios(mmc);
 
-    // TODO: Some resistor stuff
+    // TODO: Begin RPi specific things
+
+    /* ============================
+     * Initialising the SDHCI SD card controller on the Pi.
+     * ============================ */
+
+    // /* Set control0 to zero. */
+    // res = sdhci_regs_zero_control0(sdhci_regs);
+    // if (result_is_err(res)) {
+    //     return result_err_chain(res, "Failed to zero `control0` in bcm_emmc_init().");
+    // }
+    // /* Set control1 to zero. */
+    // res = sdhci_regs_zero_control1(sdhci_regs);
+    // if (result_is_err(res)) {
+    //     return result_err_chain(res, "Failed to zero `control1` in bcm_emmc_init().");
+    // }
+    // /* Reset the complete host circuit */
+    // res = sdhci_regs_reset_host_circuit(sdhci_regs);
+    // if (result_is_err(res)) {
+    //     return result_err_chain(res, "Failed to reset host circuit in bcm_emmc_init().");
+    // }
+    // /* Wait until host circuit has finished resetting. */
+    // size_t retries_host_circuit = 10000;
+    // bool is_host_circuit_reset = false;
+    // do {
+    //     usleep(10); /* Wait for 10 microseconds. */
+    //     res = sdhci_regs_is_host_circuit_reset(
+    //             sdhci_regs,
+    //             &is_host_circuit_reset
+    //     );
+    //     if (result_is_err(res)) {
+    //         return result_err_chain(res, "Failed to check if host circuit was reset in bcm_emmc_init().");
+    //     }
+    // } while (!is_host_circuit_reset && (retries_host_circuit-- > 0));
+    // if (!is_host_circuit_reset) {
+    //     return result_err("Host circuit did not reset in bcm_emmc_init().");
+    // }
+
 
     /* Set the Data Timeout to the maximum value. */
+    //! This may not work!
     res = sdhci_regs_set_max_data_timeout(sdhci_regs);
     if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to set max data timeout in oc4_emmc_init().");
+        return result_err_chain(res, "Failed to set max data timeout in bcm_emmc_init().");
     }
-    /* Enable the Internal Clock. */
-    res = sdhci_regs_enable_internal_clock(sdhci_regs);
-    if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to enable internal clock in oc4_emmc_init().");
-    }
+    // /* Enable the Internal Clock. */
+    // res = sdhci_regs_enable_internal_clock(sdhci_regs);
+    // if (result_is_err(res)) {
+    //     return result_err_chain(res, "Failed to enable internal clock in bcm_emmc_init().");
+    // }
     /* Wait 10 microseconds. */
     usleep(10);
 
     /* Set clock to low-speed setup frequency (400KHz). */
+    //? Not a sdhci regs function!
     log_trace("Setting clock to low-speed setup frequency (400KHz).");
     res = sdhci_set_sd_clock(sdhci_regs, 400000);
     if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to set clock to low-speed setup frequency in oc4_emmc_init().");
-    }
-
-    /* Enable interrupts. */
-    log_trace("Enabling interrupts.");
-    res = sdhci_regs_enable_interrupts(sdhci_regs);
-    if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to enable interrupts in oc4_emmc_init().");
+        return result_err_chain(res, "Failed to set clock to low-speed setup frequency in bcm_emmc_init().");
     }
 
     /* enable interrupts */

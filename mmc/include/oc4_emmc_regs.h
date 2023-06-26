@@ -134,7 +134,11 @@ enum meson_gx_mmc_compatible {
 #define   CLK_RX_PHASE_090		    (1 << 12)
 #define   CLK_RX_PHASE_180		    (2 << 12)
 #define   CLK_RX_PHASE_270		    (3 << 12)
-#define   CLK_ALWAYS_ON			    BIT(24) /* THIS LINE SEEMS TO BE WRONG? Should it not be BIT(28) ???? */
+#define   CLK_ALWAYS_ON			    BIT(28) /* THIS LINE SEEMS TO BE WRONG? Should it not be BIT(28) ???? was BIT(24) before */
+
+#define SD_EMMC_DELAY1		        0x04
+#define SD_EMMC_ADJUST		        0x0c
+#define SD_EMMC_START		        0x40
 
 #define SD_EMMC_CFG		            0x44
 #define   CFG_BUS_WIDTH_MASK	    GENMASK_UNSAFE(1, 0) /* Actually 2 bits */
@@ -161,6 +165,8 @@ enum meson_gx_mmc_compatible {
 #define   STATUS_RESP_TIMEOUT	    BIT(11)
 #define   STATUS_DESC_TIMEOUT	    BIT(12)
 #define   STATUS_END_OF_CHAIN	    BIT(13)
+#define   STATUS_DESC_BUSY	    	BIT(30)
+#define   STATUS_CORE_BUSY	    	BIT(31)
 
 #define SD_EMMC_IRQ_EN	            0x4c
 

@@ -5,6 +5,12 @@ result_t sdhci_card_init_and_id(
         sdcard_t *sdcard,
         sdhci_result_t *sdhci_result
 ) {
+
+    //? Steps in initilaising SD card
+    //? Send Go Idle command
+    //? Send If Cond command
+
+
     if (sdhci_regs == NULL) {
         return result_err("sdhci_regs is NULL in sdhci_card_init_and_id().");
     }
@@ -16,6 +22,8 @@ result_t sdhci_card_init_and_id(
     }
     *sdhci_result = SD_ERROR;
     result_t res;
+
+    //? (https://electronics.stackexchange.com/questions/77417/what-is-the-correct-command-sequence-for-microsd-card-initialization-in-spi)
 
     /* Sending GO_IDLE command. */
     log_trace("Sending GO_IDLE (CMD0) command...");
@@ -135,17 +143,20 @@ result_t sdhci_card_init_and_id(
     }
     /* SD card will have an RCA at this point. */
 
+
+    //! SDHCI CONTROLLER HERE
+
     /* ===================================
      * Setting SD Clock Frequency to full-speed.
      * =================================== */
-    res = sdhci_set_sd_clock(
-            sdhci_regs,
-            25000000
-    );
-    if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to set SD clock frequency to full-speed in sdhci_card_init_and_id().");
-    }
-    log_trace("Finished setting SD clock to full-speed frequency (25GHz).");
+    // res = sdhci_set_sd_clock(
+    //         sdhci_regs,
+    //         25000000
+    // );
+    // if (result_is_err(res)) {
+    //     return result_err_chain(res, "Failed to set SD clock frequency to full-speed in sdhci_card_init_and_id().");
+    // }
+    // log_trace("Finished setting SD clock to full-speed frequency (25GHz).");
 
     /* ===================================
      * Populating `sdcard` with data from CSD Card Specific Data Register (CSD):
@@ -200,15 +211,17 @@ result_t sdhci_card_init_and_id(
         return result_err_chain(res, "Failed to wait for data in progress in sdhci_card_init_and_id().");
     }
     /* Set BLKSIZECNT to 1 block of 8 bytes. */
-    log_trace("Setting BLKSIZECNT to 1 block of 8 bytes...");
-    res = sdhci_regs_set_block_count(sdhci_regs, 1);
-    if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to set block count to 1 in sdhci_card_init_and_id().");
-    }
-    res = sdhci_regs_set_block_size(sdhci_regs, 8);
-    if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to set block size to 8 in sdhci_card_init_and_id().");
-    }
+    // log_trace("Setting BLKSIZECNT to 1 block of 8 bytes...");
+
+    //! There are no such fields in the Odroid C4
+    // res = sdhci_regs_set_block_count(sdhci_regs, 1);
+    // if (result_is_err(res)) {
+    //     return result_err_chain(res, "Failed to set block count to 1 in sdhci_card_init_and_id().");
+    // }
+    // res = sdhci_regs_set_block_size(sdhci_regs, 8);
+    // if (result_is_err(res)) {
+    //     return result_err_chain(res, "Failed to set block size to 8 in sdhci_card_init_and_id().");
+    // }
     /* Get the SCR by sending the `SEND_SCR` command. We need the SCR to figure
      * out what the allowed bus widths are. */
     log_trace("Sending SEND_SCR (CMD51) command...");
@@ -236,10 +249,11 @@ result_t sdhci_card_init_and_id(
     int num_scr_retries = 100000;
     bool is_read_ready = false;
     do {
-        res = sdhci_regs_is_read_ready(sdhci_regs, &is_read_ready);
-        if (result_is_err(res)) {
-            return result_err_chain(res, "Failed to check if read ready in sdhci_card_init_and_id().");
-        }
+        // res = sdhci_regs_is_read_ready(sdhci_regs, &is_read_ready);
+        // if (result_is_err(res)) {
+        //     return result_err_chain(res, "Failed to check if read ready in sdhci_card_init_and_id().");
+        // }
+        is_read_ready = true;
         if (is_read_ready) {
             /* Read the SCR from the data register. */
             uint32_t data = 0;
@@ -516,14 +530,14 @@ result_t sdhci_transfer_blocks(
      * as the data blocks are transferred and stops the transfer once BLKCNT
      * reaches 0.
      * TODO: TM_AUTO_CMD12 - is this needed?  What effect does it have? */
-    res = sdhci_regs_set_block_count(sdhci_regs, num_blocks);
-    if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to set block count to 1 in sdhci_card_init_and_id().");
-    }
-    res = sdhci_regs_set_block_size(sdhci_regs, block_size);
-    if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to set block size to 8 in sdhci_card_init_and_id().");
-    }
+    // res = sdhci_regs_set_block_count(sdhci_regs, num_blocks);
+    // if (result_is_err(res)) {
+    //     return result_err_chain(res, "Failed to set block count to 1 in sdhci_card_init_and_id().");
+    // }
+    // res = sdhci_regs_set_block_size(sdhci_regs, block_size);
+    // if (result_is_err(res)) {
+    //     return result_err_chain(res, "Failed to set block size to 8 in sdhci_card_init_and_id().");
+    // }
     /* Send the Transfer Command. */
     res = sdhci_send_cmd(
             sdhci_regs,
@@ -629,26 +643,28 @@ result_t sdhci_get_sd_clock_divisor(
     if (divisor > 0x3FF) {
         divisor = 0x3FF;
     }
-    /* Obtain the controller's Host Controller Spec Version. */
-    uint8_t host_controller_spec_version = 0;
-    result_t res = sdhci_regs_get_host_controller_spec_version(
-            sdhci_regs,
-            &host_controller_spec_version
-    );
-    if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to get host controller spec version in sdhci_get_sd_clock_divisor().");
-    }
-    /* If the Host Controller Spec Version is 1 or 2, we're in "8-bit Divided
-     * Clock Mode". */
-    if (host_controller_spec_version < 2) {
-        uint_fast8_t shiftcount = arith_find_most_sig_bit_set(divisor);
-        /* Note the offset of shift by 1 (look at the spec) */
-        if (shiftcount > 0) shiftcount--;
-        /* It's only 8 bits maximum on HOST_SPEC_V2 */
-        if (shiftcount > 7) shiftcount = 7;
-        /* Version 1 and 2 take power 2 */
-        divisor = ((uint32_t) 1 << shiftcount);
-    }
+
+    //! Raspberry Pi Specific things
+    // /* Obtain the controller's Host Controller Spec Version. */
+    // uint8_t host_controller_spec_version = 0;
+    // result_t res = sdhci_regs_get_host_controller_spec_version(
+    //         sdhci_regs,
+    //         &host_controller_spec_version
+    // );
+    // if (result_is_err(res)) {
+    //     return result_err_chain(res, "Failed to get host controller spec version in sdhci_get_sd_clock_divisor().");
+    // }
+    // /* If the Host Controller Spec Version is 1 or 2, we're in "8-bit Divided
+    //  * Clock Mode". */
+    // if (host_controller_spec_version < 2) {
+    //     uint_fast8_t shiftcount = arith_find_most_sig_bit_set(divisor);
+    //     /* Note the offset of shift by 1 (look at the spec) */
+    //     if (shiftcount > 0) shiftcount--;
+    //     /* It's only 8 bits maximum on HOST_SPEC_V2 */
+    //     if (shiftcount > 7) shiftcount = 7;
+    //     /* Version 1 and 2 take power 2 */
+    //     divisor = ((uint32_t) 1 << shiftcount);
+    // }
     /* TODO: Check this. */
     else if (divisor < 3) {
         divisor = 4;
@@ -657,6 +673,7 @@ result_t sdhci_get_sd_clock_divisor(
     return result_ok();
 }
 
+//! Raspberry Pi specific function
 result_t sdhci_set_sd_clock(sdhci_regs_t *sdhci_regs, uint32_t freq) {
     if (sdhci_regs == NULL) {
         return result_err("NULL `sdhci_regs` passed to sdhci_set_sd_clock().");
@@ -897,10 +914,12 @@ result_t sdhci_wait_for_data_in_progress(
     size_t retries = 100000;
     do {
         usleep(10);
-        result_t res_cmd = sdhci_regs_is_data_in_progress(
-                sdhci_regs,
-                &data_in_progress
-        );
+        result_t res_cmd = result_ok();
+        data_in_progress = true;
+        // result_t res_cmd = sdhci_regs_is_data_in_progress(
+        //         sdhci_regs,
+        //         &data_in_progress
+        // );
         if (result_is_err(res_cmd)) {
             return result_err_chain(res_cmd, "Failed to check if data is in progress in sdhci_wait_for_data_in_progress().");
         }
@@ -922,6 +941,8 @@ result_t sdhci_wait_for_data_in_progress(
     *sdhci_result = SD_OK;
     return result_ok();
 }
+
+//! Send CMD
 
 result_t sdhci_send_cmd(
         sdhci_regs_t *sdhci_regs,
@@ -1054,14 +1075,15 @@ result_t sdhci_send_cmd(
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to get cmdtm in sdhci_send_cmd().");
     }
-    /* Set the command register to the value obtained from `sdhci_cmd`. */
-    res = sdhci_regs_set_cmdtm(
-            sdhci_regs,
-            cmdtm
-    );
-    if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to set cmdtm in sdhci_send_cmd().");
-    }
+    //! Raspberry Pi specific!
+    // /* Set the command register to the value obtained from `sdhci_cmd`. */
+    // res = sdhci_regs_set_cmdtm(
+    //         sdhci_regs,
+    //         cmdtm
+    // );
+    // if (result_is_err(res)) {
+    //     return result_err_chain(res, "Failed to set cmdtm in sdhci_send_cmd().");
+    // }
     /* Obtain the delay from the command. */
     size_t delay_us = 0;
     res = sdhci_cmd_get_delay(

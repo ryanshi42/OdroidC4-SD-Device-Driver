@@ -89,7 +89,7 @@ void init(void) {
         return;
     }
 
-    /* Initialise and reset the Pi's SD card Host Controller. */
+    /* Initialise and reset the Odroid C4's SD card Host Controller. */
     res = oc4_emmc_init(
             &global_sdhci_regs,
             NULL
@@ -134,6 +134,8 @@ void init(void) {
         result_printf(res);
         return;
     }
+    log_trace("Finished testing read write simple.");
+
 
     res = mmc_driver_e2e_read_write_multiple_blocks(
             &global_sdhci_regs,
@@ -143,6 +145,8 @@ void init(void) {
         result_printf(res);
         return;
     }
+    log_trace("Finished testing multiple block read write.");
+
 
     res = mmc_driver_e2e_sdcard_card_specific_data(&global_sdcard);
     if (result_is_err(res)) {

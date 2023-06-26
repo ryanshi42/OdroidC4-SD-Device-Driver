@@ -283,7 +283,21 @@ result_t oc4_emmc_regs_is_write_ready(
     return result_err("I should never be called!");
 }
 
-
+result_t oc4_emmc_regs_is_data_in_progress(
+        oc4_emmc_regs_t *oc4_emmc_regs,
+        bool *ret_val
+) {
+    if (oc4_emmc_regs == NULL) {
+        return result_err("NULL `oc4_emmc_regs` passed to oc4_emmc_regs_is_data_in_progress().");
+    }
+    if (ret_val == NULL) {
+        return result_err("NULL `ret_val` passed to oc4_emmc_regs_is_data_in_progress().");
+    }
+    // *ret_val = oc4_emmc_regs->sd_emmc_status;
+    *ret_val = true;
+    // return result_ok(); 
+    return result_err("I should never be called!");
+}
 
 
 
@@ -421,19 +435,6 @@ result_t oc4_emmc_regs_is_any_err(
     }
     *ret_val = oc4_emmc_regs->sd_emmc_status & STATUS_ERR_MASK;
     return result_ok();
-}
-
-result_t oc4_emmc_regs_is_data_in_progress(
-        oc4_emmc_regs_t *oc4_emmc_regs,
-        bool *ret_val
-) {
-    if (oc4_emmc_regs == NULL) {
-        return result_err("NULL `oc4_emmc_regs` passed to oc4_emmc_regs_is_data_in_progress().");
-    }
-    if (ret_val == NULL) {
-        return result_err("NULL `ret_val` passed to oc4_emmc_regs_is_data_in_progress().");
-    }
-    return status_get_dat_inhibit(&oc4_emmc_regs->sd_emmc_status, ret_val);
 }
 
 //? This seems to do nothing
