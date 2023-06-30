@@ -192,16 +192,14 @@ enum meson_gx_mmc_compatible {
 #define SD_EMMC_CMD_RSP2		    0x64
 #define SD_EMMC_CMD_RSP3		    0x68
 
-static inline u32 div_round_up(u32 num, u32 den)
+static inline uint32_t div_round_up(uint32_t num, uint32_t den)
 {
 	return (num + den - 1)/den;
 }
 
-struct meson_mmc_plat {
-	struct mmc_config cfg;
-	struct mmc mmc;
-	void *regbase;
-	void *w_buf;
-};
-
-#endif
+// struct meson_mmc_plat {
+// 	struct mmc_config cfg;
+// 	struct mmc mmc;
+// 	void *regbase;
+// 	void *w_buf;
+// };

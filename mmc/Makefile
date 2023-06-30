@@ -4,6 +4,11 @@
 # SPDX-License-Identifier: BSD-2-Clause
 #
 
+# BUILD_DIR='../odroidc4_build_dir'
+# SEL4CP_SDK='../sel4cp-sdk-1.2.6'
+# SEL4CP_BOARD='odroidc4'
+# SEL4CP_CONFIG='debug'
+
 ifeq ($(strip $(BUILD_DIR)),)
 $(error BUILD_DIR must be specified)
 endif
@@ -27,6 +32,7 @@ CPU := cortex-a53
 CC := $(TOOLCHAIN)-gcc
 LD := $(TOOLCHAIN)-ld
 AS := $(TOOLCHAIN)-as
+
 SEL4CP_TOOL ?= $(SEL4CP_SDK)/bin/sel4cp
 
 # Specifies where the source files are.
@@ -86,8 +92,8 @@ CFLAGS += \
 # Specifies which Object files in $(BUILD_DIR) should be linked.
 SERIAL_DRIVER_OBJS := \
 	serial_driver.o \
-	serial_driver/oc4_uart_regs.o \
-	serial_driver/oc4_uart.o \
+	serial_driver/bcm_uart_regs.o \
+	serial_driver/bcm_uart.o \
 	serial_driver/serial_parity.o \
 	common/arith.o \
 	libsharedringbuffer/shared_ringbuffer.o \
@@ -118,17 +124,6 @@ MMC_DRIVER_OBJS := \
 	mmc_driver/sdhci/sdhci_cmds.o \
 	mmc_driver/sdhci/sdhci_resp_r1.o \
 	mmc_driver/sdhci/sdhci_resp_r6.o \
-	mmc_driver/oc4_emmc_regs/control0.o \
-	mmc_driver/oc4_emmc_regs/control1.o \
-	mmc_driver/oc4_emmc_regs/irpt_en.o \
-	mmc_driver/oc4_emmc_regs/irpt_mask.o \
-	mmc_driver/oc4_emmc_regs/status.o \
-	mmc_driver/oc4_emmc_regs/slotisr_ver.o \
-	mmc_driver/oc4_emmc_regs/cmdtm.o \
-	mmc_driver/oc4_emmc_regs/cmdtm/cmd_index.o \
-	mmc_driver/oc4_emmc_regs/cmdtm/cmd_rspns_type.o \
-	mmc_driver/oc4_emmc_regs/interrupt.o \
-	mmc_driver/oc4_emmc_regs/blksizecnt.o \
 	lib_printf/printf.o \
 	lib_sleep/sleep.o \
 	lib_assert/assert.o \
@@ -188,8 +183,14 @@ IMAGES := \
 	timer_driver.elf \
 	fatfs.elf \
 
+#! THIS LINE IS BREAKING
 .PHONY: all
 all: directories $(IMAGE_FILE)
+
+# .PHONY: say_hello
+# say_hello:
+# 	@echo "Hello World"
+
 
 # Create build directory
 directories:
@@ -214,6 +215,8 @@ directories:
 	mkdir -p $(BUILD_DIR)/serial_driver
 	mkdir -p $(BUILD_DIR)/timer_driver
 	mkdir -p $(BUILD_DIR)/gpio_driver
+
+
 
 # ======================================
 # Step 1: Generate $(BUILD_DIR)/%.o object files from $(SRC_DIR)/%.c source
