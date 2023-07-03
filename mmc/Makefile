@@ -25,7 +25,11 @@ ifeq ($(strip $(SEL4CP_CONFIG)),)
 $(error SEL4CP_CONFIG must be specified)
 endif
 
+
+# arm-gnu-toolchain-12.2.MPACBTI-Rel1-darwin-arm64-arm-none
+
 TOOLCHAIN := aarch64-none-elf
+# TOOLCHAIN := arm-none-eabi
 
 CPU := cortex-a53
 
@@ -61,6 +65,15 @@ CFLAGS := \
 	-Wall \
 	-Werror \
 	-Wno-unused-function
+
+# CFLAGS := \
+# 	-mcpu=$(CPU) \
+# 	-ffreestanding \
+# 	-g3 \
+# 	-O3 \
+# 	-Wall \
+# 	-Werror \
+# 	-Wno-unused-function
 
 LDFLAGS := \
 	-L$(BOARD_DIR)/lib \
@@ -124,12 +137,21 @@ MMC_DRIVER_OBJS := \
 	mmc_driver/sdhci/sdhci_cmds.o \
 	mmc_driver/sdhci/sdhci_resp_r1.o \
 	mmc_driver/sdhci/sdhci_resp_r6.o \
+	mmc_driver/oc4_emmc_regs/control0.o \
+	mmc_driver/oc4_emmc_regs/control1.o \
+	mmc_driver/oc4_emmc_regs/irpt_en.o \
+	mmc_driver/oc4_emmc_regs/irpt_mask.o \
+	mmc_driver/oc4_emmc_regs/status.o \
+	mmc_driver/oc4_emmc_regs/slotisr_ver.o \
+	mmc_driver/oc4_emmc_regs/cmdtm.o \
+	mmc_driver/oc4_emmc_regs/cmdtm/cmd_index.o \
+	mmc_driver/oc4_emmc_regs/cmdtm/cmd_rspns_type.o \
+	mmc_driver/oc4_emmc_regs/interrupt.o \
+	mmc_driver/oc4_emmc_regs/blksizecnt.o \
 	lib_printf/printf.o \
 	lib_sleep/sleep.o \
 	lib_assert/assert.o \
 	lib_clock/clock.o \
-	timer_driver/oc4_timer.o \
-	timer_driver/oc4_timer_regs.o \
 	common/arith.o \
 	lib_result/result.o \
 	lib_result/result_prod.o \
@@ -183,7 +205,6 @@ IMAGES := \
 	timer_driver.elf \
 	fatfs.elf \
 
-#! THIS LINE IS BREAKING
 .PHONY: all
 all: directories $(IMAGE_FILE)
 

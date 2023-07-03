@@ -1,4 +1,5 @@
 #include "sdhci_regs.h"
+#include "oc4_emmc_regs.h"
 
 result_t sdhci_regs_init(sdhci_regs_t *sdhci_regs, void *regs) {
     if (sdhci_regs == NULL) {

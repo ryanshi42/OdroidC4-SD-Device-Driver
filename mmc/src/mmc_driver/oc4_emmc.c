@@ -17,20 +17,25 @@ Stage 2: Read and write a disk block on the SD card
 static inline void *get_regbase(const struct oc4_emmc_regs *mmc)
 {
     // Or can be 0xFFE05000?
-	return 0xFFE07000;
+	return (void *) 0xFFE07000;
 }
 
 // Read a value in a certain register
 static inline uint32_t oc4_mmc_regs_read_unsafe(struct oc4_emmc_regs *mmc, int offset)
 {
-	return readl(get_regbase(mmc) + offset);
+    // return readl(get_regbase(mmc) + offset);
+	uint32_t *val = (uint32_t *)(get_regbase(mmc) + offset);
+    return val[0];
 }
 
 // Write a value to a certain register
 // Note is uint32_t
 static inline void oc4_mmc_regs_write_unsafe(struct oc4_emmc_regs *mmc, uint32_t val, int offset)
 {
-	writel(val, get_regbase(mmc) + offset);
+	// writel(val, get_regbase(mmc) + offset);
+    uint32_t *addr = (uint32_t *)(get_regbase(mmc) + offset);
+    addr[0] = val;
+    return;
 }
 
 // Configure the clock
@@ -342,6 +347,8 @@ result_t oc4_emmc_init(
         oc4_gpio_regs_t *oc4_gpio_regs
 ) {
     uint32_t val;
+
+    oc4_emmc_regs_t *oc4_emmc_regs = (oc4_emmc_regs_t *) sdhci_regs;
     
     if (sdhci_regs == NULL) {
         return result_err("NULL `sdhci_regs` passed to oc4_emmc_init().");
@@ -357,23 +364,23 @@ result_t oc4_emmc_init(
     //? With the hope that not all registers matter if they are set to 0
 
     log_trace("Resetting Clock.");
-    oc4_mmc_regs_write_unsafe(mmc, 0, SD_EMMC_CLOCK);
+    oc4_mmc_regs_write_unsafe(oc4_emmc_regs, 0, SD_EMMC_CLOCK);
 
     log_trace("Resetting Delay.");
-    oc4_mmc_regs_write_unsafe(mmc, 0, SD_EMMC_DELAY1);
+    oc4_mmc_regs_write_unsafe(oc4_emmc_regs, 0, SD_EMMC_DELAY1);
 
     log_trace("Resetting Adjust.");
-    oc4_mmc_regs_write_unsafe(mmc, 0, SD_EMMC_ADJUST);
+    oc4_mmc_regs_write_unsafe(oc4_emmc_regs, 0, SD_EMMC_ADJUST);
 
     log_trace("Resetting Start.");
-    oc4_mmc_regs_write_unsafe(mmc, 0, SD_EMMC_START);
+    oc4_mmc_regs_write_unsafe(oc4_emmc_regs, 0, SD_EMMC_START);
 
     log_trace("Resetting Config.");
-    oc4_mmc_regs_write_unsafe(mmc, 0, SD_EMMC_CFG);
+    oc4_mmc_regs_write_unsafe(oc4_emmc_regs, 0, SD_EMMC_CFG);
 
     /* disable interrupts */
     log_trace("Disabling interrupts.");
-    oc4_mmc_regs_write_unsafe(mmc, 0, SD_EMMC_IRQ_EN);
+    oc4_mmc_regs_write_unsafe(oc4_emmc_regs, 0, SD_EMMC_IRQ_EN);
 
 
     // TODO: U-Boot Driver Stuff
@@ -382,16 +389,16 @@ result_t oc4_emmc_init(
 
     /* enable auto clock mode */
     log_trace("Enabling Auto Clock Mode.");
-    val = oc4_mmc_regs_read_unsafe(mmc, SD_EMMC_CFG);
+    val = oc4_mmc_regs_read_unsafe(oc4_emmc_regs, SD_EMMC_CFG);
     val &= ~CFG_SDCLK_ALWAYS_ON;
     val |= CFG_AUTO_CLK;
-    oc4_mmc_regs_write_unsafe(mmc, val, SD_EMMC_CFG);
+    oc4_mmc_regs_write_unsafe(oc4_emmc_regs, val, SD_EMMC_CFG);
 
     log_trace("Configuring clock.");
-	oc4_mmc_regs_mmc_config_clock(mmc);
+	oc4_mmc_regs_mmc_config_clock(oc4_emmc_regs);
 
     log_trace("Setting I/Os.");
-    oc4_mmc_regs_dm_mmc_set_ios(mmc);
+    oc4_mmc_regs_mmc_set_ios(oc4_emmc_regs);
 
     // TODO: Begin RPi specific things
 
@@ -434,7 +441,7 @@ result_t oc4_emmc_init(
 
     /* Set the Data Timeout to the maximum value. */
     //! This may not work!
-    res = sdhci_regs_set_max_data_timeout(sdhci_regs);
+    result_t res = sdhci_regs_set_max_data_timeout(sdhci_regs);
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to set max data timeout in bcm_emmc_init().");
     }
@@ -456,7 +463,7 @@ result_t oc4_emmc_init(
 
     /* enable interrupts */
     log_trace("Enabling interrupts.");
-    oc4_mmc_regs_write_unsafe(mmc, 0, SD_EMMC_IRQ_EN);
+    oc4_mmc_regs_write_unsafe(oc4_emmc_regs, 0, SD_EMMC_IRQ_EN);
 
     return result_ok();
 }

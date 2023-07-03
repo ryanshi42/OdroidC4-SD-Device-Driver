@@ -312,10 +312,6 @@ result_t oc4_emmc_regs_is_data_in_progress(
 
 
 
-
-
-
-
 //* The following functions are shared between RPi3 and OC4.
 
 result_t oc4_emmc_regs_set_max_data_timeout(oc4_emmc_regs_t *oc4_emmc_regs) {

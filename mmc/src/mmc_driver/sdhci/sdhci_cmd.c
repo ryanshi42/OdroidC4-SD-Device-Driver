@@ -1,4 +1,5 @@
 #include "sdhci_cmd.h"
+#include "cmdtm.h"
 
 result_t sdhci_cmd_get_cmdtm(
         sdhci_cmd_t *sdhci_cmd,
