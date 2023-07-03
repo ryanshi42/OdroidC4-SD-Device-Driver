@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 #include "result.h"
-#include "bcm_timer.h"
+#include "oc4_timer.h"
 #include "shared_ringbuffer.h"
 #include "sel4cp_facade.h"
 #include "printf.h"
@@ -13,8 +13,8 @@
 
 typedef struct timer_driver timer_driver_t;
 struct timer_driver {
-    /* The BCM2835 Timer Device. */
-    bcm_timer_t bcm_timer;
+    /* The OC4 Timer Device. */
+    oc4_timer_t oc4_timer;
 };
 
 /**

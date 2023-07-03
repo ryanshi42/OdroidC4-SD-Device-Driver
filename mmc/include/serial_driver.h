@@ -2,7 +2,7 @@
 
 #include <stdbool.h>
 
-#include "bcm_uart.h"
+#include "oc4_uart.h"
 #include "shared_ringbuffer.h"
 #include "shared_dma.h"
 #include "sel4cp_facade.h"
@@ -15,7 +15,7 @@
 typedef struct serial_driver serial_driver_t;
 struct serial_driver {
     /* UART device. */
-    bcm_uart_t bcm_uart;
+    oc4_uart_t oc4_uart;
     /* Transaction ring buffer handle. This is a convenience `struct` that
      * contains all the pointers to the relevant Transmit "available" and "used"
      * buffers. */

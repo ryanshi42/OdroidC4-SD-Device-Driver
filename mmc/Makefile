@@ -66,15 +66,6 @@ CFLAGS := \
 	-Werror \
 	-Wno-unused-function
 
-# CFLAGS := \
-# 	-mcpu=$(CPU) \
-# 	-ffreestanding \
-# 	-g3 \
-# 	-O3 \
-# 	-Wall \
-# 	-Werror \
-# 	-Wno-unused-function
-
 LDFLAGS := \
 	-L$(BOARD_DIR)/lib \
 	-L$(LIB_DIR)/libc \
@@ -105,8 +96,8 @@ CFLAGS += \
 # Specifies which Object files in $(BUILD_DIR) should be linked.
 SERIAL_DRIVER_OBJS := \
 	serial_driver.o \
-	serial_driver/bcm_uart_regs.o \
-	serial_driver/bcm_uart.o \
+	serial_driver/oc4_uart_regs.o \
+	serial_driver/oc4_uart.o \
 	serial_driver/serial_parity.o \
 	common/arith.o \
 	libsharedringbuffer/shared_ringbuffer.o \
@@ -152,6 +143,8 @@ MMC_DRIVER_OBJS := \
 	lib_sleep/sleep.o \
 	lib_assert/assert.o \
 	lib_clock/clock.o \
+	timer_driver/oc4_timer.o \
+	timer_driver/oc4_timer_regs.o \
 	common/arith.o \
 	lib_result/result.o \
 	lib_result/result_prod.o \
@@ -204,6 +197,9 @@ IMAGES := \
 	mmc_driver.elf \
 	timer_driver.elf \
 	fatfs.elf \
+
+.PHONY: all
+all: directories $(IMAGE_FILE)
 
 .PHONY: all
 all: directories $(IMAGE_FILE)
@@ -267,6 +263,7 @@ $(BUILD_DIR)/mmc_driver.elf: $(addprefix $(BUILD_DIR)/, $(MMC_DRIVER_OBJS))
 $(BUILD_DIR)/timer_driver.elf: $(addprefix $(BUILD_DIR)/, $(TIMER_DRIVER_OBJS))
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
+#! This is the last line that is currently breaking
 $(BUILD_DIR)/fatfs.elf: $(addprefix $(BUILD_DIR)/, $(FATFS_OBJS))
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 

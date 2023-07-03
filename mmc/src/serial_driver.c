@@ -20,13 +20,13 @@ serial_driver_t global_serial_driver = {};
 /**
  * Initialises the serial driver. Called by this PD's `init` function.
  * @param serial_driver
- * @param bcm_uart_base_vaddr
+ * @param oc4_uart_base_vaddr
  * @param auto_insert_carriage_return
  * @return
  */
 static int serial_driver_init(
         serial_driver_t *serial_driver,
-        uintptr_t bcm_uart_base_vaddr,
+        uintptr_t oc4_uart_base_vaddr,
         bool auto_insert_carriage_return
 );
 
@@ -60,7 +60,7 @@ static int serial_driver_dec_num_chars_for_client(serial_driver_t *serial_driver
 
 static int serial_driver_init(
         serial_driver_t *serial_driver,
-        uintptr_t bcm_uart_base_vaddr,
+        uintptr_t oc4_uart_base_vaddr,
         bool auto_insert_carriage_return
 ) {
     /* Initialise our `tx_ring_buf_handle`, which is just a convenience struct
@@ -86,9 +86,9 @@ static int serial_driver_init(
             0 /* Refer to earlier comment about this param. */
     );
     /* Initialise the UART device. */
-    bool is_success = bcm_uart_init(
-            &serial_driver->bcm_uart,
-            bcm_uart_base_vaddr,
+    bool is_success = oc4_uart_init(
+            &serial_driver->oc4_uart,
+            oc4_uart_base_vaddr,
             auto_insert_carriage_return
     );
     if (is_success) {
@@ -103,7 +103,7 @@ static void serial_driver_put_char(serial_driver_t *serial_driver, int ch) {
         return;
     }
     /* Keep trying to send the character to the UART device until it is successful. */
-    while (bcm_uart_put_char(&serial_driver->bcm_uart, ch) < 0);
+    while (oc4_uart_put_char(&serial_driver->oc4_uart, ch) < 0);
 }
 
 static int serial_driver_get_num_chars_for_client(serial_driver_t *serial_driver) {
@@ -168,7 +168,7 @@ void notified(sel4cp_channel channel) {
          * new character was sent to the UART device). */
         case IRQ_59_CHANNEL: {
             /* We obtain the character for the UART device. */
-            int c = bcm_uart_get_char(&global_serial_driver.bcm_uart);
+            int c = oc4_uart_get_char(&global_serial_driver.oc4_uart);
             /* If the character is not erroneous, we send the character to the
              * UART device to output to the console. */
             if (c != -1) {

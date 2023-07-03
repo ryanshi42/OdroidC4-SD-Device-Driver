@@ -13,8 +13,12 @@ timer_driver_t global_timer_driver = {0};
 
 result_t timer_driver_init(timer_driver_t *timer_driver, uintptr_t base_vaddr) {
     /* Initialise the timer. */
-    result_t res = bcm_timer_init(
-            &timer_driver->bcm_timer,
+    // result_t res = bcm_timer_init(
+    //         &timer_driver->bcm_timer,
+    //         base_vaddr
+    // );
+    result_t res = oc4_timer_init(
+            &timer_driver->oc4_timer,
             base_vaddr
     );
     if (result_is_err(res)) {
@@ -50,7 +54,8 @@ void notified(sel4cp_channel channel) {
     switch(channel) {
         case TIMER_DRIVER_TO_MMC_DRIVER_GET_NUM_TICKS_CHANNEL: {
             uint64_t num_ticks;
-            result_t res = bcm_timer_get_num_ticks(&timer_driver->bcm_timer, &num_ticks);
+            // result_t res = bcm_timer_get_num_ticks(&timer_driver->bcm_timer, &num_ticks);
+            result_t res = oc4_timer_get_num_ticks(&timer_driver->oc4_timer, &num_ticks);
             if (result_is_err(res)) {
                 result_printf(res);
                 return;
