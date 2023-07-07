@@ -75,9 +75,14 @@ void init(void) {
         return;
     }
 
+    printf("\n\n\n\n\n\n\n\n\n\nHello World\n\n\n\n\n\n\n\n\n\n\n\n");
+
+
     /* Run E2E tests to verify sleep works properly, which our SD card driver
      * depends upon.*/
     mmc_driver_e2e_sleep();
+
+    printf("\n\n\n\n\n\n\n\n\n\nGoodbye World\n\n\n\n\n\n\n\n\n\n\n\n");
 
     /* Initialise SDHCI registers. */
     res = sdhci_regs_init(

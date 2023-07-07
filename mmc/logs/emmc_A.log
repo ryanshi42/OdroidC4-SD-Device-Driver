@@ -1,0 +1,219 @@
+Rebooting odroidc4-2 and loading image: /tmp/tmp.I9saSdWyuL
+SM1:BL:511f6b:81ca2f;FEAT:A0F83180:20282000;POC:F;RCY:0;EMMC:0;READ:0;0.0;CHK:0;
+bl2_stage_init 0x01
+bl2_stage_init 0x81
+hw id: 0x0000 - pwm id 0x01
+bl2_stage_init 0xc1
+bl2_stage_init 0x02
+
+L0:00000000
+L1:00000703
+L2:00008067
+L3:15000020
+S1:00000000
+B2:20282000
+B1:a0f83180
+
+TE: 174719
+
+BL2 Built : 20:29:41, Jun 18 2019. g12a ga659aac - luan.yuan@droid15-sz
+
+Board ID = 1
+Set cpu clk to 24M
+Set clk81 to 24M
+Use GP1_pll as DSU clk.
+DSU clk: 1200 Mhz
+CPU clk: 1200 MHz
+Set clk81 to 166.6M
+eMMC boot @ 0
+sw8 s
+DDR driver_vesion: LPDDR4_PHY_V_0_1_15 build time: Jun 18 2019 20:29:37
+board id: 1
+Load FIP HDR from eMMC, src: 0x00010200, des: 0xfffd0000, size: 0x00004000, part: 0
+fw parse done
+Load ddrfw from eMMC, src: 0x00060200, des: 0xfffd0000, size: 0x0000c000, part: 0
+Load ddrfw from eMMC, src: 0x00038200, des: 0xfffd0000, size: 0x00004000, part: 0
+PIEI prepare done
+fastboot data load
+00000000
+emmc switch 1 ok
+00000000
+emmc switch 2 ok
+fastboot data verify
+verify result: 255
+Cfg max: 2, cur: 1. Board id: 255. Force loop cfg
+DDR4 probe
+ddr clk to 1320MHz
+Load ddrfw from eMMC, src: 0x00014200, des: 0xfffd0000, size: 0x0000c000, part: 0
+00000000
+emmc switch 0 ok
+
+dmc_version 0001
+Check phy result
+INFO : End of initialization
+INFO : End of read enable training
+INFO : End of fine write leveling
+INFO : End of read dq deskew training
+INFO : End of MPR read delay center optimization
+INFO : End of Write leveling coarse delay
+INFO : End of write delay center optimization
+INFO : End of read delay center optimization
+INFO : End of max read latency training
+INFO : Training has run successfully!
+1D training succeed
+Load ddrfw from eMMC, src: 0x00020200, des: 0xfffd0000, size: 0x0000c000, part: 0
+Check phy result
+INFO : End of initialization
+INFO : End of 2D read delay Voltage center optimization
+INFO : End of 2D write delay Voltage center optimization
+INFO : Training has run successfully!
+
+R0_RxClkDly_Margin==94 ps 8
+R0_TxDqDly_Margi==106 ps 9
+
+
+R1_RxClkDly_Margin==0 ps 0
+R1_TxDqDly_Margi==0 ps 0
+
+ dwc_ddrphy_apb_wr((0<<20)|(2<<16)|(0<<12)|(0xb0):0001 
+
+soc_vref_reg_value 0x 0000004f 0000004f 0000004f 0000004d 0000004f 00000051 0000004e 0000004e 0000004e 00000050 0000004f 0000004d 0000004e 0000004e 0000004d 0000004d 0000004f 0000004f 0000004e 00000050 0000004f 0000004f 0000004e 00000050 0000004f 00000051 00000050 0000004f 0000004f 0000004f 00000050 00000051 dram_vref_reg_value 0x 00000021
+2D training succeed
+aml_ddr_fw_vesion: LPDDR4_PHY_V_0_1_15 build time: Jun 18 2019 20:29:43
+auto size-- 65535DDR cs0 size: 2048MB
+DDR cs1 size: 2048MB
+DMC_DDR_CTRL: 00700024DDR size: 3928MB
+cs0 DataBus test pass
+cs1 DataBus test pass
+cs0 AddrBus test pass
+cs1 AddrBus test pass
+
+non-sec scramble use zero key
+ddr scramble enabled
+
+100bdlr_step_size ps== 435
+result report
+boot times 0Enable ddr reg access
+00000000
+emmc switch 3 ok
+Authentication key not yet programmed
+get rpmb counter error 0x00000007
+00000000
+emmc switch 0 ok
+Load FIP HDR from eMMC, src: 0x00010200, des: 0x01700000, size: 0x00004000, part: 0
+Load BL3X from eMMC, src: 0x00078200, des: 0x01768000, size: 0x0009c000, part: 0
+bl2z: ptr: 05129330, size: 00001e40
+0.0;M3 CHK:0;cm4_sp_mode 0
+MVN_1=0x00000000
+MVN_2=0x00000000
+[Image: g12a_v1.1.3386-3b31431 2019-05-21 10:41:54 luan.yuan@droid15-sz]
+OPS=0x10
+ring efuse init
+2b 0c 10 00 01 1d 22 00 00 19 36 30 36 58 4b 50 
+[0.017319 Inits done]
+secure task start!
+high task start!
+low task start!
+run into bl31
+NOTICE:  BL31: v1.3(release):4fc40b1
+NOTICE:  BL31: Built : 15:57:33, May 22 2019
+NOTICE:  BL31: G12A normal boot!
+NOTICE:  BL31: BL33 decompress pass
+ERROR:   Error initializing runtime service opteed_fast
+
+<debug_uart>
+
+
+U-Boot 2022.07-armbian (Feb 17 2023 - 22:32:33 +0000) odroid-c4/hc4
+
+Model: Hardkernel ODROID-C4
+SoC:   Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2)
+DRAM:  3.8 GiB
+Core:  388 devices, 27 uclasses, devicetree: separate
+MMC:   sd@ffe05000: 0, mmc@ffe07000: 1
+Loading Environment from nowhere... OK
+In:    serial
+Out:   serial
+Err:   serial
+Board variant: c4
+Net:   eth0: ethernet@ff3f0000
+Hit any key to stop autoboot:  2  
+ 0 
+=> 
+=> setenv autoload no && dhcp && tftpboot 0x20000000 odroidc4-2/local-kernel
+setenv autoload no && dhcp && tftpboot 0x20000000 odroidc4-2/local-kernel
+ethernet@ff3f0000 Waiting for PHY auto negotiation to complete...... done
+Speed: 1000, full duplex
+BOOTP broadcast 1
+BOOTP broadcast 2
+BOOTP broadcast 3
+DHCP client bound to address 172.16.1.107 (1005 ms)
+Speed: 1000, full duplex
+Using ethernet@ff3f0000 device
+TFTP from server 172.16.0.2; our IP address is 172.16.1.107
+Filename 'odroidc4-2/local-kernel'.
+Load address: 0x20000000
+Loading: #################################################################
+         #################################################################
+         #################################################################
+         #################################################################
+         14 MiB/s
+done
+Bytes transferred = 3810896 (3a2650 hex)
+=> go 0x20000000
+go 0x20000000
+## Starting application at 0x20000000 ...
+LDR|INFO: altloader for seL4 starting
+LDR|INFO: Flags:                0x0000000000000000
+LDR|INFO: Kernel:      entry:   0xffffff8000000000
+LDR|INFO: Root server: physmem: 0x0000000000399000 -- 0x00000000003a0000
+LDR|INFO:              virtmem: 0x000000008a000000 -- 0x000000008a007000
+LDR|INFO:              entry  : 0x000000008a000000
+LDR|INFO: region: 0x00000000   addr: 0x0000000000000000   size: 0x0000000000247000   offset: 0x0000000000000000   type: 0x0000000000000001
+LDR|INFO: region: 0x00000001   addr: 0x0000000000399000   size: 0x0000000000006980   offset: 0x0000000000247000   type: 0x0000000000000001
+LDR|INFO: region: 0x00000002   addr: 0x0000000000247000   size: 0x00000000000095b8   offset: 0x000000000024d980   type: 0x0000000000000001
+LDR|INFO: region: 0x00000003   addr: 0x0000000000251000   size: 0x0000000000000a90   offset: 0x0000000000256f40   type: 0x0000000000000001
+LDR|INFO: region: 0x00000004   addr: 0x0000000000252000   size: 0x00000000000010c0   offset: 0x00000000002579d0   type: 0x0000000000000001
+LDR|INFO: region: 0x00000005   addr: 0x0000000000254000   size: 0x0000000000000cf8   offset: 0x0000000000258a90   type: 0x0000000000000001
+LDR|INFO: region: 0x00000006   addr: 0x0000000000255000   size: 0x00000000000010b0   offset: 0x0000000000259790   type: 0x0000000000000001
+LDR|INFO: region: 0x00000007   addr: 0x0000000000257000   size: 0x00000000000039c0   offset: 0x000000000025a840   type: 0x0000000000000001
+LDR|INFO: region: 0x00000008   addr: 0x000000000025b000   size: 0x0000000000003090   offset: 0x000000000025e200   type: 0x0000000000000001
+LDR|INFO: region: 0x00000009   addr: 0x000000000025f000   size: 0x0000000000011060   offset: 0x0000000000261290   type: 0x0000000000000001
+LDR|INFO: region: 0x0000000a   addr: 0x0000000000271000   size: 0x0000000000003640   offset: 0x00000000002722f0   type: 0x0000000000000001
+LDR|INFO: region: 0x0000000b   addr: 0x0000000000275000   size: 0x000000000001d920   offset: 0x0000000000275930   type: 0x0000000000000001
+LDR|INFO: region: 0x0000000c   addr: 0x0000000000293000   size: 0x0000000000105110   offset: 0x0000000000293250   type: 0x0000000000000001
+LDR|INFO: copying region 0x00000000
+LDR|INFO: copying region 0x00000001
+LDR|INFO: copying region 0x00000002
+LDR|INFO: copying region 0x00000003
+LDR|INFO: copying region 0x00000004
+LDR|INFO: copying region 0x00000005
+LDR|INFO: copying region 0x00000006
+LDR|INFO: copying region 0x00000007
+LDR|INFO: copying region 0x00000008
+LDR|INFO: copying region 0x00000009
+LDR|INFO: copying region 0x0000000a
+LDR|INFO: copying region 0x0000000b
+LDR|INFO: copying region 0x0000000c
+LDR|INFO: CurrentEL=EL2
+LDR|INFO: Resetting CNTVOFF
+LDR|INFO: Dropping from EL2 to EL1
+LDR|INFO: CurrentEL=EL1
+LDR|INFO: Dropped to EL1 successfully
+LDR|INFO: enabling MMU
+LDR|INFO: jumping to kernel
+Bootstrapping kernel
+available phys memory regions: 2
+  [0..5000000]
+  [5300000..40000000]
+reserved virt address space regions: 3
+  [ffffff8000000000..ffffff8000247000]
+  [ffffff8000247000..ffffff8000399000]
+  [ffffff8000399000..ffffff80003a0000]
+Booting all finished, dropped to user space
+MON|INFO: seL4 Core Platform Bootstrap
+MON|INFO: bootinfo untyped list matches expected list
+MON|INFO: Number of bootstrap invocations: 0x0000000b
+MON|INFO: Number of system invocations:    0x00000214
+MON|INFO: completed bootstrap invocations
+MON|INFO: completed system invocations
