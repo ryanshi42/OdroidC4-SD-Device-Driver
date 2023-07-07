@@ -5,19 +5,27 @@
     <memory_region
             name="gpio"
             size="0x1_000"
-            phys_addr="0x3f200000"/>
+            phys_addr="0xff_634_000"/>
+
+
     <!-- This is a 4KB, page-aligned memory region at the physical address of
     0x3f_003_000, which is where the Timer registers are mapped to. -->
+    <!-- Actually, it is 0x7E, but it maps down into 0x3f -->
     <memory_region
             name="timer"
             size="0x1_000"
-            phys_addr="0x3f_003_000"/>
+            phys_addr="0xff_d03_000"/>
+
+
     <!-- This is a 4KB, page-aligned memory region at the physical address of
     0x3f_300_000, which is where the EMMC registers are mapped to. -->
+
+    <!-- base=0xffe00000 -->
+
     <memory_region
             name="emmc"
-            size="0x1_000"
-            phys_addr="0x3f_300_000"/>
+            size="0x2_000"
+            phys_addr="0xff_e03_000"/>
     <!-- This is a 4KB, page-aligned memory region at the physical address of
     0x3f215000, which is where the UART device registers are mapped to. Note, we
     are mapping in the Rpi3B's "Mini" UART device registers and NOT its "PL011"
@@ -30,7 +38,7 @@
     <memory_region
             name="uart"
             size="0x1_000"
-            phys_addr="0x3f215000"/>
+            phys_addr="0xff_d09_000"/>
     <!-- In the SDDF's design-documentation, `shared_dma` is referred to as the
     "Data Region". `shared_dma` is an array of I/O buffers that will be used to
     pass/transport data from `serial_client` to `serial_driver` and vice-versa.

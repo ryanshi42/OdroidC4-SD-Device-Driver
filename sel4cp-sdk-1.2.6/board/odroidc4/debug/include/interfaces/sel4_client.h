@@ -19,17 +19,17 @@
         typedef unsigned long __type_##type##_size_incorrect[ \
                 (sizeof(type) == expected_bytes) ? 1 : -1]
 
-assert_size_correct(int, 4); // works
+assert_size_correct(int, 4);
 assert_size_correct(long, 8);
-assert_size_correct(seL4_Uint8, 1); // works
-assert_size_correct(seL4_Uint16, 2); // works
-assert_size_correct(seL4_Uint32, 4); // works
+assert_size_correct(seL4_Uint8, 1);
+assert_size_correct(seL4_Uint16, 2);
+assert_size_correct(seL4_Uint32, 4);
 assert_size_correct(seL4_Uint64, 8);
 assert_size_correct(seL4_Time, 8);
 assert_size_correct(seL4_Word, 8);
-assert_size_correct(seL4_Bool, 1); // works
-assert_size_correct(seL4_CapRights_t, 8); 
-assert_size_correct(seL4_CPtr, 8); 
+assert_size_correct(seL4_Bool, 1);
+assert_size_correct(seL4_CapRights_t, 8);
+assert_size_correct(seL4_CPtr, 8);
 assert_size_correct(seL4_CNode, 8);
 assert_size_correct(seL4_IRQHandler, 8);
 assert_size_correct(seL4_IRQControl, 8);
