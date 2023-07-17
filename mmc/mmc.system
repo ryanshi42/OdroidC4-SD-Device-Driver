@@ -7,6 +7,11 @@
             size="0x1_000"
             phys_addr="0xff_634_000"/>
 
+<!-- <memory_region
+        name="gpio"
+        size="0x1_000"
+        phys_addr="0x69_696_000"/> -->
+
 
     <!-- This is a 4KB, page-aligned memory region at the physical address of
     0x3f_003_000, which is where the Timer registers are mapped to. -->

@@ -31,7 +31,7 @@ HELLO_OBJS := hello.o
 BOARD_DIR := $(SEL4CP_SDK)/board/$(SEL4CP_BOARD)/$(SEL4CP_CONFIG)
 
 IMAGES := hello.elf
-CFLAGS := -mcmodel=medany -mstrict-align -march=rv64imac -mabi=lp64 -nostdlib -ffreestanding -g3 -O3 -Wall -Wno-unused-function -Werror -I$(BOARD_DIR)/include
+CFLAGS := -mcmodel=medany -mstrict-align -march=rv64imac -mabi=lp64 -nostdlib -ffreestanding  -O3 -Wall -Wno-unused-function -Werror -I$(BOARD_DIR)/include
 LDFLAGS := -L$(BOARD_DIR)/lib
 LIBS := -lsel4cp -Tsel4cp.ld
 
@@ -45,7 +45,7 @@ $(BUILD_DIR)/%.o: %.c Makefile
 	$(CC) -c $(CFLAGS) $< -o $@
 
 $(BUILD_DIR)/%.o: %.s Makefile
-	$(AS) -g3 -mcpu=$(CPU) $< -o $@
+	$(AS)  -mcpu=$(CPU) $< -o $@
 
 $(BUILD_DIR)/hello.elf: $(addprefix $(BUILD_DIR)/, $(HELLO_OBJS))
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@

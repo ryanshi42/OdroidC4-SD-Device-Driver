@@ -1,13 +1,295 @@
+# #
+# # Copyright 2022, UNSW
+# #
+# # SPDX-License-Identifier: BSD-2-Clause
+# #
+
+# # BUILD_DIR='../odroidc4_build_dir'
+# # SEL4CP_SDK='../sel4cp-sdk-1.2.6'
+# # SEL4CP_BOARD='odroidc4'
+# # SEL4CP_CONFIG='debug'
+
+# ifeq ($(strip $(BUILD_DIR)),)
+# $(error BUILD_DIR must be specified)
+# endif
+
+# ifeq ($(strip $(SEL4CP_SDK)),)
+# $(error SEL4CP_SDK must be specified)
+# endif
+
+# ifeq ($(strip $(SEL4CP_BOARD)),)
+# $(error SEL4CP_BOARD must be specified)
+# endif
+
+# ifeq ($(strip $(SEL4CP_CONFIG)),)
+# $(error SEL4CP_CONFIG must be specified)
+# endif
+
+
+# # arm-gnu-toolchain-12.2.MPACBTI-Rel1-darwin-arm64-arm-none
+
+# TOOLCHAIN := aarch64-none-elf
+# # TOOLCHAIN := arm-none-eabi
+
+# CPU := cortex-a53
+
+# CC := $(TOOLCHAIN)-gcc
+# LD := $(TOOLCHAIN)-ld
+# AS := $(TOOLCHAIN)-as
+
+# SEL4CP_TOOL ?= $(SEL4CP_SDK)/bin/sel4cp
+
+# # Specifies where the source files are.
+# SRC_DIR := src
+# # Specifies where the library files are.
+# LIB_DIR := lib
+# # Specifies where the ring buffer files are.
+# LIB_SHARED_RINGBUFFER_DIR := $(SRC_DIR)/libsharedringbuffer
+# LIB_PRINTF_DIR := $(SRC_DIR)/lib_printf
+# LIB_SLEEP_DIR := $(SRC_DIR)/lib_sleep
+# LIB_ASSERT_DIR := $(SRC_DIR)/lib_assert
+# LIB_CLOCK_DIR := $(SRC_DIR)/lib_clock
+# LIB_RESULT_DIR := $(SRC_DIR)/lib_result
+# LIB_FATFS_DIR := $(SRC_DIR)/lib_fatfs
+# LIB_SDDF_BLK_DIR := $(SRC_DIR)/lib_sddf_blk
+# LIB_MEMORY := $(SRC_DIR)/lib_memory
+
+# BOARD_DIR := $(SEL4CP_SDK)/board/$(SEL4CP_BOARD)/$(SEL4CP_CONFIG)
+
+# CFLAGS := \
+# 	-mcpu=$(CPU) \
+# 	-mstrict-align \
+# 	-ffreestanding \
+# 	 \
+# 	-O3 \
+# 	-Wall \
+# 	-Werror \
+# 	-Wno-unused-function
+
+# LDFLAGS := \
+# 	-L$(BOARD_DIR)/lib \
+# 	-L$(LIB_DIR)/libc \
+# 	-L$(LIB_DIR)/libmemory \
+
+# LIBS := \
+# 	-lsel4cp \
+# 	-Tsel4cp.ld \
+# 	-lc \
+# 	-lmemory_freelist \
+
+# IMAGE_FILE = $(BUILD_DIR)/loader.img
+# REPORT_FILE = $(BUILD_DIR)/report.txt
+
+# CFLAGS += \
+# 	-I$(BOARD_DIR)/include \
+# 	-Iinclude \
+# 	-I$(LIB_SHARED_RINGBUFFER_DIR)/include \
+# 	-I$(LIB_PRINTF_DIR) \
+# 	-I$(LIB_SLEEP_DIR) \
+# 	-I$(LIB_ASSERT_DIR) \
+# 	-I$(LIB_CLOCK_DIR) \
+# 	-I$(LIB_RESULT_DIR) \
+# 	-I$(LIB_FATFS_DIR) \
+# 	-I$(LIB_SDDF_BLK_DIR) \
+# 	-I$(LIB_MEMORY) \
+
+# # Specifies which Object files in $(BUILD_DIR) should be linked.
+# SERIAL_DRIVER_OBJS := \
+# 	serial_driver.o \
+# 	serial_driver/oc4_uart_regs.o \
+# 	serial_driver/oc4_uart.o \
+# 	serial_driver/serial_parity.o \
+# 	common/arith.o \
+# 	libsharedringbuffer/shared_ringbuffer.o \
+# 	common/shared_dma.o \
+
+# SERIAL_CLIENT_OBJS := \
+# 	serial_client.o \
+# 	libsharedringbuffer/shared_ringbuffer.o \
+# 	common/shared_dma.o \
+
+# MMC_DRIVER_OBJS := \
+# 	mmc_driver.o \
+# 	mmc_driver_e2e.o \
+# 	mmc_driver/oc4_emmc.o \
+# 	mmc_driver/oc4_emmc_regs.o \
+# 	mmc_driver/sdcard.o \
+# 	mmc_driver/sdcard/ocr.o \
+# 	mmc_driver/sdcard/cid.o \
+# 	mmc_driver/sdcard/scr.o \
+# 	mmc_driver/sdcard/sdcard_data/csd.o \
+# 	mmc_driver/sdcard/sdcard_data/sdcard_data_v1.o \
+# 	mmc_driver/sdcard/sdcard_data/sdcard_data_v2.o \
+# 	mmc_driver/sdcard/sdcard_data.o \
+# 	mmc_driver/sdhci.o \
+# 	mmc_driver/sdhci_regs.o \
+# 	mmc_driver/sdhci/sdhci_result.o \
+# 	mmc_driver/sdhci/sdhci_cmd.o \
+# 	mmc_driver/sdhci/sdhci_cmds.o \
+# 	mmc_driver/sdhci/sdhci_resp_r1.o \
+# 	mmc_driver/sdhci/sdhci_resp_r6.o \
+# 	mmc_driver/oc4_emmc_regs/control0.o \
+# 	mmc_driver/oc4_emmc_regs/control1.o \
+# 	mmc_driver/oc4_emmc_regs/irpt_en.o \
+# 	mmc_driver/oc4_emmc_regs/irpt_mask.o \
+# 	mmc_driver/oc4_emmc_regs/status.o \
+# 	mmc_driver/oc4_emmc_regs/slotisr_ver.o \
+# 	mmc_driver/oc4_emmc_regs/cmdtm.o \
+# 	mmc_driver/oc4_emmc_regs/cmdtm/cmd_index.o \
+# 	mmc_driver/oc4_emmc_regs/cmdtm/cmd_rspns_type.o \
+# 	mmc_driver/oc4_emmc_regs/interrupt.o \
+# 	mmc_driver/oc4_emmc_regs/blksizecnt.o \
+# 	lib_printf/printf.o \
+# 	lib_sleep/sleep.o \
+# 	lib_assert/assert.o \
+# 	lib_clock/clock.o \
+# 	timer_driver/oc4_timer.o \
+# 	timer_driver/oc4_timer_regs.o \
+# 	common/arith.o \
+# 	lib_result/result.o \
+# 	lib_result/result_prod.o \
+# 	common/timer_client.o \
+# 	common/shared_dma.o \
+# 	common/log.o \
+# 	libsharedringbuffer/shared_ringbuffer.o \
+# 	gpio_driver.o \
+# 	gpio_driver/oc4_gpio_regs.o \
+# 	gpio_driver/gpio_mode.o \
+# 	gpio_driver/gpio_fix_resistor.o \
+# 	lib_sddf_blk/blk_request.o \
+# 	lib_sddf_blk/blk_request_queue.o \
+# 	lib_sddf_blk/blk_response.o \
+# 	lib_sddf_blk/blk_response_queue.o \
+# 	lib_sddf_blk/blk_shared_data_buf.o \
+
+# TIMER_DRIVER_OBJS := \
+# 	timer_driver.o \
+# 	libsharedringbuffer/shared_ringbuffer.o \
+# 	lib_result/result.o \
+# 	lib_result/result_prod.o \
+# 	timer_driver/oc4_timer.o \
+# 	timer_driver/oc4_timer_regs.o \
+# 	lib_printf/printf.o \
+
+# FATFS_OBJS := \
+# 	fatfs.o \
+# 	lib_printf/printf.o \
+# 	common/log.o \
+# 	common/memory_facade.o \
+# 	lib_result/result.o \
+# 	lib_result/result_prod.o \
+# 	lib_sddf_blk/blk_request.o \
+# 	lib_sddf_blk/blk_request_queue.o \
+# 	lib_sddf_blk/blk_response.o \
+# 	lib_sddf_blk/blk_response_queue.o \
+# 	lib_sddf_blk/blk_shared_data_buf.o \
+# 	lib_sddf_blk/blk_shared_data_queue.o \
+# 	lib_fatfs/diskio.o \
+# 	lib_fatfs/ff.o \
+# 	lib_fatfs/diskio_test.o \
+# 	lib_fatfs/ffunicode.o \
+# 	fatfs_e2e.o \
+# 	mmc_driver_client/mmc_driver_client.o \
+
+# IMAGES := \
+# 	serial_driver.elf \
+# 	serial_client.elf \
+# 	mmc_driver.elf \
+# 	timer_driver.elf \
+# 	fatfs.elf \
+
+# .PHONY: all
+# all: directories $(IMAGE_FILE)
+
+# .PHONY: all
+# all: directories $(IMAGE_FILE)
+
+# # .PHONY: say_hello
+# # say_hello:
+# # 	@echo "Hello World"
+
+
+# # Create build directory
+# directories:
+# 	mkdir -p $(BUILD_DIR)
+# 	mkdir -p $(BUILD_DIR)/libsharedringbuffer
+# 	mkdir -p $(BUILD_DIR)/lib_printf
+# 	mkdir -p $(BUILD_DIR)/lib_sleep
+# 	mkdir -p $(BUILD_DIR)/lib_assert
+# 	mkdir -p $(BUILD_DIR)/lib_clock
+# 	mkdir -p $(BUILD_DIR)/lib_result
+# 	mkdir -p $(BUILD_DIR)/lib_fatfs
+# 	mkdir -p $(BUILD_DIR)/lib_sddf_blk
+# 	mkdir -p $(BUILD_DIR)/lib_memory
+# 	mkdir -p $(BUILD_DIR)/common
+# 	mkdir -p $(BUILD_DIR)/mmc_driver
+# 	mkdir -p $(BUILD_DIR)/mmc_driver_client
+# 	mkdir -p $(BUILD_DIR)/mmc_driver/sdhci
+# 	mkdir -p $(BUILD_DIR)/mmc_driver/oc4_emmc_regs
+# 	mkdir -p $(BUILD_DIR)/mmc_driver/oc4_emmc_regs/cmdtm
+# 	mkdir -p $(BUILD_DIR)/mmc_driver/sdcard
+# 	mkdir -p $(BUILD_DIR)/mmc_driver/sdcard/sdcard_data
+# 	mkdir -p $(BUILD_DIR)/serial_driver
+# 	mkdir -p $(BUILD_DIR)/timer_driver
+# 	mkdir -p $(BUILD_DIR)/gpio_driver
+
+
+
+# # ======================================
+# # Step 1: Generate $(BUILD_DIR)/%.o object files from $(SRC_DIR)/%.c source
+# # files and $(SRC_DIR)/%.c assembler files.
+# # ======================================
+
+# $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c Makefile
+# 	$(CC) -c $(CFLAGS) $< -o $@
+
+# $(BUILD_DIR)/%.o: $(SRC_DIR)/%.s Makefile
+# 	$(AS)  -mcpu=$(CPU) $< -o $@
+
+# # ======================================
+# # Step 2: Generate our $(BUILD_DIR)/serial_driver.elf ELF file using each
+# # $(SERIAL_DRIVER_OBJS) object file in the $(BUILD_DIR).
+# # ======================================
+
+# $(BUILD_DIR)/serial_driver.elf: $(addprefix $(BUILD_DIR)/, $(SERIAL_DRIVER_OBJS))
+# 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
+
+# $(BUILD_DIR)/serial_client.elf: $(addprefix $(BUILD_DIR)/, $(SERIAL_CLIENT_OBJS))
+# 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
+
+# $(BUILD_DIR)/mmc_driver.elf: $(addprefix $(BUILD_DIR)/, $(MMC_DRIVER_OBJS))
+# 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
+
+# $(BUILD_DIR)/timer_driver.elf: $(addprefix $(BUILD_DIR)/, $(TIMER_DRIVER_OBJS))
+# 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
+
+# #! This is the last line that is currently breaking
+# $(BUILD_DIR)/fatfs.elf: $(addprefix $(BUILD_DIR)/, $(FATFS_OBJS))
+# 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
+
+# # ======================================
+# # Step 3: Generate our $(BUILD_DIR)/loader.img using the $(SEL4CP_TOOL).
+# # ======================================
+
+# $(IMAGE_FILE) $(REPORT_FILE): $(addprefix $(BUILD_DIR)/, $(IMAGES)) mmc.system
+# 	$(SEL4CP_TOOL) \
+# 		  mmc.system \
+# 		  --search-path $(BUILD_DIR) \
+# 		  --board $(SEL4CP_BOARD) \
+# 		  --config $(SEL4CP_CONFIG) \
+# 		  -o $(IMAGE_FILE) \
+# 		  -r $(REPORT_FILE)
+
+# .PHONY: clean
+# clean:
+# 	rm -f *.o *.elf .depend*
+# 	find . -name \*.o |xargs --no-run-if-empty rm
+
 #
 # Copyright 2022, UNSW
 #
 # SPDX-License-Identifier: BSD-2-Clause
 #
-
-# BUILD_DIR='../odroidc4_build_dir'
-# SEL4CP_SDK='../sel4cp-sdk-1.2.6'
-# SEL4CP_BOARD='odroidc4'
-# SEL4CP_CONFIG='debug'
 
 ifeq ($(strip $(BUILD_DIR)),)
 $(error BUILD_DIR must be specified)
@@ -25,18 +307,13 @@ ifeq ($(strip $(SEL4CP_CONFIG)),)
 $(error SEL4CP_CONFIG must be specified)
 endif
 
-
-# arm-gnu-toolchain-12.2.MPACBTI-Rel1-darwin-arm64-arm-none
-
 TOOLCHAIN := aarch64-none-elf
-# TOOLCHAIN := arm-none-eabi
 
 CPU := cortex-a53
 
 CC := $(TOOLCHAIN)-gcc
 LD := $(TOOLCHAIN)-ld
 AS := $(TOOLCHAIN)-as
-
 SEL4CP_TOOL ?= $(SEL4CP_SDK)/bin/sel4cp
 
 # Specifies where the source files are.
@@ -201,14 +478,6 @@ IMAGES := \
 .PHONY: all
 all: directories $(IMAGE_FILE)
 
-.PHONY: all
-all: directories $(IMAGE_FILE)
-
-# .PHONY: say_hello
-# say_hello:
-# 	@echo "Hello World"
-
-
 # Create build directory
 directories:
 	mkdir -p $(BUILD_DIR)
@@ -232,8 +501,6 @@ directories:
 	mkdir -p $(BUILD_DIR)/serial_driver
 	mkdir -p $(BUILD_DIR)/timer_driver
 	mkdir -p $(BUILD_DIR)/gpio_driver
-
-
 
 # ======================================
 # Step 1: Generate $(BUILD_DIR)/%.o object files from $(SRC_DIR)/%.c source
@@ -263,7 +530,6 @@ $(BUILD_DIR)/mmc_driver.elf: $(addprefix $(BUILD_DIR)/, $(MMC_DRIVER_OBJS))
 $(BUILD_DIR)/timer_driver.elf: $(addprefix $(BUILD_DIR)/, $(TIMER_DRIVER_OBJS))
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
-#! This is the last line that is currently breaking
 $(BUILD_DIR)/fatfs.elf: $(addprefix $(BUILD_DIR)/, $(FATFS_OBJS))
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
@@ -284,4 +550,3 @@ $(IMAGE_FILE) $(REPORT_FILE): $(addprefix $(BUILD_DIR)/, $(IMAGES)) mmc.system
 clean:
 	rm -f *.o *.elf .depend*
 	find . -name \*.o |xargs --no-run-if-empty rm
-

@@ -1,4 +1,5 @@
 #include "serial_driver.h"
+#include "oc4_uart.h"
 
 /* This will be automatically populated with the Virtual Address that
  * corresponds to the Physical Address of the UART device by the seL4CP tool. */

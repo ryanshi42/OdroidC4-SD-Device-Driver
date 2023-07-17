@@ -32,6 +32,11 @@ sdhci_regs_t global_sdhci_regs = {0};
 
 void init(void) {
     result_t res;
+    // res = false;
+    // result_printf(res);
+    // return;
+    seL4_DebugPutChar('h');
+
 
     /* Initialise `printf`. The `log.h` library depends on `printf` being
      * initialised first. */
@@ -40,6 +45,14 @@ void init(void) {
             MMC_DRIVER_TO_SERIAL_CLIENT_PUTCHAR_CHANNEL
     );
 
+
+    // puts("HELP NEEDED\n\n\n\n\n\n\n");
+    sel4cp_dbg_puts("unrecognisable string\n");
+
+
+    // panic("heelp needed\n");
+    log_trace("Starting init() in MMC Driver");
+
     /* Initialise the `timer_client`, which is the library used to interface
      * with the `timer_driver` PD. */
     res = timer_client_init(
@@ -47,6 +60,8 @@ void init(void) {
             MMC_DRIVER_TO_TIMER_DRIVER_GET_NUM_TICKS_CHANNEL,
             (uint64_t *) timer_driver_to_mmc_driver_numticks_buf
     );
+    result_printf(res);
+
     if (result_is_err(res)) {
         result_printf(res);
         return;
@@ -75,14 +90,14 @@ void init(void) {
         return;
     }
 
-    printf("\n\n\n\n\n\n\n\n\n\nHello World\n\n\n\n\n\n\n\n\n\n\n\n");
+    // printf("\n\n\n\n\n\n\n\n\n\nHello World\n\n\n\n\n\n\n\n\n\n\n\n");
 
 
     /* Run E2E tests to verify sleep works properly, which our SD card driver
      * depends upon.*/
     mmc_driver_e2e_sleep();
 
-    printf("\n\n\n\n\n\n\n\n\n\nGoodbye World\n\n\n\n\n\n\n\n\n\n\n\n");
+    // printf("\n\n\n\n\n\n\n\n\n\nGoodbye World\n\n\n\n\n\n\n\n\n\n\n\n");
 
     /* Initialise SDHCI registers. */
     res = sdhci_regs_init(

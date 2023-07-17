@@ -10,7 +10,7 @@ endif ()
 set(CMAKE_C_STANDARD 11)
 
 # Using most flags in src/Makefile.
-set(GCC_COMPILE_FLAGS -mstrict-align -Wall -Werror -Wvla -g3 -O3)
+set(GCC_COMPILE_FLAGS -mstrict-align -Wall -Werror -Wvla  -O3)
 
 SET(CMAKE_BUILD_TYPE Debug)
 

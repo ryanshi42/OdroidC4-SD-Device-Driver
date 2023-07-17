@@ -346,6 +346,11 @@ result_t oc4_emmc_init(
         sdhci_regs_t *sdhci_regs,
         oc4_gpio_regs_t *oc4_gpio_regs
 ) {
+    log_trace("Called OC4 EMMC.");
+    sel4cp_dbg_puts("unrecognisable string\n");
+    seL4_DebugPutChar('h');
+
+
     uint32_t val;
 
     oc4_emmc_regs_t *oc4_emmc_regs = (oc4_emmc_regs_t *) sdhci_regs;

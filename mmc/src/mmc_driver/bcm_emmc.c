@@ -5,6 +5,10 @@ result_t bcm_emmc_init(
         sdhci_regs_t *sdhci_regs,
         bcm_gpio_regs_t *bcm_gpio_regs
 ) {
+    log_trace("Called BCM EMMC.");
+    sel4cp_dbg_puts("unrecognisable string\n");
+
+
     if (sdhci_regs == NULL) {
         return result_err("NULL `sdhci_regs` passed to bcm_emmc_init().");
     }

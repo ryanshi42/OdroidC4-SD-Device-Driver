@@ -35,7 +35,7 @@ GPT_OBJS := gpt.o
 BOARD_DIR := $(SEL4CP_SDK)/board/$(SEL4CP_BOARD)/$(SEL4CP_CONFIG)
 
 IMAGES := eth.elf pass.elf gpt.elf
-CFLAGS := -mcpu=$(CPU) -mstrict-align -nostdlib -ffreestanding -g3 -O3 -Wall  -Wno-unused-function -Werror -I$(BOARD_DIR)/include
+CFLAGS := -mcpu=$(CPU) -mstrict-align -nostdlib -ffreestanding  -O3 -Wall  -Wno-unused-function -Werror -I$(BOARD_DIR)/include
 LDFLAGS := -L$(BOARD_DIR)/lib
 LIBS := -lsel4cp -Tsel4cp.ld
 
@@ -48,7 +48,7 @@ $(BUILD_DIR)/%.o: %.c Makefile
 	$(CC) -c $(CFLAGS) $< -o $@
 
 $(BUILD_DIR)/%.o: %.s Makefile
-	$(AS) -g3 -mcpu=$(CPU) $< -o $@
+	$(AS)  -mcpu=$(CPU) $< -o $@
 
 $(BUILD_DIR)/eth.elf: $(addprefix $(BUILD_DIR)/, $(ETH_OBJS))
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
