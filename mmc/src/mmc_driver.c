@@ -35,7 +35,7 @@ void init(void) {
     // res = false;
     // result_printf(res);
     // return;
-    seL4_DebugPutChar('h');
+    // seL4_DebugPutChar('h');
 
 
     /* Initialise `printf`. The `log.h` library depends on `printf` being
@@ -47,11 +47,11 @@ void init(void) {
 
 
     // puts("HELP NEEDED\n\n\n\n\n\n\n");
-    sel4cp_dbg_puts("unrecognisable string\n");
+    sel4cp_dbg_puts("begun MMC driver init\n");
 
 
     // panic("heelp needed\n");
-    log_trace("Starting init() in MMC Driver");
+    sel4cp_dbg_puts("Starting init() in MMC Driver");
 
     /* Initialise the `timer_client`, which is the library used to interface
      * with the `timer_driver` PD. */
@@ -90,8 +90,6 @@ void init(void) {
         return;
     }
 
-    // printf("\n\n\n\n\n\n\n\n\n\nHello World\n\n\n\n\n\n\n\n\n\n\n\n");
-
 
     /* Run E2E tests to verify sleep works properly, which our SD card driver
      * depends upon.*/
@@ -118,7 +116,7 @@ void init(void) {
         result_printf(res);
         return;
     }
-    log_trace("Finished initialising SD Host Controller.");
+    sel4cp_dbg_puts("Finished initialising SD Host Controller.");
 
     /* Initialise and identify the SD card. */
     sdhci_result_t sdhci_result;
@@ -131,7 +129,7 @@ void init(void) {
         result_printf(res);
         return;
     }
-    log_trace("Finished initialising and identifying the SD card.");
+    sel4cp_dbg_puts("Finished initialising and identifying the SD card.");
 
     /* Setting Bus Width to maximum possible value. */
     res = sdhci_set_max_bus_width(
@@ -143,7 +141,7 @@ void init(void) {
         result_printf(res);
         return;
     }
-    log_trace("Finished setting SD bus width to maximum possible value.");
+    sel4cp_dbg_puts("Finished setting SD bus width to maximum possible value.");
 
     /* Running E2E tests to verify our SD card driver works properly.*/
     res = mmc_driver_e2e_read_write_simple(
@@ -154,7 +152,7 @@ void init(void) {
         result_printf(res);
         return;
     }
-    log_trace("Finished testing read write simple.");
+    sel4cp_dbg_puts("Finished testing read write simple.");
 
 
     res = mmc_driver_e2e_read_write_multiple_blocks(
@@ -165,7 +163,7 @@ void init(void) {
         result_printf(res);
         return;
     }
-    log_trace("Finished testing multiple block read write.");
+    sel4cp_dbg_puts("Finished testing multiple block read write.");
 
 
     res = mmc_driver_e2e_sdcard_card_specific_data(&global_sdcard);

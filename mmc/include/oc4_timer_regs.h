@@ -9,6 +9,8 @@
 
 #include "result.h"
 
+// We will leave the timer register untouched for now, as it doesn't seem to need to work?
+
 typedef struct oc4_timer_regs oc4_timer_regs_t;
 struct __attribute__((__packed__, aligned(4))) oc4_timer_regs {
     uint32_t control_status;  // 0x00
