@@ -13,35 +13,11 @@ Stage 2: Read and write a disk block on the SD card
 
 */
 
-// Get the base of the register structs
-static inline void *get_regbase(const struct oc4_emmc_regs *mmc)
-{
-    // Or can be 0xFFE05000?
-	return (void *) 0xFFE07000;
-}
-
-// Read a value in a certain register
-static inline uint32_t oc4_mmc_regs_read_unsafe(struct oc4_emmc_regs *mmc, int offset)
-{
-    // return readl(get_regbase(mmc) + offset);
-	uint32_t *val = (uint32_t *)(get_regbase(mmc) + offset);
-    return val[0];
-}
-
-// Write a value to a certain register
-// Note is uint32_t
-static inline void oc4_mmc_regs_write_unsafe(struct oc4_emmc_regs *mmc, uint32_t val, int offset)
-{
-	// writel(val, get_regbase(mmc) + offset);
-    uint32_t *addr = (uint32_t *)(get_regbase(mmc) + offset);
-    addr[0] = val;
-    return;
-}
 
 // Configure the clock
-static void oc4_mmc_regs_mmc_config_clock(struct oc4_emmc_regs *mmc)
+static void oc4_emmc_regs_mmc_config_clock(struct oc4_emmc_regs *mmc)
 {
-	uint32_t oc4_mmc_regs_mmc_clk = 0;
+	uint32_t oc4_emmc_regs_mmc_clk = 0;
 	unsigned int clk, clk_src, clk_div;
 
 	if (!mmc->sd_emmc_clock)
@@ -71,38 +47,41 @@ static void oc4_mmc_regs_mmc_config_clock(struct oc4_emmc_regs *mmc)
      *
 	 */
 	if (true) /* The Odroid C4 we are using uses the SM1 SoC so we should be fine here */
-		oc4_mmc_regs_mmc_clk |= CLK_CO_PHASE_270;
+		oc4_emmc_regs_mmc_clk |= CLK_CO_PHASE_270;
 	else
-		oc4_mmc_regs_mmc_clk |= CLK_CO_PHASE_180;
+		oc4_emmc_regs_mmc_clk |= CLK_CO_PHASE_180;
 
 	/* 180 phase tx sd_emmc_clock */
-	oc4_mmc_regs_mmc_clk |= CLK_TX_PHASE_000;
+	oc4_emmc_regs_mmc_clk |= CLK_TX_PHASE_000;
 
 	/* sd_emmc_clock settings */
-	oc4_mmc_regs_mmc_clk |= clk_src;
-	oc4_mmc_regs_mmc_clk |= clk_div;
+	oc4_emmc_regs_mmc_clk |= clk_src;
+	oc4_emmc_regs_mmc_clk |= clk_div;
 
-	oc4_mmc_regs_write_unsafe(mmc, oc4_mmc_regs_mmc_clk, SD_EMMC_CLOCK);
+	// oc4_emmc_regs_write_unsafe(mmc, oc4_emmc_regs_mmc_clk, SD_EMMC_CLOCK);
+	mmc->sd_emmc_clock = oc4_emmc_regs_mmc_clk;
 }
 
 // Set the IO configuration of the registers
-static int oc4_mmc_regs_mmc_set_ios(struct oc4_emmc_regs *mmc)
+static int oc4_emmc_regs_mmc_set_ios(struct oc4_emmc_regs *mmc)
 {
-	uint32_t oc4_mmc_regs_mmc_cfg = 0;
+	uint32_t oc4_emmc_regs_mmc_cfg = 0;
 
     // Read the config
-	oc4_mmc_regs_mmc_cfg = oc4_mmc_regs_read_unsafe(mmc, SD_EMMC_CFG);
+	// oc4_emmc_regs_mmc_cfg = oc4_emmc_regs_read_unsafe(mmc, SD_EMMC_CFG);
+	oc4_emmc_regs_mmc_cfg = mmc->sd_emmc_cfg;
+
 
     // Get the bus width from the registers
     // Does this mean it is automatically instantiated??? // TODO: check this!
-	oc4_mmc_regs_mmc_cfg &= ~CFG_BUS_WIDTH_MASK;
-    oc4_mmc_regs_mmc_cfg |= CFG_BUS_WIDTH_4;
+	oc4_emmc_regs_mmc_cfg &= ~CFG_BUS_WIDTH_MASK;
+    oc4_emmc_regs_mmc_cfg |= CFG_BUS_WIDTH_4;
 	// if (mmc->bus_width == 1)
-	// 	oc4_mmc_regs_mmc_cfg |= CFG_BUS_WIDTH_1;
+	// 	oc4_emmc_regs_mmc_cfg |= CFG_BUS_WIDTH_1;
 	// else if (mmc->bus_width == 4)
-	// 	oc4_mmc_regs_mmc_cfg |= CFG_BUS_WIDTH_4;
+	// 	oc4_emmc_regs_mmc_cfg |= CFG_BUS_WIDTH_4;
 	// else if (mmc->bus_width == 8)
-	// 	oc4_mmc_regs_mmc_cfg |= CFG_BUS_WIDTH_8;
+	// 	oc4_emmc_regs_mmc_cfg |= CFG_BUS_WIDTH_8;
 	// else
 	// 	return -EINVAL;
 
@@ -110,68 +89,69 @@ static int oc4_mmc_regs_mmc_set_ios(struct oc4_emmc_regs *mmc)
     // Some of these constants have been "redefined": // TODO: fix later!!!
 
 	/* 512 bytes block length */
-	oc4_mmc_regs_mmc_cfg &= ~CFG_BL_LEN_MASK;
-	oc4_mmc_regs_mmc_cfg |= CFG_BL_LEN_512;
+	oc4_emmc_regs_mmc_cfg &= ~CFG_BL_LEN_MASK;
+	oc4_emmc_regs_mmc_cfg |= CFG_BL_LEN_512;
 
 	/* Response timeout 256 clk */
-	oc4_mmc_regs_mmc_cfg &= ~CFG_RESP_TIMEOUT_MASK;
-	oc4_mmc_regs_mmc_cfg |= CFG_RESP_TIMEOUT_256;
+	oc4_emmc_regs_mmc_cfg &= ~CFG_RESP_TIMEOUT_MASK;
+	oc4_emmc_regs_mmc_cfg |= CFG_RESP_TIMEOUT_256;
 
 	/* Command-command gap 16 clk */
-	oc4_mmc_regs_mmc_cfg &= ~CFG_RC_CC_MASK;
-	oc4_mmc_regs_mmc_cfg |= CFG_RC_CC_16;
+	oc4_emmc_regs_mmc_cfg &= ~CFG_RC_CC_MASK;
+	oc4_emmc_regs_mmc_cfg |= CFG_RC_CC_16;
 
-	oc4_mmc_regs_write_unsafe(mmc, oc4_mmc_regs_mmc_cfg, SD_EMMC_CFG);
+	// oc4_emmc_regs_write_unsafe(mmc, oc4_emmc_regs_mmc_cfg, SD_EMMC_CFG);
+	mmc->sd_emmc_cfg = oc4_emmc_regs_mmc_cfg;
 
 	return 0;
 }
 
 // TODO: Set up commands
 
-// static void oc4_mmc_regs_mmc_setup_cmd(struct oc4_emmc_regs *mmc)
+// static void oc4_emmc_regs_mmc_setup_cmd(struct oc4_emmc_regs *mmc)
 // {
-// 	uint32_t oc4_mmc_regs_mmc_cmd = 0, cfg;
+// 	uint32_t oc4_emmc_regs_mmc_cmd = 0, cfg;
 
 //     // This line seems to be useless, as it sets the cmd to be equal to the value that is already there
 //     // Seems like a U-Boot specific implementation
-// 	oc4_mmc_regs_mmc_cmd |= oc4_mmc_regs_read_unsafe(mmc, SD_EMMC_CMD_CFG | CMD_CFG_CMD_INDEX_SHIFT) << CMD_CFG_CMD_INDEX_SHIFT;
+// 	oc4_emmc_regs_mmc_cmd |= oc4_emmc_regs_read_unsafe(mmc, SD_EMMC_CMD_CFG | CMD_CFG_CMD_INDEX_SHIFT) << CMD_CFG_CMD_INDEX_SHIFT;
 
 
 //     // NOTE: How to obtain information from MMC controller?
 // 	if (cmd->resp_type & MMC_RSP_PRESENT) {
 // 		if (cmd->resp_type & MMC_RSP_136)
-// 			oc4_mmc_regs_mmc_cmd |= CMD_CFG_RESP_128;
+// 			oc4_emmc_regs_mmc_cmd |= CMD_CFG_RESP_128;
 
 // 		if (cmd->resp_type & MMC_RSP_BUSY)
-// 			oc4_mmc_regs_mmc_cmd |= CMD_CFG_R1B;
+// 			oc4_emmc_regs_mmc_cmd |= CMD_CFG_R1B;
 
 // 		if (!(cmd->resp_type & MMC_RSP_CRC))
-// 			oc4_mmc_regs_mmc_cmd |= CMD_CFG_RESP_NOCRC;
+// 			oc4_emmc_regs_mmc_cmd |= CMD_CFG_RESP_NOCRC;
 // 	} else {
-// 		oc4_mmc_regs_mmc_cmd |= CMD_CFG_NO_RESP;
+// 		oc4_emmc_regs_mmc_cmd |= CMD_CFG_NO_RESP;
 // 	}
 
 // 	if (data) {
-// 		cfg = oc4_mmc_regs_read_unsafe(mmc, SD_EMMC_CFG);
+// 		cfg = oc4_emmc_regs_read_unsafe(mmc, SD_EMMC_CFG);
 // 		cfg &= ~CFG_BL_LEN_MASK;
 // 		cfg |= ilog2(data->blocksize) << CFG_BL_LEN_SHIFT;
-// 		oc4_mmc_regs_write_unsafe(mmc, cfg, SD_EMMC_CFG);
+// 		oc4_emmc_regs_write_unsafe(mmc, cfg, SD_EMMC_CFG);
 
 // 		if (data->flags == MMC_DATA_WRITE)
-// 			oc4_mmc_regs_mmc_cmd |= CMD_CFG_DATA_WR;
+// 			oc4_emmc_regs_mmc_cmd |= CMD_CFG_DATA_WR;
 
-// 		oc4_mmc_regs_mmc_cmd |= CMD_CFG_DATA_IO | CMD_CFG_BLOCK_MODE | data->blocks;
+// 		oc4_emmc_regs_mmc_cmd |= CMD_CFG_DATA_IO | CMD_CFG_BLOCK_MODE | data->blocks;
 // 	}
 
-// 	oc4_mmc_regs_mmc_cmd |= CMD_CFG_TIMEOUT_4S | CMD_CFG_OWNER | CMD_CFG_END_OF_CHAIN;
+// 	oc4_emmc_regs_mmc_cmd |= CMD_CFG_TIMEOUT_4S | CMD_CFG_OWNER | CMD_CFG_END_OF_CHAIN;
 
-// 	oc4_mmc_regs_write_unsafe(mmc, oc4_mmc_regs_mmc_cmd, SD_EMMC_CMD_CFG);
+// 	oc4_emmc_regs_write_unsafe(mmc, oc4_emmc_regs_mmc_cmd, SD_EMMC_CMD_CFG);
 // }
 
 // TODO: Setup Addresses
-// static void oc4_mmc_regs_mmc_setup_addr(struct oc4_emmc_regs *mmc, struct oc4_emmc_regs_data *data)
+// static void oc4_emmc_regs_mmc_setup_addr(struct oc4_emmc_regs *mmc, struct oc4_emmc_regs_data *data)
 // {
-// 	struct oc4_mmc_regs_mmc_plat *pdata = mmc->priv;
+// 	struct oc4_emmc_regs_mmc_plat *pdata = mmc->priv;
 // 	unsigned int data_size;
 // 	uint32_t data_addr = 0;
 
@@ -190,28 +170,28 @@ static int oc4_mmc_regs_mmc_set_ios(struct oc4_emmc_regs *mmc)
 // 		}
 // 	}
 
-// 	oc4_mmc_regs_write_unsafe(mmc, data_addr, SD_EMMC_CMD_DAT);
+// 	oc4_emmc_regs_write_unsafe(mmc, data_addr, SD_EMMC_CMD_DAT);
 // }
 
 // TODO: Read responses
-// static void oc4_mmc_regs_mmc_read_response(struct oc4_emmc_regs *mmc, struct oc4_emmc_regs_cmd *cmd)
+// static void oc4_emmc_regs_mmc_read_response(struct oc4_emmc_regs *mmc, struct oc4_emmc_regs_cmd *cmd)
 // {
 // 	if (cmd->resp_type & MMC_RSP_136) {
-// 		cmd->response[0] = oc4_mmc_regs_read_unsafe(mmc, SD_EMMC_CMD_RSP3);
-// 		cmd->response[1] = oc4_mmc_regs_read_unsafe(mmc, SD_EMMC_CMD_RSP2);
-// 		cmd->response[2] = oc4_mmc_regs_read_unsafe(mmc, SD_EMMC_CMD_RSP1);
-// 		cmd->response[3] = oc4_mmc_regs_read_unsafe(mmc, SD_EMMC_CMD_RSP);
+// 		cmd->response[0] = oc4_emmc_regs_read_unsafe(mmc, SD_EMMC_CMD_RSP3);
+// 		cmd->response[1] = oc4_emmc_regs_read_unsafe(mmc, SD_EMMC_CMD_RSP2);
+// 		cmd->response[2] = oc4_emmc_regs_read_unsafe(mmc, SD_EMMC_CMD_RSP1);
+// 		cmd->response[3] = oc4_emmc_regs_read_unsafe(mmc, SD_EMMC_CMD_RSP);
 // 	} else {
-// 		cmd->response[0] = oc4_mmc_regs_read_unsafe(mmc, SD_EMMC_CMD_RSP);
+// 		cmd->response[0] = oc4_emmc_regs_read_unsafe(mmc, SD_EMMC_CMD_RSP);
 // 	}
 // }
 
 // TODO: Send commands
-// static int oc4_mmc_regs_dm_mmc_send_cmd(struct udevice *dev, struct oc4_emmc_regs_cmd *cmd,
+// static int oc4_emmc_regs_dm_mmc_send_cmd(struct udevice *dev, struct oc4_emmc_regs_cmd *cmd,
 // 				 struct oc4_emmc_regs_data *data)
 // {
 // 	struct oc4_emmc_regs *mmc = mmc_get_mmc_dev(dev);
-// 	struct oc4_mmc_regs_mmc_plat *pdata = mmc->priv;
+// 	struct oc4_emmc_regs_mmc_plat *pdata = mmc->priv;
 // 	uint32_t status;
 // 	ulong start;
 // 	int ret = 0;
@@ -220,15 +200,15 @@ static int oc4_mmc_regs_mmc_set_ios(struct oc4_emmc_regs *mmc)
 // 	if (data && data->blocksize > 512)
 // 		return -EINVAL;
 
-// 	oc4_mmc_regs_mmc_setup_cmd(mmc, data, cmd);
-// 	oc4_mmc_regs_mmc_setup_addr(mmc, data);
+// 	oc4_emmc_regs_mmc_setup_cmd(mmc, data, cmd);
+// 	oc4_emmc_regs_mmc_setup_addr(mmc, data);
 
-// 	oc4_mmc_regs_write_unsafe(mmc, cmd->cmdarg, SD_EMMC_CMD_ARG);
+// 	oc4_emmc_regs_write_unsafe(mmc, cmd->cmdarg, SD_EMMC_CMD_ARG);
 
 // 	/* use 10s timeout */
 // 	start = get_timer(0);
 // 	do {
-// 		status = oc4_mmc_regs_read_unsafe(mmc, SD_EMMC_STATUS);
+// 		status = oc4_emmc_regs_read_unsafe(mmc, SD_EMMC_STATUS);
 // 	} while(!(status & STATUS_END_OF_CHAIN) && get_timer(start) < 10000);
 
 // 	if (!(status & STATUS_END_OF_CHAIN))
@@ -238,27 +218,27 @@ static int oc4_mmc_regs_mmc_set_ios(struct oc4_emmc_regs *mmc)
 // 	else if (status & STATUS_ERR_MASK)
 // 		ret = -EIO;
 
-// 	oc4_mmc_regs_mmc_read_response(mmc, cmd);
+// 	oc4_emmc_regs_mmc_read_response(mmc, cmd);
 
 // 	if (data && data->flags == MMC_DATA_WRITE)
 // 		free(pdata->w_buf);
 
 // 	/* reset status bits */
-// 	oc4_mmc_regs_write_unsafe(mmc, STATUS_MASK, SD_EMMC_STATUS);
+// 	oc4_emmc_regs_write_unsafe(mmc, STATUS_MASK, SD_EMMC_STATUS);
 
 // 	return ret;
 // }
 
 // TODO: Set up Operations
-// static const struct dm_mmc_ops oc4_mmc_regs_dm_mmc_ops = {
-// 	.send_cmd = oc4_mmc_regs_dm_mmc_send_cmd,
-// 	.set_ios = oc4_mmc_regs_dm_mmc_set_ios,
+// static const struct dm_mmc_ops oc4_emmc_regs_dm_mmc_ops = {
+// 	.send_cmd = oc4_emmc_regs_dm_mmc_send_cmd,
+// 	.set_ios = oc4_emmc_regs_dm_mmc_set_ios,
 // };
 
 // TODO: ???
-// static int oc4_mmc_regs_mmc_of_to_plat(struct udevice *dev)
+// static int oc4_emmc_regs_mmc_of_to_plat(struct udevice *dev)
 // {
-// 	struct oc4_mmc_regs_mmc_plat *pdata = dev_get_plat(dev);
+// 	struct oc4_emmc_regs_mmc_plat *pdata = dev_get_plat(dev);
 // 	fdt_addr_t addr;
 
 // 	addr = dev_read_addr(dev);
@@ -271,7 +251,7 @@ static int oc4_mmc_regs_mmc_set_ios(struct oc4_emmc_regs *mmc)
 // }
 
 // TODO: Set some probe stuff
-// static int oc4_mmc_regs_mmc_probe()
+// static int oc4_emmc_regs_mmc_probe()
 // {
 // 	struct oc4_emmc_regs *mmc = &pdata->mmc;
 // 	struct oc4_emmc_regs_config *cfg = &pdata->cfg;
@@ -313,31 +293,31 @@ static int oc4_mmc_regs_mmc_set_ios(struct oc4_emmc_regs *mmc)
 // #endif
 
 // 	/* reset all status bits */
-// 	oc4_mmc_regs_write_unsafe(mmc, STATUS_MASK, SD_EMMC_STATUS);
+// 	oc4_emmc_regs_write_unsafe(mmc, STATUS_MASK, SD_EMMC_STATUS);
 
 // 	/* disable interrupts */
-// 	oc4_mmc_regs_write_unsafe(mmc, 0, SD_EMMC_IRQ_EN);
+// 	oc4_emmc_regs_write_unsafe(mmc, 0, SD_EMMC_IRQ_EN);
 
 // 	/* enable auto clock mode */
-// 	val = oc4_mmc_regs_read_unsafe(mmc, SD_EMMC_CFG);
+// 	val = oc4_emmc_regs_read_unsafe(mmc, SD_EMMC_CFG);
 // 	val &= ~CFG_SDCLK_ALWAYS_ON;
 // 	val |= CFG_AUTO_CLK;
-// 	oc4_mmc_regs_write_unsafe(mmc, val, SD_EMMC_CFG);
+// 	oc4_emmc_regs_write_unsafe(mmc, val, SD_EMMC_CFG);
 
 // 	return 0;
 // }
 
-// int oc4_mmc_regs_mmc_bind(struct udevice *dev)
+// int oc4_emmc_regs_mmc_bind(struct udevice *dev)
 // {
-// 	struct oc4_mmc_regs_mmc_plat *pdata = dev_get_plat(dev);
+// 	struct oc4_emmc_regs_mmc_plat *pdata = dev_get_plat(dev);
 
 // 	return mmc_bind(dev, &pdata->mmc, &pdata->cfg);
 // }
 
-// static const struct udevice_id oc4_mmc_regs_mmc_match[] = {
-// 	{ .compatible = "amlogic,oc4_mmc_regs-gx-mmc", .data = MMC_COMPATIBLE_GX },
-// 	{ .compatible = "amlogic,oc4_mmc_regs-axg-mmc", .data = MMC_COMPATIBLE_GX },
-// 	{ .compatible = "amlogic,oc4_mmc_regs-sm1-mmc", .data = MMC_COMPATIBLE_SM1 },
+// static const struct udevice_id oc4_emmc_regs_mmc_match[] = {
+// 	{ .compatible = "amlogic,oc4_emmc_regs-gx-mmc", .data = MMC_COMPATIBLE_GX },
+// 	{ .compatible = "amlogic,oc4_emmc_regs-axg-mmc", .data = MMC_COMPATIBLE_GX },
+// 	{ .compatible = "amlogic,oc4_emmc_regs-sm1-mmc", .data = MMC_COMPATIBLE_SM1 },
 // 	{ /* sentinel */ }
 // };
 
@@ -347,17 +327,25 @@ result_t oc4_emmc_init(
         oc4_gpio_regs_t *oc4_gpio_regs
 ) {
     log_trace("Called OC4 EMMC.");
-    sel4cp_dbg_puts("unrecognisable string\n");
-    seL4_DebugPutChar('h');
+    sel4cp_dbg_puts("\n\nunrecognisable string");
+
+    sel4cp_dbg_puts("\n\n Called OC4 EMMC.1");
+    printf("\n\n Hello world?.");
+    sel4cp_dbg_puts("\n\n Called OC4 EMMC.2");
 
 
     uint32_t val;
 
-    oc4_emmc_regs_t *oc4_emmc_regs = (oc4_emmc_regs_t *) sdhci_regs;
+    oc4_emmc_regs_t *oc4_emmc_regs = sdhci_regs->regs;
     
     if (sdhci_regs == NULL) {
+        sel4cp_dbg_puts("\n\n sdhci regs are null.");
+
         return result_err("NULL `sdhci_regs` passed to oc4_emmc_init().");
     }
+
+    sel4cp_dbg_puts("\n\n Called OC4 EMMC.3");
+
     // TODO: Fix this gpio reg stuff
     // if (oc4_gpio_regs == NULL) {
     //     return result_err("NULL `oc4_gpio_regs` passed to oc4_emmc_init().");
@@ -368,42 +356,70 @@ result_t oc4_emmc_init(
     //? To achieve something equivalent to the RPi specific things, we will also zero out all the "default values"
     //? With the hope that not all registers matter if they are set to 0
 
+
+
+
+
+    //! WARNING: this code does not work yet -- we should NOT reset the clock!////
+    //! WARNING: this doesn't work
+
     log_trace("Resetting Clock.");
-    oc4_mmc_regs_write_unsafe(oc4_emmc_regs, 0, SD_EMMC_CLOCK);
+    // oc4_emmc_regs_write_unsafe(oc4_emmc_regs, (uint32_t) 0, SD_EMMC_CLOCK);
+    // sel4cp_dbg_puts("\n\n Finished clock reset1");
+    // oc4_emmc_regs->sd_emmc_clock = (uint32_t) 0;
+    // sel4cp_dbg_puts("\n\n Finished clock reset2");
 
     log_trace("Resetting Delay.");
-    oc4_mmc_regs_write_unsafe(oc4_emmc_regs, 0, SD_EMMC_DELAY1);
+    // oc4_emmc_regs_write_unsafe(oc4_emmc_regs, (uint32_t) 0, SD_EMMC_DELAY1);
+    sel4cp_dbg_puts("\n\n Finished clock 1e3");
+    oc4_emmc_regs->sd_emmc_delay1 = (uint32_t) 0;
+    sel4cp_dbg_puts("\n\n Finished clock delay");
+
 
     log_trace("Resetting Adjust.");
-    oc4_mmc_regs_write_unsafe(oc4_emmc_regs, 0, SD_EMMC_ADJUST);
+    // oc4_emmc_regs_write_unsafe(oc4_emmc_regs, (uint32_t) 0, SD_EMMC_ADJUST);
+    oc4_emmc_regs->sd_emmc_adjust = (uint32_t) 0;
+    sel4cp_dbg_puts("\n\n Finished clock adjust");
+
 
     log_trace("Resetting Start.");
-    oc4_mmc_regs_write_unsafe(oc4_emmc_regs, 0, SD_EMMC_START);
+    // oc4_emmc_regs_write_unsafe(oc4_emmc_regs, (uint32_t) 0, SD_EMMC_START);
+    oc4_emmc_regs->sd_emmc_start = (uint32_t) 0;
+    sel4cp_dbg_puts("\n\n Finished clock start");
+
 
     log_trace("Resetting Config.");
-    oc4_mmc_regs_write_unsafe(oc4_emmc_regs, 0, SD_EMMC_CFG);
+    // oc4_emmc_regs_write_unsafe(oc4_emmc_regs, (uint32_t) 0, SD_EMMC_CFG);
+    oc4_emmc_regs->sd_emmc_cfg = (uint32_t) 0;
+    sel4cp_dbg_puts("\n\n Finished clock config");
+
 
     /* disable interrupts */
     log_trace("Disabling interrupts.");
-    oc4_mmc_regs_write_unsafe(oc4_emmc_regs, 0, SD_EMMC_IRQ_EN);
-
+    // oc4_emmc_regs_write_unsafe(oc4_emmc_regs, (uint32_t) 0, SD_EMMC_IRQ_EN);
+    oc4_emmc_regs->sd_emmc_irq_en = (uint32_t) 0;
+    sel4cp_dbg_puts("\n\n Finished resetting interrupts, config, start, adjust, delay and clock");
 
     // TODO: U-Boot Driver Stuff
 
-
-
     /* enable auto clock mode */
     log_trace("Enabling Auto Clock Mode.");
-    val = oc4_mmc_regs_read_unsafe(oc4_emmc_regs, SD_EMMC_CFG);
+    // val = oc4_emmc_regs_read_unsafe(oc4_emmc_regs, SD_EMMC_CFG);
+    val = oc4_emmc_regs->sd_emmc_cfg;
     val &= ~CFG_SDCLK_ALWAYS_ON;
     val |= CFG_AUTO_CLK;
-    oc4_mmc_regs_write_unsafe(oc4_emmc_regs, val, SD_EMMC_CFG);
+    // oc4_emmc_regs_write_unsafe(oc4_emmc_regs, val, SD_EMMC_CFG);
+    oc4_emmc_regs->sd_emmc_cfg = val;
+
 
     log_trace("Configuring clock.");
-	oc4_mmc_regs_mmc_config_clock(oc4_emmc_regs);
+	oc4_emmc_regs_mmc_config_clock(oc4_emmc_regs);
 
     log_trace("Setting I/Os.");
-    oc4_mmc_regs_mmc_set_ios(oc4_emmc_regs);
+    oc4_emmc_regs_mmc_set_ios(oc4_emmc_regs);
+    
+    sel4cp_dbg_puts("\n\n Finished enabling clock, auto clock and setting I/Os");
+
 
     // TODO: Begin RPi specific things
 
@@ -446,10 +462,13 @@ result_t oc4_emmc_init(
 
     /* Set the Data Timeout to the maximum value. */
     //! This may not work!
-    result_t res = sdhci_regs_set_max_data_timeout(sdhci_regs);
+    //! Even worse, removing this will screw up the device driver
+    result_t res = oc4_emmc_regs_set_max_data_timeout(oc4_emmc_regs);
     if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to set max data timeout in bcm_emmc_init().");
+        return result_err_chain(res, "Failed to set max data timeout in oc4_emmc_init().");
     }
+    sel4cp_dbg_puts("\n\n Finished setting max data timeout");
+
     // /* Enable the Internal Clock. */
     // res = sdhci_regs_enable_internal_clock(sdhci_regs);
     // if (result_is_err(res)) {
@@ -457,18 +476,27 @@ result_t oc4_emmc_init(
     // }
     /* Wait 10 microseconds. */
     usleep(10);
+    //TODO: fix the usleeps; these depend on the timer driver which doesn't exist
 
     /* Set clock to low-speed setup frequency (400KHz). */
     //? Not a sdhci regs function!
+    sel4cp_dbg_puts("\n\n Finished sleeping");
+
     log_trace("Setting clock to low-speed setup frequency (400KHz).");
-    res = sdhci_set_sd_clock(sdhci_regs, 400000);
-    if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to set clock to low-speed setup frequency in bcm_emmc_init().");
-    }
+    // res = sdhci_set_sd_clock(sdhci_regs, 400000);
+    // if (result_is_err(res)) {
+    //     return result_err_chain(res, "Failed to set clock to low-speed setup frequency in oc4_emmc_init().");
+    // }
+    //TODO: fix the sdhci set sd clock stuff
+    sel4cp_dbg_puts("\n\n Finished setting sd clock");
 
     /* enable interrupts */
     log_trace("Enabling interrupts.");
-    oc4_mmc_regs_write_unsafe(oc4_emmc_regs, 0, SD_EMMC_IRQ_EN);
+    // oc4_emmc_regs_write_unsafe(oc4_emmc_regs, 0, SD_EMMC_IRQ_EN);
+    oc4_emmc_regs->sd_emmc_irq_en = 0;
+    sel4cp_dbg_puts("\n\n Finished enabling interrupts");
+
+    sel4cp_dbg_puts("\n\n Finished setting up OC4 emmc");
 
     return result_ok();
 }

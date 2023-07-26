@@ -1,4 +1,5 @@
 #include "result_prod.h"
+// #include <stdio.h>
 
 result_data_t global_result_data = {0};
 
@@ -15,6 +16,9 @@ result_t result_err(const char *err_msg) {
 }
 
 result_t result_err_chain(result_t result, const char *err_msg) {
+    // kprintf("\n\nchained error encountered\n\n");
+    // kprintf(err_msg);
+    // kprintf("\n\nchained error encounteredT\n\n");
     if (err_msg == NULL) {
         return result;
     }

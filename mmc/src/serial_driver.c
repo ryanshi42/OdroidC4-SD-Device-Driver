@@ -142,6 +142,8 @@ static int serial_driver_dec_num_chars_for_client(serial_driver_t *serial_driver
 void init(void) {
     serial_driver_t *serial_driver = &global_serial_driver; /* Local reference to global serial driver for our convenience. */
     /* Initialise our `global_serial_driver` struct. */
+    //! FOR SOME REASON THIS BREAKS THE CODE???
+    //TODO: Figure out why this is
     int ret_serial_driver_init = serial_driver_init(
             serial_driver,
             /* As explained in `serial.system`, `uart_base_vaddr` is mapped to a

@@ -18,6 +18,7 @@
     <!-- Actually, it is 0x7E, but it maps down into 0x3f -->
 
     <!-- Where is the timer????? -->
+    <!-- c50 -->
     <memory_region
             name="timer"
             size="0x1_000"

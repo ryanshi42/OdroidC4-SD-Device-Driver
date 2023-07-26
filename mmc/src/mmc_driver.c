@@ -1,4 +1,5 @@
 #include "mmc_driver.h"
+// #include "mmc_driver_e2e.h"
 
 /* Used for transporting chars from `mmc_driver` to `serial_client`. */
 uintptr_t mmc_to_serial_client_putchar_buf;
@@ -47,11 +48,11 @@ void init(void) {
 
 
     // puts("HELP NEEDED\n\n\n\n\n\n\n");
-    sel4cp_dbg_puts("begun MMC driver init\n");
+    sel4cp_dbg_puts("\n\nbegun MMC driver init\n");
 
 
     // panic("heelp needed\n");
-    sel4cp_dbg_puts("Starting init() in MMC Driver");
+    sel4cp_dbg_puts("\n\nStarting init() in MMC Driver");
 
     /* Initialise the `timer_client`, which is the library used to interface
      * with the `timer_driver` PD. */
@@ -60,7 +61,9 @@ void init(void) {
             MMC_DRIVER_TO_TIMER_DRIVER_GET_NUM_TICKS_CHANNEL,
             (uint64_t *) timer_driver_to_mmc_driver_numticks_buf
     );
-    result_printf(res);
+    sel4cp_dbg_puts("\n\nFinished timer client init");
+
+    // result_printf(res);
 
     if (result_is_err(res)) {
         result_printf(res);
@@ -74,6 +77,8 @@ void init(void) {
         result_printf(res);
         return;
     }
+    sel4cp_dbg_puts("\n\nFinished clock init");
+
 
     /* Initialise sleep library, which depends on the `timer_client` being
      * initialised first. */
@@ -82,6 +87,7 @@ void init(void) {
         result_printf(res);
         return;
     }
+    sel4cp_dbg_puts("\n\nFinished sleep init");
 
     /* Initialise the `sdcard` struct by clearing it to zero. */
     res = sdcard_init(&global_sdcard);
@@ -89,11 +95,15 @@ void init(void) {
         result_printf(res);
         return;
     }
+    sel4cp_dbg_puts("\n\nFinished sdcard init");
 
 
     /* Run E2E tests to verify sleep works properly, which our SD card driver
      * depends upon.*/
     mmc_driver_e2e_sleep();
+    sel4cp_dbg_puts("\n\nFinished testing E2E sleep");
+    //! Don't know if the above code works?
+
 
     // printf("\n\n\n\n\n\n\n\n\n\nGoodbye World\n\n\n\n\n\n\n\n\n\n\n\n");
 
@@ -106,6 +116,10 @@ void init(void) {
         result_printf(res);
         return;
     }
+    if (global_sdhci_regs.regs == NULL) {
+        sel4cp_dbg_puts("\n\nwuhoh1..");
+    }
+    sel4cp_dbg_puts("\n\nFinished initialising SDHCI regs");
 
     /* Initialise and reset the Odroid C4's SD card Host Controller. */
     res = oc4_emmc_init(
@@ -116,9 +130,14 @@ void init(void) {
         result_printf(res);
         return;
     }
-    sel4cp_dbg_puts("Finished initialising SD Host Controller.");
+    sel4cp_dbg_puts("\n\nFinished initialising SD Host Controller.");
+
+    if (global_sdhci_regs.regs == NULL) {
+        sel4cp_dbg_puts("\n\nwuhoh2..");
+    }
 
     /* Initialise and identify the SD card. */
+    //TODO: this is the one that causes the most bugs.
     sdhci_result_t sdhci_result;
     res = sdhci_card_init_and_id(
             &global_sdhci_regs,
@@ -129,7 +148,7 @@ void init(void) {
         result_printf(res);
         return;
     }
-    sel4cp_dbg_puts("Finished initialising and identifying the SD card.");
+    sel4cp_dbg_puts("\n\nFinished initialising and identifying the SD card.");
 
     /* Setting Bus Width to maximum possible value. */
     res = sdhci_set_max_bus_width(
@@ -141,7 +160,10 @@ void init(void) {
         result_printf(res);
         return;
     }
-    sel4cp_dbg_puts("Finished setting SD bus width to maximum possible value.");
+    sel4cp_dbg_puts("\n\nFinished setting SD bus width to maximum possible value.");
+
+    sel4cp_dbg_puts("\n\nBeginning Tests:\n\n");
+
 
     /* Running E2E tests to verify our SD card driver works properly.*/
     res = mmc_driver_e2e_read_write_simple(
@@ -152,8 +174,7 @@ void init(void) {
         result_printf(res);
         return;
     }
-    sel4cp_dbg_puts("Finished testing read write simple.");
-
+    sel4cp_dbg_puts("\n\nFinished testing read write simple.");
 
     res = mmc_driver_e2e_read_write_multiple_blocks(
             &global_sdhci_regs,
@@ -163,7 +184,7 @@ void init(void) {
         result_printf(res);
         return;
     }
-    sel4cp_dbg_puts("Finished testing multiple block read write.");
+    sel4cp_dbg_puts("\n\nFinished testing multiple block read write.");
 
 
     res = mmc_driver_e2e_sdcard_card_specific_data(&global_sdcard);

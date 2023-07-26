@@ -200,7 +200,7 @@ result_t oc4_emmc_regs_is_sd_clock_stable(
     return result_err("I should never be called!");
 }
 
-//! This does not work!
+// ! This does not work!
 result_t oc4_emmc_regs_is_cmd_in_progress(
         oc4_emmc_regs_t *oc4_emmc_regs,
         bool *ret_val
@@ -212,7 +212,9 @@ result_t oc4_emmc_regs_is_cmd_in_progress(
         return result_err("NULL `ret_val` passed to oc4_emmc_regs_is_cmd_in_progress().");
     }
     // return status_get_cmd_inhibit(&oc4_emmc_regs->sd_emmc_status, ret_val);
-    return result_err("I should never be called!");
+    *ret_val = true ? ((oc4_emmc_regs->sd_emmc_status & BIT(31)) || (oc4_emmc_regs->sd_emmc_status & BIT(30))) : false;
+    return result_ok();
+    // return result_err("I should never be called!");
 }
 
 //! This does not work!
@@ -318,12 +320,16 @@ result_t oc4_emmc_regs_set_max_data_timeout(oc4_emmc_regs_t *oc4_emmc_regs) {
     if (oc4_emmc_regs == NULL) {
         return result_err("NULL `oc4_emmc_regs` passed to oc4_emmc_regs_set_max_data_timeout().");
     }
+    // sel4cp_dbg_puts("inside max data timeout");
     //? Unsure whether this is the correct DATA timeout or not, just based it off Linux!
     //? The other timeout refers to the config timeout, but that is in clock cycles whereas presumably this one is not
 
     //? The documentation is badly formatted - if timeout is set to 12, then it is 2 ** 12 = 4096 ms ~= 4s
     oc4_emmc_regs->sd_emmc_cfg |= ~CMD_CFG_TIMEOUT_MASK;
+    // sel4cp_dbg_puts("inside max data timeout2");
     oc4_emmc_regs->sd_emmc_cfg |= CMD_CFG_TIMEOUT_4S;
+    // sel4cp_dbg_puts("inside max data timeout3");
+
     return result_ok();
 
     // result_t res = control1_set_data_tounit(&oc4_emmc_regs->control1, 0b1110);
@@ -437,6 +443,7 @@ result_t oc4_emmc_regs_is_any_err(
 result_t oc4_emmc_regs_clear_interrupt(
         oc4_emmc_regs_t *oc4_emmc_regs
 ) {
+
     if (oc4_emmc_regs == NULL) {
         return result_err("NULL `oc4_emmc_regs` passed to oc4_emmc_regs_clear_interrupt().");
     }

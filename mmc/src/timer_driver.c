@@ -21,6 +21,7 @@ result_t timer_driver_init(timer_driver_t *timer_driver, uintptr_t base_vaddr) {
             &timer_driver->oc4_timer,
             base_vaddr
     );
+    // return result_err("tjossafjsdja");
     if (result_is_err(res)) {
         return result_ok_or(res, "Failed to initialise timer in timer_driver_init().");
     }
