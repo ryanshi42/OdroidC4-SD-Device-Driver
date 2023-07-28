@@ -1355,11 +1355,11 @@ result_t sdhci_send_cmd(
                     sel4cp_dbg_puts("\n");
 
 
-
+                    //TODO: Fix this!!!
                     res = sdcard_set_ocr_raw32(sdcard, resp0);
                     while (result_is_err(res)) {
-                        // res = sdcard_set_ocr_raw32(sdcard, resp0);
-                        // sel4cp_dbg_puts("trying 0x29 and ");
+                        res = sdcard_set_ocr_raw32(sdcard, resp0);
+                        sel4cp_dbg_puts("trying 0x29 and ");
                         return result_err_chain(res, "Failed to set OCR in sdhci_send_cmd().");
                     }
                     *sdhci_result = SD_OK;

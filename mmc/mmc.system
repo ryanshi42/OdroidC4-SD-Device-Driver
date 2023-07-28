@@ -21,8 +21,8 @@
     <!-- c50 -->
     <memory_region
             name="timer"
-            size="0x1_000"
-            phys_addr="0xff_d03_000"/>
+            size="0x10_000"
+            phys_addr="0xff_d0f_000"/>
 
 
     <!-- This is a 4KB, page-aligned memory region at the physical address of
@@ -291,7 +291,7 @@
             name="timer_driver_to_serial_client_putchar_buf"
             size="0x1_000"
             page_size="0x1_000"/>
-    <!-- Protection Domain for Timer driver. -->
+
     <protection_domain
             name="timer_driver"
             priority="99"

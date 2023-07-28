@@ -35,8 +35,8 @@ typedef struct oc4_timer_regs oc4_timer_regs_t;
 // #define TIMER_MAP_BASE  0xc1109000
 // #define TIMER_REG_START     0x940    // TIMER_MUX
 
-#define TIMER_BASE          0xffd00000
-#define TIMER_REG_START     0x3c50    // TIMER_MUX
+#define TIMER_BASE          0xffd0f000
+#define TIMER_REG_START     0x140    // TIMER_MUX
 
 #define TIMER_A_INPUT_CLK   0
 #define TIMER_E_INPUT_CLK   8
@@ -66,7 +66,7 @@ struct __attribute__((__packed__, aligned(4))) oc4_timer_regs {
     uint32_t timer_b;       // 0x3c52
     uint32_t timer_c;       // 0x3c53
     uint32_t timer_d;       // 0x3c54
-    uint32_t unused[7];     // 0x3c55 - 0x3c61 inclusive
+    uint32_t unused[13];    // 0x3c55 - 0x3c61 inclusive -> 55, 56, 57, 58, 59, 5a, 5b, 5c, 5d, 5e, 5f, 60, 61
     uint32_t timer_e;       // 0x3c62
     uint32_t timer_e_hi;    // 0x3c63
     uint32_t mux1;          // 0x3c64

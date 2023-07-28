@@ -137,7 +137,7 @@ void init(void) {
     }
 
     /* Initialise and identify the SD card. */
-    //TODO: this is the one that causes the most bugs.
+    //TODO this is the one that causes the most bugs.
     sdhci_result_t sdhci_result;
     res = sdhci_card_init_and_id(
             &global_sdhci_regs,

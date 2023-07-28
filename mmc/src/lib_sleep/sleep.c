@@ -39,7 +39,7 @@ char* itoa(int i, char b[]){
 }
 
 int usleep(unsigned int usec) {
-    return 0;
+    // return 0;2ddd
     //TODO: Fix the usleep function later when I am bothered to fix the timer driver
     timer_client_t *timer_client = &global_sleep_data.timer_client;
     /* Get the number of ticks at beginning. */
@@ -48,17 +48,17 @@ int usleep(unsigned int usec) {
     if (result_is_err(res)) {
         return -1;
     }
-    char snum[10];
+    // char snum[10];
 
-    sel4cp_dbg_puts("\n");
-    sel4cp_dbg_puts(itoa(start_ticks, snum));
-    sel4cp_dbg_puts("\n");
+    // sel4cp_dbg_puts("\n");
+    // sel4cp_dbg_puts(itoa(start_ticks, snum));
+    // sel4cp_dbg_puts("\n");
     /* Compute the number of ticks at the end. */
     uint64_t end_ticks = start_ticks + usec;
 
-    sel4cp_dbg_puts("\n");
-    sel4cp_dbg_puts(itoa(end_ticks, snum));
-    sel4cp_dbg_puts("\n");
+    // sel4cp_dbg_puts("\n");
+    // sel4cp_dbg_puts(itoa(end_ticks, snum));
+    // sel4cp_dbg_puts("\n");
 
     uint64_t curr_ticks = 0;
     do {

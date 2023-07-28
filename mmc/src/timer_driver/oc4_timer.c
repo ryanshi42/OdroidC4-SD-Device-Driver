@@ -14,10 +14,12 @@ result_t oc4_timer_init(
     // Set the register to be equal to the base virtual address
     //: Must add the 0xc50 as the timer register is a little offset
     // return result_err("should fail");
-    oc4_timer->regs = oc4_timer_regs_get(base_vaddr + 0xc50);
+    oc4_timer->regs = oc4_timer_regs_get(base_vaddr + 0x140);
+    // oc4_timer->regs = (oc4_timer_regs_t *) 0xffd0f140;
     /* Start timer E acts as a clock, while timer A can be used for timeouts from clients */
-    oc4_timer->regs->mux = TIMER_A_EN | (TIMESTAMP_TIMEBASE_100_US << TIMER_E_INPUT_CLK) | (TIMEOUT_TIMEBASE_1_MS << TIMER_A_INPUT_CLK);
-    oc4_timer->regs->timer_e = 0;
+    oc4_timer->regs->mux = TIMER_A_EN | (0b001 << TIMER_E_INPUT_CLK) | (TIMEOUT_TIMEBASE_1_MS << TIMER_A_INPUT_CLK);
+    // oc4_timer->regs->mux = (0b001 << TIMER_E_INPUT_CLK);
+    // oc4_timer->regs->timer_e = 0b111111;
     // if (oc4_timer->regs->mux == 0) {
     //     return result_err("failed");
     // }
@@ -25,6 +27,26 @@ result_t oc4_timer_init(
     
     return result_ok();
 }
+
+// char* itoa(int i, char b[]){
+//     char const digit[] = "0123456789";
+//     char* p = b;
+//     if(i<0){
+//         *p++ = '-';
+//         i *= -1;
+//     }
+//     int shifter = i;
+//     do{ //Move to where representation ends
+//         ++p;
+//         shifter = shifter/10;
+//     }while(shifter);
+//     *p = '\0';
+//     do{ //Move back, inserting digits as u go
+//         *--p = digit[i%10];
+//         i = i/10;
+//     }while(i);
+//     return b;
+// }
 
 result_t oc4_timer_get_num_ticks(
         oc4_timer_t *oc4_timer,
@@ -39,6 +61,10 @@ result_t oc4_timer_get_num_ticks(
     // if (oc4_timer->regs->mux == 0) {
     //     return result_err("failed");
     // }
+    // char snum[10];
+    // sel4cp_dbg_puts(itoa(oc4_timer->regs->mux, snum));
+    // sel4cp_dbg_puts("\n");
+
     uint32_t counter_lo;
     uint32_t counter_hi;
     uint32_t counter_hi_tmp;
