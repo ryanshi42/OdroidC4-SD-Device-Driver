@@ -102,7 +102,7 @@ void init(void) {
      * depends upon.*/
     mmc_driver_e2e_sleep();
     sel4cp_dbg_puts("\n\nFinished testing E2E sleep");
-    //! Don't know if the above code works?
+    //! Don't know if the above code actually works?
 
 
     // printf("\n\n\n\n\n\n\n\n\n\nGoodbye World\n\n\n\n\n\n\n\n\n\n\n\n");

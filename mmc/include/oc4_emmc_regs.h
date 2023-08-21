@@ -57,13 +57,174 @@ struct __attribute__((__packed__, aligned(4))) sd_emmc_desc {
     uint32_t cmd_resp; /* Command Response */
 };
 
+// /**
+//  * A struct that stores all the normal registers of the Odroid C4
+//  */
+// struct __attribute__((__packed__, aligned(4))) oc4_emmc_regs {
+
+// 	uint32_t sd_emmc_clock;		    // 0x00 SD_EMMC_CLOCK : // TODO: make own type later
+// 	uint32_t sd_emmc_clock2;		    // 0x00 SD_EMMC_CLOCK : // TODO: make own type later
+// 	uint32_t sd_emmc_clock3;		    // 0x00 SD_EMMC_CLOCK : // TODO: make own type later
+// 	uint32_t sd_emmc_clock4;		    // 0x00 SD_EMMC_CLOCK : // TODO: make own type later
+// 	uint32_t sd_emmc_delay1;		// 0x04 DELAY1 = 0xffe05010 FINAL
+// 	uint32_t sd_emmc_delay12;		// 0x04 DELAY1
+// 	uint32_t sd_emmc_delay13;		// 0x04 DELAY1
+// 	uint32_t sd_emmc_delay14;		// 0x04 DELAY1
+// 	uint32_t sd_emmc_delay2;		// 0x08 DELAY1 = 0xffe05020 FINAL
+// 	uint32_t sd_emmc_delay22;		// 0x08 DELAY1
+// 	uint32_t sd_emmc_delay23;		// 0x08 DELAY1
+// 	uint32_t sd_emmc_delay24;		// 0x08 DELAY1
+// 	uint32_t sd_emmc_adjust;		// 0x0c DELAY1
+// 	uint32_t sd_emmc_adjust2;		// 0x0c DELAY1
+// 	uint32_t sd_emmc_adjust3;		// 0x0c DELAY1
+// 	uint32_t sd_emmc_adjust4;		// 0x0c DELAY1
+// 	uint32_t sd_emmc_calout;		// 0x10 DELAY1
+// 	uint32_t sd_emmc_calout2;		// 0x10 DELAY1
+// 	uint32_t sd_emmc_calout3;		// 0x10 DELAY1
+// 	uint32_t sd_emmc_calout4;		// 0x10 DELAY1
+// 	uint32_t undocumented0;		    // 0x14 EMPTY
+// 	uint32_t undocumented02;		    // 0x14 EMPTY
+// 	uint32_t undocumented03;		    // 0x14 EMPTY
+// 	uint32_t undocumented04;		    // 0x14 EMPTY
+// 	uint32_t undocumented1;		    // 0x18 EMPTY
+// 	uint32_t undocumented12;		    // 0x18 EMPTY
+// 	uint32_t undocumented13;		    // 0x18 EMPTY
+// 	uint32_t undocumented14;		    // 0x18 EMPTY
+// 	uint32_t undocumented2;		    // 0x1c EMPTY
+// 	uint32_t undocumented22;		    // 0x1c EMPTY
+// 	uint32_t undocumented23;		    // 0x1c EMPTY
+// 	uint32_t undocumented24;		    // 0x1c EMPTY
+// 	uint32_t sd_emmc_adj_idx_log;   // 0x20 ADJ IDX LOG
+// 	uint32_t sd_emmc_adj_idx_log2;   // 0x20 ADJ IDX LOG
+// 	uint32_t sd_emmc_adj_idx_log3;   // 0x20 ADJ IDX LOG
+// 	uint32_t sd_emmc_adj_idx_log4;   // 0x20 ADJ IDX LOG
+// 	uint32_t sd_emmc_clk_test_log;	// 0x24 CLK TEST LOG
+// 	uint32_t sd_emmc_clk_test_log2;	// 0x24 CLK TEST LOG
+// 	uint32_t sd_emmc_clk_test_log3;	// 0x24 CLK TEST LOG
+// 	uint32_t sd_emmc_clk_test_log4;	// 0x24 CLK TEST LOG
+// 	uint32_t sd_emmc_clk_test_out;	// 0x28 CLK TEST OUT
+// 	uint32_t sd_emmc_clk_test_out2;	// 0x28 CLK TEST OUT
+// 	uint32_t sd_emmc_clk_test_out3;	// 0x28 CLK TEST OUT
+// 	uint32_t sd_emmc_clk_test_out4;	// 0x28 CLK TEST OUT
+// 	uint32_t sd_emmc_eyetest_log;	// 0x2c EYETEST LOG
+// 	uint32_t sd_emmc_eyetest_log2;	// 0x2c EYETEST LOG
+// 	uint32_t sd_emmc_eyetest_log3;	// 0x2c EYETEST LOG
+// 	uint32_t sd_emmc_eyetest_log4;	// 0x2c EYETEST LOG
+// 	uint32_t sd_emmc_eyetest_out0;	// 0x30 EYETEST OUT0
+// 	uint32_t sd_emmc_eyetest_out02;	// 0x30 EYETEST OUT0
+// 	uint32_t sd_emmc_eyetest_out03;	// 0x30 EYETEST OUT0
+// 	uint32_t sd_emmc_eyetest_out04;	// 0x30 EYETEST OUT0
+// 	uint32_t sd_emmc_eyetest_out1;	// 0x34 EYETEST OUT0
+// 	uint32_t sd_emmc_eyetest_out12;	// 0x34 EYETEST OUT0
+// 	uint32_t sd_emmc_eyetest_out13;	// 0x34 EYETEST OUT0
+// 	uint32_t sd_emmc_eyetest_out14;	// 0x34 EYETEST OUT0
+// 	uint32_t sd_emmc_intf3;	        // 0x38 INTF3
+// 	uint32_t sd_emmc_intf32;	        // 0x38 INTF3
+// 	uint32_t sd_emmc_intf33;	        // 0x38 INTF3
+// 	uint32_t sd_emmc_intf34;	        // 0x38 INTF3
+// 	uint32_t undocumented3;	        // 0x3c EMPTY
+// 	uint32_t undocumented32;	        // 0x3c EMPTY
+// 	uint32_t undocumented33;	        // 0x3c EMPTY
+// 	uint32_t undocumented34;	        // 0x3c EMPTY
+// 	uint32_t sd_emmc_start;	        // 0x40 START
+// 	uint32_t sd_emmc_start2;	        // 0x40 START
+// 	uint32_t sd_emmc_start3;	        // 0x40 START
+// 	uint32_t sd_emmc_start4;	        // 0x40 START
+// 	uint32_t sd_emmc_cfg;	        // 0x44 CFG
+// 	uint32_t sd_emmc_cfg2;	        // 0x44 CFG
+// 	uint32_t sd_emmc_cfg3;	        // 0x44 CFG
+// 	uint32_t sd_emmc_cfg4;	        // 0x44 CFG
+// 	uint32_t sd_emmc_status;	    // 0x48 STATUS
+// 	uint32_t sd_emmc_status2;	    // 0x48 STATUS
+// 	uint32_t sd_emmc_status3;	    // 0x48 STATUS
+// 	uint32_t sd_emmc_status4;	    // 0x48 STATUS
+// 	uint32_t sd_emmc_irq_en;	    // 0x4c IRQ EN
+// 	uint32_t sd_emmc_irq_en2;	    // 0x4c IRQ EN
+// 	uint32_t sd_emmc_irq_en3;	    // 0x4c IRQ EN
+// 	uint32_t sd_emmc_irq_en4;	    // 0x4c IRQ EN
+// 	uint32_t sd_emmc_cmd_cfg;	    // 0x50 COMMAND CFG
+// 	uint32_t sd_emmc_cmd_cfg2;	    // 0x50 COMMAND CFG
+// 	uint32_t sd_emmc_cmd_cfg3;	    // 0x50 COMMAND CFG
+// 	uint32_t sd_emmc_cmd_cfg4;	    // 0x50 COMMAND CFG
+// 	uint32_t sd_emmc_cmd_arg;	    // 0x54 COMMAND ARG
+// 	uint32_t sd_emmc_cmd_arg2;	    // 0x54 COMMAND ARG
+// 	uint32_t sd_emmc_cmd_arg3;	    // 0x54 COMMAND ARG
+// 	uint32_t sd_emmc_cmd_arg4;	    // 0x54 COMMAND ARG
+// 	uint32_t sd_emmc_cmd_dat;	    // 0x58 COMMAND DAT
+// 	uint32_t sd_emmc_cmd_dat2;	    // 0x58 COMMAND DAT
+// 	uint32_t sd_emmc_cmd_dat3;	    // 0x58 COMMAND DAT
+// 	uint32_t sd_emmc_cmd_dat4;	    // 0x58 COMMAND DAT
+// 	uint32_t sd_emmc_cmd_rsp;	    // 0x5c COMMAND RSP
+// 	uint32_t sd_emmc_cmd_rsp2;	    // 0x5c COMMAND RSP
+// 	uint32_t sd_emmc_cmd_rsp3;	    // 0x5c COMMAND RSP
+// 	uint32_t sd_emmc_cmd_rsp4;	    // 0x5c COMMAND RSP
+// 	uint32_t sd_emmc_cmd_rsp1;	    // 0x60 COMMAND RSP1
+// 	uint32_t sd_emmc_cmd_rsp12;	    // 0x60 COMMAND RSP1
+// 	uint32_t sd_emmc_cmd_rsp13;	    // 0x60 COMMAND RSP1
+// 	uint32_t sd_emmc_cmd_rsp14;	    // 0x60 COMMAND RSP1
+// 	uint32_t sd_emmc_cmd_rsp21;	    // 0x64 COMMAND RSP2
+// 	uint32_t sd_emmc_cmd_rsp22;	    // 0x64 COMMAND RSP2
+// 	uint32_t sd_emmc_cmd_rsp23;	    // 0x64 COMMAND RSP2
+// 	uint32_t sd_emmc_cmd_rsp24;	    // 0x64 COMMAND RSP2
+// 	uint32_t sd_emmc_cmd_rsp31;	    // 0x68 COMMAND RSP3
+// 	uint32_t sd_emmc_cmd_rsp32;	    // 0x68 COMMAND RSP3
+// 	uint32_t sd_emmc_cmd_rsp33;	    // 0x68 COMMAND RSP3
+// 	uint32_t sd_emmc_cmd_rsp34;	    // 0x68 COMMAND RSP3
+// 	uint32_t undocumented4;	        // 0x6c RESERVED
+// 	uint32_t undocumented42;	        // 0x6c RESERVED
+// 	uint32_t undocumented43;	        // 0x6c RESERVED
+// 	uint32_t undocumented44;	        // 0x6c RESERVED
+// 	uint32_t sd_emmc_curr_cfg;	    // 0x70 CURR CFG
+// 	uint32_t sd_emmc_curr_cfg2;	    // 0x70 CURR CFG
+// 	uint32_t sd_emmc_curr_cfg3;	    // 0x70 CURR CFG
+// 	uint32_t sd_emmc_curr_cfg4;	    // 0x70 CURR CFG
+// 	uint32_t sd_emmc_curr_arg;	    // 0x74 CURR ARG
+// 	uint32_t sd_emmc_curr_arg2;	    // 0x74 CURR ARG
+// 	uint32_t sd_emmc_curr_arg3;	    // 0x74 CURR ARG
+// 	uint32_t sd_emmc_curr_arg4;	    // 0x74 CURR ARG
+// 	uint32_t sd_emmc_curr_dat;	    // 0x78 CURR DAT
+// 	uint32_t sd_emmc_curr_dat2;	    // 0x78 CURR DAT
+// 	uint32_t sd_emmc_curr_dat3;	    // 0x78 CURR DAT
+// 	uint32_t sd_emmc_curr_dat4;	    // 0x78 CURR DAT
+// 	uint32_t sd_emmc_curr_rsp;	    // 0x7c CURR RSP
+// 	uint32_t sd_emmc_curr_rsp2;	    // 0x7c CURR RSP
+// 	uint32_t sd_emmc_curr_rsp3;	    // 0x7c CURR RSP
+// 	uint32_t sd_emmc_curr_rsp4;	    // 0x7c CURR RSP
+// 	uint32_t sd_emmc_next_cfg;	    // 0x80 NEXT CFG
+// 	uint32_t sd_emmc_next_cfg2;	    // 0x80 NEXT CFG
+// 	uint32_t sd_emmc_next_cfg3;	    // 0x80 NEXT CFG
+// 	uint32_t sd_emmc_next_cfg4;	    // 0x80 NEXT CFG
+// 	uint32_t sd_emmc_next_arg;	    // 0x84 NEXT ARG
+// 	uint32_t sd_emmc_next_arg2;	    // 0x84 NEXT ARG
+// 	uint32_t sd_emmc_next_arg3;	    // 0x84 NEXT ARG
+// 	uint32_t sd_emmc_next_arg4;	    // 0x84 NEXT ARG
+// 	uint32_t sd_emmc_next_dat;	    // 0x88 NEXT DAT
+// 	uint32_t sd_emmc_next_dat2;	    // 0x88 NEXT DAT
+// 	uint32_t sd_emmc_next_dat3;	    // 0x88 NEXT DAT
+// 	uint32_t sd_emmc_next_dat4;	    // 0x88 NEXT DAT
+// 	uint32_t sd_emmc_next_rsp;	    // 0x8c NEXT RSP
+// 	uint32_t sd_emmc_next_rsp2;	    // 0x8c NEXT RSP
+// 	uint32_t sd_emmc_next_rsp3;	    // 0x8c NEXT RSP
+// 	uint32_t sd_emmc_next_rsp4;	    // 0x8c NEXT RSP
+// 	uint32_t sd_emmc_rxd;	        // 0x90 RXD
+// 	uint32_t sd_emmc_rxd2;	        // 0x90 RXD
+// 	uint32_t sd_emmc_rxd3;	        // 0x90 RXD
+// 	uint32_t sd_emmc_rxd4;	        // 0x90 RXD
+// 	uint32_t sd_emmc_txd;	        // 0x94 TXD
+// 	uint32_t sd_emmc_txd2;	        // 0x94 TXD
+// 	uint32_t sd_emmc_txd3;	        // 0x94 TXD
+// 	uint32_t sd_emmc_txd4;	        // 0x94 TXD}; = 0x250 FINAL
+// };
+
+
 /**
  * A struct that stores all the normal registers of the Odroid C4
  */
 struct __attribute__((__packed__, aligned(4))) oc4_emmc_regs {
+
 	uint32_t sd_emmc_clock;		    // 0x00 SD_EMMC_CLOCK : // TODO: make own type later
-	uint32_t sd_emmc_delay1;		// 0x04 DELAY1
-	uint32_t sd_emmc_delay2;		// 0x08 DELAY1
+	uint32_t sd_emmc_delay1;		// 0x04 DELAY1 = 0xffe05010 FINAL
+	uint32_t sd_emmc_delay2;		// 0x08 DELAY1 = 0xffe05020 FINAL
 	uint32_t sd_emmc_adjust;		// 0x0c DELAY1
 	uint32_t sd_emmc_calout;		// 0x10 DELAY1
 	uint32_t undocumented0;		    // 0x14 EMPTY
@@ -93,7 +254,7 @@ struct __attribute__((__packed__, aligned(4))) oc4_emmc_regs {
 	uint32_t sd_emmc_curr_arg;	    // 0x74 CURR ARG
 	uint32_t sd_emmc_curr_dat;	    // 0x78 CURR DAT
 	uint32_t sd_emmc_curr_rsp;	    // 0x7c CURR RSP
-    uint32_t sd_emmc_next_cfg;	    // 0x80 NEXT CFG
+	uint32_t sd_emmc_next_cfg;	    // 0x80 NEXT CFG
 	uint32_t sd_emmc_next_arg;	    // 0x84 NEXT ARG
 	uint32_t sd_emmc_next_dat;	    // 0x88 NEXT DAT
 	uint32_t sd_emmc_next_rsp;	    // 0x8c NEXT RSP
@@ -182,7 +343,8 @@ enum meson_gx_mmc_compatible {
 #define   CMD_CFG_DATA_WR		    BIT(19)
 #define   CMD_CFG_RESP_NOCRC	    BIT(20)
 #define   CMD_CFG_RESP_128		    BIT(21)
-#define   CMD_CFG_CMD_INDEX_SHIFT	GENMASK_UNSAFE(29, 24)
+#define   CMD_CFG_CMD_INDEX			GENMASK_UNSAFE(29, 24)
+#define   CMD_CFG_CMD_INDEX_SHIFT	24
 #define   CMD_CFG_OWNER			    BIT(31)
 
 #define SD_EMMC_CMD_ARG		        0x54

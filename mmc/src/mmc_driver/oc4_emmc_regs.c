@@ -181,6 +181,7 @@ result_t oc4_emmc_regs_set_sd_clock_divisor(
     // if (result_is_err(res)) {
     //     return result_err_chain(res, "Failed to set `control1.CLK_FREQ8` in oc4_emmc_regs_set_clock_divisor().");
     // }
+    //hi
     return result_err("I should never be called!");
 
 }
@@ -200,7 +201,7 @@ result_t oc4_emmc_regs_is_sd_clock_stable(
     return result_err("I should never be called!");
 }
 
-// ! This does not work!
+//? This might not work?
 result_t oc4_emmc_regs_is_cmd_in_progress(
         oc4_emmc_regs_t *oc4_emmc_regs,
         bool *ret_val
@@ -212,7 +213,9 @@ result_t oc4_emmc_regs_is_cmd_in_progress(
         return result_err("NULL `ret_val` passed to oc4_emmc_regs_is_cmd_in_progress().");
     }
     // return status_get_cmd_inhibit(&oc4_emmc_regs->sd_emmc_status, ret_val);
-    *ret_val = true ? ((oc4_emmc_regs->sd_emmc_status & BIT(31)) || (oc4_emmc_regs->sd_emmc_status & BIT(30))) : false;
+    //: Jade suspects that the issue is here
+    *ret_val = (oc4_emmc_regs->sd_emmc_status & STATUS_END_OF_CHAIN) ? false : true;
+    // *ret_val = true ? (oc4_emmc_regs->sd_emmc_status) : false;
     return result_ok();
     // return result_err("I should never be called!");
 }

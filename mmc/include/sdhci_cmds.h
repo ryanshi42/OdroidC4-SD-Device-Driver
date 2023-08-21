@@ -6,6 +6,8 @@
 /*--------------------------------------------------------------------------}
 {						SD CARD COMMAND INDEX DEFINITIONS				    }
 {--------------------------------------------------------------------------*/
+
+//: These are covered in sdhci_cmds.c
 #define IDX_GO_IDLE_STATE    0
 #define IDX_ALL_SEND_CID     1
 #define IDX_SEND_REL_ADDR    2
@@ -38,6 +40,29 @@
 #define IDX_APP_CMD          29
 #define IDX_APP_CMD_RCA      30
 #define IDX_GEN_CMD          31
+
+// #define IDX_GO_IDLE_STATE       0
+// #define IDX_SEND_OP_COND        1
+// #define IDX_SWITCH_FUNC         6
+// #define IDX_SEND_CSD            7
+// #define IDX_SEND_IF_COND        8
+// #define IDX_CSD                 9
+// #define IDX_CID                 10
+// #define IDX_STOP_TRANSMISSION   12
+// #define IDX_SEND_STATUS         13
+// #define IDX_SET_BLOCKLEN        16
+// #define IDX_READ_SINGLE         17
+// #define IDX_READ_MULTI          18
+// #define IDX_SEND_TUNING         16
+// #define IDX_WRITE_SINGLE        24
+// #define IDX_WRITE_MULTI         25
+// #define IDX_PROGRAM_CSD         27
+// #define IDX_SET_WRITE_PR        28
+// #define IDX_CLR_WRITE_PR        29
+// #define IDX_SND_WRITE_PR        30
+// #define IDX_ERASE_WR_ST         32
+// #define IDX_ERASE_WR_END        33
+// #define IDX_ERASE               38
 
 // Commands hereafter require APP_CMD.
 #define IDX_APP_CMD_START    32

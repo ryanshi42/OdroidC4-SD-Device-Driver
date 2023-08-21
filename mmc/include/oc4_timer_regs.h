@@ -61,9 +61,9 @@ typedef struct oc4_timer_regs oc4_timer_regs_t;
 
 //? Start timer E acts as a clock, while timer A can be used for timeouts from clients
 struct __attribute__((__packed__, aligned(4))) oc4_timer_regs {
-    uint32_t mux;           // 0x3c50
-    uint32_t timer_a;       // 0x3c51
-    uint32_t timer_b;       // 0x3c52
+    uint32_t mux;           // 0x3c50 = 0xffd0f140 FINAL
+    uint32_t timer_a;       // 0x3c51 = 0xffd0f144 FINAL
+    uint32_t timer_b;       // 0x3c52 = 0xffd0f148 FINAL
     uint32_t timer_c;       // 0x3c53
     uint32_t timer_d;       // 0x3c54
     uint32_t unused[13];    // 0x3c55 - 0x3c61 inclusive -> 55, 56, 57, 58, 59, 5a, 5b, 5c, 5d, 5e, 5f, 60, 61
