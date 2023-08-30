@@ -76,6 +76,7 @@ result_t sdcard_has_powered_up(sdcard_t *sdcard, bool *ret_val) {
     if (sdcard == NULL) {
         return result_err("NULL `sdcard` passed to sdcard_has_powered_up().");
     }
+    // return true;
     return ocr_get_card_power_up_busy(&sdcard->ocr, ret_val);
 }
 

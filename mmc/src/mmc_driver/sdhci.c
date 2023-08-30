@@ -58,6 +58,7 @@ result_t sdhci_card_init_and_id(
     *sdhci_result = SD_ERROR;
     result_t res;
 
+
     //? (https://electronics.stackexchange.com/questions/77417/what-is-the-correct-command-sequence-for-microsd-card-initialization-in-spi)
 
     /* Sending GO_IDLE command. */
@@ -127,6 +128,9 @@ result_t sdhci_card_init_and_id(
     //! Current bug, here!
     //! Want that has powered up
 
+    sel4cp_dbg_puts("\n Trying to power up...\n");
+
+
     size_t retries = 7;
     bool has_powered_up = false;
     do {
@@ -139,15 +143,19 @@ result_t sdhci_card_init_and_id(
                 sdhci_result
         );
         if (result_is_err(res)) {
+            sel4cp_dbg_puts("\n Result error when sending command to power up. \n");
+
             return result_err_chain(res, "Failed to send `IDX_APP_SEND_OP_COND` in sdhci_card_init_and_id().");
         }
         res = sdcard_has_powered_up(sdcard, &has_powered_up);
         if (result_is_err(res)) {
+            sel4cp_dbg_puts("\n Result error when powering up. \n");
+
             return result_err_chain(res, "Failed to check if card has powered up in sdhci_card_init_and_id().");
         }
     } while (!has_powered_up && (retries-- > 0));
 
-    sel4cp_dbg_puts("\n Finished setting IF_COND");
+    // sel4cp_dbg_puts("\n Finished setting IF_COND");
 
     /* If the card still hasn't powered up, we timeout. */
     if (!has_powered_up) {
@@ -156,6 +164,9 @@ result_t sdhci_card_init_and_id(
         *sdhci_result = SD_TIMEOUT;
         return result_err("EMMC card did not power up in sdhci_card_init_and_id().");
     }
+
+    sel4cp_dbg_puts("\n SD Card powered up. \n");
+
 
     /* Check voltage */
     sel4cp_dbg_puts("Checking card voltage is 3v3...");
@@ -169,6 +180,8 @@ result_t sdhci_card_init_and_id(
         return result_err("EMMC card does not have correct voltage in sdhci_card_init_and_id().");
     }
     sel4cp_dbg_puts("Voltage good.");
+    sel4cp_dbg_puts("\n Voltage good. \n");
+
 
     /* Check card capacity. */
     sel4cp_dbg_puts("Checking card type...");
@@ -1015,10 +1028,13 @@ result_t sdhci_wait_for_cmd_in_progress(
         }
     } while (cmd_in_progress && !has_any_err && (retries-- > 0));
     if (has_any_err) {
+        sel4cp_dbg_puts("\nError occurred in sdhci_wait_for_cmd_in_progress().\n");
+
         return result_err("Error occurred in sdhci_wait_for_cmd_in_progress().");
     }
     if (cmd_in_progress) {
         *sdhci_result = SD_BUSY;
+        sel4cp_dbg_puts("\nTimed out waiting for command in sdhci_wait_for_cmd_in_progress().\n");
         return result_err("Timed out waiting for command in sdhci_wait_for_cmd_in_progress().");
     }
     *sdhci_result = SD_OK;
@@ -1137,6 +1153,9 @@ result_t sdhci_send_cmd(
 
     if (is_app_cmd) {
         /* Check if Relative Card Address (RCA) has been saved yet. */
+
+        sel4cp_dbg_puts("\n In an app command. \n");
+        
         bool has_rca = false;
         res = sdcard_has_rca(sdcard, &has_rca);
         if (result_is_err(res)) {
@@ -1162,8 +1181,13 @@ result_t sdhci_send_cmd(
                 sdhci_result
         );
         if (result_is_err(res)) {
+            sel4cp_dbg_puts("\n Error in app recursion. \n");
+
             return result_err_chain(res, "Failed to send app command in sdhci_send_cmd().");
         }
+
+        sel4cp_dbg_puts("\n App recursion executed fine. \n");
+
         /* When there is an RCA, we should check the status indicates APP_CMD accepted. */
         if (app_cmd_index == IDX_APP_CMD_RCA) {
             bool is_app_cmd_accepted;
@@ -1173,12 +1197,133 @@ result_t sdhci_send_cmd(
             }
             if (!is_app_cmd_accepted) {
                 *sdhci_result = SD_ERROR;
+                sel4cp_dbg_puts("\n App command not accepted... \n");
+
                 return result_err("App command was not accepted in sdhci_send_cmd().");
             }
         }
     }
 
     sel4cp_dbg_puts("\nApp commands check done\n");
+
+
+    sel4cp_dbg_puts("\nPrinting Everything\n");
+
+
+    sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_clock:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_clock);		    // 0x00 SD_EMMC_CLOCK : // TODO: make own type later
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_delay1:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_delay1);		// 0x04 DELAY1 = 0xffe05010 FINAL
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_delay2:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_delay2);		// 0x08 DELAY1 = 0xffe05020 FINAL
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_adjust:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_adjust);		// 0x0c DELAY1
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_calout:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_calout);		// 0x10 DELAY1
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("undocumented0:\n\n");
+    puthex32(sdhci_regs->regs->undocumented0);		    // 0x14 EMPTY
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("undocumented1:\n\n");
+    puthex32(sdhci_regs->regs->undocumented1);		    // 0x18 EMPTY
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("undocumented2:\n\n");
+    puthex32(sdhci_regs->regs->undocumented2);		    // 0x1c EMPTY
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_adj_idx_log:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_adj_idx_log);   // 0x20 ADJ IDX LOG
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_clk_test_log:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_clk_test_log);	// 0x24 CLK TEST LOG
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_clk_test_out:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_clk_test_out);	// 0x28 CLK TEST OUT
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_eyetest_log:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_eyetest_log);	// 0x2c EYETEST LOG
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_eyetest_out0:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_eyetest_out0);	// 0x30 EYETEST OUT0
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_eyetest_out1:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_eyetest_out1);	// 0x34 EYETEST OUT0
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_intf3:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_intf3);	        // 0x38 INTF3
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("undocumented3:\n\n");
+    puthex32(sdhci_regs->regs->undocumented3);	        // 0x3c EMPTY
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_start:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_start);	        // 0x40 START
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_cfg:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_cfg);	        // 0x44 CFG
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_status:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_status);	    // 0x48 STATUS
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_irq_en:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_irq_en);	    // 0x4c IRQ EN
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_cmd_cfg:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);	    // 0x50 COMMAND CFG
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_cmd_arg:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_cmd_arg);	    // 0x54 COMMAND ARG
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_cmd_dat:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_cmd_dat);	    // 0x58 COMMAND DAT
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_cmd_rsp:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp);	    // 0x5c COMMAND RSP
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_cmd_rsp1:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp1);	    // 0x60 COMMAND RSP1
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_cmd_rsp2:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp2);	    // 0x64 COMMAND RSP2
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_cmd_rsp3:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp3);	    // 0x68 COMMAND RSP3
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("undocumented4:\n\n");
+    puthex32(sdhci_regs->regs->undocumented4);	        // 0x6c RESERVED
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_curr_cfg:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_curr_cfg);	    // 0x70 CURR CFG
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_curr_arg:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_curr_arg);	    // 0x74 CURR ARG
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_curr_dat:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_curr_dat);	    // 0x78 CURR DAT
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_curr_rsp:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_curr_rsp);	    // 0x7c CURR RSP
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_next_cfg:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_next_cfg);	    // 0x80 NEXT CFG
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_next_arg:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_next_arg);	    // 0x84 NEXT ARG
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_next_dat:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_next_dat);	    // 0x88 NEXT DAT
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_next_rsp:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_next_rsp);	    // 0x8c NEXT RSP
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_rxd:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_rxd);	        // 0x90 RXD
+	sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("sd_emmc_txd:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_txd);	        // 0x94 TXD
 
     sel4cp_dbg_puts("getting status: NOT checking if it's complete");
     // char _num[16];
@@ -1408,24 +1553,30 @@ result_t sdhci_send_cmd(
 
 
     uint32_t meson_mmc_cmd = 0;
+    uint32_t meson_mmc_dat = 0;
+
+    sel4cp_dbg_puts("Pre CMD Status:\n\n");
+    // puthex32(sdhci_regs->regs->sd_emmc_status);
+    puthex32(sdhci_regs->regs->sd_emmc_status);
+    sel4cp_dbg_puts("\n\n");
 
     // cmdtm
 
 	meson_mmc_cmd |= cmdtm.CMD_INDEX << CMD_CFG_CMD_INDEX_SHIFT;
 
-	// if (cmdtm.CMD_RSPNS_TYPE & MMC_RSP_PRESENT) {
-	// 	if (cmdtm.CMD_RSPNS_TYPE & MMC_RSP_136)
-	// 		meson_mmc_cmd |= CMD_CFG_RESP_128;
+	if (cmdtm.CMD_RSPNS_TYPE) {
+		if (cmdtm.CMD_RSPNS_TYPE & CMD_136BIT_RESP)
+			meson_mmc_cmd |= CMD_CFG_RESP_128;
 
-	// 	if (cmdtm.CMD_RSPNS_TYPE & MMC_RSP_BUSY)
-	// 		meson_mmc_cmd |= CMD_CFG_R1B;
+		if (cmdtm.CMD_RSPNS_TYPE & CMD_BUSY48BIT_RESP)
+			meson_mmc_cmd |= CMD_CFG_R1B;
 
-	// 	if (!(cmdtm.CMD_RSPNS_TYPE & MMC_RSP_CRC))
-	// 		meson_mmc_cmd |= CMD_CFG_RESP_NOCRC;
-	// } else {
-	// 	meson_mmc_cmd |= CMD_CFG_NO_RESP;
-	// }
-    // meson_mmc_cmd |= CMD_CFG_NO_RESP;
+		if (!(cmdtm.CMD_CRCCHK_EN))
+			meson_mmc_cmd |= CMD_CFG_RESP_NOCRC;
+	} else {
+		meson_mmc_cmd |= CMD_CFG_NO_RESP;
+	}
+    // meson_mmc_cmd |= CMD_CFG_RESP_128;
 
 	// if (data) {
 	// 	cfg = sdhci_regs.regs.sd_emmc_cmd_cfg;
@@ -1440,38 +1591,45 @@ result_t sdhci_send_cmd(
 	// 			 data.blocks;
 	// }
 
-	meson_mmc_cmd |= CMD_CFG_TIMEOUT_4S | CMD_CFG_OWNER |
-			 CMD_CFG_END_OF_CHAIN;
+	meson_mmc_cmd |= CMD_CFG_TIMEOUT_4S | CMD_CFG_OWNER | CMD_CFG_ERROR | CMD_CFG_END_OF_CHAIN;
 
-    puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
+    // puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
 
-    puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
+    // puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
 
+
+    //? Following Linux spec here
     sdhci_regs->regs->sd_emmc_cmd_cfg = meson_mmc_cmd;
+    sdhci_regs->regs->sd_emmc_cmd_dat = meson_mmc_dat;
+    sdhci_regs->regs->sd_emmc_cmd_rsp = 0;
     sdhci_regs->regs->sd_emmc_cmd_arg = arg;
 
 
-
-
-
-    // puthex32(sdhci_regs->regs->sd_emmc_cmd_arg);
-    // // puthex32(meson_mmc_cmd);
-    puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
-
-    //hi
-    puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
-    puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
-    puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
-    puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
-    puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
-    puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
-    puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
-    puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
+    sel4cp_dbg_puts("Post CMD-arg Status:\n\n");
+    // puthex32(sdhci_regs->regs->sd_emmc_status);
     puthex32(sdhci_regs->regs->sd_emmc_status);
-    puthex32(sdhci_regs->regs->sd_emmc_cfg);
-    puthex32(sdhci_regs->regs->sd_emmc_cmd_arg);
-    puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp);
+    sel4cp_dbg_puts("\n\n");
+
+
+
+    // // puthex32(sdhci_regs->regs->sd_emmc_cmd_arg);
+    // // // puthex32(meson_mmc_cmd);
+    // puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
+
+    // //hi
+    // puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
+    // puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
+    // puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
+    // puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
+    // puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
+    // puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
+    // puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
+    // puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
+    // puthex32(sdhci_regs->regs->sd_emmc_status);
     // puthex32(sdhci_regs->regs->sd_emmc_cfg);
+    // puthex32(sdhci_regs->regs->sd_emmc_cmd_arg);
+    // puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp);
+    // // puthex32(sdhci_regs->regs->sd_emmc_cfg);
 
 
 
@@ -1560,7 +1718,7 @@ result_t sdhci_send_cmd(
     puthex32(sdhci_regs->regs->sd_emmc_cmd_arg);
 
 
-    /* Wait for command in progress. */
+    /* Wait for command in progress (this is actually the interrupt we are waiting for). */
     sel4cp_dbg_puts("Status before waiting for command:\n\n");
     puthex32(sdhci_regs->regs->sd_emmc_status);
     sel4cp_dbg_puts("\n\n");
@@ -1572,6 +1730,7 @@ result_t sdhci_send_cmd(
     sel4cp_dbg_puts("Status after waiting for command:\n\n");
     puthex32(sdhci_regs->regs->sd_emmc_status);
     sel4cp_dbg_puts("\n\n");
+
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to wait for command in progress in sdhci_send_cmd().");
     }
@@ -1580,10 +1739,11 @@ result_t sdhci_send_cmd(
 
     sel4cp_dbg_puts("Status:\n\n");
     puthex32(sdhci_regs->regs->sd_emmc_status);
+    puthex32(sdhci_regs->regs->sd_emmc_status);
     sel4cp_dbg_puts("\n\n");
 
 
-    sel4cp_dbg_puts("Config:\n\n");
+    sel4cp_dbg_puts("Command Config:\n\n");
     puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
     sel4cp_dbg_puts("\n\n");
 
@@ -1596,10 +1756,15 @@ result_t sdhci_send_cmd(
 
     /* Reset status bits */
     sdhci_regs->regs->sd_emmc_status = STATUS_MASK;
+    sdhci_regs->regs->sd_emmc_status = STATUS_MASK;
+    sdhci_regs->regs->sd_emmc_status = STATUS_MASK;
+    sdhci_regs->regs->sd_emmc_status = STATUS_MASK;
 
     //! Doesn't write properly
     sel4cp_dbg_puts("New Status:\n\n");
     puthex32(sdhci_regs->regs->sd_emmc_status);
+    puthex32(sdhci_regs->regs->sd_emmc_status);
+
     sel4cp_dbg_puts("\n\n");
 
     sel4cp_dbg_puts("Clock:\n\n");
@@ -1613,15 +1778,38 @@ result_t sdhci_send_cmd(
     puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp3);
     sel4cp_dbg_puts("\n\n");
 
+    sel4cp_dbg_puts("Fake Resp:\n\n");
+    // sdhci_regs->regs->sd_emmc_cmd_rsp = 0x6969;
+    // puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp);
+    // sel4cp_dbg_puts("\n\n");
+
+
+
     /* Get the response from `resp0`. */
-    uint32_t resp0;
-    res = sdhci_regs_get_resp0(
-            sdhci_regs,
-            &resp0
-    );
-    if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to get resp0 in sdhci_send_cmd().");
-    }
+    uint32_t resp0 = 0;
+    // puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp);
+
+    resp0 = sdhci_regs->regs->sd_emmc_cmd_rsp;
+
+    puthex32(resp0);
+    puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp);
+
+    // res = sdhci_regs_get_resp0(
+    //         sdhci_regs,
+    //         &resp0
+    // );
+    // if (result_is_err(res)) {
+    //     return result_err_chain(res, "Failed to get resp0 in sdhci_send_cmd().");
+    // }
+
+    sel4cp_dbg_puts("Fake Resp 2:\n\n");
+    puthex32(resp0);
+    puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp);
+    sel4cp_dbg_puts("\n\n");
+    // puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp);
+
+    sel4cp_dbg_puts("\n\n");
+
 
     /* Get the SDHCI command's response type. */
     cmd_rspns_type_t cmd_rspns_type;
@@ -1733,6 +1921,7 @@ result_t sdhci_send_cmd(
                     sel4cp_dbg_puts("getting resp0: ");
 
                     sel4cp_dbg_puts(itoa(resp0, snum, 16));
+                    sel4cp_dbg_puts(itoa(sdhci_regs->regs->sd_emmc_cmd_rsp, snum, 16));
 
                     sel4cp_dbg_puts("getting resp1: ");
 
@@ -1756,6 +1945,7 @@ result_t sdhci_send_cmd(
                     } else {
                         *sdhci_result = SD_ERROR;
                         sel4cp_dbg_puts("\nGotten cmd response type, not match\n");
+                        puthex32(sdcard->ocr.raw32);
 
                         return result_err("Response from SD card does not match argument in sdhci_send_cmd().");
                     }

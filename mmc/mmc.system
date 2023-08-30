@@ -7,6 +7,11 @@
             size="0x1_000"
             phys_addr="0xff_634_000"/>
 
+    <memory_region 
+            name="clk" 
+            size="0x1000" 
+            phys_addr="0xff_63c_000"/> 
+
 <!-- <memory_region
         name="gpio"
         size="0x1_000"
@@ -31,7 +36,7 @@
     <memory_region
             name="emmc"
             size="0x2_000"
-            phys_addr="0xff_e07_000"/>
+            phys_addr="0xff_e05_000"/>
     <!-- This is a 4KB, page-aligned memory region at the physical address of
     0x3f215000, which is where the UART device registers are mapped to. Note, we
     are mapping in the Rpi3B's "Mini" UART device registers and NOT its "PL011"
@@ -325,6 +330,8 @@
         <program_image path="mmc_driver.elf"/>
         <!-- Shared memory region for `timer_driver` PD to pass num ticks to
         `mmc` PD.-->
+
+
         <map
                 mr="timer_driver_to_mmc_driver_numticks_buf"
                 vaddr="0x2_600_000"
@@ -355,6 +362,13 @@
                 perms="rw"
                 cached="false"
                 setvar_vaddr="emmc_base_vaddr"/>
+
+        <!-- Memory region mapped to the Clock Gate. -->
+        <map    mr="clk"         
+                vaddr="0x3_006_000" 
+                perms="rw" 
+                setvar_vaddr="clk_vaddr" 
+                cached="false"/>
         <!-- A shared memory region for passing requests from `fatfs` to
         `mmc_driver`. -->
         <map

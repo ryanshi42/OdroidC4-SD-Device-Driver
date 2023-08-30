@@ -14,6 +14,7 @@ result_t ocr_get_card_power_up_busy(ocr_t *ocr, bool *ret_val) {
         return result_err("NULL `ocr` passed to ocr_get_card_power_up_busy().");
     }
     *ret_val = ocr->card_power_up_busy;
+    // *ret_val = true;
     return result_ok();
 }
 

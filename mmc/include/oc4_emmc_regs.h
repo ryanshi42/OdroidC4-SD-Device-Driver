@@ -32,7 +32,7 @@
 /**
  * Some Linux-defined constants related to the IRQ EN registers below
  */
-#define   IRQ_RXD_ERR_MASK GENMASK_UNSAFE_UNSAFE(7, 0)
+#define   IRQ_RXD_ERR_MASK GENMASK_UNSAFE(7, 0)
 #define   IRQ_TXD_ERR BIT(8)
 #define   IRQ_DESC_ERR BIT(9)
 #define   IRQ_RESP_ERR BIT(10)
@@ -235,7 +235,7 @@ struct __attribute__((__packed__, aligned(4))) oc4_emmc_regs {
 	uint32_t sd_emmc_clk_test_out;	// 0x28 CLK TEST OUT
 	uint32_t sd_emmc_eyetest_log;	// 0x2c EYETEST LOG
 	uint32_t sd_emmc_eyetest_out0;	// 0x30 EYETEST OUT0
-	uint32_t sd_emmc_eyetest_out1;	// 0x34 EYETEST OUT0
+	uint32_t sd_emmc_eyetest_out1;	// 0x34 EYETEST OUT1
 	uint32_t sd_emmc_intf3;	        // 0x38 INTF3
 	uint32_t undocumented3;	        // 0x3c EMPTY
 	uint32_t sd_emmc_start;	        // 0x40 START
@@ -345,6 +345,7 @@ enum meson_gx_mmc_compatible {
 #define   CMD_CFG_RESP_128		    BIT(21)
 #define   CMD_CFG_CMD_INDEX			GENMASK_UNSAFE(29, 24)
 #define   CMD_CFG_CMD_INDEX_SHIFT	24
+#define   CMD_CFG_ERROR			    BIT(30)
 #define   CMD_CFG_OWNER			    BIT(31)
 
 #define SD_EMMC_CMD_ARG		        0x54

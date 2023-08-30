@@ -13,6 +13,29 @@ Stage 2: Read and write a disk block on the SD card
 
 */
 
+static char
+hexchar(unsigned int v)
+{
+    return v < 10 ? '0' + v : ('a' - 10) + v;
+}
+
+static void
+puthex32(uint32_t val)
+{
+    char buffer[8 + 3];
+    buffer[0] = '0';
+    buffer[1] = 'x';
+    buffer[8 + 3 - 1] = 0;
+    for (unsigned i = 8 + 1; i > 1; i--) {
+        buffer[i] = hexchar(val & 0xf);
+        val >>= 4;
+    }
+    sel4cp_dbg_puts(buffer);
+}
+
+
+
+
 
 // Configure the clock
 static void oc4_emmc_regs_mmc_config_clock(struct oc4_emmc_regs *mmc)
@@ -22,6 +45,9 @@ static void oc4_emmc_regs_mmc_config_clock(struct oc4_emmc_regs *mmc)
 
 	if (!mmc->sd_emmc_clock)
 		return;
+
+        sel4cp_dbg_puts("Putting clock...:\n");
+    puthex32(mmc->sd_emmc_clock);
 
 	/* TOFIX This should use the proper clock taken from DT */
 
@@ -54,9 +80,15 @@ static void oc4_emmc_regs_mmc_config_clock(struct oc4_emmc_regs *mmc)
 	// /* 180 phase tx sd_emmc_clock */
 	// oc4_emmc_regs_mmc_clk |= CLK_TX_PHASE_000;
 
+    sel4cp_dbg_puts("Putting clock...:\n");
+    puthex32(mmc->sd_emmc_clock);
+
     oc4_emmc_regs_mmc_clk |= CLK_CO_PHASE_270;
 	oc4_emmc_regs_mmc_clk |= CLK_TX_PHASE_000;
-	// oc4_emmc_regs_mmc_clk |= CLK_RX_PHASE_000;
+	oc4_emmc_regs_mmc_clk |= CLK_RX_PHASE_000;
+
+    sel4cp_dbg_puts("Putting clock...:\n");
+    puthex32(oc4_emmc_regs_mmc_clk);
 
 	/* sd_emmc_clock settings */
 	oc4_emmc_regs_mmc_clk |= clk_src;
@@ -65,6 +97,25 @@ static void oc4_emmc_regs_mmc_config_clock(struct oc4_emmc_regs *mmc)
 	// oc4_emmc_regs_write_unsafe(mmc, oc4_emmc_regs_mmc_clk, SD_EMMC_CLOCK);
 	mmc->sd_emmc_clock = oc4_emmc_regs_mmc_clk;
 	// mmc->sd_emmc_clock |= 0xffffffff;
+
+    // Setting the gpio part
+
+
+
+    // clk81_ptr = (volatile uint32_t *)(clk_vaddr + CLK_OFFSET2);
+    // clk81 = *clk81_ptr;
+
+    // // Enable by removing clock gate
+    // clk81 |= (SD_CLK81_BIT);
+    // *clk81_ptr = clk81;
+
+    // // Check that registers actually changed
+    // if (!(*clk81_ptr & SD_CLK81_BIT)) {
+    //     sel4cp_dbg_puts("driver: failed to toggle clock gate!\n");
+    // } else {
+    //     sel4cp_dbg_puts("driver: successfully toggled clock gate!\n");
+    // }
+    
 }
 
 // Set the IO configuration of the registers
@@ -80,7 +131,7 @@ static int oc4_emmc_regs_mmc_set_ios(struct oc4_emmc_regs *mmc)
     // Get the bus width from the registers
     // Does this mean it is automatically instantiated??? // TODO: check this!
 	oc4_emmc_regs_mmc_cfg &= ~CFG_BUS_WIDTH_MASK;
-    oc4_emmc_regs_mmc_cfg |= CFG_BUS_WIDTH_4;
+    oc4_emmc_regs_mmc_cfg |= CFG_BUS_WIDTH_8;
 	// if (mmc->bus_width == 1)
 	// 	oc4_emmc_regs_mmc_cfg |= CFG_BUS_WIDTH_1;
 	// else if (mmc->bus_width == 4)
@@ -116,6 +167,12 @@ result_t oc4_emmc_init(
         sdhci_regs_t *sdhci_regs,
         oc4_gpio_regs_t *oc4_gpio_regs
 ) {
+
+    sel4cp_dbg_puts("CLK: sd_emmc_cfg:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_cfg);	        // 0x44 CFG
+	sel4cp_dbg_puts("\n\n");
+
+
     log_trace("Called OC4 EMMC.");
     sel4cp_dbg_puts("\n\nunrecognisable string");
 
@@ -181,6 +238,8 @@ result_t oc4_emmc_init(
     // oc4_emmc_regs->sd_emmc_cfg = (uint32_t) 0;
     // sel4cp_dbg_puts("\n\n Finished clock config");
 
+    //! Voltage
+
     log_trace("Configuring clock.");
 	oc4_emmc_regs_mmc_config_clock(oc4_emmc_regs);
 
@@ -203,12 +262,20 @@ result_t oc4_emmc_init(
     log_trace("Enabling Auto Clock Mode.");
     // val = oc4_emmc_regs_read_unsafe(oc4_emmc_regs, SD_EMMC_CFG);
 
+        sel4cp_dbg_puts("CLK: sd_emmc_cfg:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_cfg);	        // 0x44 CFG
+	sel4cp_dbg_puts("\n\n");
+
 
     val = oc4_emmc_regs->sd_emmc_cfg;
     val &= ~CFG_SDCLK_ALWAYS_ON;
     val |= CFG_AUTO_CLK;
     // oc4_emmc_regs_write_unsafe(oc4_emmc_regs, val, SD_EMMC_CFG);
     oc4_emmc_regs->sd_emmc_cfg = val;
+
+    sel4cp_dbg_puts("CLK: sd_emmc_cfg:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_cfg);	        // 0x44 CFG
+	sel4cp_dbg_puts("\n\n");
     
     sel4cp_dbg_puts("\n\n Finished enabling clock, auto clock and setting I/Os");
 
@@ -252,14 +319,21 @@ result_t oc4_emmc_init(
     // }
 
 
+
     /* Set the Data Timeout to the maximum value. */
     //! This may not work!
     //! Even worse, removing this will screw up the device driver
-    result_t res = oc4_emmc_regs_set_max_data_timeout(oc4_emmc_regs);
-    if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to set max data timeout in oc4_emmc_init().");
-    }
-    sel4cp_dbg_puts("\n\n Finished setting max data timeout");
+    // result_t res = oc4_emmc_regs_set_max_data_timeout(oc4_emmc_regs);
+    // if (result_is_err(res)) {
+    //     return result_err_chain(res, "Failed to set max data timeout in oc4_emmc_init().");
+    // }
+    // sel4cp_dbg_puts("\n\n Finished setting max data timeout");
+
+
+    sel4cp_dbg_puts("CLK: sd_emmc_cfg:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_cfg);	        // 0x44 CFG
+	sel4cp_dbg_puts("\n\n");
+    
 
     // /* Enable the Internal Clock. */
     // res = sdhci_regs_enable_internal_clock(sdhci_regs);
@@ -267,6 +341,7 @@ result_t oc4_emmc_init(
     //     return result_err_chain(res, "Failed to enable internal clock in bcm_emmc_init().");
     // }
     /* Wait 10 microseconds. */
+    usleep(10);
     usleep(10);
 
     /* Set clock to low-speed setup frequency (400KHz). */
@@ -287,7 +362,28 @@ result_t oc4_emmc_init(
     // oc4_emmc_regs->sd_emmc_irq_en = 0;
     // sel4cp_dbg_puts("\n\n Finished Disabling interrupts");
 
+
+        sel4cp_dbg_puts("CLK: sd_emmc_cfg:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_cfg);	        // 0x44 CFG
+	sel4cp_dbg_puts("\n\n");
+    
+    /* enable interrupts */
+    // log_trace("Enabling interrupts.");
+    // // oc4_emmc_regs_write_unsafe(oc4_emmc_regs, (uint32_t) 0, SD_EMMC_IRQ_EN);
+    // oc4_emmc_regs->sd_emmc_irq_en = (uint32_t) IRQ_EN_MASK;
+
+
+        sel4cp_dbg_puts("CLK: sd_emmc_cfg:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_cfg);	        // 0x44 CFG
+	sel4cp_dbg_puts("\n\n");
+    
+
     sel4cp_dbg_puts("\n\n Finished setting up OC4 emmc");
+
+        sel4cp_dbg_puts("CLK: sd_emmc_cfg:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_cfg);	        // 0x44 CFG
+	sel4cp_dbg_puts("\n\n");
+    
 
     return result_ok();
 }

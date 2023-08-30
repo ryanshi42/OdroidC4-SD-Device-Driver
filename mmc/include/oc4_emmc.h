@@ -10,6 +10,12 @@
 #include "oc4_gpio_regs.h"
 #include "gpio_driver.h"
 
+#define CLK_OFFSET1     0x140
+#define CLK_OFFSET2     0x0c0
+#define SD_CLK81_BIT    BIT(26)
+
+// uintptr_t clk_vaddr;
+
 /**
  * Initialises the oc4 EMMC device.
  * @param sdhci_regs
