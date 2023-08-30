@@ -328,9 +328,9 @@ result_t oc4_emmc_regs_set_max_data_timeout(oc4_emmc_regs_t *oc4_emmc_regs) {
     //? The other timeout refers to the config timeout, but that is in clock cycles whereas presumably this one is not
 
     //? The documentation is badly formatted - if timeout is set to 12, then it is 2 ** 12 = 4096 ms ~= 4s
-    oc4_emmc_regs->sd_emmc_cfg |= ~CMD_CFG_TIMEOUT_MASK;
+    oc4_emmc_regs->sd_emmc_cfg &= ~CFG_RESP_TIMEOUT_MASK;
     // sel4cp_dbg_puts("inside max data timeout2");
-    oc4_emmc_regs->sd_emmc_cfg |= CMD_CFG_TIMEOUT_4S;
+    oc4_emmc_regs->sd_emmc_cfg |= CFG_RESP_TIMEOUT_256;
     // sel4cp_dbg_puts("inside max data timeout3");
 
     return result_ok();

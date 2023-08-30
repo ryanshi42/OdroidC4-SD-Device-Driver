@@ -13,8 +13,8 @@
        <Region name=PD-ELF serial_client-1 addr=0x255000 size=4272>
        <Region name=PD-ELF timer_driver-0 addr=0x257000 size=14784>
        <Region name=PD-ELF timer_driver-1 addr=0x25b000 size=12432>
-       <Region name=PD-ELF mmc_driver-0 addr=0x25f000 size=90384>
-       <Region name=PD-ELF mmc_driver-1 addr=0x276000 size=13904>
+       <Region name=PD-ELF mmc_driver-0 addr=0x25f000 size=90632>
+       <Region name=PD-ELF mmc_driver-1 addr=0x276000 size=14208>
        <Region name=PD-ELF fatfs-0 addr=0x27a000 size=121120>
        <Region name=PD-ELF fatfs-1 addr=0x298000 size=1069328>
 

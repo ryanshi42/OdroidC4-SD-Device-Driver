@@ -46,6 +46,7 @@ result_t sdhci_cmd_get_cmd_index(
         sdhci_cmd_t *sdhci_cmd,
         cmd_index_t *ret_val
 ) {
+    // return result_ok();
     if (sdhci_cmd == NULL) {
         return result_err("NULL `sdhci_cmd` passed to sdhci_cmd_get_cmd_index().");
     }

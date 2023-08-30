@@ -311,6 +311,9 @@ enum meson_gx_mmc_compatible {
 #define   CFG_BL_LEN_512		    (9 << 4)
 #define   CFG_RESP_TIMEOUT_MASK	    GENMASK_UNSAFE(11, 8)
 #define   CFG_RESP_TIMEOUT_256	    (8 << 8)
+
+// // TODO: change the 256 to something more reasonable
+// #define   CFG_RESP_TIMEOUT_256	    (15 << 8)
 #define   CFG_RC_CC_MASK		    GENMASK_UNSAFE(15, 12)
 #define   CFG_RC_CC_16			    (4 << 12)
 #define   CFG_SDCLK_ALWAYS_ON	    BIT(18)

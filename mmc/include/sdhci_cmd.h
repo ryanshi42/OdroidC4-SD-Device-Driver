@@ -12,11 +12,11 @@
  */
 typedef struct sdhci_cmd sdhci_cmd_t;
 struct sdhci_cmd {
-    const char cmd_name[16];
-    cmdtm_t cmdtm; /* Populated with values to put into the command register. */
-    bool use_rca; /* Whether the command uses rca or not. */
-    size_t delay; /* Delay in microseconds to apply after command */
-//    bool is_app_cmd; /* Whether the command is an application command. */
+        const char cmd_name[16];
+        cmdtm_t cmdtm; /* Populated with values to put into the command register. */
+        bool use_rca; /* Whether the command uses rca or not. */
+        size_t delay; /* Delay in microseconds to apply after command */
+        bool is_app_cmd; /* Whether the command is an application command. */
 };
 
 /**

@@ -100,8 +100,6 @@ static void oc4_emmc_regs_mmc_config_clock(struct oc4_emmc_regs *mmc)
 
     // Setting the gpio part
 
-
-
     // clk81_ptr = (volatile uint32_t *)(clk_vaddr + CLK_OFFSET2);
     // clk81 = *clk81_ptr;
 
@@ -179,6 +177,7 @@ result_t oc4_emmc_init(
     sel4cp_dbg_puts("\n\n Called OC4 EMMC.1");
     printf("\n\n Hello world?.");
     sel4cp_dbg_puts("\n\n Called OC4 EMMC.2");
+
 
 
     uint32_t val;
@@ -267,6 +266,7 @@ result_t oc4_emmc_init(
 	sel4cp_dbg_puts("\n\n");
 
 
+
     val = oc4_emmc_regs->sd_emmc_cfg;
     val &= ~CFG_SDCLK_ALWAYS_ON;
     val |= CFG_AUTO_CLK;
@@ -323,11 +323,11 @@ result_t oc4_emmc_init(
     /* Set the Data Timeout to the maximum value. */
     //! This may not work!
     //! Even worse, removing this will screw up the device driver
-    // result_t res = oc4_emmc_regs_set_max_data_timeout(oc4_emmc_regs);
-    // if (result_is_err(res)) {
-    //     return result_err_chain(res, "Failed to set max data timeout in oc4_emmc_init().");
-    // }
-    // sel4cp_dbg_puts("\n\n Finished setting max data timeout");
+    result_t res = oc4_emmc_regs_set_max_data_timeout(oc4_emmc_regs);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to set max data timeout in oc4_emmc_init().");
+    }
+    sel4cp_dbg_puts("\n\n Finished setting max data timeout");
 
 
     sel4cp_dbg_puts("CLK: sd_emmc_cfg:\n\n");

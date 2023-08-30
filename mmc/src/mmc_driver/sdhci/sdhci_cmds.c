@@ -98,7 +98,7 @@ sdhci_cmd_t sdhci_cmds[IDX_SEND_SCR + 1] = {
         [IDX_SET_BLOCKLEN] = {
                 "SET_BLOCKLEN",
                 .cmdtm.CMD_INDEX = 0x10,
-                .cmdtm.CMD_RSPNS_TYPE = CMD_48BIT_RESP,
+                .cmdtm.CMD_RSPNS_TYPE = CMD_NO_RESP,
                 .use_rca = 0,
                 .delay = 0
         },
@@ -220,7 +220,7 @@ sdhci_cmd_t sdhci_cmds[IDX_SEND_SCR + 1] = {
         [IDX_APP_CMD] = {
                 "APP_CMD",
                 .cmdtm.CMD_INDEX = 0x37,
-                .cmdtm.CMD_RSPNS_TYPE = CMD_NO_RESP,
+                .cmdtm.CMD_RSPNS_TYPE = CMD_48BIT_RESP,
                 .use_rca = 0,
                 .delay = 100
         },
@@ -238,6 +238,10 @@ sdhci_cmd_t sdhci_cmds[IDX_SEND_SCR + 1] = {
                 .use_rca = 0,
                 .delay = 0
         },
+
+
+
+
 
         // APP commands must be prefixed by an APP_CMD.
         [IDX_SET_BUS_WIDTH] = {
