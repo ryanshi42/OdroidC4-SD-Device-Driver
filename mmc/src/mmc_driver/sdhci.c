@@ -34,13 +34,6 @@ result_t sdhci_card_init_and_id(
         sdhci_result_t *sdhci_result
 ) {
 
-    //TODO: fix the sdhci card and init function
-    // return 0;
-
-    //? Steps in initilaising SD card
-    //? Send Go Idle command
-    //? Send If Cond command
-
     sel4cp_dbg_puts("Beginning SDHCI init...");
 
     if (sdhci_regs == NULL) {
@@ -57,7 +50,6 @@ result_t sdhci_card_init_and_id(
     }
     *sdhci_result = SD_ERROR;
     result_t res;
-
 
     //? (https://electronics.stackexchange.com/questions/77417/what-is-the-correct-command-sequence-for-microsd-card-initialization-in-spi)
 
@@ -306,9 +298,6 @@ result_t sdhci_card_init_and_id(
         return result_err_chain(res, "Failed to send `IDX_CARD_SELECT` in sdhci_card_init_and_id().");
     }
 
-        
-
-
     // Now we need to start reading the SCR
 
     //? DO NOT REMOVE: this does not work as of now but it might later on.
@@ -336,7 +325,7 @@ result_t sdhci_card_init_and_id(
     // /* Set BLKSIZECNT to 1 block of 8 bytes. */
     // sel4cp_dbg_puts("\nSetting BLKSIZECNT to 1 block of 8 bytes...\n");
 
-    // //! This won't work on the Odroid C4.
+    //! This won't work on the Odroid C4. These commands are instead sent using a data pointer which is what U-Boot and Linux do.
     // res = sdhci_regs_set_block_count(sdhci_regs, 1);
     // if (result_is_err(res)) {
     //     return result_err_chain(res, "Failed to set block count to 1 in sdhci_card_init_and_id().");
@@ -348,11 +337,6 @@ result_t sdhci_card_init_and_id(
 
     sel4cp_dbg_puts("\n Finished, now we need to send SCR. \n");
 
-
-
-
-    //! Current bug, here!
-    //! Want that has powered up
 
     /* Get the SCR by sending the `SEND_SCR` command. We need the SCR to figure
      * out what the allowed bus widths are. */
@@ -1293,7 +1277,6 @@ result_t sdhci_send_cmd(
     sel4cp_dbg_puts("\nSDHCI send commands checks finished\n");
     result_t res;
 
-    //! Get command
     /* Obtain the command from the list of commands we can send. */
     sdhci_cmd_t *sdhci_cmd = NULL;
     res = sdhci_cmds_get_cmd(
@@ -1396,8 +1379,6 @@ result_t sdhci_send_cmd(
     // print_everything(sdhci_regs);
 
     sel4cp_dbg_puts("getting status: NOT checking if it's complete");
-    // char _num[16];
-
 
     // sel4cp_dbg_puts(itoa(sdhci_regs->regs->sd_emmc_status, _num, 16));
     puthex32(sdhci_regs->regs->sd_emmc_status);
@@ -1438,33 +1419,6 @@ result_t sdhci_send_cmd(
     // if (result_is_err(res)) {
     //     return result_err_chain(res, "Failed to set argument in sdhci_send_cmd().");
     // }
-
-    // char tnum[16];
-    // sel4cp_dbg_puts("getting command argument: ");
-
-    // sel4cp_dbg_puts(itoa(sdhci_regs->regs->sd_emmc_cmd_arg, tnum, 16));
-    
-    // sel4cp_dbg_puts("original argument: ");
-
-    // char vnum[16];
-
-    // sel4cp_dbg_puts(itoa(arg, vnum, 16));
-
-
-
-
-    // char snum[16];
-
-
-    // sel4cp_dbg_puts("getting cmd cfg pre pre: ");
-
-    // sel4cp_dbg_puts(itoa(sdhci_regs->regs->sd_emmc_cmd_cfg, snum, 16));
-
-    // char snump[16];
-
-    // sel4cp_dbg_puts("getting cmd cfg pre post pre: ");
-
-    // sel4cp_dbg_puts(itoa(sdhci_regs->regs->sd_emmc_cmd_cfg, snump, 16));
 
     //TODO This could be the breaking code
     /* Get the command register value stored in `sdhci_cmd`. */

@@ -181,7 +181,6 @@ result_t oc4_emmc_init(
     sel4cp_dbg_puts("\n\n Called OC4 EMMC.2");
 
 
-
     uint32_t val;
 
     oc4_emmc_regs_t *oc4_emmc_regs = sdhci_regs->regs;
@@ -195,6 +194,7 @@ result_t oc4_emmc_init(
     sel4cp_dbg_puts("\n\n Called OC4 EMMC.3");
 
     // TODO: Fix this gpio reg stuff
+    //? Apparently U-Boot code will do this already
     // if (oc4_gpio_regs == NULL) {
     //     return result_err("NULL `oc4_gpio_regs` passed to oc4_emmc_init().");
     // }
@@ -207,7 +207,6 @@ result_t oc4_emmc_init(
     //? This is generally not a good idea: see clock
 
     //! WARNING: this code does not work yet -- we should NOT reset the clock!////
-    //! WARNING: this doesn't work
 
     // log_trace("Resetting Clock.");
     // // oc4_emmc_regs_write_unsafe(oc4_emmc_regs, (uint32_t) 0, SD_EMMC_CLOCK);
@@ -239,7 +238,9 @@ result_t oc4_emmc_init(
     // oc4_emmc_regs->sd_emmc_cfg = (uint32_t) 0;
     // sel4cp_dbg_puts("\n\n Finished clock config");
 
-    //! Voltage
+    /* ============================
+     * Initialising the SDHCI SD card controller on the Pi.
+     * ============================ */
 
     log_trace("Configuring clock.");
 	oc4_emmc_regs_mmc_config_clock(oc4_emmc_regs);
@@ -282,49 +283,11 @@ result_t oc4_emmc_init(
     sel4cp_dbg_puts("\n\n Finished enabling clock, auto clock and setting I/Os");
 
 
-    // TODO: Begin RPi specific things
-
-    /* ============================
-     * Initialising the SDHCI SD card controller on the Pi.
-     * ============================ */
-
-    // /* Set control0 to zero. */
-    // res = sdhci_regs_zero_control0(sdhci_regs);
-    // if (result_is_err(res)) {
-    //     return result_err_chain(res, "Failed to zero `control0` in bcm_emmc_init().");
-    // }
-    // /* Set control1 to zero. */
-    // res = sdhci_regs_zero_control1(sdhci_regs);
-    // if (result_is_err(res)) {
-    //     return result_err_chain(res, "Failed to zero `control1` in bcm_emmc_init().");
-    // }
-    // /* Reset the complete host circuit */
-    // res = sdhci_regs_reset_host_circuit(sdhci_regs);
-    // if (result_is_err(res)) {
-    //     return result_err_chain(res, "Failed to reset host circuit in bcm_emmc_init().");
-    // }
-    // /* Wait until host circuit has finished resetting. */
-    // size_t retries_host_circuit = 10000;
-    // bool is_host_circuit_reset = false;
-    // do {
-    //     usleep(10); /* Wait for 10 microseconds. */
-    //     res = sdhci_regs_is_host_circuit_reset(
-    //             sdhci_regs,
-    //             &is_host_circuit_reset
-    //     );
-    //     if (result_is_err(res)) {
-    //         return result_err_chain(res, "Failed to check if host circuit was reset in bcm_emmc_init().");
-    //     }
-    // } while (!is_host_circuit_reset && (retries_host_circuit-- > 0));
-    // if (!is_host_circuit_reset) {
-    //     return result_err("Host circuit did not reset in bcm_emmc_init().");
-    // }
-
-
 
     /* Set the Data Timeout to the maximum value. */
     //! This may not work!
     //! Even worse, removing this will screw up the device driver
+    //! THIS WAS THE MAJOR SOURCE OF ERROR that cost me 3 weeks.
     result_t res = oc4_emmc_regs_set_max_data_timeout(oc4_emmc_regs);
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to set max data timeout in oc4_emmc_init().");
