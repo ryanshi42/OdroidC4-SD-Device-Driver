@@ -65,6 +65,7 @@ result_t sdhci_card_init_and_id(
     sel4cp_dbg_puts("Sending GO_IDLE (CMD0) command...");
     sdhci_result_t sdhci_res_go_idle;
     res = sdhci_send_cmd(
+            NULL,
             sdhci_regs,
             IDX_GO_IDLE_STATE,
             0,
@@ -110,6 +111,7 @@ result_t sdhci_card_init_and_id(
     sel4cp_dbg_puts("Sending IF_COND (CMD8) command...");
     sdhci_result_t sdhci_res_if_cond;
     res = sdhci_send_cmd(
+            NULL,
             sdhci_regs,
             IDX_SEND_IF_COND,
             0x000001AA,
@@ -133,6 +135,7 @@ result_t sdhci_card_init_and_id(
     do {
         usleep(400000);
         res = sdhci_send_cmd(
+                NULL,
                 sdhci_regs,
                 IDX_APP_SEND_OP_COND,
                 ACMD41_ARG_HC,
@@ -209,6 +212,7 @@ result_t sdhci_card_init_and_id(
     /* Send ALL_SEND_CID (CMD2). */
     sel4cp_dbg_puts("Sending ALL_SEND_CID (CMD2) command...");
     res = sdhci_send_cmd(
+            NULL,
             sdhci_regs,
             IDX_ALL_SEND_CID,
             0,
@@ -223,6 +227,7 @@ result_t sdhci_card_init_and_id(
     /* TODO: In theory, loop back to SEND_IF_COND to find additional cards. */
     sel4cp_dbg_puts("Sending SEND_REL_ADDR (CMD3) command...");
     res = sdhci_send_cmd(
+            NULL,
             sdhci_regs,
             IDX_SEND_REL_ADDR,
             0,
@@ -266,6 +271,7 @@ result_t sdhci_card_init_and_id(
 
     sel4cp_dbg_puts("Sending SEND_CSD (CMD9)...");
     res = sdhci_send_cmd(
+            NULL,
             sdhci_regs,
             IDX_SEND_CSD,
             rca,
@@ -277,25 +283,7 @@ result_t sdhci_card_init_and_id(
     }
     sel4cp_dbg_puts("\nSent the CSD successfully.\n");
 
-
-    // Set the block length to be equal to 512
-    sel4cp_dbg_puts("Sending SET_BLOCKLEN (CMD16)...");
-    res = sdhci_send_cmd(
-            sdhci_regs,
-            IDX_SET_BLOCKLEN,
-            512,
-            sdcard,
-            sdhci_result
-    );
-    if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to send `SET_BLOCKLEN` in sdhci_card_init_and_id().");
-    }
-    sel4cp_dbg_puts("\nSet the Blocklen to 512 successfully.\n");
-
-
-
-    //! Current bug, here!
-    //! Want that has powered up
+    //! CAUTION: Do NOT reverse the order of commands. This order of commands is strictly necessary.
 
     /* ===================================
      * Populating `sdcard` with data from SD Card Configuration Register (SCR):
@@ -307,6 +295,7 @@ result_t sdhci_card_init_and_id(
      * write; data block includes PWD setting mode, PWD len, PWD data.*/
     sel4cp_dbg_puts("Sending CARD_SELECT (CMD7)...");
     res = sdhci_send_cmd(
+            NULL,
             sdhci_regs,
             IDX_CARD_SELECT,
             rca,
@@ -317,6 +306,21 @@ result_t sdhci_card_init_and_id(
         return result_err_chain(res, "Failed to send `IDX_CARD_SELECT` in sdhci_card_init_and_id().");
     }
 
+        
+
+
+    // Now we need to start reading the SCR
+
+    //? DO NOT REMOVE: this does not work as of now but it might later on.
+
+    sdhci_data_t sdhci_data = {0};
+
+    sdhci_data_t* sdhci_data_ptr = &sdhci_data;
+
+    sdhci_data_ptr->blocks = 1;
+    sdhci_data_ptr->blocksize = 3;
+
+    puthex32(sdhci_data_ptr->blocksize);
 
     /* Reading from the SD Card Configuration Register (SCR).
      * SEND_SCR command is like a READ_SINGLE but for a block of 8 bytes.*/
@@ -329,25 +333,32 @@ result_t sdhci_card_init_and_id(
         return result_err_chain(res, "Failed to wait for data in progress in sdhci_card_init_and_id().");
     }
 
-    /* Set BLKSIZECNT to 1 block of 8 bytes. */
-    sel4cp_dbg_puts("\nSetting BLKSIZECNT to 1 block of 8 bytes...\n");
+    // /* Set BLKSIZECNT to 1 block of 8 bytes. */
+    // sel4cp_dbg_puts("\nSetting BLKSIZECNT to 1 block of 8 bytes...\n");
 
-    //! This won't work on the Odroid C4.
-    res = sdhci_regs_set_block_count(sdhci_regs, 1);
-    if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to set block count to 1 in sdhci_card_init_and_id().");
-    }
-    res = sdhci_regs_set_block_size(sdhci_regs, 8);
-    if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to set block size to 8 in sdhci_card_init_and_id().");
-    }
+    // //! This won't work on the Odroid C4.
+    // res = sdhci_regs_set_block_count(sdhci_regs, 1);
+    // if (result_is_err(res)) {
+    //     return result_err_chain(res, "Failed to set block count to 1 in sdhci_card_init_and_id().");
+    // }
+    // res = sdhci_regs_set_block_size(sdhci_regs, 8);
+    // if (result_is_err(res)) {
+    //     return result_err_chain(res, "Failed to set block size to 8 in sdhci_card_init_and_id().");
+    // }
 
     sel4cp_dbg_puts("\n Finished, now we need to send SCR. \n");
+
+
+
+
+    //! Current bug, here!
+    //! Want that has powered up
 
     /* Get the SCR by sending the `SEND_SCR` command. We need the SCR to figure
      * out what the allowed bus widths are. */
     sel4cp_dbg_puts("Sending SEND_SCR (CMD51) command...");
     res = sdhci_send_cmd(
+            sdhci_data_ptr,
             sdhci_regs,
             IDX_SEND_SCR,
             0,
@@ -409,6 +420,22 @@ result_t sdhci_card_init_and_id(
         return result_err("Failed to read SCR in sdhci_card_init_and_id().");
     }
 
+    // Set the block length to be equal to 512
+    sel4cp_dbg_puts("Sending SET_BLOCKLEN (CMD16)...");
+    res = sdhci_send_cmd(
+            NULL,
+            sdhci_regs,
+            IDX_SET_BLOCKLEN,
+            512,
+            sdcard,
+            sdhci_result
+    );
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to send `SET_BLOCKLEN` in sdhci_card_init_and_id().");
+    }
+    sel4cp_dbg_puts("\nSet the Blocklen to 512 successfully.\n");
+
+
     *sdhci_result = SD_OK;
     return result_ok();
 }
@@ -455,6 +482,7 @@ result_t sdhci_set_max_bus_width(
     if (is_bus_width_4_bit) {
         sel4cp_dbg_puts("Setting bus width to 4 bit...");
         res = sdhci_send_cmd(
+                NULL,
                 sdhci_regs,
                 IDX_SET_BUS_WIDTH,
                 rca | 2,
@@ -649,6 +677,7 @@ result_t sdhci_transfer_blocks(
      * SET_BLOCK_COUNT command to indicate the number of blocks to transfer. */
     if (num_blocks > 1 && is_set_block_count_cmd_supported) {
         res = sdhci_send_cmd(
+                NULL,
                 sdhci_regs,
                 IDX_SET_BLOCKCNT,
                 num_blocks,
@@ -695,6 +724,7 @@ result_t sdhci_transfer_blocks(
     // }
     /* Send the Transfer Command. */
     res = sdhci_send_cmd(
+            NULL,
             sdhci_regs,
             transfer_cmd,
             block_addr,
@@ -739,6 +769,7 @@ result_t sdhci_transfer_blocks(
         *sdhci_result = SD_TIMEOUT;
         if (!is_write && num_blocks > 1) {
             res = sdhci_send_cmd(
+                    NULL,
                     sdhci_regs,
                     IDX_STOP_TRANS,
                     0,
@@ -769,6 +800,7 @@ result_t sdhci_transfer_blocks(
      * that there are no more blocks to be transferred. */
     if (num_blocks > 1 && !is_set_block_count_cmd_supported) {
         res = sdhci_send_cmd(
+                NULL,
                 sdhci_regs,
                 IDX_STOP_TRANS,
                 0,
@@ -1039,15 +1071,15 @@ result_t sdhci_wait_for_cmd_in_progress(
                 sdhci_regs,
                 &cmd_in_progress
         );
-        if (cmd_in_progress) {
-            sel4cp_dbg_puts("cmd in progress\n");
-            puthex32(sdhci_regs->regs->sd_emmc_status);
-            sel4cp_dbg_puts("\n");
-            puthex32(sdhci_regs->regs->sd_emmc_status & STATUS_END_OF_CHAIN);
-            if (sdhci_regs->regs->sd_emmc_status & STATUS_END_OF_CHAIN) sel4cp_dbg_puts("what the hell\n");
-            // puthex32(STATUS_END_OF_CHAIN);
+        // if (cmd_in_progress) {
+        //     sel4cp_dbg_puts("cmd in progress\n");
+        //     puthex32(sdhci_regs->regs->sd_emmc_status);
+        //     sel4cp_dbg_puts("\n");
+        //     puthex32(sdhci_regs->regs->sd_emmc_status & STATUS_END_OF_CHAIN);
+        //     if (sdhci_regs->regs->sd_emmc_status & STATUS_END_OF_CHAIN) sel4cp_dbg_puts("what the hell\n");
+        //     // puthex32(STATUS_END_OF_CHAIN);
 
-        }
+        // }
         if (result_is_err(res_cmd)) {
             return result_err_chain(res_cmd, "Failed to check if command is in progress in sdhci_wait_for_cmd_in_progress().");
         }
@@ -1240,6 +1272,7 @@ result_t sdhci_wait_for_data_in_progress(
 
 //! Send CMD
 result_t sdhci_send_cmd(
+        sdhci_data_t *data,
         sdhci_regs_t *sdhci_regs,
         size_t sdhci_cmd_index,
         uint32_t arg,
@@ -1327,6 +1360,7 @@ result_t sdhci_send_cmd(
         /* `app_cmd_arg` will be 0 if no RCA and will be RCA otherwise. This is
          * a recursive call to ourselves. */
         res = sdhci_send_cmd(
+                NULL,
                 sdhci_regs,
                 app_cmd_index, /* This will change depending on if RCA exists or not. */
                 app_cmd_arg,
@@ -1467,10 +1501,6 @@ result_t sdhci_send_cmd(
     // }
 
     // oc4_emmc_regs_mmc_setup_cmd(mmc, data, cmd);
-
-    // if (sdhci_regs->regs->sd_emmc_cmd_dat) {
-    //     sdhci_regs->regs->sd_emmc_cfg &= ~CFG_BL_LEN_MASK;
-
     //     //! These won't work rn
 	// 	// sdhci_regs->regs->sd_emmc_cfg |= ilog2(data->blocksize) << CFG_BL_LEN_SHIFT;
 
@@ -1589,17 +1619,21 @@ result_t sdhci_send_cmd(
     // meson_mmc_cmd |= CMD_CFG_RESP_128;
 
     //: Need to deal with data at a later time
-	// if (data) {
-	// 	cfg = sdhci_regs.regs.sd_emmc_cmd_cfg;
-	// 	cfg &= ~CFG_BL_LEN_MASK;
-	// 	cfg |= ilog2(data.blocksize) << CFG_BL_LEN_SHIFT;
-	// 	meson_write(mmc, cfg, MESON_SD_EMMC_CFG);
+	if (data) {
+		uint32_t cfg = sdhci_regs->regs->sd_emmc_cfg;
+		cfg &= ~CFG_BL_LEN_MASK;
 
-	// 	if (data.flags == MMC_DATA_WRITE)
-	// 		meson_mmc_cmd |= CMD_CFG_DATA_WR;
+        //? Warning: here we are not taking the log2 of the data block size.
+		cfg |= (data->blocksize) << CFG_BL_LEN_SHIFT;
 
-	// 	meson_mmc_cmd |= CMD_CFG_DATA_IO | CMD_CFG_BLOCK_MODE | data.blocks;
-	// }
+        sdhci_regs->regs->sd_emmc_cfg = cfg;
+
+		// if (data.flags == MMC_DATA_WRITE)
+		// meson_mmc_cmd |= CMD_CFG_DATA_WR;
+
+		meson_mmc_cmd |= CMD_CFG_DATA_IO | CMD_CFG_BLOCK_MODE | data->blocks;
+		// meson_mmc_cmd |= BIT(23);
+	}
 
 	meson_mmc_cmd |= CMD_CFG_TIMEOUT_4S | CMD_CFG_OWNER | CMD_CFG_END_OF_CHAIN;
 
@@ -1733,12 +1767,15 @@ result_t sdhci_send_cmd(
     puthex32(sdhci_regs->regs->sd_emmc_status);
     sel4cp_dbg_puts("\n\n");
 
-    sel4cp_dbg_puts("Resp:\n\n");
-    puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp);
-    puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp1);
-    puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp2);
-    puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp3);
-    sel4cp_dbg_puts("\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_cmd_dat);
+
+
+    // sel4cp_dbg_puts("Resp:\n\n");
+    // puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp);
+    // puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp1);
+    // puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp2);
+    // puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp3);
+    // sel4cp_dbg_puts("\n\n");
 
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to wait for command in progress in sdhci_send_cmd().");
@@ -1752,15 +1789,15 @@ result_t sdhci_send_cmd(
     sel4cp_dbg_puts("\n\n");
 
 
-    sel4cp_dbg_puts("Command Config:\n\n");
-    puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
-    sel4cp_dbg_puts("\n\n");
+    // sel4cp_dbg_puts("Command Config:\n\n");
+    // puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
+    // sel4cp_dbg_puts("\n\n");
 
-    sel4cp_dbg_puts("Arg:\n\n");
-    puthex32(sdhci_regs->regs->sd_emmc_cmd_arg);
-    sel4cp_dbg_puts("\n\n");
-    puthex32(arg);
-    sel4cp_dbg_puts("\n\n");
+    // sel4cp_dbg_puts("Arg:\n\n");
+    // puthex32(sdhci_regs->regs->sd_emmc_cmd_arg);
+    // sel4cp_dbg_puts("\n\n");
+    // puthex32(arg);
+    // sel4cp_dbg_puts("\n\n");
 
 
     /* Reset status bits */
@@ -1770,22 +1807,22 @@ result_t sdhci_send_cmd(
     sdhci_regs->regs->sd_emmc_status = STATUS_MASK;
 
     //! Doesn't write properly
-    sel4cp_dbg_puts("New Status:\n\n");
-    puthex32(sdhci_regs->regs->sd_emmc_status);
-    puthex32(sdhci_regs->regs->sd_emmc_status);
+    // sel4cp_dbg_puts("New Status:\n\n");
+    // puthex32(sdhci_regs->regs->sd_emmc_status);
+    // puthex32(sdhci_regs->regs->sd_emmc_status);
 
-    sel4cp_dbg_puts("\n\n");
+    // sel4cp_dbg_puts("\n\n");
 
-    sel4cp_dbg_puts("Clock:\n\n");
-    puthex32(sdhci_regs->regs->sd_emmc_clock);
-    sel4cp_dbg_puts("\n\n");
+    // sel4cp_dbg_puts("Clock:\n\n");
+    // puthex32(sdhci_regs->regs->sd_emmc_clock);
+    // sel4cp_dbg_puts("\n\n");
 
-    sel4cp_dbg_puts("Resp:\n\n");
-    puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp);
-    puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp1);
-    puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp2);
-    puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp3);
-    sel4cp_dbg_puts("\n\n");
+    // sel4cp_dbg_puts("Resp:\n\n");
+    // puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp);
+    // puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp1);
+    // puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp2);
+    // puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp3);
+    // sel4cp_dbg_puts("\n\n");
 
     // sel4cp_dbg_puts("Fake Resp:\n\n");
     // sdhci_regs->regs->sd_emmc_cmd_rsp = 0x6969;
@@ -1835,14 +1872,21 @@ result_t sdhci_send_cmd(
             if (result_is_err(res)) {
                 return result_err_chain(res, "Failed to set status in sdhci_send_cmd().");
             }
+            sel4cp_dbg_puts("\nSet status successfully.\n");
+
             bool resp_r1_has_err = true;
             res = sdhci_resp_r1_has_error(resp0, &resp_r1_has_err);
+
             if (result_is_err(res)) {
                 return result_err_chain(res, "Failed to check if resp_r1 has error in sdhci_send_cmd().");
             }
+            sel4cp_dbg_puts("\nThere is no error.\n");
+            // puthex32(resp_r1_has_err);
+
             if (resp_r1_has_err) {
                 return result_err("Response from SD card indicates error in `CMD_BUSY48BIT_RESP` case in sdhci_send_cmd().");
             }
+            sel4cp_dbg_puts("\nThe response from SD card indicates that there is no error.\n");
             *sdhci_result = SD_OK;
             return result_ok();
         }

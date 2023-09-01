@@ -406,4 +406,4 @@ result_t oc4_emmc_regs_get_data(oc4_emmc_regs_t *oc4_emmc_regs, uint32_t *ret_va
 result_t oc4_emmc_regs_set_data(oc4_emmc_regs_t *oc4_emmc_regs, uint32_t val);
 result_t oc4_emmc_regs_is_cmd_timeout_err(oc4_emmc_regs_t *oc4_emmc_regs, bool *ret_val);
 result_t oc4_emmc_regs_get_interrupt_raw32(oc4_emmc_regs_t *oc4_emmc_regs, uint32_t *ret_val);
-result_t oc4_emmc_regs_set_bus_width_4(oc4_emmc_regs_t *oc4_emmc_regs, bool val);
+result_t oc4_emmc_regs_set_bus_width_4(oc4_emmc_regs_t *oc4_emmc_regs);

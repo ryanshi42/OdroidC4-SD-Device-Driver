@@ -241,6 +241,8 @@ result_t oc4_emmc_regs_set_block_size(
     if (oc4_emmc_regs == NULL) {
         return result_err("NULL `oc4_emmc_regs` passed to oc4_emmc_regs_set_blk_size().");
     }
+    // cfg &= ~CFG_BL_LEN_MASK;
+	// cfg |= val << CFG_BL_LEN_SHIFT;
     // return result_ok();
     return result_err("I should never be called!");
     // return blksizecnt_set_blksize(&oc4_emmc_regs->blksizecnt, val);
@@ -254,9 +256,10 @@ result_t oc4_emmc_regs_set_block_count(
     if (oc4_emmc_regs == NULL) {
         return result_err("NULL `oc4_emmc_regs` passed to oc4_emmc_regs_set_blk_cnt().");
     }
-    // return result_ok();
-    return result_err("I should never be called!");
 
+    // return result_ok();
+
+    return result_err("I should never be called!");
     // return blksizecnt_set_blkcnt(&oc4_emmc_regs->blksizecnt, val);
 }
 
@@ -298,10 +301,10 @@ result_t oc4_emmc_regs_is_data_in_progress(
     if (ret_val == NULL) {
         return result_err("NULL `ret_val` passed to oc4_emmc_regs_is_data_in_progress().");
     }
-    // *ret_val = oc4_emmc_regs->sd_emmc_status;
-    *ret_val = true;
-    // return result_ok(); 
-    return result_err("I should never be called!");
+    *ret_val = (oc4_emmc_regs->sd_emmc_status & STATUS_CORE_BUSY) || (oc4_emmc_regs->sd_emmc_status & STATUS_DESC_BUSY);
+    // *ret_val = true;
+    return result_ok(); 
+    // return result_err("I should never be called!");
 }
 
 
@@ -547,8 +550,7 @@ result_t oc4_emmc_regs_set_data(
 }
 
 result_t oc4_emmc_regs_set_bus_width_4(
-        oc4_emmc_regs_t *oc4_emmc_regs,
-        bool val
+        oc4_emmc_regs_t *oc4_emmc_regs
 ) {
     if (oc4_emmc_regs == NULL) {
         return result_err("NULL `oc4_emmc_regs` passed to oc4_emmc_regs_use_4_data_lines().");

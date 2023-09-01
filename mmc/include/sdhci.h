@@ -7,6 +7,7 @@
 #include "log.h"
 #include "arith.h"
 #include "sdhci_result.h"
+#include "sdhci_data.h"
 #include "sdhci_cmds.h"
 #include "sdhci_cmd.h"
 #include "cmd_rspns_type.h"
@@ -184,6 +185,7 @@ result_t sdhci_wait_for_data_in_progress(
  * @return
  */
 result_t sdhci_send_cmd(
+        sdhci_data_t *sdhci_data,
         sdhci_regs_t *sdhci_regs,
         size_t sdhci_cmd_index,
         uint32_t arg,
