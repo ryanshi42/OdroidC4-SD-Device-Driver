@@ -307,9 +307,11 @@ result_t sdhci_card_init_and_id(
     sdhci_data_t* sdhci_data_ptr = &sdhci_data;
 
     sdhci_data_ptr->blocks = 1;
-    sdhci_data_ptr->blocksize = 3;
 
-    puthex32(sdhci_data_ptr->blocksize);
+    //? We take 3 as the block size is 2 ^ 3
+    sdhci_data_ptr->blocksize = 8;
+
+    // puthex32(sdhci_data_ptr->blocksize);
 
     /* Reading from the SD Card Configuration Register (SCR).
      * SEND_SCR command is like a READ_SINGLE but for a block of 8 bytes.*/
@@ -371,6 +373,8 @@ result_t sdhci_card_init_and_id(
         //     return result_err_chain(res, "Failed to check if read ready in sdhci_card_init_and_id().");
         // }
         is_read_ready = true;
+
+        //! this data does not work properly.
         if (is_read_ready) {
             /* Read the SCR from the data register. */
             uint32_t data = 0;
@@ -381,12 +385,17 @@ result_t sdhci_card_init_and_id(
             if (num_scr_reads == 0) {
                 /* Save low portion of SCR register to sdcard. */
                 res = sdcard_set_scr_raw32_lo(sdcard, data);
+                sel4cp_dbg_puts("SCR LO is \n");
+                puthex32(data);
                 if (result_is_err(res)) {
                     return result_err_chain(res, "Failed to set SCR raw32 lo in sdhci_card_init_and_id().");
                 }
             } else {
                 /* Save high portion of SCR register to sdcard. */
                 res = sdcard_set_scr_raw32_hi(sdcard, data);
+                sel4cp_dbg_puts("SCR HI is \n");
+                puthex32(data);
+
                 if (result_is_err(res)) {
                     return result_err_chain(res, "Failed to set SCR raw32 hi in sdhci_card_init_and_id().");
                 }
@@ -404,20 +413,20 @@ result_t sdhci_card_init_and_id(
         return result_err("Failed to read SCR in sdhci_card_init_and_id().");
     }
 
-    // Set the block length to be equal to 512
-    sel4cp_dbg_puts("Sending SET_BLOCKLEN (CMD16)...");
-    res = sdhci_send_cmd(
-            NULL,
-            sdhci_regs,
-            IDX_SET_BLOCKLEN,
-            512,
-            sdcard,
-            sdhci_result
-    );
-    if (result_is_err(res)) {
-        return result_err_chain(res, "Failed to send `SET_BLOCKLEN` in sdhci_card_init_and_id().");
-    }
-    sel4cp_dbg_puts("\nSet the Blocklen to 512 successfully.\n");
+    // // Set the block length to be equal to 512
+    // sel4cp_dbg_puts("Sending SET_BLOCKLEN (CMD16)...");
+    // res = sdhci_send_cmd(
+    //         NULL,
+    //         sdhci_regs,
+    //         IDX_SET_BLOCKLEN,
+    //         512,
+    //         sdcard,
+    //         sdhci_result
+    // );
+    // if (result_is_err(res)) {
+    //     return result_err_chain(res, "Failed to send `SET_BLOCKLEN` in sdhci_card_init_and_id().");
+    // }
+    // sel4cp_dbg_puts("\nSet the Blocklen to 512 successfully.\n");
 
 
     *sdhci_result = SD_OK;
@@ -631,21 +640,21 @@ result_t sdhci_transfer_blocks(
     sel4cp_dbg_puts("\nSD card can wait for data in progress\n");
 
     /* Determine the interrupt and command values for the transfer. */
-    int ready_interrupt;
-    int transfer_cmd;
+    // int ready_interrupt;
+    int read_or_write_cmd;
     if (is_write) {
-        ready_interrupt = INT_WRITE_RDY;
+        // ready_interrupt = INT_WRITE_RDY;
         if (num_blocks == 1) {
-            transfer_cmd = IDX_WRITE_SINGLE;
+            read_or_write_cmd = IDX_WRITE_SINGLE;
         } else {
-            transfer_cmd = IDX_WRITE_MULTI;
+            read_or_write_cmd = IDX_WRITE_MULTI;
         }
     } else {
-        ready_interrupt = INT_READ_RDY;
+        // ready_interrupt = INT_READ_RDY;
         if (num_blocks == 1) {
-            transfer_cmd = IDX_READ_SINGLE;
+            read_or_write_cmd = IDX_READ_SINGLE;
         } else {
-            transfer_cmd = IDX_READ_MULTI;
+            read_or_write_cmd = IDX_READ_MULTI;
         }
     }
     /* Check to see if the card supports multi block transfers. */
@@ -690,7 +699,7 @@ result_t sdhci_transfer_blocks(
         block_addr = lba;
     }
 
-    sel4cp_dbg_puts("\nSDHCI standard capacity\n");
+    sel4cp_dbg_puts("\nSDHCI card is indeed standard capacity\n");
 
     /* Set BLKSIZECNT to number of blocks * 512 bytes, send the read or write command.
      * Once the data transfer has started and the TM_BLKCNT_EN bit in the CMDTM
@@ -698,6 +707,20 @@ result_t sdhci_transfer_blocks(
      * as the data blocks are transferred and stops the transfer once BLKCNT
      * reaches 0.
      * TODO: TM_AUTO_CMD12 - is this needed?  What effect does it have? */
+
+    sdhci_data_t sdhci_data = {0};
+
+    sdhci_data_t* sdhci_data_ptr = &sdhci_data;
+
+    sdhci_data_ptr->blocks = num_blocks;
+
+    // Blocksize is 9
+    sdhci_data_ptr->blocksize = block_size;
+
+    if (is_write)
+        sdhci_data_ptr->flags |= MMC_DATA_WRITE;
+
+    //! This is RPi specific.
     // res = sdhci_regs_set_block_count(sdhci_regs, num_blocks);
     // if (result_is_err(res)) {
     //     return result_err_chain(res, "Failed to set block count to 1 in sdhci_card_init_and_id().");
@@ -708,9 +731,9 @@ result_t sdhci_transfer_blocks(
     // }
     /* Send the Transfer Command. */
     res = sdhci_send_cmd(
-            NULL,
+            sdhci_data_ptr,
             sdhci_regs,
-            transfer_cmd,
+            read_or_write_cmd,
             block_addr,
             sdcard,
             sdhci_result
@@ -718,67 +741,78 @@ result_t sdhci_transfer_blocks(
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to send transfer command in sdhci_transfer_blocks().");
     }
-    /* Transfer all blocks. */
-    size_t blocks_done = 0;
-    while (blocks_done < num_blocks) {
-        /* Wait for ready interrupt for the next block. */
-        res = sdhci_wait_for_interrupt(
-                sdhci_regs,
-                ready_interrupt,
-                sdhci_result
-        );
-        if (result_is_err(res)) {
-            return result_err_chain(res, "Failed to wait for ready interrupt in sdhci_transfer_blocks().");
-        }
-        /* Loop through the block 4 bytes (32 bits) at a time. */
-        for (size_t i = 0; i < (block_size / sizeof(uint32_t)); i++) {
-            if (is_write) {
-                res = sdhci_regs_set_data(sdhci_regs, ((uint32_t *) buffer)[i]);
-                if (result_is_err(res)) {
-                    return result_err_chain(res, "Failed to set data in sdhci_transfer_blocks().");
-                }
-            } else {
-                res = sdhci_regs_get_data(sdhci_regs, &((uint32_t *) buffer)[i]);
-                if (result_is_err(res)) {
-                    return result_err_chain(res, "Failed to get data in sdhci_transfer_blocks().");
-                }
-            }
-        }
-        blocks_done++;
-        buffer += block_size;
-    }
 
-    /* If not all bytes were read/written, the operation timed out. */
-    if (blocks_done != num_blocks) {
-        *sdhci_result = SD_TIMEOUT;
-        if (!is_write && num_blocks > 1) {
-            res = sdhci_send_cmd(
-                    NULL,
-                    sdhci_regs,
-                    IDX_STOP_TRANS,
-                    0,
-                    sdcard,
-                    sdhci_result
-            );
-            if (result_is_err(res)) {
-                return result_err_chain(res, "Failed to send STOP_TRANSMISSION command in sdhci_transfer_blocks().");
-            }
-        }
-    }
-    sel4cp_dbg_puts("\nAll blocks transferred\n");
+    sel4cp_dbg_puts("\nSent write type commands done.\n");
 
-    /* For a write operation, ensure DATA_DONE interrupt before we stop transmission. */
-    if (is_write) {
-        res = sdhci_wait_for_interrupt(
-                sdhci_regs,
-                INT_DATA_DONE,
-                sdhci_result
-        );
-        if (result_is_err(res)) {
-            return result_err_chain(res, "Failed to wait for data done interrupt in sdhci_transfer_blocks().");
-        }
-    }
-    sel4cp_dbg_puts("\n Data done interrupt correctly set\n");
+    //? The issue with transferring blocks in the Odroid C4 is super different to the RPi3.
+    //? You would load blocks one by one in the RPi, but you need to set up some other DMA addresses otherwise.
+
+    // /* Transfer all blocks. */
+    // size_t blocks_done = 0;
+    // while (blocks_done < num_blocks) {
+    //     /* Wait for ready interrupt for the next block. */
+    //     res = sdhci_wait_for_interrupt(
+    //             sdhci_regs,
+    //             ready_interrupt,
+    //             sdhci_result
+    //     );
+    //     if (result_is_err(res)) {
+    //         return result_err_chain(res, "Failed to wait for ready interrupt in sdhci_transfer_blocks().");
+    //     }
+
+    //     //! This is RPi specific.
+    //     /* Loop through the block 4 bytes (32 bits) at a time. */
+    //     for (size_t i = 0; i < (block_size / sizeof(uint32_t)); i++) {
+    //         if (is_write) {
+    //             res = sdhci_regs_set_data(sdhci_regs, ((uint32_t *) buffer)[i]);
+    //             if (result_is_err(res)) {
+    //                 return result_err_chain(res, "Failed to set data in sdhci_transfer_blocks().");
+    //             }
+    //         } else {
+    //             res = sdhci_regs_get_data(sdhci_regs, &((uint32_t *) buffer)[i]);
+    //             if (result_is_err(res)) {
+    //                 return result_err_chain(res, "Failed to get data in sdhci_transfer_blocks().");
+    //             }
+    //         }
+    //     }
+    //     blocks_done++;
+    //     buffer += block_size;
+    // }
+
+    // /* If not all bytes were read/written, the operation timed out. */
+    // if (blocks_done != num_blocks) {
+    //     *sdhci_result = SD_TIMEOUT;
+    //     if (!is_write && num_blocks > 1) {
+    //         res = sdhci_send_cmd(
+    //                 NULL,
+    //                 sdhci_regs,
+    //                 IDX_STOP_TRANS,
+    //                 0,
+    //                 sdcard,
+    //                 sdhci_result
+    //         );
+    //         if (result_is_err(res)) {
+    //             return result_err_chain(res, "Failed to send STOP_TRANSMISSION command in sdhci_transfer_blocks().");
+    //         }
+    //     }
+    // }
+
+    sel4cp_dbg_puts("\nAll blocks transferred with no timeout.\n");
+
+    //! This is also RPi3 specific and will do nothing. There is probably some equivalent on the Odroid C4 though.
+    //TODO: Fix this.
+    // /* For a write operation, ensure DATA_DONE interrupt before we stop transmission. */
+    // if (is_write) {
+    //     res = sdhci_wait_for_interrupt(
+    //             sdhci_regs,
+    //             INT_DATA_DONE,
+    //             sdhci_result
+    //     );
+    //     if (result_is_err(res)) {
+    //         return result_err_chain(res, "Failed to wait for data done interrupt in sdhci_transfer_blocks().");
+    //     }
+    // }
+    // sel4cp_dbg_puts("\n Data done interrupt correctly set\n");
 
     /* For a multi-block operation, if SET_BLOCKCNT is not supported, we need to indicate
      * that there are no more blocks to be transferred. */
@@ -795,7 +829,7 @@ result_t sdhci_transfer_blocks(
             return result_err_chain(res, "Failed to send STOP_TRANSMISSION command in sdhci_transfer_blocks().");
         }
     }
-    sel4cp_dbg_puts("\n Transmission stpoped successfully \n");
+    sel4cp_dbg_puts("\n Transmission stopped successfully. \n");
 
     *sdhci_result = SD_OK;
     return result_ok();
@@ -939,6 +973,7 @@ result_t sdhci_set_sd_clock(sdhci_regs_t *sdhci_regs, uint32_t freq) {
 }
 
 //! This seems like a Raspberry Pi specific function.
+//TODO: Fix this.
 result_t sdhci_wait_for_interrupt(
         sdhci_regs_t *sdhci_regs,
         uint32_t interrupt_mask,
@@ -1089,7 +1124,7 @@ result_t sdhci_wait_for_cmd_in_progress(
     return result_ok();
 }
 
-void print_everything(sdhci_regs_t* sdhci_regs) {
+void print_emmc_registers(sdhci_regs_t* sdhci_regs) {
 
     sel4cp_dbg_puts("\nPrinting Everything\n");
 
@@ -1376,7 +1411,7 @@ result_t sdhci_send_cmd(
 
     sel4cp_dbg_puts("\nApp commands check done\n");
 
-    // print_everything(sdhci_regs);
+    // print_emmc_registers(sdhci_regs);
 
     sel4cp_dbg_puts("getting status: NOT checking if it's complete");
 
@@ -1503,7 +1538,6 @@ result_t sdhci_send_cmd(
     // sel4cp_dbg_puts(itoa(sdhci_regs->regs->sd_emmc_cmd_arg, snum, 16));
 
     //     // sdhci_regs->regs->sd_emmc_cmd_arg = 1;
-    //     //! Changing this changes the cfg register?
 
     sel4cp_dbg_puts("\n========================================================\n");
     sel4cp_dbg_puts("\nBeginning send command\n");
@@ -1577,16 +1611,20 @@ result_t sdhci_send_cmd(
 		uint32_t cfg = sdhci_regs->regs->sd_emmc_cfg;
 		cfg &= ~CFG_BL_LEN_MASK;
 
-        //? Warning: here we are not taking the log2 of the data block size.
-		cfg |= (data->blocksize) << CFG_BL_LEN_SHIFT;
+		cfg |= ilog2(data->blocksize) << CFG_BL_LEN_SHIFT;
+
+        // puthex32(ilog2(data->blocksize));
+        // sel4cp_dbg_puts("ajdshflkadsjhf");
 
         sdhci_regs->regs->sd_emmc_cfg = cfg;
 
-		// if (data.flags == MMC_DATA_WRITE)
-		// meson_mmc_cmd |= CMD_CFG_DATA_WR;
+		if (data->flags == MMC_DATA_WRITE) 
+            meson_mmc_cmd |= CMD_CFG_DATA_WR;
 
 		meson_mmc_cmd |= CMD_CFG_DATA_IO | CMD_CFG_BLOCK_MODE | data->blocks;
 		// meson_mmc_cmd |= BIT(23);
+
+        
 	}
 
 	meson_mmc_cmd |= CMD_CFG_TIMEOUT_4S | CMD_CFG_OWNER | CMD_CFG_END_OF_CHAIN;
@@ -1605,10 +1643,7 @@ result_t sdhci_send_cmd(
 
     sel4cp_dbg_puts("Post CMD-arg Registers:\n\n");
 
-    print_everything(sdhci_regs);
-
-
-
+    print_emmc_registers(sdhci_regs);
 
 
     // // puthex32(sdhci_regs->regs->sd_emmc_cmd_arg);
@@ -1633,11 +1668,6 @@ result_t sdhci_send_cmd(
 
 
 
-
-
-
-
-
     //! To fix; this doesn't work at the moment
     // uint32_t status;
 
@@ -1658,7 +1688,6 @@ result_t sdhci_send_cmd(
     //     return result_err("EIO");
 
     //TODO Refactor into a function later
-
 
 	// if (data && data->flags == MMC_DATA_WRITE)
 	// 	free(pdata->w_buf);
@@ -1696,17 +1725,6 @@ result_t sdhci_send_cmd(
 
     // sel4cp_dbg_puts("\nGotten interrupt\n");
     sel4cp_dbg_puts("\nWaiting for CMD to finish...\n");
-
-    sel4cp_dbg_puts("\nx1\n");
-
-    // sdhci_regs->regs->sd_emmc_status = STATUS_MASK;
-
-    // puthex32(sdhci_regs->regs->sd_emmc_status);
-
-    // puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
-
-    // puthex32(sdhci_regs->regs->sd_emmc_cmd_arg);
-
 
     /* Wait for command in progress (this is actually the interrupt we are waiting for). */
     sel4cp_dbg_puts("Status before waiting for command:\n\n");
@@ -1806,7 +1824,6 @@ result_t sdhci_send_cmd(
     // puthex32(resp0);
     // puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp);
     // sel4cp_dbg_puts("\n\n");
-    // // puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp);
 
     // sel4cp_dbg_puts("\n\n");
 
@@ -1912,34 +1929,6 @@ result_t sdhci_send_cmd(
                      * the argument. */
                     sel4cp_dbg_puts("\nGotten cmd response type, it's CMD_48BIT_RESP, 0x08\n");
 
-                    // TODO: fix IFCOND
-
-                    // char snum[16];
-                    // sel4cp_dbg_puts("getting arg: ");
-
-                    // sel4cp_dbg_puts(itoa(arg, snum, 16));
-
-                    // sel4cp_dbg_puts("getting resp0: ");
-
-                    // sel4cp_dbg_puts(itoa(resp0, snum, 16));
-                    // sel4cp_dbg_puts(itoa(sdhci_regs->regs->sd_emmc_cmd_rsp, snum, 16));
-
-                    // sel4cp_dbg_puts("getting resp1: ");
-
-                    // sel4cp_dbg_puts(itoa(sdhci_regs->regs->sd_emmc_cmd_rsp1, snum, 16));
-
-                    // sel4cp_dbg_puts("getting resp2: ");
-
-                    // sel4cp_dbg_puts(itoa(sdhci_regs->regs->sd_emmc_cmd_rsp2, snum, 16));
-
-                    // sel4cp_dbg_puts("getting resp3: ");
-
-                    // sel4cp_dbg_puts(itoa(sdhci_regs->regs->sd_emmc_cmd_rsp3, snum, 16));
-
-                    // TODO fix
-
-                    // resp0 = arg;
-
                     if (resp0 == arg) {
                         *sdhci_result = SD_OK;
                         return result_ok();
@@ -2039,21 +2028,6 @@ result_t sdhci_send_cmd(
                 res = sdcard_set_sdcard_data(sdcard, resp0, resp1, resp2, resp3);
                 sel4cp_dbg_puts("getting resp0 and setting as csd: ");
 
-                char fnum[16];
-                sel4cp_dbg_puts(itoa(resp0, fnum, 16));
-                sel4cp_dbg_puts("\n");
-
-                char gnum[16];
-                sel4cp_dbg_puts(itoa(resp1, gnum, 16));
-                sel4cp_dbg_puts("\n");
-
-                char hnum[16];
-                sel4cp_dbg_puts(itoa(resp2, hnum, 16));
-                sel4cp_dbg_puts("\n");
-
-                char inum[16];
-                sel4cp_dbg_puts(itoa(resp3, inum, 16));
-                sel4cp_dbg_puts("\n");
                 if (result_is_err(res)) {
                     return result_err_chain(res, "Failed to set CSD in sdhci_send_cmd().");
                 }
@@ -2094,24 +2068,6 @@ result_t sdhci_send_cmd(
                     return result_err_chain(res, "Failed to set CID in sdhci_send_cmd().");
                 }
 
-
-                sel4cp_dbg_puts("getting resp0 and setting as cid: ");
-
-                char fnum[16];
-                sel4cp_dbg_puts(itoa(resp0, fnum, 16));
-                sel4cp_dbg_puts("\n");
-
-                char gnum[16];
-                sel4cp_dbg_puts(itoa(resp1, gnum, 16));
-                sel4cp_dbg_puts("\n");
-
-                char hnum[16];
-                sel4cp_dbg_puts(itoa(resp2, hnum, 16));
-                sel4cp_dbg_puts("\n");
-
-                char inum[16];
-                sel4cp_dbg_puts(itoa(resp3, inum, 16));
-                sel4cp_dbg_puts("\n");
                 *sdhci_result = SD_OK;
                 return result_ok();
             }

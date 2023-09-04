@@ -36,7 +36,6 @@ void init(void) {
     // res = false;
     // result_printf(res);
     // return;
-    // seL4_DebugPutChar('h');
 
 
     /* Initialise `printf`. The `log.h` library depends on `printf` being

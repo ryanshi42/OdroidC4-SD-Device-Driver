@@ -27,3 +27,5 @@
  * @return 0 - 32 are only possible answers given uint32_t is 32 bits.
  */
 uint_fast8_t arith_find_most_sig_bit_set(uint32_t x);
+
+int ilog2 (uint32_t value);

@@ -60,6 +60,8 @@ result_t mmc_driver_e2e_read_write_simple(
         result_printf(res);
         return result_ok();
     }
+
+    sel4cp_dbg_puts("Successfully wrote a single zeroed block to the SD card.\n");
     size_t num_iterations = 20;
     for (int i = 0; i < num_iterations; i++) {
         /* Read the block. */

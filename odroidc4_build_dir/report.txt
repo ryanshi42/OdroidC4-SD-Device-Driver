@@ -7,14 +7,14 @@
 
 # Loader Regions
 
-       <Region name=PD-ELF serial_driver-0 addr=0x251000 size=2336>
+       <Region name=PD-ELF serial_driver-0 addr=0x251000 size=2536>
        <Region name=PD-ELF serial_driver-1 addr=0x252000 size=4288>
        <Region name=PD-ELF serial_client-0 addr=0x254000 size=3320>
        <Region name=PD-ELF serial_client-1 addr=0x255000 size=4272>
        <Region name=PD-ELF timer_driver-0 addr=0x257000 size=14784>
        <Region name=PD-ELF timer_driver-1 addr=0x25b000 size=12432>
-       <Region name=PD-ELF mmc_driver-0 addr=0x25f000 size=87016>
-       <Region name=PD-ELF mmc_driver-1 addr=0x275000 size=14208>
+       <Region name=PD-ELF mmc_driver-0 addr=0x25f000 size=86344>
+       <Region name=PD-ELF mmc_driver-1 addr=0x275000 size=14192>
        <Region name=PD-ELF fatfs-0 addr=0x279000 size=121120>
        <Region name=PD-ELF fatfs-1 addr=0x297000 size=1069328>
 
@@ -25,7 +25,7 @@
 
 # Allocated Kernel Objects Summary
 
-     # of allocated objects: 431
+     # of allocated objects: 430
 
 # Bootstrap Kernel Invocations Summary
 
@@ -34,8 +34,8 @@
 
 # System Kernel Invocations Summary
 
-     # of invocations   :        559
-     size of invocations:     40,352
+     # of invocations   :        553
+     size of invocations:     39,944
 
 # Allocated Kernel Objects Detail
 
@@ -389,87 +389,86 @@
     Page(4 KiB): MR=ELF:fatfs-1 @ 39b000               7 cap_addr=8000000000000166 phys_addr=39b000
     Page(4 KiB): MR=ELF:fatfs-1 @ 39c000               7 cap_addr=8000000000000167 phys_addr=39c000
     Page(4 KiB): MR=gpio @ ff634000                    7 cap_addr=800000000000016d phys_addr=ff634000
-    Page(4 KiB): MR=clk @ ff63c000                     7 cap_addr=8000000000000171 phys_addr=ff63c000
-    Page(4 KiB): MR=uart @ ff803000                    7 cap_addr=8000000000000174 phys_addr=ff803000
-    Page(4 KiB): MR=timer @ ffd0f000                   7 cap_addr=8000000000000179 phys_addr=ffd0f000
-    Page(4 KiB): MR=timer @ ffd10000                   7 cap_addr=800000000000017a phys_addr=ffd10000
-    Page(4 KiB): MR=timer @ ffd11000                   7 cap_addr=800000000000017b phys_addr=ffd11000
-    Page(4 KiB): MR=timer @ ffd12000                   7 cap_addr=800000000000017c phys_addr=ffd12000
-    Page(4 KiB): MR=timer @ ffd13000                   7 cap_addr=800000000000017d phys_addr=ffd13000
-    Page(4 KiB): MR=timer @ ffd14000                   7 cap_addr=800000000000017e phys_addr=ffd14000
-    Page(4 KiB): MR=timer @ ffd15000                   7 cap_addr=800000000000017f phys_addr=ffd15000
-    Page(4 KiB): MR=timer @ ffd16000                   7 cap_addr=8000000000000180 phys_addr=ffd16000
-    Page(4 KiB): MR=timer @ ffd17000                   7 cap_addr=8000000000000181 phys_addr=ffd17000
-    Page(4 KiB): MR=timer @ ffd18000                   7 cap_addr=8000000000000182 phys_addr=ffd18000
-    Page(4 KiB): MR=timer @ ffd19000                   7 cap_addr=8000000000000183 phys_addr=ffd19000
-    Page(4 KiB): MR=timer @ ffd1a000                   7 cap_addr=8000000000000184 phys_addr=ffd1a000
-    Page(4 KiB): MR=timer @ ffd1b000                   7 cap_addr=8000000000000185 phys_addr=ffd1b000
-    Page(4 KiB): MR=timer @ ffd1c000                   7 cap_addr=8000000000000186 phys_addr=ffd1c000
-    Page(4 KiB): MR=timer @ ffd1d000                   7 cap_addr=8000000000000187 phys_addr=ffd1d000
-    Page(4 KiB): MR=timer @ ffd1e000                   7 cap_addr=8000000000000188 phys_addr=ffd1e000
-    Page(4 KiB): MR=emmc @ ffe05000                    7 cap_addr=800000000000018b phys_addr=ffe05000
-    Page(4 KiB): MR=emmc @ ffe06000                    7 cap_addr=800000000000018c phys_addr=ffe06000
-    TCB: PD=serial_driver                              1 cap_addr=800000000000018d phys_addr=3a5000
-    TCB: PD=serial_client                              1 cap_addr=800000000000018e phys_addr=3a5800
-    TCB: PD=timer_driver                               1 cap_addr=800000000000018f phys_addr=3a6000
-    TCB: PD=mmc_driver                                 1 cap_addr=8000000000000190 phys_addr=3a6800
-    TCB: PD=fatfs                                      1 cap_addr=8000000000000191 phys_addr=3a7000
-    SchedContext: PD=serial_driver                     5 cap_addr=8000000000000192 phys_addr=3c0000
-    SchedContext: PD=serial_client                     5 cap_addr=8000000000000193 phys_addr=3c2000
-    SchedContext: PD=timer_driver                      5 cap_addr=8000000000000194 phys_addr=3c4000
-    SchedContext: PD=mmc_driver                        5 cap_addr=8000000000000195 phys_addr=3c6000
-    SchedContext: PD=fatfs                             5 cap_addr=8000000000000196 phys_addr=3c8000
-    Reply: Monitor                                     6 cap_addr=8000000000000197 phys_addr=3a7800
-    Reply: PD=serial_driver                            6 cap_addr=8000000000000198 phys_addr=3a7820
-    Reply: PD=serial_client                            6 cap_addr=8000000000000199 phys_addr=3a7840
-    Reply: PD=timer_driver                             6 cap_addr=800000000000019a phys_addr=3a7860
-    Reply: PD=mmc_driver                               6 cap_addr=800000000000019b phys_addr=3a7880
-    Reply: PD=fatfs                                    6 cap_addr=800000000000019c phys_addr=3a78a0
-    EP: Monitor Fault                                  2 cap_addr=800000000000019d phys_addr=3a78c0
-    EP: PD=serial_driver                               2 cap_addr=800000000000019e phys_addr=3a78d0
-    EP: PD=serial_client                               2 cap_addr=800000000000019f phys_addr=3a78e0
-    EP: PD=timer_driver                                2 cap_addr=80000000000001a0 phys_addr=3a78f0
-    EP: PD=mmc_driver                                  2 cap_addr=80000000000001a1 phys_addr=3a7900
-    EP: PD=fatfs                                       2 cap_addr=80000000000001a2 phys_addr=3a7910
-    Notification: PD=serial_driver                     3 cap_addr=80000000000001a3 phys_addr=3a7940
-    Notification: PD=serial_client                     3 cap_addr=80000000000001a4 phys_addr=3a7980
-    Notification: PD=timer_driver                      3 cap_addr=80000000000001a5 phys_addr=3a79c0
-    Notification: PD=mmc_driver                        3 cap_addr=80000000000001a6 phys_addr=3a7a00
-    Notification: PD=fatfs                             3 cap_addr=80000000000001a7 phys_addr=3a7a40
-    VSpace: PD=serial_driver                           14 cap_addr=80000000000001a8 phys_addr=3a8000
-    VSpace: PD=serial_client                           14 cap_addr=80000000000001a9 phys_addr=3a9000
-    VSpace: PD=timer_driver                            14 cap_addr=80000000000001aa phys_addr=3aa000
-    VSpace: PD=mmc_driver                              14 cap_addr=80000000000001ab phys_addr=3ab000
-    VSpace: PD=fatfs                                   14 cap_addr=80000000000001ac phys_addr=3ac000
-    PageUpperDirectory: PD/VM=serial_driver VADDR=0x0  12 cap_addr=80000000000001ad phys_addr=3b9000
-    PageUpperDirectory: PD/VM=serial_client VADDR=0x0  12 cap_addr=80000000000001ae phys_addr=3ba000
-    PageUpperDirectory: PD/VM=timer_driver VADDR=0x0   12 cap_addr=80000000000001af phys_addr=3bb000
-    PageUpperDirectory: PD/VM=mmc_driver VADDR=0x0     12 cap_addr=80000000000001b0 phys_addr=3bc000
-    PageUpperDirectory: PD/VM=fatfs VADDR=0x0          12 cap_addr=80000000000001b1 phys_addr=3bd000
-    PageDirectory: PD/VM=serial_driver VADDR=0x0       11 cap_addr=80000000000001b2 phys_addr=3ca000
-    PageDirectory: PD/VM=serial_client VADDR=0x0       11 cap_addr=80000000000001b3 phys_addr=3cb000
-    PageDirectory: PD/VM=timer_driver VADDR=0x0        11 cap_addr=80000000000001b4 phys_addr=3cc000
-    PageDirectory: PD/VM=mmc_driver VADDR=0x0          11 cap_addr=80000000000001b5 phys_addr=3cd000
-    PageDirectory: PD/VM=fatfs VADDR=0x0               11 cap_addr=80000000000001b6 phys_addr=3ce000
-    PageTable: PD/VM=serial_driver VADDR=0x200000      10 cap_addr=80000000000001b7 phys_addr=3cf000
-    PageTable: PD/VM=serial_driver VADDR=0x5000000     10 cap_addr=80000000000001b8 phys_addr=3d0000
-    PageTable: PD/VM=serial_client VADDR=0x200000      10 cap_addr=80000000000001b9 phys_addr=3d1000
-    PageTable: PD/VM=serial_client VADDR=0x6800000     10 cap_addr=80000000000001ba phys_addr=3d2000
-    PageTable: PD/VM=serial_client VADDR=0x7000000     10 cap_addr=80000000000001bb phys_addr=3d3000
-    PageTable: PD/VM=serial_client VADDR=0x7200000     10 cap_addr=80000000000001bc phys_addr=3d4000
-    PageTable: PD/VM=timer_driver VADDR=0x200000       10 cap_addr=80000000000001bd phys_addr=3d5000
-    PageTable: PD/VM=timer_driver VADDR=0x2200000      10 cap_addr=80000000000001be phys_addr=3d6000
-    PageTable: PD/VM=timer_driver VADDR=0x2600000      10 cap_addr=80000000000001bf phys_addr=3d7000
-    PageTable: PD/VM=mmc_driver VADDR=0x200000         10 cap_addr=80000000000001c0 phys_addr=3d8000
-    PageTable: PD/VM=mmc_driver VADDR=0x2600000        10 cap_addr=80000000000001c1 phys_addr=3d9000
-    PageTable: PD/VM=mmc_driver VADDR=0x3000000        10 cap_addr=80000000000001c2 phys_addr=3da000
-    PageTable: PD/VM=fatfs VADDR=0x200000              10 cap_addr=80000000000001c3 phys_addr=3db000
-    PageTable: PD/VM=fatfs VADDR=0x2600000             10 cap_addr=80000000000001c4 phys_addr=3dc000
-    CNode: PD=serial_driver                            4 cap_addr=80000000000001c5 phys_addr=3e0000
-    CNode: PD=serial_client                            4 cap_addr=80000000000001c6 phys_addr=3e4000
-    CNode: PD=timer_driver                             4 cap_addr=80000000000001c7 phys_addr=3e8000
-    CNode: PD=mmc_driver                               4 cap_addr=80000000000001c8 phys_addr=3ec000
-    CNode: PD=fatfs                                    4 cap_addr=80000000000001c9 phys_addr=3f0000
+    Page(4 KiB): MR=uart @ ff803000                    7 cap_addr=8000000000000170 phys_addr=ff803000
+    Page(4 KiB): MR=timer @ ffd0f000                   7 cap_addr=8000000000000175 phys_addr=ffd0f000
+    Page(4 KiB): MR=timer @ ffd10000                   7 cap_addr=8000000000000176 phys_addr=ffd10000
+    Page(4 KiB): MR=timer @ ffd11000                   7 cap_addr=8000000000000177 phys_addr=ffd11000
+    Page(4 KiB): MR=timer @ ffd12000                   7 cap_addr=8000000000000178 phys_addr=ffd12000
+    Page(4 KiB): MR=timer @ ffd13000                   7 cap_addr=8000000000000179 phys_addr=ffd13000
+    Page(4 KiB): MR=timer @ ffd14000                   7 cap_addr=800000000000017a phys_addr=ffd14000
+    Page(4 KiB): MR=timer @ ffd15000                   7 cap_addr=800000000000017b phys_addr=ffd15000
+    Page(4 KiB): MR=timer @ ffd16000                   7 cap_addr=800000000000017c phys_addr=ffd16000
+    Page(4 KiB): MR=timer @ ffd17000                   7 cap_addr=800000000000017d phys_addr=ffd17000
+    Page(4 KiB): MR=timer @ ffd18000                   7 cap_addr=800000000000017e phys_addr=ffd18000
+    Page(4 KiB): MR=timer @ ffd19000                   7 cap_addr=800000000000017f phys_addr=ffd19000
+    Page(4 KiB): MR=timer @ ffd1a000                   7 cap_addr=8000000000000180 phys_addr=ffd1a000
+    Page(4 KiB): MR=timer @ ffd1b000                   7 cap_addr=8000000000000181 phys_addr=ffd1b000
+    Page(4 KiB): MR=timer @ ffd1c000                   7 cap_addr=8000000000000182 phys_addr=ffd1c000
+    Page(4 KiB): MR=timer @ ffd1d000                   7 cap_addr=8000000000000183 phys_addr=ffd1d000
+    Page(4 KiB): MR=timer @ ffd1e000                   7 cap_addr=8000000000000184 phys_addr=ffd1e000
+    Page(4 KiB): MR=emmc @ ffe05000                    7 cap_addr=8000000000000187 phys_addr=ffe05000
+    Page(4 KiB): MR=emmc @ ffe06000                    7 cap_addr=8000000000000188 phys_addr=ffe06000
+    TCB: PD=serial_driver                              1 cap_addr=8000000000000189 phys_addr=3a5000
+    TCB: PD=serial_client                              1 cap_addr=800000000000018a phys_addr=3a5800
+    TCB: PD=timer_driver                               1 cap_addr=800000000000018b phys_addr=3a6000
+    TCB: PD=mmc_driver                                 1 cap_addr=800000000000018c phys_addr=3a6800
+    TCB: PD=fatfs                                      1 cap_addr=800000000000018d phys_addr=3a7000
+    SchedContext: PD=serial_driver                     5 cap_addr=800000000000018e phys_addr=3c0000
+    SchedContext: PD=serial_client                     5 cap_addr=800000000000018f phys_addr=3c2000
+    SchedContext: PD=timer_driver                      5 cap_addr=8000000000000190 phys_addr=3c4000
+    SchedContext: PD=mmc_driver                        5 cap_addr=8000000000000191 phys_addr=3c6000
+    SchedContext: PD=fatfs                             5 cap_addr=8000000000000192 phys_addr=3c8000
+    Reply: Monitor                                     6 cap_addr=8000000000000193 phys_addr=3a7800
+    Reply: PD=serial_driver                            6 cap_addr=8000000000000194 phys_addr=3a7820
+    Reply: PD=serial_client                            6 cap_addr=8000000000000195 phys_addr=3a7840
+    Reply: PD=timer_driver                             6 cap_addr=8000000000000196 phys_addr=3a7860
+    Reply: PD=mmc_driver                               6 cap_addr=8000000000000197 phys_addr=3a7880
+    Reply: PD=fatfs                                    6 cap_addr=8000000000000198 phys_addr=3a78a0
+    EP: Monitor Fault                                  2 cap_addr=8000000000000199 phys_addr=3a78c0
+    EP: PD=serial_driver                               2 cap_addr=800000000000019a phys_addr=3a78d0
+    EP: PD=serial_client                               2 cap_addr=800000000000019b phys_addr=3a78e0
+    EP: PD=timer_driver                                2 cap_addr=800000000000019c phys_addr=3a78f0
+    EP: PD=mmc_driver                                  2 cap_addr=800000000000019d phys_addr=3a7900
+    EP: PD=fatfs                                       2 cap_addr=800000000000019e phys_addr=3a7910
+    Notification: PD=serial_driver                     3 cap_addr=800000000000019f phys_addr=3a7940
+    Notification: PD=serial_client                     3 cap_addr=80000000000001a0 phys_addr=3a7980
+    Notification: PD=timer_driver                      3 cap_addr=80000000000001a1 phys_addr=3a79c0
+    Notification: PD=mmc_driver                        3 cap_addr=80000000000001a2 phys_addr=3a7a00
+    Notification: PD=fatfs                             3 cap_addr=80000000000001a3 phys_addr=3a7a40
+    VSpace: PD=serial_driver                           14 cap_addr=80000000000001a4 phys_addr=3a8000
+    VSpace: PD=serial_client                           14 cap_addr=80000000000001a5 phys_addr=3a9000
+    VSpace: PD=timer_driver                            14 cap_addr=80000000000001a6 phys_addr=3aa000
+    VSpace: PD=mmc_driver                              14 cap_addr=80000000000001a7 phys_addr=3ab000
+    VSpace: PD=fatfs                                   14 cap_addr=80000000000001a8 phys_addr=3ac000
+    PageUpperDirectory: PD/VM=serial_driver VADDR=0x0  12 cap_addr=80000000000001a9 phys_addr=3b9000
+    PageUpperDirectory: PD/VM=serial_client VADDR=0x0  12 cap_addr=80000000000001aa phys_addr=3ba000
+    PageUpperDirectory: PD/VM=timer_driver VADDR=0x0   12 cap_addr=80000000000001ab phys_addr=3bb000
+    PageUpperDirectory: PD/VM=mmc_driver VADDR=0x0     12 cap_addr=80000000000001ac phys_addr=3bc000
+    PageUpperDirectory: PD/VM=fatfs VADDR=0x0          12 cap_addr=80000000000001ad phys_addr=3bd000
+    PageDirectory: PD/VM=serial_driver VADDR=0x0       11 cap_addr=80000000000001ae phys_addr=3ca000
+    PageDirectory: PD/VM=serial_client VADDR=0x0       11 cap_addr=80000000000001af phys_addr=3cb000
+    PageDirectory: PD/VM=timer_driver VADDR=0x0        11 cap_addr=80000000000001b0 phys_addr=3cc000
+    PageDirectory: PD/VM=mmc_driver VADDR=0x0          11 cap_addr=80000000000001b1 phys_addr=3cd000
+    PageDirectory: PD/VM=fatfs VADDR=0x0               11 cap_addr=80000000000001b2 phys_addr=3ce000
+    PageTable: PD/VM=serial_driver VADDR=0x200000      10 cap_addr=80000000000001b3 phys_addr=3cf000
+    PageTable: PD/VM=serial_driver VADDR=0x5000000     10 cap_addr=80000000000001b4 phys_addr=3d0000
+    PageTable: PD/VM=serial_client VADDR=0x200000      10 cap_addr=80000000000001b5 phys_addr=3d1000
+    PageTable: PD/VM=serial_client VADDR=0x6800000     10 cap_addr=80000000000001b6 phys_addr=3d2000
+    PageTable: PD/VM=serial_client VADDR=0x7000000     10 cap_addr=80000000000001b7 phys_addr=3d3000
+    PageTable: PD/VM=serial_client VADDR=0x7200000     10 cap_addr=80000000000001b8 phys_addr=3d4000
+    PageTable: PD/VM=timer_driver VADDR=0x200000       10 cap_addr=80000000000001b9 phys_addr=3d5000
+    PageTable: PD/VM=timer_driver VADDR=0x2200000      10 cap_addr=80000000000001ba phys_addr=3d6000
+    PageTable: PD/VM=timer_driver VADDR=0x2600000      10 cap_addr=80000000000001bb phys_addr=3d7000
+    PageTable: PD/VM=mmc_driver VADDR=0x200000         10 cap_addr=80000000000001bc phys_addr=3d8000
+    PageTable: PD/VM=mmc_driver VADDR=0x2600000        10 cap_addr=80000000000001bd phys_addr=3d9000
+    PageTable: PD/VM=mmc_driver VADDR=0x3000000        10 cap_addr=80000000000001be phys_addr=3da000
+    PageTable: PD/VM=fatfs VADDR=0x200000              10 cap_addr=80000000000001bf phys_addr=3db000
+    PageTable: PD/VM=fatfs VADDR=0x2600000             10 cap_addr=80000000000001c0 phys_addr=3dc000
+    CNode: PD=serial_driver                            4 cap_addr=80000000000001c1 phys_addr=3e0000
+    CNode: PD=serial_client                            4 cap_addr=80000000000001c2 phys_addr=3e4000
+    CNode: PD=timer_driver                             4 cap_addr=80000000000001c3 phys_addr=3e8000
+    CNode: PD=mmc_driver                               4 cap_addr=80000000000001c4 phys_addr=3ec000
+    CNode: PD=fatfs                                    4 cap_addr=80000000000001c5 phys_addr=3f0000
 
 # Bootstrap Kernel Invocations Detail
 
@@ -3276,89 +3275,89 @@
          node_depth           1
          node_offset          365
          num_objects          1
-    0x0154 Untyped              - Retype            - 0x000000000000002e (Untyped @ 0xff000000:0x800000 (device))
+    0x0154 Untyped              - Retype            - 0x000000000000002f (Untyped @ 0xff800000:0x400000 (device))
          object_type          0 (SEL4_UNTYPED_OBJECT - variable size)
-         size_bits            12 (0x1000)
+         size_bits            13 (0x2000)
          root (cap)           0x0000000000000063 (CNode: root)
          node_index           1
          node_depth           1
          node_offset          366
          num_objects          1
-    0x0155 Untyped              - Retype            - 0x000000000000002e (Untyped @ 0xff000000:0x800000 (device))
-         object_type          0 (SEL4_UNTYPED_OBJECT - variable size)
-         size_bits            13 (0x2000)
-         root (cap)           0x0000000000000063 (CNode: root)
-         node_index           1
-         node_depth           1
-         node_offset          367
-         num_objects          1
-    0x0156 Untyped              - Retype            - 0x000000000000002e (Untyped @ 0xff000000:0x800000 (device))
-         object_type          0 (SEL4_UNTYPED_OBJECT - variable size)
-         size_bits            14 (0x4000)
-         root (cap)           0x0000000000000063 (CNode: root)
-         node_index           1
-         node_depth           1
-         node_offset          368
-         num_objects          1
-    0x0157 Untyped              - Retype            - 0x000000000000002e (Untyped @ 0xff000000:0x800000 (device))
-         object_type          7 (SEL4_SMALL_PAGE_OBJECT - 0x1000)
-         size_bits            0 (N/A)
-         root (cap)           0x0000000000000063 (CNode: root)
-         node_index           1
-         node_depth           1
-         node_offset          369
-         num_objects          1
-    0x0158 Untyped              - Retype            - 0x000000000000002f (Untyped @ 0xff800000:0x400000 (device))
-         object_type          0 (SEL4_UNTYPED_OBJECT - variable size)
-         size_bits            13 (0x2000)
-         root (cap)           0x0000000000000063 (CNode: root)
-         node_index           1
-         node_depth           1
-         node_offset          370
-         num_objects          1
-    0x0159 Untyped              - Retype            - 0x000000000000002f (Untyped @ 0xff800000:0x400000 (device))
+    0x0155 Untyped              - Retype            - 0x000000000000002f (Untyped @ 0xff800000:0x400000 (device))
          object_type          0 (SEL4_UNTYPED_OBJECT - variable size)
          size_bits            12 (0x1000)
          root (cap)           0x0000000000000063 (CNode: root)
          node_index           1
          node_depth           1
-         node_offset          371
+         node_offset          367
          num_objects          1
-    0x015a Untyped              - Retype            - 0x000000000000002f (Untyped @ 0xff800000:0x400000 (device))
+    0x0156 Untyped              - Retype            - 0x000000000000002f (Untyped @ 0xff800000:0x400000 (device))
          object_type          7 (SEL4_SMALL_PAGE_OBJECT - 0x1000)
          size_bits            0 (N/A)
+         root (cap)           0x0000000000000063 (CNode: root)
+         node_index           1
+         node_depth           1
+         node_offset          368
+         num_objects          1
+    0x0157 Untyped              - Retype            - 0x0000000000000038 (Untyped @ 0xffd00000:0x100000 (device))
+         object_type          0 (SEL4_UNTYPED_OBJECT - variable size)
+         size_bits            15 (0x8000)
+         root (cap)           0x0000000000000063 (CNode: root)
+         node_index           1
+         node_depth           1
+         node_offset          369
+         num_objects          1
+    0x0158 Untyped              - Retype            - 0x0000000000000038 (Untyped @ 0xffd00000:0x100000 (device))
+         object_type          0 (SEL4_UNTYPED_OBJECT - variable size)
+         size_bits            14 (0x4000)
+         root (cap)           0x0000000000000063 (CNode: root)
+         node_index           1
+         node_depth           1
+         node_offset          370
+         num_objects          1
+    0x0159 Untyped              - Retype            - 0x0000000000000038 (Untyped @ 0xffd00000:0x100000 (device))
+         object_type          0 (SEL4_UNTYPED_OBJECT - variable size)
+         size_bits            13 (0x2000)
+         root (cap)           0x0000000000000063 (CNode: root)
+         node_index           1
+         node_depth           1
+         node_offset          371
+         num_objects          1
+    0x015a Untyped              - Retype            - 0x0000000000000038 (Untyped @ 0xffd00000:0x100000 (device))
+         object_type          0 (SEL4_UNTYPED_OBJECT - variable size)
+         size_bits            12 (0x1000)
          root (cap)           0x0000000000000063 (CNode: root)
          node_index           1
          node_depth           1
          node_offset          372
          num_objects          1
     0x015b Untyped              - Retype            - 0x0000000000000038 (Untyped @ 0xffd00000:0x100000 (device))
-         object_type          0 (SEL4_UNTYPED_OBJECT - variable size)
-         size_bits            15 (0x8000)
+         object_type          7 (SEL4_SMALL_PAGE_OBJECT - 0x1000)
+         size_bits            0 (N/A)
          root (cap)           0x0000000000000063 (CNode: root)
          node_index           1
          node_depth           1
          node_offset          373
          num_objects          1
     0x015c Untyped              - Retype            - 0x0000000000000038 (Untyped @ 0xffd00000:0x100000 (device))
-         object_type          0 (SEL4_UNTYPED_OBJECT - variable size)
-         size_bits            14 (0x4000)
+         object_type          7 (SEL4_SMALL_PAGE_OBJECT - 0x1000)
+         size_bits            0 (N/A)
          root (cap)           0x0000000000000063 (CNode: root)
          node_index           1
          node_depth           1
          node_offset          374
          num_objects          1
     0x015d Untyped              - Retype            - 0x0000000000000038 (Untyped @ 0xffd00000:0x100000 (device))
-         object_type          0 (SEL4_UNTYPED_OBJECT - variable size)
-         size_bits            13 (0x2000)
+         object_type          7 (SEL4_SMALL_PAGE_OBJECT - 0x1000)
+         size_bits            0 (N/A)
          root (cap)           0x0000000000000063 (CNode: root)
          node_index           1
          node_depth           1
          node_offset          375
          num_objects          1
     0x015e Untyped              - Retype            - 0x0000000000000038 (Untyped @ 0xffd00000:0x100000 (device))
-         object_type          0 (SEL4_UNTYPED_OBJECT - variable size)
-         size_bits            12 (0x1000)
+         object_type          7 (SEL4_SMALL_PAGE_OBJECT - 0x1000)
+         size_bits            0 (N/A)
          root (cap)           0x0000000000000063 (CNode: root)
          node_index           1
          node_depth           1
@@ -3460,23 +3459,23 @@
          node_depth           1
          node_offset          388
          num_objects          1
-    0x016b Untyped              - Retype            - 0x0000000000000038 (Untyped @ 0xffd00000:0x100000 (device))
-         object_type          7 (SEL4_SMALL_PAGE_OBJECT - 0x1000)
-         size_bits            0 (N/A)
+    0x016b Untyped              - Retype            - 0x0000000000000039 (Untyped @ 0xffe00000:0x200000 (device))
+         object_type          0 (SEL4_UNTYPED_OBJECT - variable size)
+         size_bits            14 (0x4000)
          root (cap)           0x0000000000000063 (CNode: root)
          node_index           1
          node_depth           1
          node_offset          389
          num_objects          1
-    0x016c Untyped              - Retype            - 0x0000000000000038 (Untyped @ 0xffd00000:0x100000 (device))
-         object_type          7 (SEL4_SMALL_PAGE_OBJECT - 0x1000)
-         size_bits            0 (N/A)
+    0x016c Untyped              - Retype            - 0x0000000000000039 (Untyped @ 0xffe00000:0x200000 (device))
+         object_type          0 (SEL4_UNTYPED_OBJECT - variable size)
+         size_bits            12 (0x1000)
          root (cap)           0x0000000000000063 (CNode: root)
          node_index           1
          node_depth           1
          node_offset          390
          num_objects          1
-    0x016d Untyped              - Retype            - 0x0000000000000038 (Untyped @ 0xffd00000:0x100000 (device))
+    0x016d Untyped              - Retype            - 0x0000000000000039 (Untyped @ 0xffe00000:0x200000 (device))
          object_type          7 (SEL4_SMALL_PAGE_OBJECT - 0x1000)
          size_bits            0 (N/A)
          root (cap)           0x0000000000000063 (CNode: root)
@@ -3484,7 +3483,7 @@
          node_depth           1
          node_offset          391
          num_objects          1
-    0x016e Untyped              - Retype            - 0x0000000000000038 (Untyped @ 0xffd00000:0x100000 (device))
+    0x016e Untyped              - Retype            - 0x0000000000000039 (Untyped @ 0xffe00000:0x200000 (device))
          object_type          7 (SEL4_SMALL_PAGE_OBJECT - 0x1000)
          size_bits            0 (N/A)
          root (cap)           0x0000000000000063 (CNode: root)
@@ -3492,132 +3491,132 @@
          node_depth           1
          node_offset          392
          num_objects          1
-    0x016f Untyped              - Retype            - 0x0000000000000039 (Untyped @ 0xffe00000:0x200000 (device))
-         object_type          0 (SEL4_UNTYPED_OBJECT - variable size)
-         size_bits            14 (0x4000)
-         root (cap)           0x0000000000000063 (CNode: root)
-         node_index           1
-         node_depth           1
-         node_offset          393
-         num_objects          1
-    0x0170 Untyped              - Retype            - 0x0000000000000039 (Untyped @ 0xffe00000:0x200000 (device))
-         object_type          0 (SEL4_UNTYPED_OBJECT - variable size)
-         size_bits            12 (0x1000)
-         root (cap)           0x0000000000000063 (CNode: root)
-         node_index           1
-         node_depth           1
-         node_offset          394
-         num_objects          1
-    0x0171 Untyped              - Retype            - 0x0000000000000039 (Untyped @ 0xffe00000:0x200000 (device))
-         object_type          7 (SEL4_SMALL_PAGE_OBJECT - 0x1000)
-         size_bits            0 (N/A)
-         root (cap)           0x0000000000000063 (CNode: root)
-         node_index           1
-         node_depth           1
-         node_offset          395
-         num_objects          1
-    0x0172 Untyped              - Retype            - 0x0000000000000039 (Untyped @ 0xffe00000:0x200000 (device))
-         object_type          7 (SEL4_SMALL_PAGE_OBJECT - 0x1000)
-         size_bits            0 (N/A)
-         root (cap)           0x0000000000000063 (CNode: root)
-         node_index           1
-         node_depth           1
-         node_offset          396
-         num_objects          1
-    0x0173 Untyped              - Retype            - 0x0000000000000043 (Untyped @ 0x3a4000:0x4000)
+    0x016f Untyped              - Retype            - 0x0000000000000043 (Untyped @ 0x3a4000:0x4000)
          object_type          1 (SEL4_TCB_OBJECT - 0x800)
          size_bits            0 (N/A)
          root (cap)           0x0000000000000063 (CNode: root)
          node_index           1
          node_depth           1
-         node_offset          397
+         node_offset          393
          num_objects          5
-    0x0174 Untyped              - Retype            - 0x0000000000000046 (Untyped @ 0x3c0000:0x40000)
+    0x0170 Untyped              - Retype            - 0x0000000000000046 (Untyped @ 0x3c0000:0x40000)
          object_type          5 (SEL4_SCHEDCONTEXT_OBJECT - variable size)
          size_bits            8 (0x100)
          root (cap)           0x0000000000000063 (CNode: root)
          node_index           1
          node_depth           1
-         node_offset          402
+         node_offset          398
          num_objects          5
-    0x0175 Untyped              - Retype            - 0x0000000000000043 (Untyped @ 0x3a4000:0x4000)
+    0x0171 Untyped              - Retype            - 0x0000000000000043 (Untyped @ 0x3a4000:0x4000)
          object_type          6 (SEL4_REPLY_OBJECT - 0x20)
          size_bits            0 (N/A)
          root (cap)           0x0000000000000063 (CNode: root)
          node_index           1
          node_depth           1
-         node_offset          407
+         node_offset          403
          num_objects          6
-    0x0176 Untyped              - Retype            - 0x0000000000000043 (Untyped @ 0x3a4000:0x4000)
+    0x0172 Untyped              - Retype            - 0x0000000000000043 (Untyped @ 0x3a4000:0x4000)
          object_type          2 (SEL4_ENDPOINT_OBJECT - 0x10)
          size_bits            0 (N/A)
          root (cap)           0x0000000000000063 (CNode: root)
          node_index           1
          node_depth           1
-         node_offset          413
+         node_offset          409
          num_objects          6
-    0x0177 Untyped              - Retype            - 0x0000000000000043 (Untyped @ 0x3a4000:0x4000)
+    0x0173 Untyped              - Retype            - 0x0000000000000043 (Untyped @ 0x3a4000:0x4000)
          object_type          3 (SEL4_NOTIFICATION_OBJECT - 0x40)
          size_bits            0 (N/A)
          root (cap)           0x0000000000000063 (CNode: root)
          node_index           1
          node_depth           1
-         node_offset          419
+         node_offset          415
          num_objects          5
-    0x0178 Untyped              - Retype            - 0x0000000000000044 (Untyped @ 0x3a8000:0x8000)
+    0x0174 Untyped              - Retype            - 0x0000000000000044 (Untyped @ 0x3a8000:0x8000)
          object_type          14 (SEL4_VSPACE_OBJECT - 0x1000)
          size_bits            0 (N/A)
          root (cap)           0x0000000000000063 (CNode: root)
          node_index           1
          node_depth           1
-         node_offset          424
+         node_offset          420
          num_objects          5
-    0x0179 Untyped              - Retype            - 0x0000000000000045 (Untyped @ 0x3b0000:0x10000)
+    0x0175 Untyped              - Retype            - 0x0000000000000045 (Untyped @ 0x3b0000:0x10000)
          object_type          12 (SEL4_PAGE_DIRECTORY_OBJECT - 0x1000)
          size_bits            0 (N/A)
          root (cap)           0x0000000000000063 (CNode: root)
          node_index           1
          node_depth           1
-         node_offset          429
+         node_offset          425
          num_objects          5
-    0x017a Untyped              - Retype            - 0x0000000000000046 (Untyped @ 0x3c0000:0x40000)
+    0x0176 Untyped              - Retype            - 0x0000000000000046 (Untyped @ 0x3c0000:0x40000)
          object_type          11 (SEL4_PAGE_DIRECTORY_OBJECT - 0x1000)
          size_bits            0 (N/A)
          root (cap)           0x0000000000000063 (CNode: root)
          node_index           1
          node_depth           1
-         node_offset          434
+         node_offset          430
          num_objects          5
-    0x017b Untyped              - Retype            - 0x0000000000000046 (Untyped @ 0x3c0000:0x40000)
+    0x0177 Untyped              - Retype            - 0x0000000000000046 (Untyped @ 0x3c0000:0x40000)
          object_type          10 (SEL4_PAGE_TABLE_OBJECT - 0x1000)
          size_bits            0 (N/A)
          root (cap)           0x0000000000000063 (CNode: root)
          node_index           1
          node_depth           1
-         node_offset          439
+         node_offset          435
          num_objects          14
-    0x017c Untyped              - Retype            - 0x0000000000000046 (Untyped @ 0x3c0000:0x40000)
+    0x0178 Untyped              - Retype            - 0x0000000000000046 (Untyped @ 0x3c0000:0x40000)
          object_type          4 (SEL4_CNODE_OBJECT - variable size)
          size_bits            9 (0x200)
          root (cap)           0x0000000000000063 (CNode: root)
          node_index           1
          node_depth           1
-         node_offset          453
+         node_offset          449
          num_objects          5
-    0x017d IRQ Control          - Get               - 0x0000000000000004 (IRQ Control)
+    0x0179 IRQ Control          - Get               - 0x0000000000000004 (IRQ Control)
          irq                  225
          trigger              1
          dest_root (cap)      0x0000000000000063 (CNode: root)
-         dest_index           9223372036854776266
+         dest_index           9223372036854776262
          dest_depth           64
-    0x017e ASID Pool            - Assign            - 0x0000000000000006 (ASID Pool: init)
-         vspace (cap)         0x80000000000001a8 (VSpace: PD=serial_driver)
+    0x017a ASID Pool            - Assign            - 0x0000000000000006 (ASID Pool: init)
+         vspace (cap)         0x80000000000001a4 (VSpace: PD=serial_driver)
       REPEAT: count=5 {'vspace': 1}
+    0x017b CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           455
+         dest_depth           10
+         src_root (cap)       0x0000000000000063 (CNode: root)
+         src_obj (cap)        0x8000000000000170 (Page(4 KiB): MR=uart @ ff803000)
+         src_depth            64
+         rights               3
+         badge                0
+    0x017c CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           456
+         dest_depth           10
+         src_root (cap)       0x0000000000000063 (CNode: root)
+         src_obj (cap)        0x800000000000000b (Page(2 MiB): MR=shared_dma #0)
+         src_depth            64
+         rights               3
+         badge                0
+    0x017d CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           457
+         dest_depth           10
+         src_root (cap)       0x0000000000000063 (CNode: root)
+         src_obj (cap)        0x800000000000000c (Page(2 MiB): MR=tx_avail_ring_buf #0)
+         src_depth            64
+         rights               3
+         badge                0
+    0x017e CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           458
+         dest_depth           10
+         src_root (cap)       0x0000000000000063 (CNode: root)
+         src_obj (cap)        0x800000000000000d (Page(2 MiB): MR=tx_used_ring_buf #0)
+         src_depth            64
+         rights               3
+         badge                0
     0x017f CNode                - Mint              - 0x0000000000000064 (CNode: system)
          dest_index           459
          dest_depth           10
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x8000000000000174 (Page(4 KiB): MR=uart @ ff803000)
+         src_obj (cap)        0x800000000000000e (Page(2 MiB): MR=rx_avail_ring_buf #0)
          src_depth            64
          rights               3
          badge                0
@@ -3625,7 +3624,7 @@
          dest_index           460
          dest_depth           10
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x800000000000000b (Page(2 MiB): MR=shared_dma #0)
+         src_obj (cap)        0x800000000000000f (Page(2 MiB): MR=rx_used_ring_buf #0)
          src_depth            64
          rights               3
          badge                0
@@ -3633,44 +3632,12 @@
          dest_index           461
          dest_depth           10
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x800000000000000c (Page(2 MiB): MR=tx_avail_ring_buf #0)
-         src_depth            64
-         rights               3
-         badge                0
-    0x0182 CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           462
-         dest_depth           10
-         src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x800000000000000d (Page(2 MiB): MR=tx_used_ring_buf #0)
-         src_depth            64
-         rights               3
-         badge                0
-    0x0183 CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           463
-         dest_depth           10
-         src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x800000000000000e (Page(2 MiB): MR=rx_avail_ring_buf #0)
-         src_depth            64
-         rights               3
-         badge                0
-    0x0184 CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           464
-         dest_depth           10
-         src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x800000000000000f (Page(2 MiB): MR=rx_used_ring_buf #0)
-         src_depth            64
-         rights               3
-         badge                0
-    0x0185 CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           465
-         dest_depth           10
-         src_root (cap)       0x0000000000000063 (CNode: root)
          src_obj (cap)        0x800000000000001c (Page(4 KiB): MR=ELF:serial_driver-0 @ 251000)
          src_depth            64
          rights               2
          badge                0
-    0x0186 CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           466
+    0x0182 CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           462
          dest_depth           10
          src_root (cap)       0x0000000000000063 (CNode: root)
          src_obj (cap)        0x800000000000001d (Page(4 KiB): MR=ELF:serial_driver-1 @ 252000)
@@ -3678,11 +3645,43 @@
          rights               3
          badge                0
       REPEAT: count=2 {'dest_index': 1, 'src_obj': 1}
+    0x0183 CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           464
+         dest_depth           10
+         src_root (cap)       0x0000000000000063 (CNode: root)
+         src_obj (cap)        0x800000000000000b (Page(2 MiB): MR=shared_dma #0)
+         src_depth            64
+         rights               3
+         badge                0
+    0x0184 CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           465
+         dest_depth           10
+         src_root (cap)       0x0000000000000063 (CNode: root)
+         src_obj (cap)        0x800000000000000c (Page(2 MiB): MR=tx_avail_ring_buf #0)
+         src_depth            64
+         rights               3
+         badge                0
+    0x0185 CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           466
+         dest_depth           10
+         src_root (cap)       0x0000000000000063 (CNode: root)
+         src_obj (cap)        0x800000000000000d (Page(2 MiB): MR=tx_used_ring_buf #0)
+         src_depth            64
+         rights               3
+         badge                0
+    0x0186 CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           467
+         dest_depth           10
+         src_root (cap)       0x0000000000000063 (CNode: root)
+         src_obj (cap)        0x800000000000000e (Page(2 MiB): MR=rx_avail_ring_buf #0)
+         src_depth            64
+         rights               3
+         badge                0
     0x0187 CNode                - Mint              - 0x0000000000000064 (CNode: system)
          dest_index           468
          dest_depth           10
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x800000000000000b (Page(2 MiB): MR=shared_dma #0)
+         src_obj (cap)        0x800000000000000f (Page(2 MiB): MR=rx_used_ring_buf #0)
          src_depth            64
          rights               3
          badge                0
@@ -3690,7 +3689,7 @@
          dest_index           469
          dest_depth           10
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x800000000000000c (Page(2 MiB): MR=tx_avail_ring_buf #0)
+         src_obj (cap)        0x8000000000000018 (Page(4 KiB): MR=mmc_to_serial_client_putchar_buf #0)
          src_depth            64
          rights               3
          badge                0
@@ -3698,7 +3697,7 @@
          dest_index           470
          dest_depth           10
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x800000000000000d (Page(2 MiB): MR=tx_used_ring_buf #0)
+         src_obj (cap)        0x800000000000001b (Page(4 KiB): MR=timer_driver_to_serial_client_putchar_buf #0)
          src_depth            64
          rights               3
          badge                0
@@ -3706,7 +3705,7 @@
          dest_index           471
          dest_depth           10
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x800000000000000e (Page(2 MiB): MR=rx_avail_ring_buf #0)
+         src_obj (cap)        0x8000000000000019 (Page(4 KiB): MR=fatfs_to_serial_client_putchar_buf #0)
          src_depth            64
          rights               3
          badge                0
@@ -3714,44 +3713,12 @@
          dest_index           472
          dest_depth           10
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x800000000000000f (Page(2 MiB): MR=rx_used_ring_buf #0)
-         src_depth            64
-         rights               3
-         badge                0
-    0x018c CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           473
-         dest_depth           10
-         src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x8000000000000018 (Page(4 KiB): MR=mmc_to_serial_client_putchar_buf #0)
-         src_depth            64
-         rights               3
-         badge                0
-    0x018d CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           474
-         dest_depth           10
-         src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x800000000000001b (Page(4 KiB): MR=timer_driver_to_serial_client_putchar_buf #0)
-         src_depth            64
-         rights               3
-         badge                0
-    0x018e CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           475
-         dest_depth           10
-         src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x8000000000000019 (Page(4 KiB): MR=fatfs_to_serial_client_putchar_buf #0)
-         src_depth            64
-         rights               3
-         badge                0
-    0x018f CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           476
-         dest_depth           10
-         src_root (cap)       0x0000000000000063 (CNode: root)
          src_obj (cap)        0x800000000000001f (Page(4 KiB): MR=ELF:serial_client-0 @ 254000)
          src_depth            64
          rights               2
          badge                0
-    0x0190 CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           477
+    0x018c CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           473
          dest_depth           10
          src_root (cap)       0x0000000000000063 (CNode: root)
          src_obj (cap)        0x8000000000000020 (Page(4 KiB): MR=ELF:serial_client-1 @ 255000)
@@ -3759,25 +3726,25 @@
          rights               3
          badge                0
       REPEAT: count=2 {'dest_index': 1, 'src_obj': 1}
-    0x0191 CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           479
+    0x018d CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           475
          dest_depth           10
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x8000000000000179 (Page(4 KiB): MR=timer @ ffd0f000)
+         src_obj (cap)        0x8000000000000175 (Page(4 KiB): MR=timer @ ffd0f000)
          src_depth            64
          rights               3
          badge                0
       REPEAT: count=16 {'dest_index': 1, 'src_obj': 1}
-    0x0192 CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           495
+    0x018e CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           491
          dest_depth           10
          src_root (cap)       0x0000000000000063 (CNode: root)
          src_obj (cap)        0x800000000000001a (Page(4 KiB): MR=timer_driver_to_mmc_driver_numticks_buf #0)
          src_depth            64
          rights               3
          badge                0
-    0x0193 CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           496
+    0x018f CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           492
          dest_depth           10
          src_root (cap)       0x0000000000000063 (CNode: root)
          src_obj (cap)        0x8000000000000022 (Page(4 KiB): MR=ELF:timer_driver-0 @ 257000)
@@ -3785,8 +3752,8 @@
          rights               2
          badge                0
       REPEAT: count=4 {'dest_index': 1, 'src_obj': 1}
-    0x0194 CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           500
+    0x0190 CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           496
          dest_depth           10
          src_root (cap)       0x0000000000000063 (CNode: root)
          src_obj (cap)        0x8000000000000026 (Page(4 KiB): MR=ELF:timer_driver-1 @ 25b000)
@@ -3794,73 +3761,65 @@
          rights               3
          badge                0
       REPEAT: count=4 {'dest_index': 1, 'src_obj': 1}
-    0x0195 CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           504
+    0x0191 CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           500
          dest_depth           10
          src_root (cap)       0x0000000000000063 (CNode: root)
          src_obj (cap)        0x800000000000001a (Page(4 KiB): MR=timer_driver_to_mmc_driver_numticks_buf #0)
          src_depth            64
          rights               3
          badge                0
-    0x0196 CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           505
+    0x0192 CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           501
          dest_depth           10
          src_root (cap)       0x0000000000000063 (CNode: root)
          src_obj (cap)        0x8000000000000018 (Page(4 KiB): MR=mmc_to_serial_client_putchar_buf #0)
          src_depth            64
          rights               3
          badge                0
-    0x0197 CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           506
+    0x0193 CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           502
          dest_depth           10
          src_root (cap)       0x0000000000000063 (CNode: root)
          src_obj (cap)        0x800000000000016d (Page(4 KiB): MR=gpio @ ff634000)
          src_depth            64
          rights               3
          badge                0
-    0x0198 CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           507
+    0x0194 CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           503
          dest_depth           10
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x800000000000018b (Page(4 KiB): MR=emmc @ ffe05000)
+         src_obj (cap)        0x8000000000000187 (Page(4 KiB): MR=emmc @ ffe05000)
          src_depth            64
          rights               3
          badge                0
       REPEAT: count=2 {'dest_index': 1, 'src_obj': 1}
-    0x0199 CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           509
-         dest_depth           10
-         src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x8000000000000171 (Page(4 KiB): MR=clk @ ff63c000)
-         src_depth            64
-         rights               3
-         badge                0
-    0x019a CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           510
+    0x0195 CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           505
          dest_depth           10
          src_root (cap)       0x0000000000000063 (CNode: root)
          src_obj (cap)        0x8000000000000011 (Page(2 MiB): MR=mmc_driver_request_queue #0)
          src_depth            64
          rights               3
          badge                0
-    0x019b CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           511
+    0x0196 CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           506
          dest_depth           10
          src_root (cap)       0x0000000000000063 (CNode: root)
          src_obj (cap)        0x8000000000000012 (Page(2 MiB): MR=mmc_driver_response_queue #0)
          src_depth            64
          rights               3
          badge                0
-    0x019c CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           512
+    0x0197 CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           507
          dest_depth           10
          src_root (cap)       0x0000000000000063 (CNode: root)
          src_obj (cap)        0x8000000000000010 (Page(2 MiB): MR=mmc_driver_shared_data #0)
          src_depth            64
          rights               3
          badge                0
-    0x019d CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           513
+    0x0198 CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           508
          dest_depth           10
          src_root (cap)       0x0000000000000063 (CNode: root)
          src_obj (cap)        0x800000000000002a (Page(4 KiB): MR=ELF:mmc_driver-0 @ 25f000)
@@ -3868,8 +3827,8 @@
          rights               2
          badge                0
       REPEAT: count=22 {'dest_index': 1, 'src_obj': 1}
-    0x019e CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           535
+    0x0199 CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           530
          dest_depth           10
          src_root (cap)       0x0000000000000063 (CNode: root)
          src_obj (cap)        0x8000000000000040 (Page(4 KiB): MR=ELF:mmc_driver-1 @ 275000)
@@ -3877,40 +3836,40 @@
          rights               3
          badge                0
       REPEAT: count=4 {'dest_index': 1, 'src_obj': 1}
-    0x019f CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           539
+    0x019a CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           534
          dest_depth           10
          src_root (cap)       0x0000000000000063 (CNode: root)
          src_obj (cap)        0x8000000000000019 (Page(4 KiB): MR=fatfs_to_serial_client_putchar_buf #0)
          src_depth            64
          rights               3
          badge                0
-    0x01a0 CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           540
+    0x019b CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           535
          dest_depth           10
          src_root (cap)       0x0000000000000063 (CNode: root)
          src_obj (cap)        0x8000000000000011 (Page(2 MiB): MR=mmc_driver_request_queue #0)
          src_depth            64
          rights               3
          badge                0
-    0x01a1 CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           541
+    0x019c CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           536
          dest_depth           10
          src_root (cap)       0x0000000000000063 (CNode: root)
          src_obj (cap)        0x8000000000000012 (Page(2 MiB): MR=mmc_driver_response_queue #0)
          src_depth            64
          rights               3
          badge                0
-    0x01a2 CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           542
+    0x019d CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           537
          dest_depth           10
          src_root (cap)       0x0000000000000063 (CNode: root)
          src_obj (cap)        0x8000000000000010 (Page(2 MiB): MR=mmc_driver_shared_data #0)
          src_depth            64
          rights               3
          badge                0
-    0x01a3 CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           543
+    0x019e CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           538
          dest_depth           10
          src_root (cap)       0x0000000000000063 (CNode: root)
          src_obj (cap)        0x8000000000000044 (Page(4 KiB): MR=ELF:fatfs-0 @ 279000)
@@ -3918,8 +3877,8 @@
          rights               2
          badge                0
       REPEAT: count=30 {'dest_index': 1, 'src_obj': 1}
-    0x01a4 CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           573
+    0x019f CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           568
          dest_depth           10
          src_root (cap)       0x0000000000000063 (CNode: root)
          src_obj (cap)        0x8000000000000062 (Page(4 KiB): MR=ELF:fatfs-1 @ 297000)
@@ -3927,790 +3886,785 @@
          rights               3
          badge                0
       REPEAT: count=262 {'dest_index': 1, 'src_obj': 1}
+    0x01a0 CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           830
+         dest_depth           10
+         src_root (cap)       0x0000000000000063 (CNode: root)
+         src_obj (cap)        0x800000000000019f (Notification: PD=serial_driver)
+         src_depth            64
+         rights               15
+         badge                4
+    0x01a1 CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           831
+         dest_depth           10
+         src_root (cap)       0x0000000000000063 (CNode: root)
+         src_obj (cap)        0x8000000000000199 (EP: Monitor Fault)
+         src_depth            64
+         rights               15
+         badge                1
+    0x01a2 CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           832
+         dest_depth           10
+         src_root (cap)       0x0000000000000063 (CNode: root)
+         src_obj (cap)        0x8000000000000199 (EP: Monitor Fault)
+         src_depth            64
+         rights               15
+         badge                2
+    0x01a3 CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           833
+         dest_depth           10
+         src_root (cap)       0x0000000000000063 (CNode: root)
+         src_obj (cap)        0x8000000000000199 (EP: Monitor Fault)
+         src_depth            64
+         rights               15
+         badge                3
+    0x01a4 CNode                - Mint              - 0x0000000000000064 (CNode: system)
+         dest_index           834
+         dest_depth           10
+         src_root (cap)       0x0000000000000063 (CNode: root)
+         src_obj (cap)        0x8000000000000199 (EP: Monitor Fault)
+         src_depth            64
+         rights               15
+         badge                4
     0x01a5 CNode                - Mint              - 0x0000000000000064 (CNode: system)
          dest_index           835
          dest_depth           10
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x80000000000001a3 (Notification: PD=serial_driver)
-         src_depth            64
-         rights               15
-         badge                4
-    0x01a6 CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           836
-         dest_depth           10
-         src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x800000000000019d (EP: Monitor Fault)
-         src_depth            64
-         rights               15
-         badge                1
-    0x01a7 CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           837
-         dest_depth           10
-         src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x800000000000019d (EP: Monitor Fault)
-         src_depth            64
-         rights               15
-         badge                2
-    0x01a8 CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           838
-         dest_depth           10
-         src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x800000000000019d (EP: Monitor Fault)
-         src_depth            64
-         rights               15
-         badge                3
-    0x01a9 CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           839
-         dest_depth           10
-         src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x800000000000019d (EP: Monitor Fault)
-         src_depth            64
-         rights               15
-         badge                4
-    0x01aa CNode                - Mint              - 0x0000000000000064 (CNode: system)
-         dest_index           840
-         dest_depth           10
-         src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x800000000000019d (EP: Monitor Fault)
+         src_obj (cap)        0x8000000000000199 (EP: Monitor Fault)
          src_depth            64
          rights               15
          badge                5
-    0x01ab CNode                - Mint              - 0x80000000000001c5 (CNode: PD=serial_driver)
+    0x01a6 CNode                - Mint              - 0x80000000000001c1 (CNode: PD=serial_driver)
          dest_index           1
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x800000000000019e (EP: PD=serial_driver)
+         src_obj (cap)        0x800000000000019a (EP: PD=serial_driver)
          src_depth            64
          rights               15
          badge                0
-    0x01ac CNode                - Mint              - 0x80000000000001c6 (CNode: PD=serial_client)
+    0x01a7 CNode                - Mint              - 0x80000000000001c2 (CNode: PD=serial_client)
          dest_index           1
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x800000000000019f (EP: PD=serial_client)
+         src_obj (cap)        0x800000000000019b (EP: PD=serial_client)
          src_depth            64
          rights               15
          badge                0
-    0x01ad CNode                - Mint              - 0x80000000000001c7 (CNode: PD=timer_driver)
+    0x01a8 CNode                - Mint              - 0x80000000000001c3 (CNode: PD=timer_driver)
          dest_index           1
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x80000000000001a0 (EP: PD=timer_driver)
+         src_obj (cap)        0x800000000000019c (EP: PD=timer_driver)
          src_depth            64
          rights               15
          badge                0
-    0x01ae CNode                - Mint              - 0x80000000000001c8 (CNode: PD=mmc_driver)
+    0x01a9 CNode                - Mint              - 0x80000000000001c4 (CNode: PD=mmc_driver)
          dest_index           1
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x80000000000001a1 (EP: PD=mmc_driver)
+         src_obj (cap)        0x800000000000019d (EP: PD=mmc_driver)
          src_depth            64
          rights               15
          badge                0
-    0x01af CNode                - Mint              - 0x80000000000001c9 (CNode: PD=fatfs)
+    0x01aa CNode                - Mint              - 0x80000000000001c5 (CNode: PD=fatfs)
          dest_index           1
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x80000000000001a2 (EP: PD=fatfs)
+         src_obj (cap)        0x800000000000019e (EP: PD=fatfs)
          src_depth            64
          rights               15
          badge                0
-    0x01b0 CNode                - Mint              - 0x80000000000001c5 (CNode: PD=serial_driver)
+    0x01ab CNode                - Mint              - 0x80000000000001c1 (CNode: PD=serial_driver)
          dest_index           4
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x8000000000000198 (Reply: PD=serial_driver)
+         src_obj (cap)        0x8000000000000194 (Reply: PD=serial_driver)
          src_depth            64
          rights               15
          badge                1
       REPEAT: count=5 {'cnode': 1, 'src_obj': 1}
-    0x01b1 CNode                - Mint              - 0x80000000000001c5 (CNode: PD=serial_driver)
+    0x01ac CNode                - Mint              - 0x80000000000001c1 (CNode: PD=serial_driver)
          dest_index           3
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x80000000000001a8 (VSpace: PD=serial_driver)
+         src_obj (cap)        0x80000000000001a4 (VSpace: PD=serial_driver)
          src_depth            64
          rights               15
          badge                0
       REPEAT: count=5 {'cnode': 1, 'src_obj': 1}
-    0x01b2 CNode                - Mint              - 0x80000000000001c5 (CNode: PD=serial_driver)
+    0x01ad CNode                - Mint              - 0x80000000000001c1 (CNode: PD=serial_driver)
          dest_index           140
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x80000000000001ca (IRQ Handler: irq=225)
+         src_obj (cap)        0x80000000000001c6 (IRQ Handler: irq=225)
          src_depth            64
          rights               15
          badge                0
-    0x01b3 CNode                - Mint              - 0x80000000000001c6 (CNode: PD=serial_client)
+    0x01ae CNode                - Mint              - 0x80000000000001c2 (CNode: PD=serial_client)
          dest_index           13
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x80000000000001a3 (Notification: PD=serial_driver)
+         src_obj (cap)        0x800000000000019f (Notification: PD=serial_driver)
          src_depth            64
          rights               15
          badge                16
-    0x01b4 CNode                - Mint              - 0x80000000000001c5 (CNode: PD=serial_driver)
+    0x01af CNode                - Mint              - 0x80000000000001c1 (CNode: PD=serial_driver)
          dest_index           14
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x80000000000001a4 (Notification: PD=serial_client)
+         src_obj (cap)        0x80000000000001a0 (Notification: PD=serial_client)
          src_depth            64
          rights               15
          badge                8
-    0x01b5 CNode                - Mint              - 0x80000000000001c6 (CNode: PD=serial_client)
+    0x01b0 CNode                - Mint              - 0x80000000000001c2 (CNode: PD=serial_client)
          dest_index           77
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x800000000000019e (EP: PD=serial_driver)
+         src_obj (cap)        0x800000000000019a (EP: PD=serial_driver)
          src_depth            64
          rights               15
          badge                9223372036854775812
-    0x01b6 CNode                - Mint              - 0x80000000000001c5 (CNode: PD=serial_driver)
+    0x01b1 CNode                - Mint              - 0x80000000000001c1 (CNode: PD=serial_driver)
          dest_index           78
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x800000000000019f (EP: PD=serial_client)
+         src_obj (cap)        0x800000000000019b (EP: PD=serial_client)
          src_depth            64
          rights               15
          badge                9223372036854775811
-    0x01b7 CNode                - Mint              - 0x80000000000001c6 (CNode: PD=serial_client)
+    0x01b2 CNode                - Mint              - 0x80000000000001c2 (CNode: PD=serial_client)
          dest_index           15
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x80000000000001a3 (Notification: PD=serial_driver)
+         src_obj (cap)        0x800000000000019f (Notification: PD=serial_driver)
          src_depth            64
          rights               15
          badge                64
-    0x01b8 CNode                - Mint              - 0x80000000000001c5 (CNode: PD=serial_driver)
+    0x01b3 CNode                - Mint              - 0x80000000000001c1 (CNode: PD=serial_driver)
          dest_index           16
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x80000000000001a4 (Notification: PD=serial_client)
+         src_obj (cap)        0x80000000000001a0 (Notification: PD=serial_client)
          src_depth            64
          rights               15
          badge                32
-    0x01b9 CNode                - Mint              - 0x80000000000001c6 (CNode: PD=serial_client)
+    0x01b4 CNode                - Mint              - 0x80000000000001c2 (CNode: PD=serial_client)
          dest_index           79
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x800000000000019e (EP: PD=serial_driver)
+         src_obj (cap)        0x800000000000019a (EP: PD=serial_driver)
          src_depth            64
          rights               15
          badge                9223372036854775814
-    0x01ba CNode                - Mint              - 0x80000000000001c5 (CNode: PD=serial_driver)
+    0x01b5 CNode                - Mint              - 0x80000000000001c1 (CNode: PD=serial_driver)
          dest_index           80
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x800000000000019f (EP: PD=serial_client)
+         src_obj (cap)        0x800000000000019b (EP: PD=serial_client)
          src_depth            64
          rights               15
          badge                9223372036854775813
-    0x01bb CNode                - Mint              - 0x80000000000001c7 (CNode: PD=timer_driver)
+    0x01b6 CNode                - Mint              - 0x80000000000001c3 (CNode: PD=timer_driver)
          dest_index           19
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x80000000000001a4 (Notification: PD=serial_client)
+         src_obj (cap)        0x80000000000001a0 (Notification: PD=serial_client)
          src_depth            64
          rights               15
          badge                1024
-    0x01bc CNode                - Mint              - 0x80000000000001c6 (CNode: PD=serial_client)
+    0x01b7 CNode                - Mint              - 0x80000000000001c2 (CNode: PD=serial_client)
          dest_index           20
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x80000000000001a5 (Notification: PD=timer_driver)
+         src_obj (cap)        0x80000000000001a1 (Notification: PD=timer_driver)
          src_depth            64
          rights               15
          badge                512
-    0x01bd CNode                - Mint              - 0x80000000000001c7 (CNode: PD=timer_driver)
+    0x01b8 CNode                - Mint              - 0x80000000000001c3 (CNode: PD=timer_driver)
          dest_index           83
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x800000000000019f (EP: PD=serial_client)
+         src_obj (cap)        0x800000000000019b (EP: PD=serial_client)
          src_depth            64
          rights               15
          badge                9223372036854775818
-    0x01be CNode                - Mint              - 0x80000000000001c6 (CNode: PD=serial_client)
+    0x01b9 CNode                - Mint              - 0x80000000000001c2 (CNode: PD=serial_client)
          dest_index           84
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x80000000000001a0 (EP: PD=timer_driver)
+         src_obj (cap)        0x800000000000019c (EP: PD=timer_driver)
          src_depth            64
          rights               15
          badge                9223372036854775817
-    0x01bf CNode                - Mint              - 0x80000000000001c8 (CNode: PD=mmc_driver)
+    0x01ba CNode                - Mint              - 0x80000000000001c4 (CNode: PD=mmc_driver)
          dest_index           17
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x80000000000001a4 (Notification: PD=serial_client)
+         src_obj (cap)        0x80000000000001a0 (Notification: PD=serial_client)
          src_depth            64
          rights               15
          badge                256
-    0x01c0 CNode                - Mint              - 0x80000000000001c6 (CNode: PD=serial_client)
+    0x01bb CNode                - Mint              - 0x80000000000001c2 (CNode: PD=serial_client)
          dest_index           18
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x80000000000001a6 (Notification: PD=mmc_driver)
+         src_obj (cap)        0x80000000000001a2 (Notification: PD=mmc_driver)
          src_depth            64
          rights               15
          badge                128
-    0x01c1 CNode                - Mint              - 0x80000000000001c8 (CNode: PD=mmc_driver)
+    0x01bc CNode                - Mint              - 0x80000000000001c4 (CNode: PD=mmc_driver)
          dest_index           81
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x800000000000019f (EP: PD=serial_client)
+         src_obj (cap)        0x800000000000019b (EP: PD=serial_client)
          src_depth            64
          rights               15
          badge                9223372036854775816
-    0x01c2 CNode                - Mint              - 0x80000000000001c6 (CNode: PD=serial_client)
+    0x01bd CNode                - Mint              - 0x80000000000001c2 (CNode: PD=serial_client)
          dest_index           82
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x80000000000001a1 (EP: PD=mmc_driver)
+         src_obj (cap)        0x800000000000019d (EP: PD=mmc_driver)
          src_depth            64
          rights               15
          badge                9223372036854775815
-    0x01c3 CNode                - Mint              - 0x80000000000001c8 (CNode: PD=mmc_driver)
+    0x01be CNode                - Mint              - 0x80000000000001c4 (CNode: PD=mmc_driver)
          dest_index           21
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x80000000000001a5 (Notification: PD=timer_driver)
+         src_obj (cap)        0x80000000000001a1 (Notification: PD=timer_driver)
          src_depth            64
          rights               15
          badge                4096
-    0x01c4 CNode                - Mint              - 0x80000000000001c7 (CNode: PD=timer_driver)
+    0x01bf CNode                - Mint              - 0x80000000000001c3 (CNode: PD=timer_driver)
          dest_index           22
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x80000000000001a6 (Notification: PD=mmc_driver)
+         src_obj (cap)        0x80000000000001a2 (Notification: PD=mmc_driver)
          src_depth            64
          rights               15
          badge                2048
-    0x01c5 CNode                - Mint              - 0x80000000000001c8 (CNode: PD=mmc_driver)
+    0x01c0 CNode                - Mint              - 0x80000000000001c4 (CNode: PD=mmc_driver)
          dest_index           85
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x80000000000001a0 (EP: PD=timer_driver)
+         src_obj (cap)        0x800000000000019c (EP: PD=timer_driver)
          src_depth            64
          rights               15
          badge                9223372036854775820
-    0x01c6 CNode                - Mint              - 0x80000000000001c7 (CNode: PD=timer_driver)
+    0x01c1 CNode                - Mint              - 0x80000000000001c3 (CNode: PD=timer_driver)
          dest_index           86
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x80000000000001a1 (EP: PD=mmc_driver)
+         src_obj (cap)        0x800000000000019d (EP: PD=mmc_driver)
          src_depth            64
          rights               15
          badge                9223372036854775819
-    0x01c7 CNode                - Mint              - 0x80000000000001c9 (CNode: PD=fatfs)
+    0x01c2 CNode                - Mint              - 0x80000000000001c5 (CNode: PD=fatfs)
          dest_index           23
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x80000000000001a4 (Notification: PD=serial_client)
+         src_obj (cap)        0x80000000000001a0 (Notification: PD=serial_client)
          src_depth            64
          rights               15
          badge                16384
-    0x01c8 CNode                - Mint              - 0x80000000000001c6 (CNode: PD=serial_client)
+    0x01c3 CNode                - Mint              - 0x80000000000001c2 (CNode: PD=serial_client)
          dest_index           24
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x80000000000001a7 (Notification: PD=fatfs)
+         src_obj (cap)        0x80000000000001a3 (Notification: PD=fatfs)
          src_depth            64
          rights               15
          badge                8192
-    0x01c9 CNode                - Mint              - 0x80000000000001c9 (CNode: PD=fatfs)
+    0x01c4 CNode                - Mint              - 0x80000000000001c5 (CNode: PD=fatfs)
          dest_index           87
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x800000000000019f (EP: PD=serial_client)
+         src_obj (cap)        0x800000000000019b (EP: PD=serial_client)
          src_depth            64
          rights               15
          badge                9223372036854775822
-    0x01ca CNode                - Mint              - 0x80000000000001c6 (CNode: PD=serial_client)
+    0x01c5 CNode                - Mint              - 0x80000000000001c2 (CNode: PD=serial_client)
          dest_index           88
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x80000000000001a2 (EP: PD=fatfs)
+         src_obj (cap)        0x800000000000019e (EP: PD=fatfs)
          src_depth            64
          rights               15
          badge                9223372036854775821
-    0x01cb CNode                - Mint              - 0x80000000000001c9 (CNode: PD=fatfs)
+    0x01c6 CNode                - Mint              - 0x80000000000001c5 (CNode: PD=fatfs)
          dest_index           25
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x80000000000001a6 (Notification: PD=mmc_driver)
+         src_obj (cap)        0x80000000000001a2 (Notification: PD=mmc_driver)
          src_depth            64
          rights               15
          badge                65536
-    0x01cc CNode                - Mint              - 0x80000000000001c8 (CNode: PD=mmc_driver)
+    0x01c7 CNode                - Mint              - 0x80000000000001c4 (CNode: PD=mmc_driver)
          dest_index           26
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x80000000000001a7 (Notification: PD=fatfs)
+         src_obj (cap)        0x80000000000001a3 (Notification: PD=fatfs)
          src_depth            64
          rights               15
          badge                32768
-    0x01cd CNode                - Mint              - 0x80000000000001c9 (CNode: PD=fatfs)
+    0x01c8 CNode                - Mint              - 0x80000000000001c5 (CNode: PD=fatfs)
          dest_index           89
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x80000000000001a1 (EP: PD=mmc_driver)
+         src_obj (cap)        0x800000000000019d (EP: PD=mmc_driver)
          src_depth            64
          rights               15
          badge                9223372036854775824
-    0x01ce CNode                - Mint              - 0x80000000000001c8 (CNode: PD=mmc_driver)
+    0x01c9 CNode                - Mint              - 0x80000000000001c4 (CNode: PD=mmc_driver)
          dest_index           90
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x80000000000001a2 (EP: PD=fatfs)
+         src_obj (cap)        0x800000000000019e (EP: PD=fatfs)
          src_depth            64
          rights               15
          badge                9223372036854775823
-    0x01cf IRQ Handler          - SetNotification   - 0x80000000000001ca (IRQ Handler: irq=225)
-         notification (cap)   0x8000000000000343 (Notification: PD=serial_driver (badge=0x4))
-    0x01d0 Page Upper Directory - Map               - 0x80000000000001ad (PageUpperDirectory: PD/VM=serial_driver VADDR=0x0)
-         vspace (cap)         0x80000000000001a8 (VSpace: PD=serial_driver)
+    0x01ca IRQ Handler          - SetNotification   - 0x80000000000001c6 (IRQ Handler: irq=225)
+         notification (cap)   0x800000000000033e (Notification: PD=serial_driver (badge=0x4))
+    0x01cb Page Upper Directory - Map               - 0x80000000000001a9 (PageUpperDirectory: PD/VM=serial_driver VADDR=0x0)
+         vspace (cap)         0x80000000000001a4 (VSpace: PD=serial_driver)
          vaddr                0x0
          attr                 3
-    0x01d1 Page Upper Directory - Map               - 0x80000000000001ae (PageUpperDirectory: PD/VM=serial_client VADDR=0x0)
-         vspace (cap)         0x80000000000001a9 (VSpace: PD=serial_client)
+    0x01cc Page Upper Directory - Map               - 0x80000000000001aa (PageUpperDirectory: PD/VM=serial_client VADDR=0x0)
+         vspace (cap)         0x80000000000001a5 (VSpace: PD=serial_client)
          vaddr                0x0
          attr                 3
-    0x01d2 Page Upper Directory - Map               - 0x80000000000001af (PageUpperDirectory: PD/VM=timer_driver VADDR=0x0)
-         vspace (cap)         0x80000000000001aa (VSpace: PD=timer_driver)
+    0x01cd Page Upper Directory - Map               - 0x80000000000001ab (PageUpperDirectory: PD/VM=timer_driver VADDR=0x0)
+         vspace (cap)         0x80000000000001a6 (VSpace: PD=timer_driver)
          vaddr                0x0
          attr                 3
-    0x01d3 Page Upper Directory - Map               - 0x80000000000001b0 (PageUpperDirectory: PD/VM=mmc_driver VADDR=0x0)
-         vspace (cap)         0x80000000000001ab (VSpace: PD=mmc_driver)
+    0x01ce Page Upper Directory - Map               - 0x80000000000001ac (PageUpperDirectory: PD/VM=mmc_driver VADDR=0x0)
+         vspace (cap)         0x80000000000001a7 (VSpace: PD=mmc_driver)
          vaddr                0x0
          attr                 3
-    0x01d4 Page Upper Directory - Map               - 0x80000000000001b1 (PageUpperDirectory: PD/VM=fatfs VADDR=0x0)
-         vspace (cap)         0x80000000000001ac (VSpace: PD=fatfs)
+    0x01cf Page Upper Directory - Map               - 0x80000000000001ad (PageUpperDirectory: PD/VM=fatfs VADDR=0x0)
+         vspace (cap)         0x80000000000001a8 (VSpace: PD=fatfs)
          vaddr                0x0
          attr                 3
-    0x01d5 Page Directory       - Map               - 0x80000000000001b2 (PageDirectory: PD/VM=serial_driver VADDR=0x0)
-         vspace (cap)         0x80000000000001a8 (VSpace: PD=serial_driver)
+    0x01d0 Page Directory       - Map               - 0x80000000000001ae (PageDirectory: PD/VM=serial_driver VADDR=0x0)
+         vspace (cap)         0x80000000000001a4 (VSpace: PD=serial_driver)
          vaddr                0x0
          attr                 3
-    0x01d6 Page Directory       - Map               - 0x80000000000001b3 (PageDirectory: PD/VM=serial_client VADDR=0x0)
-         vspace (cap)         0x80000000000001a9 (VSpace: PD=serial_client)
+    0x01d1 Page Directory       - Map               - 0x80000000000001af (PageDirectory: PD/VM=serial_client VADDR=0x0)
+         vspace (cap)         0x80000000000001a5 (VSpace: PD=serial_client)
          vaddr                0x0
          attr                 3
-    0x01d7 Page Directory       - Map               - 0x80000000000001b4 (PageDirectory: PD/VM=timer_driver VADDR=0x0)
-         vspace (cap)         0x80000000000001aa (VSpace: PD=timer_driver)
+    0x01d2 Page Directory       - Map               - 0x80000000000001b0 (PageDirectory: PD/VM=timer_driver VADDR=0x0)
+         vspace (cap)         0x80000000000001a6 (VSpace: PD=timer_driver)
          vaddr                0x0
          attr                 3
-    0x01d8 Page Directory       - Map               - 0x80000000000001b5 (PageDirectory: PD/VM=mmc_driver VADDR=0x0)
-         vspace (cap)         0x80000000000001ab (VSpace: PD=mmc_driver)
+    0x01d3 Page Directory       - Map               - 0x80000000000001b1 (PageDirectory: PD/VM=mmc_driver VADDR=0x0)
+         vspace (cap)         0x80000000000001a7 (VSpace: PD=mmc_driver)
          vaddr                0x0
          attr                 3
-    0x01d9 Page Directory       - Map               - 0x80000000000001b6 (PageDirectory: PD/VM=fatfs VADDR=0x0)
-         vspace (cap)         0x80000000000001ac (VSpace: PD=fatfs)
+    0x01d4 Page Directory       - Map               - 0x80000000000001b2 (PageDirectory: PD/VM=fatfs VADDR=0x0)
+         vspace (cap)         0x80000000000001a8 (VSpace: PD=fatfs)
          vaddr                0x0
          attr                 3
-    0x01da Page Table           - Map               - 0x80000000000001b7 (PageTable: PD/VM=serial_driver VADDR=0x200000)
-         vspace (cap)         0x80000000000001a8 (VSpace: PD=serial_driver)
+    0x01d5 Page Table           - Map               - 0x80000000000001b3 (PageTable: PD/VM=serial_driver VADDR=0x200000)
+         vspace (cap)         0x80000000000001a4 (VSpace: PD=serial_driver)
          vaddr                0x200000
          attr                 3
-    0x01db Page Table           - Map               - 0x80000000000001b8 (PageTable: PD/VM=serial_driver VADDR=0x5000000)
-         vspace (cap)         0x80000000000001a8 (VSpace: PD=serial_driver)
+    0x01d6 Page Table           - Map               - 0x80000000000001b4 (PageTable: PD/VM=serial_driver VADDR=0x5000000)
+         vspace (cap)         0x80000000000001a4 (VSpace: PD=serial_driver)
          vaddr                0x5000000
          attr                 3
-    0x01dc Page Table           - Map               - 0x80000000000001b9 (PageTable: PD/VM=serial_client VADDR=0x200000)
-         vspace (cap)         0x80000000000001a9 (VSpace: PD=serial_client)
+    0x01d7 Page Table           - Map               - 0x80000000000001b5 (PageTable: PD/VM=serial_client VADDR=0x200000)
+         vspace (cap)         0x80000000000001a5 (VSpace: PD=serial_client)
          vaddr                0x200000
          attr                 3
-    0x01dd Page Table           - Map               - 0x80000000000001ba (PageTable: PD/VM=serial_client VADDR=0x6800000)
-         vspace (cap)         0x80000000000001a9 (VSpace: PD=serial_client)
+    0x01d8 Page Table           - Map               - 0x80000000000001b6 (PageTable: PD/VM=serial_client VADDR=0x6800000)
+         vspace (cap)         0x80000000000001a5 (VSpace: PD=serial_client)
          vaddr                0x6800000
          attr                 3
-    0x01de Page Table           - Map               - 0x80000000000001bb (PageTable: PD/VM=serial_client VADDR=0x7000000)
-         vspace (cap)         0x80000000000001a9 (VSpace: PD=serial_client)
+    0x01d9 Page Table           - Map               - 0x80000000000001b7 (PageTable: PD/VM=serial_client VADDR=0x7000000)
+         vspace (cap)         0x80000000000001a5 (VSpace: PD=serial_client)
          vaddr                0x7000000
          attr                 3
-    0x01df Page Table           - Map               - 0x80000000000001bc (PageTable: PD/VM=serial_client VADDR=0x7200000)
-         vspace (cap)         0x80000000000001a9 (VSpace: PD=serial_client)
+    0x01da Page Table           - Map               - 0x80000000000001b8 (PageTable: PD/VM=serial_client VADDR=0x7200000)
+         vspace (cap)         0x80000000000001a5 (VSpace: PD=serial_client)
          vaddr                0x7200000
          attr                 3
-    0x01e0 Page Table           - Map               - 0x80000000000001bd (PageTable: PD/VM=timer_driver VADDR=0x200000)
-         vspace (cap)         0x80000000000001aa (VSpace: PD=timer_driver)
+    0x01db Page Table           - Map               - 0x80000000000001b9 (PageTable: PD/VM=timer_driver VADDR=0x200000)
+         vspace (cap)         0x80000000000001a6 (VSpace: PD=timer_driver)
          vaddr                0x200000
          attr                 3
-    0x01e1 Page Table           - Map               - 0x80000000000001be (PageTable: PD/VM=timer_driver VADDR=0x2200000)
-         vspace (cap)         0x80000000000001aa (VSpace: PD=timer_driver)
+    0x01dc Page Table           - Map               - 0x80000000000001ba (PageTable: PD/VM=timer_driver VADDR=0x2200000)
+         vspace (cap)         0x80000000000001a6 (VSpace: PD=timer_driver)
          vaddr                0x2200000
          attr                 3
-    0x01e2 Page Table           - Map               - 0x80000000000001bf (PageTable: PD/VM=timer_driver VADDR=0x2600000)
-         vspace (cap)         0x80000000000001aa (VSpace: PD=timer_driver)
+    0x01dd Page Table           - Map               - 0x80000000000001bb (PageTable: PD/VM=timer_driver VADDR=0x2600000)
+         vspace (cap)         0x80000000000001a6 (VSpace: PD=timer_driver)
          vaddr                0x2600000
          attr                 3
-    0x01e3 Page Table           - Map               - 0x80000000000001c0 (PageTable: PD/VM=mmc_driver VADDR=0x200000)
-         vspace (cap)         0x80000000000001ab (VSpace: PD=mmc_driver)
+    0x01de Page Table           - Map               - 0x80000000000001bc (PageTable: PD/VM=mmc_driver VADDR=0x200000)
+         vspace (cap)         0x80000000000001a7 (VSpace: PD=mmc_driver)
          vaddr                0x200000
          attr                 3
-    0x01e4 Page Table           - Map               - 0x80000000000001c1 (PageTable: PD/VM=mmc_driver VADDR=0x2600000)
-         vspace (cap)         0x80000000000001ab (VSpace: PD=mmc_driver)
+    0x01df Page Table           - Map               - 0x80000000000001bd (PageTable: PD/VM=mmc_driver VADDR=0x2600000)
+         vspace (cap)         0x80000000000001a7 (VSpace: PD=mmc_driver)
          vaddr                0x2600000
          attr                 3
-    0x01e5 Page Table           - Map               - 0x80000000000001c2 (PageTable: PD/VM=mmc_driver VADDR=0x3000000)
-         vspace (cap)         0x80000000000001ab (VSpace: PD=mmc_driver)
+    0x01e0 Page Table           - Map               - 0x80000000000001be (PageTable: PD/VM=mmc_driver VADDR=0x3000000)
+         vspace (cap)         0x80000000000001a7 (VSpace: PD=mmc_driver)
          vaddr                0x3000000
          attr                 3
-    0x01e6 Page Table           - Map               - 0x80000000000001c3 (PageTable: PD/VM=fatfs VADDR=0x200000)
-         vspace (cap)         0x80000000000001ac (VSpace: PD=fatfs)
+    0x01e1 Page Table           - Map               - 0x80000000000001bf (PageTable: PD/VM=fatfs VADDR=0x200000)
+         vspace (cap)         0x80000000000001a8 (VSpace: PD=fatfs)
          vaddr                0x200000
          attr                 3
-    0x01e7 Page Table           - Map               - 0x80000000000001c4 (PageTable: PD/VM=fatfs VADDR=0x2600000)
-         vspace (cap)         0x80000000000001ac (VSpace: PD=fatfs)
+    0x01e2 Page Table           - Map               - 0x80000000000001c0 (PageTable: PD/VM=fatfs VADDR=0x2600000)
+         vspace (cap)         0x80000000000001a8 (VSpace: PD=fatfs)
          vaddr                0x2600000
          attr                 3
-    0x01e8 Page                 - Map               - 0x80000000000001cb (Page(4 KiB): MR=uart @ ff803000 (derived))
-         vspace (cap)         0x80000000000001a8 (VSpace: PD=serial_driver)
+    0x01e3 Page                 - Map               - 0x80000000000001c7 (Page(4 KiB): MR=uart @ ff803000 (derived))
+         vspace (cap)         0x80000000000001a4 (VSpace: PD=serial_driver)
          vaddr                0x5000000
          rights               3
          attr                 6
-    0x01e9 Page                 - Map               - 0x80000000000001cc (Page(2 MiB): MR=shared_dma #0 (derived))
-         vspace (cap)         0x80000000000001a8 (VSpace: PD=serial_driver)
+    0x01e4 Page                 - Map               - 0x80000000000001c8 (Page(2 MiB): MR=shared_dma #0 (derived))
+         vspace (cap)         0x80000000000001a4 (VSpace: PD=serial_driver)
          vaddr                0x2400000
          rights               3
          attr                 7
-    0x01ea Page                 - Map               - 0x80000000000001cd (Page(2 MiB): MR=tx_avail_ring_buf #0 (derived))
-         vspace (cap)         0x80000000000001a8 (VSpace: PD=serial_driver)
+    0x01e5 Page                 - Map               - 0x80000000000001c9 (Page(2 MiB): MR=tx_avail_ring_buf #0 (derived))
+         vspace (cap)         0x80000000000001a4 (VSpace: PD=serial_driver)
          vaddr                0x7000000
          rights               3
          attr                 7
-    0x01eb Page                 - Map               - 0x80000000000001ce (Page(2 MiB): MR=tx_used_ring_buf #0 (derived))
-         vspace (cap)         0x80000000000001a8 (VSpace: PD=serial_driver)
+    0x01e6 Page                 - Map               - 0x80000000000001ca (Page(2 MiB): MR=tx_used_ring_buf #0 (derived))
+         vspace (cap)         0x80000000000001a4 (VSpace: PD=serial_driver)
          vaddr                0x7200000
          rights               3
          attr                 7
-    0x01ec Page                 - Map               - 0x80000000000001cf (Page(2 MiB): MR=rx_avail_ring_buf #0 (derived))
-         vspace (cap)         0x80000000000001a8 (VSpace: PD=serial_driver)
+    0x01e7 Page                 - Map               - 0x80000000000001cb (Page(2 MiB): MR=rx_avail_ring_buf #0 (derived))
+         vspace (cap)         0x80000000000001a4 (VSpace: PD=serial_driver)
          vaddr                0x7400000
          rights               3
          attr                 7
-    0x01ed Page                 - Map               - 0x80000000000001d0 (Page(2 MiB): MR=rx_used_ring_buf #0 (derived))
-         vspace (cap)         0x80000000000001a8 (VSpace: PD=serial_driver)
+    0x01e8 Page                 - Map               - 0x80000000000001cc (Page(2 MiB): MR=rx_used_ring_buf #0 (derived))
+         vspace (cap)         0x80000000000001a4 (VSpace: PD=serial_driver)
          vaddr                0x7600000
          rights               3
          attr                 7
-    0x01ee Page                 - Map               - 0x80000000000001d1 (Page(4 KiB): MR=ELF:serial_driver-0 @ 251000 (derived))
-         vspace (cap)         0x80000000000001a8 (VSpace: PD=serial_driver)
+    0x01e9 Page                 - Map               - 0x80000000000001cd (Page(4 KiB): MR=ELF:serial_driver-0 @ 251000 (derived))
+         vspace (cap)         0x80000000000001a4 (VSpace: PD=serial_driver)
          vaddr                0x200000
          rights               2
          attr                 3
-    0x01ef Page                 - Map               - 0x80000000000001d2 (Page(4 KiB): MR=ELF:serial_driver-1 @ 252000 (derived))
-         vspace (cap)         0x80000000000001a8 (VSpace: PD=serial_driver)
+    0x01ea Page                 - Map               - 0x80000000000001ce (Page(4 KiB): MR=ELF:serial_driver-1 @ 252000 (derived))
+         vspace (cap)         0x80000000000001a4 (VSpace: PD=serial_driver)
          vaddr                0x201000
          rights               3
          attr                 7
       REPEAT: count=2 {'page': 1, 'vaddr': 4096}
-    0x01f0 Page                 - Map               - 0x80000000000001d4 (Page(2 MiB): MR=shared_dma #0 (derived))
-         vspace (cap)         0x80000000000001a9 (VSpace: PD=serial_client)
+    0x01eb Page                 - Map               - 0x80000000000001d0 (Page(2 MiB): MR=shared_dma #0 (derived))
+         vspace (cap)         0x80000000000001a5 (VSpace: PD=serial_client)
          vaddr                0x2400000
          rights               3
          attr                 7
-    0x01f1 Page                 - Map               - 0x80000000000001d5 (Page(2 MiB): MR=tx_avail_ring_buf #0 (derived))
-         vspace (cap)         0x80000000000001a9 (VSpace: PD=serial_client)
+    0x01ec Page                 - Map               - 0x80000000000001d1 (Page(2 MiB): MR=tx_avail_ring_buf #0 (derived))
+         vspace (cap)         0x80000000000001a5 (VSpace: PD=serial_client)
          vaddr                0x6000000
          rights               3
          attr                 7
-    0x01f2 Page                 - Map               - 0x80000000000001d6 (Page(2 MiB): MR=tx_used_ring_buf #0 (derived))
-         vspace (cap)         0x80000000000001a9 (VSpace: PD=serial_client)
+    0x01ed Page                 - Map               - 0x80000000000001d2 (Page(2 MiB): MR=tx_used_ring_buf #0 (derived))
+         vspace (cap)         0x80000000000001a5 (VSpace: PD=serial_client)
          vaddr                0x6200000
          rights               3
          attr                 7
-    0x01f3 Page                 - Map               - 0x80000000000001d7 (Page(2 MiB): MR=rx_avail_ring_buf #0 (derived))
-         vspace (cap)         0x80000000000001a9 (VSpace: PD=serial_client)
+    0x01ee Page                 - Map               - 0x80000000000001d3 (Page(2 MiB): MR=rx_avail_ring_buf #0 (derived))
+         vspace (cap)         0x80000000000001a5 (VSpace: PD=serial_client)
          vaddr                0x6400000
          rights               3
          attr                 7
-    0x01f4 Page                 - Map               - 0x80000000000001d8 (Page(2 MiB): MR=rx_used_ring_buf #0 (derived))
-         vspace (cap)         0x80000000000001a9 (VSpace: PD=serial_client)
+    0x01ef Page                 - Map               - 0x80000000000001d4 (Page(2 MiB): MR=rx_used_ring_buf #0 (derived))
+         vspace (cap)         0x80000000000001a5 (VSpace: PD=serial_client)
          vaddr                0x6600000
          rights               3
          attr                 7
-    0x01f5 Page                 - Map               - 0x80000000000001d9 (Page(4 KiB): MR=mmc_to_serial_client_putchar_buf #0 (derived))
-         vspace (cap)         0x80000000000001a9 (VSpace: PD=serial_client)
+    0x01f0 Page                 - Map               - 0x80000000000001d5 (Page(4 KiB): MR=mmc_to_serial_client_putchar_buf #0 (derived))
+         vspace (cap)         0x80000000000001a5 (VSpace: PD=serial_client)
          vaddr                0x6800000
          rights               3
          attr                 7
-    0x01f6 Page                 - Map               - 0x80000000000001da (Page(4 KiB): MR=timer_driver_to_serial_client_putchar_buf #0 (derived))
-         vspace (cap)         0x80000000000001a9 (VSpace: PD=serial_client)
+    0x01f1 Page                 - Map               - 0x80000000000001d6 (Page(4 KiB): MR=timer_driver_to_serial_client_putchar_buf #0 (derived))
+         vspace (cap)         0x80000000000001a5 (VSpace: PD=serial_client)
          vaddr                0x7000000
          rights               3
          attr                 7
-    0x01f7 Page                 - Map               - 0x80000000000001db (Page(4 KiB): MR=fatfs_to_serial_client_putchar_buf #0 (derived))
-         vspace (cap)         0x80000000000001a9 (VSpace: PD=serial_client)
+    0x01f2 Page                 - Map               - 0x80000000000001d7 (Page(4 KiB): MR=fatfs_to_serial_client_putchar_buf #0 (derived))
+         vspace (cap)         0x80000000000001a5 (VSpace: PD=serial_client)
          vaddr                0x7200000
          rights               3
          attr                 7
-    0x01f8 Page                 - Map               - 0x80000000000001dc (Page(4 KiB): MR=ELF:serial_client-0 @ 254000 (derived))
-         vspace (cap)         0x80000000000001a9 (VSpace: PD=serial_client)
+    0x01f3 Page                 - Map               - 0x80000000000001d8 (Page(4 KiB): MR=ELF:serial_client-0 @ 254000 (derived))
+         vspace (cap)         0x80000000000001a5 (VSpace: PD=serial_client)
          vaddr                0x200000
          rights               2
          attr                 3
-    0x01f9 Page                 - Map               - 0x80000000000001dd (Page(4 KiB): MR=ELF:serial_client-1 @ 255000 (derived))
-         vspace (cap)         0x80000000000001a9 (VSpace: PD=serial_client)
+    0x01f4 Page                 - Map               - 0x80000000000001d9 (Page(4 KiB): MR=ELF:serial_client-1 @ 255000 (derived))
+         vspace (cap)         0x80000000000001a5 (VSpace: PD=serial_client)
          vaddr                0x201000
          rights               3
          attr                 7
       REPEAT: count=2 {'page': 1, 'vaddr': 4096}
-    0x01fa Page                 - Map               - 0x80000000000001df (Page(4 KiB): MR=timer @ ffd0f000 (derived))
-         vspace (cap)         0x80000000000001aa (VSpace: PD=timer_driver)
+    0x01f5 Page                 - Map               - 0x80000000000001db (Page(4 KiB): MR=timer @ ffd0f000 (derived))
+         vspace (cap)         0x80000000000001a6 (VSpace: PD=timer_driver)
          vaddr                0x2200000
          rights               3
          attr                 6
       REPEAT: count=16 {'page': 1, 'vaddr': 4096}
-    0x01fb Page                 - Map               - 0x80000000000001ef (Page(4 KiB): MR=timer_driver_to_mmc_driver_numticks_buf #0 (derived))
-         vspace (cap)         0x80000000000001aa (VSpace: PD=timer_driver)
+    0x01f6 Page                 - Map               - 0x80000000000001eb (Page(4 KiB): MR=timer_driver_to_mmc_driver_numticks_buf #0 (derived))
+         vspace (cap)         0x80000000000001a6 (VSpace: PD=timer_driver)
          vaddr                0x2600000
          rights               3
          attr                 7
-    0x01fc Page                 - Map               - 0x80000000000001f0 (Page(4 KiB): MR=ELF:timer_driver-0 @ 257000 (derived))
-         vspace (cap)         0x80000000000001aa (VSpace: PD=timer_driver)
+    0x01f7 Page                 - Map               - 0x80000000000001ec (Page(4 KiB): MR=ELF:timer_driver-0 @ 257000 (derived))
+         vspace (cap)         0x80000000000001a6 (VSpace: PD=timer_driver)
          vaddr                0x200000
          rights               2
          attr                 3
       REPEAT: count=4 {'page': 1, 'vaddr': 4096}
-    0x01fd Page                 - Map               - 0x80000000000001f4 (Page(4 KiB): MR=ELF:timer_driver-1 @ 25b000 (derived))
-         vspace (cap)         0x80000000000001aa (VSpace: PD=timer_driver)
+    0x01f8 Page                 - Map               - 0x80000000000001f0 (Page(4 KiB): MR=ELF:timer_driver-1 @ 25b000 (derived))
+         vspace (cap)         0x80000000000001a6 (VSpace: PD=timer_driver)
          vaddr                0x204000
          rights               3
          attr                 7
       REPEAT: count=4 {'page': 1, 'vaddr': 4096}
-    0x01fe Page                 - Map               - 0x80000000000001f8 (Page(4 KiB): MR=timer_driver_to_mmc_driver_numticks_buf #0 (derived))
-         vspace (cap)         0x80000000000001ab (VSpace: PD=mmc_driver)
+    0x01f9 Page                 - Map               - 0x80000000000001f4 (Page(4 KiB): MR=timer_driver_to_mmc_driver_numticks_buf #0 (derived))
+         vspace (cap)         0x80000000000001a7 (VSpace: PD=mmc_driver)
          vaddr                0x2600000
          rights               3
          attr                 7
-    0x01ff Page                 - Map               - 0x80000000000001f9 (Page(4 KiB): MR=mmc_to_serial_client_putchar_buf #0 (derived))
-         vspace (cap)         0x80000000000001ab (VSpace: PD=mmc_driver)
+    0x01fa Page                 - Map               - 0x80000000000001f5 (Page(4 KiB): MR=mmc_to_serial_client_putchar_buf #0 (derived))
+         vspace (cap)         0x80000000000001a7 (VSpace: PD=mmc_driver)
          vaddr                0x3000000
          rights               3
          attr                 7
-    0x0200 Page                 - Map               - 0x80000000000001fa (Page(4 KiB): MR=gpio @ ff634000 (derived))
-         vspace (cap)         0x80000000000001ab (VSpace: PD=mmc_driver)
+    0x01fb Page                 - Map               - 0x80000000000001f6 (Page(4 KiB): MR=gpio @ ff634000 (derived))
+         vspace (cap)         0x80000000000001a7 (VSpace: PD=mmc_driver)
          vaddr                0x3002000
          rights               3
          attr                 6
-    0x0201 Page                 - Map               - 0x80000000000001fb (Page(4 KiB): MR=emmc @ ffe05000 (derived))
-         vspace (cap)         0x80000000000001ab (VSpace: PD=mmc_driver)
+    0x01fc Page                 - Map               - 0x80000000000001f7 (Page(4 KiB): MR=emmc @ ffe05000 (derived))
+         vspace (cap)         0x80000000000001a7 (VSpace: PD=mmc_driver)
          vaddr                0x3004000
          rights               3
          attr                 6
       REPEAT: count=2 {'page': 1, 'vaddr': 4096}
-    0x0202 Page                 - Map               - 0x80000000000001fd (Page(4 KiB): MR=clk @ ff63c000 (derived))
-         vspace (cap)         0x80000000000001ab (VSpace: PD=mmc_driver)
-         vaddr                0x3006000
-         rights               3
-         attr                 6
-    0x0203 Page                 - Map               - 0x80000000000001fe (Page(2 MiB): MR=mmc_driver_request_queue #0 (derived))
-         vspace (cap)         0x80000000000001ab (VSpace: PD=mmc_driver)
+    0x01fd Page                 - Map               - 0x80000000000001f9 (Page(2 MiB): MR=mmc_driver_request_queue #0 (derived))
+         vspace (cap)         0x80000000000001a7 (VSpace: PD=mmc_driver)
          vaddr                0x3200000
          rights               3
          attr                 7
-    0x0204 Page                 - Map               - 0x80000000000001ff (Page(2 MiB): MR=mmc_driver_response_queue #0 (derived))
-         vspace (cap)         0x80000000000001ab (VSpace: PD=mmc_driver)
+    0x01fe Page                 - Map               - 0x80000000000001fa (Page(2 MiB): MR=mmc_driver_response_queue #0 (derived))
+         vspace (cap)         0x80000000000001a7 (VSpace: PD=mmc_driver)
          vaddr                0x3400000
          rights               3
          attr                 7
-    0x0205 Page                 - Map               - 0x8000000000000200 (Page(2 MiB): MR=mmc_driver_shared_data #0 (derived))
-         vspace (cap)         0x80000000000001ab (VSpace: PD=mmc_driver)
+    0x01ff Page                 - Map               - 0x80000000000001fb (Page(2 MiB): MR=mmc_driver_shared_data #0 (derived))
+         vspace (cap)         0x80000000000001a7 (VSpace: PD=mmc_driver)
          vaddr                0x4000000
          rights               3
          attr                 7
-    0x0206 Page                 - Map               - 0x8000000000000201 (Page(4 KiB): MR=ELF:mmc_driver-0 @ 25f000 (derived))
-         vspace (cap)         0x80000000000001ab (VSpace: PD=mmc_driver)
+    0x0200 Page                 - Map               - 0x80000000000001fc (Page(4 KiB): MR=ELF:mmc_driver-0 @ 25f000 (derived))
+         vspace (cap)         0x80000000000001a7 (VSpace: PD=mmc_driver)
          vaddr                0x200000
          rights               2
          attr                 3
       REPEAT: count=22 {'page': 1, 'vaddr': 4096}
-    0x0207 Page                 - Map               - 0x8000000000000217 (Page(4 KiB): MR=ELF:mmc_driver-1 @ 275000 (derived))
-         vspace (cap)         0x80000000000001ab (VSpace: PD=mmc_driver)
+    0x0201 Page                 - Map               - 0x8000000000000212 (Page(4 KiB): MR=ELF:mmc_driver-1 @ 275000 (derived))
+         vspace (cap)         0x80000000000001a7 (VSpace: PD=mmc_driver)
          vaddr                0x216000
          rights               3
          attr                 7
       REPEAT: count=4 {'page': 1, 'vaddr': 4096}
-    0x0208 Page                 - Map               - 0x800000000000021b (Page(4 KiB): MR=fatfs_to_serial_client_putchar_buf #0 (derived))
-         vspace (cap)         0x80000000000001ac (VSpace: PD=fatfs)
+    0x0202 Page                 - Map               - 0x8000000000000216 (Page(4 KiB): MR=fatfs_to_serial_client_putchar_buf #0 (derived))
+         vspace (cap)         0x80000000000001a8 (VSpace: PD=fatfs)
          vaddr                0x2600000
          rights               3
          attr                 7
-    0x0209 Page                 - Map               - 0x800000000000021c (Page(2 MiB): MR=mmc_driver_request_queue #0 (derived))
-         vspace (cap)         0x80000000000001ac (VSpace: PD=fatfs)
+    0x0203 Page                 - Map               - 0x8000000000000217 (Page(2 MiB): MR=mmc_driver_request_queue #0 (derived))
+         vspace (cap)         0x80000000000001a8 (VSpace: PD=fatfs)
          vaddr                0x2800000
          rights               3
          attr                 7
-    0x020a Page                 - Map               - 0x800000000000021d (Page(2 MiB): MR=mmc_driver_response_queue #0 (derived))
-         vspace (cap)         0x80000000000001ac (VSpace: PD=fatfs)
+    0x0204 Page                 - Map               - 0x8000000000000218 (Page(2 MiB): MR=mmc_driver_response_queue #0 (derived))
+         vspace (cap)         0x80000000000001a8 (VSpace: PD=fatfs)
          vaddr                0x3000000
          rights               3
          attr                 7
-    0x020b Page                 - Map               - 0x800000000000021e (Page(2 MiB): MR=mmc_driver_shared_data #0 (derived))
-         vspace (cap)         0x80000000000001ac (VSpace: PD=fatfs)
+    0x0205 Page                 - Map               - 0x8000000000000219 (Page(2 MiB): MR=mmc_driver_shared_data #0 (derived))
+         vspace (cap)         0x80000000000001a8 (VSpace: PD=fatfs)
          vaddr                0x4000000
          rights               3
          attr                 7
-    0x020c Page                 - Map               - 0x800000000000021f (Page(4 KiB): MR=ELF:fatfs-0 @ 279000 (derived))
-         vspace (cap)         0x80000000000001ac (VSpace: PD=fatfs)
+    0x0206 Page                 - Map               - 0x800000000000021a (Page(4 KiB): MR=ELF:fatfs-0 @ 279000 (derived))
+         vspace (cap)         0x80000000000001a8 (VSpace: PD=fatfs)
          vaddr                0x200000
          rights               2
          attr                 3
       REPEAT: count=30 {'page': 1, 'vaddr': 4096}
-    0x020d Page                 - Map               - 0x800000000000023d (Page(4 KiB): MR=ELF:fatfs-1 @ 297000 (derived))
-         vspace (cap)         0x80000000000001ac (VSpace: PD=fatfs)
+    0x0207 Page                 - Map               - 0x8000000000000238 (Page(4 KiB): MR=ELF:fatfs-1 @ 297000 (derived))
+         vspace (cap)         0x80000000000001a8 (VSpace: PD=fatfs)
          vaddr                0x21e000
          rights               3
          attr                 7
       REPEAT: count=262 {'page': 1, 'vaddr': 4096}
-    0x020e Page                 - Map               - 0x8000000000000013 (Page(4 KiB): IPC Buffer PD=serial_driver)
-         vspace (cap)         0x80000000000001a8 (VSpace: PD=serial_driver)
+    0x0208 Page                 - Map               - 0x8000000000000013 (Page(4 KiB): IPC Buffer PD=serial_driver)
+         vspace (cap)         0x80000000000001a4 (VSpace: PD=serial_driver)
          vaddr                0x203000
          rights               3
          attr                 7
-    0x020f Page                 - Map               - 0x8000000000000014 (Page(4 KiB): IPC Buffer PD=serial_client)
-         vspace (cap)         0x80000000000001a9 (VSpace: PD=serial_client)
+    0x0209 Page                 - Map               - 0x8000000000000014 (Page(4 KiB): IPC Buffer PD=serial_client)
+         vspace (cap)         0x80000000000001a5 (VSpace: PD=serial_client)
          vaddr                0x203000
          rights               3
          attr                 7
-    0x0210 Page                 - Map               - 0x8000000000000015 (Page(4 KiB): IPC Buffer PD=timer_driver)
-         vspace (cap)         0x80000000000001aa (VSpace: PD=timer_driver)
+    0x020a Page                 - Map               - 0x8000000000000015 (Page(4 KiB): IPC Buffer PD=timer_driver)
+         vspace (cap)         0x80000000000001a6 (VSpace: PD=timer_driver)
          vaddr                0x208000
          rights               3
          attr                 7
-    0x0211 Page                 - Map               - 0x8000000000000016 (Page(4 KiB): IPC Buffer PD=mmc_driver)
-         vspace (cap)         0x80000000000001ab (VSpace: PD=mmc_driver)
+    0x020b Page                 - Map               - 0x8000000000000016 (Page(4 KiB): IPC Buffer PD=mmc_driver)
+         vspace (cap)         0x80000000000001a7 (VSpace: PD=mmc_driver)
          vaddr                0x21a000
          rights               3
          attr                 7
-    0x0212 Page                 - Map               - 0x8000000000000017 (Page(4 KiB): IPC Buffer PD=fatfs)
-         vspace (cap)         0x80000000000001ac (VSpace: PD=fatfs)
+    0x020c Page                 - Map               - 0x8000000000000017 (Page(4 KiB): IPC Buffer PD=fatfs)
+         vspace (cap)         0x80000000000001a8 (VSpace: PD=fatfs)
          vaddr                0x324000
          rights               3
          attr                 7
-    0x0213 SchedControl         - ConfigureFlags    - 0x0000000000000012 (None)
-         schedcontext (cap)   0x8000000000000192 (SchedContext: PD=serial_driver)
+    0x020d SchedControl         - ConfigureFlags    - 0x0000000000000012 (None)
+         schedcontext (cap)   0x800000000000018e (SchedContext: PD=serial_driver)
          budget               1000
          period               1000
          extra_refills        0
          badge                256
          flags                0
-    0x0214 SchedControl         - ConfigureFlags    - 0x0000000000000012 (None)
-         schedcontext (cap)   0x8000000000000193 (SchedContext: PD=serial_client)
+    0x020e SchedControl         - ConfigureFlags    - 0x0000000000000012 (None)
+         schedcontext (cap)   0x800000000000018f (SchedContext: PD=serial_client)
          budget               1000
          period               1000
          extra_refills        0
          badge                257
          flags                0
-    0x0215 SchedControl         - ConfigureFlags    - 0x0000000000000012 (None)
-         schedcontext (cap)   0x8000000000000194 (SchedContext: PD=timer_driver)
+    0x020f SchedControl         - ConfigureFlags    - 0x0000000000000012 (None)
+         schedcontext (cap)   0x8000000000000190 (SchedContext: PD=timer_driver)
          budget               1000
          period               1000
          extra_refills        0
          badge                258
          flags                0
-    0x0216 SchedControl         - ConfigureFlags    - 0x0000000000000012 (None)
-         schedcontext (cap)   0x8000000000000195 (SchedContext: PD=mmc_driver)
+    0x0210 SchedControl         - ConfigureFlags    - 0x0000000000000012 (None)
+         schedcontext (cap)   0x8000000000000191 (SchedContext: PD=mmc_driver)
          budget               1000
          period               1000
          extra_refills        0
          badge                259
          flags                0
-    0x0217 SchedControl         - ConfigureFlags    - 0x0000000000000012 (None)
-         schedcontext (cap)   0x8000000000000196 (SchedContext: PD=fatfs)
+    0x0211 SchedControl         - ConfigureFlags    - 0x0000000000000012 (None)
+         schedcontext (cap)   0x8000000000000192 (SchedContext: PD=fatfs)
          budget               1000
          period               1000
          extra_refills        0
          badge                260
          flags                0
-    0x0218 TCB                  - SetSchedParams    - 0x800000000000018d (TCB: PD=serial_driver)
+    0x0212 TCB                  - SetSchedParams    - 0x8000000000000189 (TCB: PD=serial_driver)
          authority (cap)      0x0000000000000001 (TCB: init)
          mcp                  101
          priority             101
-         sched_context (cap)  0x8000000000000192 (SchedContext: PD=serial_driver)
-         fault_ep (cap)       0x800000000000019d (EP: Monitor Fault)
-    0x0219 TCB                  - SetSchedParams    - 0x800000000000018e (TCB: PD=serial_client)
+         sched_context (cap)  0x800000000000018e (SchedContext: PD=serial_driver)
+         fault_ep (cap)       0x8000000000000199 (EP: Monitor Fault)
+    0x0213 TCB                  - SetSchedParams    - 0x800000000000018a (TCB: PD=serial_client)
          authority (cap)      0x0000000000000001 (TCB: init)
          mcp                  100
          priority             100
-         sched_context (cap)  0x8000000000000193 (SchedContext: PD=serial_client)
-         fault_ep (cap)       0x800000000000019d (EP: Monitor Fault)
-    0x021a TCB                  - SetSchedParams    - 0x800000000000018f (TCB: PD=timer_driver)
+         sched_context (cap)  0x800000000000018f (SchedContext: PD=serial_client)
+         fault_ep (cap)       0x8000000000000199 (EP: Monitor Fault)
+    0x0214 TCB                  - SetSchedParams    - 0x800000000000018b (TCB: PD=timer_driver)
          authority (cap)      0x0000000000000001 (TCB: init)
          mcp                  99
          priority             99
-         sched_context (cap)  0x8000000000000194 (SchedContext: PD=timer_driver)
-         fault_ep (cap)       0x800000000000019d (EP: Monitor Fault)
-    0x021b TCB                  - SetSchedParams    - 0x8000000000000190 (TCB: PD=mmc_driver)
+         sched_context (cap)  0x8000000000000190 (SchedContext: PD=timer_driver)
+         fault_ep (cap)       0x8000000000000199 (EP: Monitor Fault)
+    0x0215 TCB                  - SetSchedParams    - 0x800000000000018c (TCB: PD=mmc_driver)
          authority (cap)      0x0000000000000001 (TCB: init)
          mcp                  98
          priority             98
-         sched_context (cap)  0x8000000000000195 (SchedContext: PD=mmc_driver)
-         fault_ep (cap)       0x800000000000019d (EP: Monitor Fault)
-    0x021c TCB                  - SetSchedParams    - 0x8000000000000191 (TCB: PD=fatfs)
+         sched_context (cap)  0x8000000000000191 (SchedContext: PD=mmc_driver)
+         fault_ep (cap)       0x8000000000000199 (EP: Monitor Fault)
+    0x0216 TCB                  - SetSchedParams    - 0x800000000000018d (TCB: PD=fatfs)
          authority (cap)      0x0000000000000001 (TCB: init)
          mcp                  97
          priority             97
-         sched_context (cap)  0x8000000000000196 (SchedContext: PD=fatfs)
-         fault_ep (cap)       0x800000000000019d (EP: Monitor Fault)
-    0x021d CNode                - Copy              - 0x80000000000001c5 (CNode: PD=serial_driver)
+         sched_context (cap)  0x8000000000000192 (SchedContext: PD=fatfs)
+         fault_ep (cap)       0x8000000000000199 (EP: Monitor Fault)
+    0x0217 CNode                - Copy              - 0x80000000000001c1 (CNode: PD=serial_driver)
          dest_index           6
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x800000000000018d (TCB: PD=serial_driver)
+         src_obj (cap)        0x8000000000000189 (TCB: PD=serial_driver)
          src_depth            64
          rights               15
-    0x021e CNode                - Copy              - 0x80000000000001c6 (CNode: PD=serial_client)
+    0x0218 CNode                - Copy              - 0x80000000000001c2 (CNode: PD=serial_client)
          dest_index           6
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x800000000000018e (TCB: PD=serial_client)
+         src_obj (cap)        0x800000000000018a (TCB: PD=serial_client)
          src_depth            64
          rights               15
-    0x021f CNode                - Copy              - 0x80000000000001c7 (CNode: PD=timer_driver)
+    0x0219 CNode                - Copy              - 0x80000000000001c3 (CNode: PD=timer_driver)
          dest_index           6
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x800000000000018f (TCB: PD=timer_driver)
+         src_obj (cap)        0x800000000000018b (TCB: PD=timer_driver)
          src_depth            64
          rights               15
-    0x0220 CNode                - Copy              - 0x80000000000001c8 (CNode: PD=mmc_driver)
+    0x021a CNode                - Copy              - 0x80000000000001c4 (CNode: PD=mmc_driver)
          dest_index           6
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x8000000000000190 (TCB: PD=mmc_driver)
+         src_obj (cap)        0x800000000000018c (TCB: PD=mmc_driver)
          src_depth            64
          rights               15
-    0x0221 CNode                - Copy              - 0x80000000000001c9 (CNode: PD=fatfs)
+    0x021b CNode                - Copy              - 0x80000000000001c5 (CNode: PD=fatfs)
          dest_index           6
          dest_depth           9
          src_root (cap)       0x0000000000000063 (CNode: root)
-         src_obj (cap)        0x8000000000000191 (TCB: PD=fatfs)
+         src_obj (cap)        0x800000000000018d (TCB: PD=fatfs)
          src_depth            64
          rights               15
-    0x0222 TCB                  - SetSpace          - 0x800000000000018d (TCB: PD=serial_driver)
-         fault_ep (cap)       0x8000000000000344 (None)
-         cspace_root (cap)    0x80000000000001c5 (CNode: PD=serial_driver)
+    0x021c TCB                  - SetSpace          - 0x8000000000000189 (TCB: PD=serial_driver)
+         fault_ep (cap)       0x800000000000033f (None)
+         cspace_root (cap)    0x80000000000001c1 (CNode: PD=serial_driver)
          cspace_root_data     55
-         vspace_root (cap)    0x80000000000001a8 (VSpace: PD=serial_driver)
+         vspace_root (cap)    0x80000000000001a4 (VSpace: PD=serial_driver)
          vspace_root_data     0
       REPEAT: count=5 {'tcb': 1, 'fault_ep': 1, 'cspace_root': 1, 'vspace_root': 1}
-    0x0223 TCB                  - SetIPCBuffer      - 0x800000000000018d (TCB: PD=serial_driver)
+    0x021d TCB                  - SetIPCBuffer      - 0x8000000000000189 (TCB: PD=serial_driver)
          buffer               2109440
          buffer_frame (cap)   0x8000000000000013 (Page(4 KiB): IPC Buffer PD=serial_driver)
-    0x0224 TCB                  - SetIPCBuffer      - 0x800000000000018e (TCB: PD=serial_client)
+    0x021e TCB                  - SetIPCBuffer      - 0x800000000000018a (TCB: PD=serial_client)
          buffer               2109440
          buffer_frame (cap)   0x8000000000000014 (Page(4 KiB): IPC Buffer PD=serial_client)
-    0x0225 TCB                  - SetIPCBuffer      - 0x800000000000018f (TCB: PD=timer_driver)
+    0x021f TCB                  - SetIPCBuffer      - 0x800000000000018b (TCB: PD=timer_driver)
          buffer               2129920
          buffer_frame (cap)   0x8000000000000015 (Page(4 KiB): IPC Buffer PD=timer_driver)
-    0x0226 TCB                  - SetIPCBuffer      - 0x8000000000000190 (TCB: PD=mmc_driver)
+    0x0220 TCB                  - SetIPCBuffer      - 0x800000000000018c (TCB: PD=mmc_driver)
          buffer               2203648
          buffer_frame (cap)   0x8000000000000016 (Page(4 KiB): IPC Buffer PD=mmc_driver)
-    0x0227 TCB                  - SetIPCBuffer      - 0x8000000000000191 (TCB: PD=fatfs)
+    0x0221 TCB                  - SetIPCBuffer      - 0x800000000000018d (TCB: PD=fatfs)
          buffer               3293184
          buffer_frame (cap)   0x8000000000000017 (Page(4 KiB): IPC Buffer PD=fatfs)
-    0x0228 TCB                  - WriteRegisters    - 0x800000000000018d (TCB: PD=serial_driver)
+    0x0222 TCB                  - WriteRegisters    - 0x8000000000000189 (TCB: PD=serial_driver)
          resume               False
          arch_flags           0
          regs                 pc : 0x0000000000200000
@@ -4749,7 +4703,7 @@
                               x28 : 0x0000000000000000
                               tpidr_el0 : 0x0000000000000000
                               tpidrro_el0 : 0x0000000000000000
-    0x0229 TCB                  - WriteRegisters    - 0x800000000000018e (TCB: PD=serial_client)
+    0x0223 TCB                  - WriteRegisters    - 0x800000000000018a (TCB: PD=serial_client)
          resume               False
          arch_flags           0
          regs                 pc : 0x0000000000200000
@@ -4788,7 +4742,7 @@
                               x28 : 0x0000000000000000
                               tpidr_el0 : 0x0000000000000000
                               tpidrro_el0 : 0x0000000000000000
-    0x022a TCB                  - WriteRegisters    - 0x800000000000018f (TCB: PD=timer_driver)
+    0x0224 TCB                  - WriteRegisters    - 0x800000000000018b (TCB: PD=timer_driver)
          resume               False
          arch_flags           0
          regs                 pc : 0x0000000000200000
@@ -4827,7 +4781,7 @@
                               x28 : 0x0000000000000000
                               tpidr_el0 : 0x0000000000000000
                               tpidrro_el0 : 0x0000000000000000
-    0x022b TCB                  - WriteRegisters    - 0x8000000000000190 (TCB: PD=mmc_driver)
+    0x0225 TCB                  - WriteRegisters    - 0x800000000000018c (TCB: PD=mmc_driver)
          resume               False
          arch_flags           0
          regs                 pc : 0x0000000000200000
@@ -4866,7 +4820,7 @@
                               x28 : 0x0000000000000000
                               tpidr_el0 : 0x0000000000000000
                               tpidrro_el0 : 0x0000000000000000
-    0x022c TCB                  - WriteRegisters    - 0x8000000000000191 (TCB: PD=fatfs)
+    0x0226 TCB                  - WriteRegisters    - 0x800000000000018d (TCB: PD=fatfs)
          resume               False
          arch_flags           0
          regs                 pc : 0x0000000000200000
@@ -4905,8 +4859,8 @@
                               x28 : 0x0000000000000000
                               tpidr_el0 : 0x0000000000000000
                               tpidrro_el0 : 0x0000000000000000
-    0x022d TCB                  - BindNotification  - 0x800000000000018d (TCB: PD=serial_driver)
-         notification (cap)   0x80000000000001a3 (Notification: PD=serial_driver)
+    0x0227 TCB                  - BindNotification  - 0x8000000000000189 (TCB: PD=serial_driver)
+         notification (cap)   0x800000000000019f (Notification: PD=serial_driver)
       REPEAT: count=5 {'tcb': 1, 'notification': 1}
-    0x022e TCB                  - Resume            - 0x800000000000018d (TCB: PD=serial_driver)
+    0x0228 TCB                  - Resume            - 0x8000000000000189 (TCB: PD=serial_driver)
       REPEAT: count=5 {'tcb': 1}

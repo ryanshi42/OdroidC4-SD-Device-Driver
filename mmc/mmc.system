@@ -7,10 +7,10 @@
             size="0x1_000"
             phys_addr="0xff_634_000"/>
 
-    <memory_region 
+    <!-- <memory_region 
             name="clk" 
             size="0x1000" 
-            phys_addr="0xff_63c_000"/> 
+            phys_addr="0xff_63c_000"/>  -->
 
 <!-- <memory_region
         name="gpio"
@@ -364,11 +364,11 @@
                 setvar_vaddr="emmc_base_vaddr"/>
 
         <!-- Memory region mapped to the Clock Gate. -->
-        <map    mr="clk"         
+        <!-- <map    mr="clk"         
                 vaddr="0x3_006_000" 
                 perms="rw" 
                 setvar_vaddr="clk_vaddr" 
-                cached="false"/>
+                cached="false"/> -->
         <!-- A shared memory region for passing requests from `fatfs` to
         `mmc_driver`. -->
         <map
