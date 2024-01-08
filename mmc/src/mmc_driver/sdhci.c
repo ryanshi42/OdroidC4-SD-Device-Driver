@@ -260,7 +260,7 @@ result_t sdhci_card_init_and_id(
     puthex32(rca);
     sel4cp_dbg_puts("\n");
 
-
+    // Currently, we should be in standby mode. How do we check this?
     sel4cp_dbg_puts("Sending SEND_CSD (CMD9)...");
     res = sdhci_send_cmd(
             NULL,
@@ -285,6 +285,7 @@ result_t sdhci_card_init_and_id(
     /* TODO: Check card_is_locked status in the R1 response from CMD7 [bit 25],
      * if so, use CMD42 to unlock CMD42 structure [4.3.7] same as a single block
      * write; data block includes PWD setting mode, PWD len, PWD data.*/
+
     sel4cp_dbg_puts("Sending CARD_SELECT (CMD7)...");
     res = sdhci_send_cmd(
             NULL,
@@ -311,6 +312,11 @@ result_t sdhci_card_init_and_id(
     //? We take 3 as the block size is 2 ^ 3
     sdhci_data_ptr->blocksize = 8;
 
+    sdhci_data_ptr->flags = MMC_DATA_READ;
+
+    char buffer[512] = {0};
+    sdhci_data_ptr->dest = buffer;
+
     // puthex32(sdhci_data_ptr->blocksize);
 
     /* Reading from the SD Card Configuration Register (SCR).
@@ -327,17 +333,9 @@ result_t sdhci_card_init_and_id(
     // /* Set BLKSIZECNT to 1 block of 8 bytes. */
     // sel4cp_dbg_puts("\nSetting BLKSIZECNT to 1 block of 8 bytes...\n");
 
-    //! This won't work on the Odroid C4. These commands are instead sent using a data pointer which is what U-Boot and Linux do.
-    // res = sdhci_regs_set_block_count(sdhci_regs, 1);
-    // if (result_is_err(res)) {
-    //     return result_err_chain(res, "Failed to set block count to 1 in sdhci_card_init_and_id().");
-    // }
-    // res = sdhci_regs_set_block_size(sdhci_regs, 8);
-    // if (result_is_err(res)) {
-    //     return result_err_chain(res, "Failed to set block size to 8 in sdhci_card_init_and_id().");
-    // }
-
     sel4cp_dbg_puts("\n Finished, now we need to send SCR. \n");
+    
+    //! We do not appear to be in the right mode at this time.
 
 
     /* Get the SCR by sending the `SEND_SCR` command. We need the SCR to figure
@@ -363,55 +361,96 @@ result_t sdhci_card_init_and_id(
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to wait for `INT_READ_RDY` in sdhci_card_init_and_id().");
     }
-    /* Start reading SCR from EMMC. */
-    int num_scr_reads = 0;
-    int num_scr_retries = 160000;
-    bool is_read_ready = false;
-    do {
-        // res = sdhci_regs_is_read_ready(sdhci_regs, &is_read_ready);
-        // if (result_is_err(res)) {
-        //     return result_err_chain(res, "Failed to check if read ready in sdhci_card_init_and_id().");
-        // }
-        is_read_ready = true;
 
-        //! this data does not work properly.
-        if (is_read_ready) {
-            /* Read the SCR from the data register. */
-            uint32_t data = 0;
-            res = sdhci_regs_get_data(sdhci_regs, &data);
-            if (result_is_err(res)) {
-                return result_err_chain(res, "Failed to get data in sdhci_card_init_and_id().");
-            }
-            if (num_scr_reads == 0) {
-                /* Save low portion of SCR register to sdcard. */
-                res = sdcard_set_scr_raw32_lo(sdcard, data);
-                sel4cp_dbg_puts("SCR LO is \n");
-                puthex32(data);
-                if (result_is_err(res)) {
-                    return result_err_chain(res, "Failed to set SCR raw32 lo in sdhci_card_init_and_id().");
-                }
-            } else {
-                /* Save high portion of SCR register to sdcard. */
-                res = sdcard_set_scr_raw32_hi(sdcard, data);
-                sel4cp_dbg_puts("SCR HI is \n");
-                puthex32(data);
-
-                if (result_is_err(res)) {
-                    return result_err_chain(res, "Failed to set SCR raw32 hi in sdhci_card_init_and_id().");
-                }
-            }
-            num_scr_reads++;
-        } else {
-            usleep(1);
-            if (--num_scr_retries == 0) {
-                break;
-            }
-        }
-    } while (num_scr_reads < 2);
-    if (num_scr_reads < 2) {
-        *sdhci_result = SD_TIMEOUT;
-        return result_err("Failed to read SCR in sdhci_card_init_and_id().");
+    sel4cp_dbg_puts("SEND_SCR Buffer is:");
+    for (int i = 0; i < 512; i++) {
+        sel4cp_dbg_putc(buffer[i]);
     }
+
+
+    //? The following may not work, we just want to test it out.
+    /* Save low portion of SCR register to sdcard. */
+    res = sdcard_set_scr_raw32_lo(sdcard, buffer[0]);
+    sel4cp_dbg_puts("SCR LO is \n");
+    // puthex32(data);
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to set SCR raw32 lo in sdhci_card_init_and_id().");
+    }
+
+    /* Save high portion of SCR register to sdcard. */
+    res = sdcard_set_scr_raw32_hi(sdcard, buffer[32]);
+    sel4cp_dbg_puts("SCR HI is \n");
+    // puthex32(data);
+
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to set SCR raw32 hi in sdhci_card_init_and_id().");
+    }
+
+    //     sel4cp_dbg_puts("Sending CARD_SELECT (CMD7)...");
+    // res = sdhci_send_cmd(
+    //         NULL,
+    //         sdhci_regs,
+    //         IDX_CARD_SELECT,
+    //         0,
+    //         sdcard,
+    //         sdhci_result
+    // );
+    // if (result_is_err(res)) {
+    //     return result_err_chain(res, "Failed to send `IDX_CARD_SELECT` in sdhci_card_init_and_id().");
+    // }
+
+
+
+
+    // /* Start reading SCR from EMMC. */
+    // int num_scr_reads = 0;
+    // int num_scr_retries = 160000;
+    // bool is_read_ready = false;
+    // do {
+    //     // res = sdhci_regs_is_read_ready(sdhci_regs, &is_read_ready);
+    //     // if (result_is_err(res)) {
+    //     //     return result_err_chain(res, "Failed to check if read ready in sdhci_card_init_and_id().");
+    //     // }
+    //     is_read_ready = true;
+
+    //     //! this data does not work properly.
+    //     if (is_read_ready) {
+    //         /* Read the SCR from the data register. */
+    //         uint32_t data = 0;
+    //         res = sdhci_regs_get_data(sdhci_regs, &data);
+    //         if (result_is_err(res)) {
+    //             return result_err_chain(res, "Failed to get data in sdhci_card_init_and_id().");
+    //         }
+    //         if (num_scr_reads == 0) {
+    //             /* Save low portion of SCR register to sdcard. */
+    //             res = sdcard_set_scr_raw32_lo(sdcard, data);
+    //             sel4cp_dbg_puts("SCR LO is \n");
+    //             puthex32(data);
+    //             if (result_is_err(res)) {
+    //                 return result_err_chain(res, "Failed to set SCR raw32 lo in sdhci_card_init_and_id().");
+    //             }
+    //         } else {
+    //             /* Save high portion of SCR register to sdcard. */
+    //             res = sdcard_set_scr_raw32_hi(sdcard, data);
+    //             sel4cp_dbg_puts("SCR HI is \n");
+    //             puthex32(data);
+
+    //             if (result_is_err(res)) {
+    //                 return result_err_chain(res, "Failed to set SCR raw32 hi in sdhci_card_init_and_id().");
+    //             }
+    //         }
+    //         num_scr_reads++;
+    //     } else {
+    //         usleep(1);
+    //         if (--num_scr_retries == 0) {
+    //             break;
+    //         }
+    //     }
+    // } while (num_scr_reads < 2);
+    // if (num_scr_reads < 2) {
+    //     *sdhci_result = SD_TIMEOUT;
+    //     return result_err("Failed to read SCR in sdhci_card_init_and_id().");
+    // }
 
     // // Set the block length to be equal to 512
     // sel4cp_dbg_puts("Sending SET_BLOCKLEN (CMD16)...");
@@ -714,11 +753,42 @@ result_t sdhci_transfer_blocks(
 
     sdhci_data_ptr->blocks = num_blocks;
 
-    // Blocksize is 9
     sdhci_data_ptr->blocksize = block_size;
 
-    if (is_write)
+    if (is_write) {
+        sel4cp_dbg_puts("This is the pre-buffer talking:\n");
+        for (int i = 0; i < buffer_len; i++) {
+            sel4cp_dbg_putc(buffer[i]);
+            // fake_buf[i] = buffer[i];
+        }
+    }
+
+    char fake_buf[buffer_len];
+    for (int i = 0; i < buffer_len; i++) {
+        // sel4cp_dbg_puts("adsf: ");
+        // sel4cp_dbg_putc(buffer[i]);
+        fake_buf[i] = buffer[i];
+    }
+
+    // If it's a write command...
+    if (is_write) {
         sdhci_data_ptr->flags |= MMC_DATA_WRITE;
+
+        sdhci_data_ptr->src = fake_buf;
+        // sdhci_data_ptr->buffer = buffer;
+
+    } else {
+        sdhci_data_ptr->flags |= MMC_DATA_READ;
+
+        // set the destination of the read to be equal to the buffer
+        sdhci_data_ptr->dest = buffer;
+        // sel4cp_dbg_puts("\nqwerty\n");
+        // puthex32(buffer);
+        // puthex32(&buffer);
+
+        // sdhci_data_ptr->buffer = buffer;
+
+    }
 
     //! This is RPi specific.
     // res = sdhci_regs_set_block_count(sdhci_regs, num_blocks);
@@ -769,7 +839,7 @@ result_t sdhci_transfer_blocks(
     //                 return result_err_chain(res, "Failed to set data in sdhci_transfer_blocks().");
     //             }
     //         } else {
-    //             res = sdhci_regs_get_data(sdhci_regs, &((uint32_t *) buffer)[i]);
+                // res = sdhci_regs_get_data(sdhci_regs, &((uint32_t *) buffer)[i]);
     //             if (result_is_err(res)) {
     //                 return result_err_chain(res, "Failed to get data in sdhci_transfer_blocks().");
     //             }
@@ -796,6 +866,18 @@ result_t sdhci_transfer_blocks(
     //         }
     //     }
     // }
+
+            // sel4cp_dbg_puts("adsf: ");
+        // sel4cp_dbg_putc(buffer[i]);
+
+    // char fake_buf[buffer_len];
+    if (!is_write) {
+        sel4cp_dbg_puts("This is the post-buffer talking:\n");
+        for (int i = 0; i < buffer_len; i++) {
+            sel4cp_dbg_putc(buffer[i]);
+            // fake_buf[i] = buffer[i];
+        }
+    }
 
     sel4cp_dbg_puts("\nAll blocks transferred with no timeout.\n");
 
@@ -1124,7 +1206,7 @@ result_t sdhci_wait_for_cmd_in_progress(
     return result_ok();
 }
 
-void print_emmc_registers(sdhci_regs_t* sdhci_regs) {
+void print_cmd_registers(sdhci_regs_t* sdhci_regs) {
 
     sel4cp_dbg_puts("\nPrinting Everything\n");
 
@@ -1411,7 +1493,7 @@ result_t sdhci_send_cmd(
 
     sel4cp_dbg_puts("\nApp commands check done\n");
 
-    // print_emmc_registers(sdhci_regs);
+    // print_cmd_registers(sdhci_regs);
 
     sel4cp_dbg_puts("getting status: NOT checking if it's complete");
 
@@ -1633,69 +1715,72 @@ result_t sdhci_send_cmd(
 
     // puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
 
+    //? Following U-Boot spec here
+    uint32_t data_addr = 0;
+
+
+    /*
+        ...read...                
+        buff ====> data->dest
+        ...write...
+        data->src =====> buff
+    */
+
+    sel4cp_dbg_puts("hello!\n\n");
+	if (data) {
+		// uint32_t data_size = data->blocks * data->blocksize;
+
+        // puthex32(data->flags);
+        // puthex32(MMC_DATA_READ);
+
+		if (data->flags == MMC_DATA_READ) {
+            // if read, set the address to be the data destination
+            sel4cp_dbg_puts("I am a read!\n\n");
+
+            // READ INTO THIS BUFFER
+			data_addr = (long) data->dest;
+
+            //TODO: fix
+			// invalidate_dcache_range(data_addr, data_addr + data_size);
+		} else {
+            sel4cp_dbg_puts("I am a write!\n\n");
+
+            // else, copy the data into the buffer from the data source
+			// data->buffer = malloc(data_size * sizeof(char));
+            // void * shared_sd_data_block = data->buffer;
+            
+            // sel4cp_dbg_puts("malloc was ok!\n\n");
+
+            // bzero(data->buffer, data_size);
+            // sel4cp_dbg_puts("bzero was ok!\n\n");
+
+            // WRITE FROM THIS BUFFER
+			data_addr = (long) data->src;
+
+			// memcpy((void *) data->buffer, data->src, data_size);
+
+            //TODO: fix
+			// flush_dcache_range(data_addr, data_addr + data_size);
+		}
+	}
+
+    meson_mmc_dat = data_addr;
+
+
 
     //? Following Linux spec here
     sdhci_regs->regs->sd_emmc_cmd_cfg = meson_mmc_cmd;
     sdhci_regs->regs->sd_emmc_cmd_dat = meson_mmc_dat;
+        // sel4cp_dbg_puts("Data is: ");
+    // sdhci_regs->regs->sd_emmc_cmd_dat = meson_mmc_dat;
+
+    // puthex32(sdhci_regs->regs->sd_emmc_cmd_dat);
+    // puthex32(meson_mmc_dat);
+    // puthex32(sdhci_regs->regs->sd_emmc_cmd_dat);
     sdhci_regs->regs->sd_emmc_cmd_rsp = 0;
     sdhci_regs->regs->sd_emmc_cmd_arg = arg;
 
-
-    sel4cp_dbg_puts("Post CMD-arg Registers:\n\n");
-
-    print_emmc_registers(sdhci_regs);
-
-
-    // // puthex32(sdhci_regs->regs->sd_emmc_cmd_arg);
-    // // // puthex32(meson_mmc_cmd);
-    // puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
-
-    // //hi
-    // puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
-    // puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
-    // puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
-    // puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
-    // puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
-    // puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
-    // puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
-    // puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
-    // puthex32(sdhci_regs->regs->sd_emmc_status);
-    // puthex32(sdhci_regs->regs->sd_emmc_cfg);
-    // puthex32(sdhci_regs->regs->sd_emmc_cmd_arg);
-    // puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp);
-    // // puthex32(sdhci_regs->regs->sd_emmc_cfg);
-
-
-
-
-    //! To fix; this doesn't work at the moment
-    // uint32_t status;
-
-	// /* use 16s timeout */
-	// // start = get_timer(0);
-	// do {
-	// 	status = sdhci_regs->regs->sd_emmc_status;
-	// } while(!(status & STATUS_END_OF_CHAIN));
-
-	// if (!(status & STATUS_END_OF_CHAIN))
-	// 	// ret = -ETIMEDOUT;
-    //     return result_err("ETIMEDOUT");
-	// else if (status & STATUS_RESP_TIMEOUT)
-	// 	// ret = -ETIMEDOUT;
-    //     return result_err("STATUS_RESP_TIMEOUT");
-	// else if (status & STATUS_ERR_MASK)
-	// 	// ret = -EIO;
-    //     return result_err("EIO");
-
     //TODO Refactor into a function later
-
-	// if (data && data->flags == MMC_DATA_WRITE)
-	// 	free(pdata->w_buf);
-
-	/* reset status bits */
-	// oc4_emmc_regs_write_unsafe(mmc, STATUS_MASK, SD_EMMC_STATUS);
-    // sdhci_regs->regs->sd_emmc_status = STATUS_MASK;
-
 
     /* Obtain the delay from the command. */
     size_t delay_us = 0;
@@ -1723,12 +1808,26 @@ result_t sdhci_send_cmd(
         return result_err_chain(res, "Failed to wait for command complete interrupt in sdhci_send_cmd().");
     }
 
+    // //! This is never loading anything in because of the data register not writing anything in buasdnfasdmfkjsnzxcbjknv
+    // if (data) {
+    //     while (!((char *)data->dest)[0]) {
+    //         sel4cp_dbg_putc('.');
+    //         sel4cp_dbg_putc(data->dest[0]);
+
+    //     }
+    // }
+
     // sel4cp_dbg_puts("\nGotten interrupt\n");
     sel4cp_dbg_puts("\nWaiting for CMD to finish...\n");
 
     /* Wait for command in progress (this is actually the interrupt we are waiting for). */
     sel4cp_dbg_puts("Status before waiting for command:\n\n");
     puthex32(sdhci_regs->regs->sd_emmc_status);
+    sel4cp_dbg_puts("\n\n");
+
+        /* Wait for command in progress (this is actually the interrupt we are waiting for). */
+    sel4cp_dbg_puts("Data before waiting for command:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_cmd_dat);
     sel4cp_dbg_puts("\n\n");
 
 
@@ -1739,7 +1838,7 @@ result_t sdhci_send_cmd(
     puthex32(sdhci_regs->regs->sd_emmc_status);
     sel4cp_dbg_puts("\n\n");
 
-    puthex32(sdhci_regs->regs->sd_emmc_cmd_dat);
+    // puthex32(sdhci_regs->regs->sd_emmc_cmd_dat);
 
 
     // sel4cp_dbg_puts("Resp:\n\n");
@@ -1760,6 +1859,24 @@ result_t sdhci_send_cmd(
     puthex32(sdhci_regs->regs->sd_emmc_status);
     sel4cp_dbg_puts("\n\n");
 
+    sel4cp_dbg_puts("Data:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_cmd_dat);
+    puthex32(sdhci_regs->regs->sd_emmc_cmd_dat);
+    sel4cp_dbg_puts("\n\n");
+
+    //     sel4cp_dbg_puts("Resp0:\n\n");
+    // puthex32(sdhci_regs->regs->sd_emmc_cmd_dat);
+    // puthex32(sdhci_regs->regs->sd_emmc_cmd_dat);
+    // sel4cp_dbg_puts("\n\n");
+
+    if (data && data->flags == MMC_DATA_READ) {
+        sel4cp_dbg_puts("adsf: ");
+        sel4cp_dbg_putc(data->dest[0]);
+    }
+
+    // print_cmd_registers(sdhci_regs);
+
+
 
     // sel4cp_dbg_puts("Command Config:\n\n");
     // puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
@@ -1778,56 +1895,17 @@ result_t sdhci_send_cmd(
     sdhci_regs->regs->sd_emmc_status = STATUS_MASK;
     sdhci_regs->regs->sd_emmc_status = STATUS_MASK;
 
-    //! Doesn't write properly
-    // sel4cp_dbg_puts("New Status:\n\n");
-    // puthex32(sdhci_regs->regs->sd_emmc_status);
-    // puthex32(sdhci_regs->regs->sd_emmc_status);
-
-    // sel4cp_dbg_puts("\n\n");
-
-    // sel4cp_dbg_puts("Clock:\n\n");
-    // puthex32(sdhci_regs->regs->sd_emmc_clock);
-    // sel4cp_dbg_puts("\n\n");
-
-    // sel4cp_dbg_puts("Resp:\n\n");
-    // puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp);
-    // puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp1);
-    // puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp2);
-    // puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp3);
-    // sel4cp_dbg_puts("\n\n");
-
-    // sel4cp_dbg_puts("Fake Resp:\n\n");
-    // sdhci_regs->regs->sd_emmc_cmd_rsp = 0x6969;
-    // puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp);
-    // sel4cp_dbg_puts("\n\n");
-
-
-
     /* Get the response from `resp0`. */
     uint32_t resp0 = 0;
-    // puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp);
-
     resp0 = sdhci_regs->regs->sd_emmc_cmd_rsp;
 
-    // puthex32(resp0);
-    // puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp);
-
-    // res = sdhci_regs_get_resp0(
-    //         sdhci_regs,
-    //         &resp0
-    // );
-    // if (result_is_err(res)) {
-    //     return result_err_chain(res, "Failed to get resp0 in sdhci_send_cmd().");
-    // }
-
-    // sel4cp_dbg_puts("Fake Resp 2:\n\n");
-    // puthex32(resp0);
-    // puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp);
-    // sel4cp_dbg_puts("\n\n");
-
-    // sel4cp_dbg_puts("\n\n");
+    sel4cp_dbg_puts("Resp0:\n\n");
+    puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp);
+    puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp);
+    sel4cp_dbg_puts("\n\n");
 
     /* Handle response depending on the SDHCI command's response type. */
+    //! Be careful with the following response types. Adding more will require you to change these.
     switch (cmd_rspns_type) {
         case CMD_NO_RESP: {
             sel4cp_dbg_puts("\nGotten cmd response type, it's CMD_NO_RESP\n");

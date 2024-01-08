@@ -7,7 +7,7 @@
 #include <stdbool.h>
 
 #include "shared_ringbuffer.h"
-#include "shared_dma.h"
+#include ".h"
 #include "sel4cp_facade.h"
 
 #define SERIAL_CLIENT_TO_SERIAL_DRIVER_PRINTF_CHANNEL (3)

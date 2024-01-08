@@ -136,7 +136,6 @@ void init(void) {
     }
 
     /* Initialise and identify the SD card. */
-    //TODO this is the one that causes the most bugs.
     sdhci_result_t sdhci_result;
     res = sdhci_card_init_and_id(
             &global_sdhci_regs,
@@ -164,6 +163,7 @@ void init(void) {
     sel4cp_dbg_puts("\n\nBeginning Tests:\n\n");
 
 
+    assert(false);
     /* Running E2E tests to verify our SD card driver works properly.*/
     res = mmc_driver_e2e_read_write_simple(
             &global_sdhci_regs,

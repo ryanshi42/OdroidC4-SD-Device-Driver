@@ -11,6 +11,7 @@ struct sdhci_data {
         char *dest;
         const char *src;
     };
+    void* buffer;
     uint32_t blocks;
     uint32_t blocksize;
     uint32_t flags;

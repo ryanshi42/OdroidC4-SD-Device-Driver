@@ -183,6 +183,8 @@ result_t mmc_driver_e2e_read_write_multiple_blocks(
     }
     for (int i = 0; i < buf_len; i++) {
         /* Assert that the buffer is filled with 'a'. */
+        sel4cp_dbg_puts("Gotten char: ");
+        sel4cp_dbg_putc(buf[i]);
         assert(buf[i] == 'a');
     }
     sel4cp_dbg_puts("Finished mmc_driver_e2e_read_write_multiple_blocks().");
