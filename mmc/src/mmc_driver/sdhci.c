@@ -1740,7 +1740,7 @@ result_t sdhci_send_cmd(
 	}
     // meson_mmc_cmd |= CMD_CFG_RESP_128;
 
-    //: Need to deal with data at a later time
+    //: Need to deal with data at a later time, aka now. This is the Odroid C4 specific code.
 	if (data) {
 		uint32_t cfg = sdhci_regs->regs->sd_emmc_cfg;
 		cfg &= ~CFG_BL_LEN_MASK;
@@ -1823,12 +1823,17 @@ result_t sdhci_send_cmd(
     //? Following Linux spec here
     sdhci_regs->regs->sd_emmc_cmd_cfg = meson_mmc_cmd;
     sdhci_regs->regs->sd_emmc_cmd_dat = meson_mmc_dat;
-        // sel4cp_dbg_puts("Data is: ");
+    // sdhci_regs->regs->sd_emmc_cmd_dat = 1;
+    sel4cp_dbg_puts("\n\nData is: \n");
     // sdhci_regs->regs->sd_emmc_cmd_dat = meson_mmc_dat;
 
-    // puthex32(sdhci_regs->regs->sd_emmc_cmd_dat);
-    // puthex32(meson_mmc_dat);
-    // puthex32(sdhci_regs->regs->sd_emmc_cmd_dat);
+    puthex32(sdhci_regs->regs->sd_emmc_cmd_dat);
+    sel4cp_dbg_puts("\n");
+    puthex32(meson_mmc_dat);
+    sel4cp_dbg_puts("\n");
+    puthex32(sdhci_regs->regs->sd_emmc_cmd_dat);
+    sel4cp_dbg_puts("\n");
+
     sdhci_regs->regs->sd_emmc_cmd_rsp = 0;
     sdhci_regs->regs->sd_emmc_cmd_arg = arg;
 
@@ -1919,7 +1924,7 @@ result_t sdhci_send_cmd(
     // sel4cp_dbg_puts("\n\n");
 
     if (data && data->flags == MMC_DATA_READ) {
-        sel4cp_dbg_puts("adsf: ");
+        sel4cp_dbg_puts("Reading the first byte from destination...: ");
         sel4cp_dbg_putc(data->dest[0]);
     }
 
