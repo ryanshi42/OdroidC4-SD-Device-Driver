@@ -67,7 +67,7 @@ result_t sdhci_card_init_and_id(
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to send `IDX_GO_IDLE_STATE` in sdhci_card_init_and_id().");
     }
-    sel4cp_dbg_puts("\n Finished setting GO_IDLE.\n");
+    sel4cp_dbg_puts("\nFinished setting GO_IDLE.\n");
 
 
     // // Sending Test command: send_CSD
@@ -95,7 +95,7 @@ result_t sdhci_card_init_and_id(
     // if (result_is_err(res)) {
     //     return result_err_chain(res, "Failed to send `IDX_SEND_IF_COND` in sdhci_card_init_and_id().");
     // }
-    // sel4cp_dbg_puts("\n Finished setting SEND_CSD");
+    // sel4cp_dbg_puts("\nFinished setting SEND_CSD");
 
 
     /* Sending SEND_IF_COND,0x000001AA (CMD8) voltage range 0x1 check pattern 0xAA.
@@ -113,13 +113,13 @@ result_t sdhci_card_init_and_id(
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to send `IDX_SEND_IF_COND` in sdhci_card_init_and_id().");
     }
-    sel4cp_dbg_puts("\n Finished sending IF_COND. \n");
+    sel4cp_dbg_puts("\nFinished sending IF_COND. \n");
 
 
     /* If card responded with voltage and check pattern, resolve voltage and
      * check for high capacity card with IDX_APP_SEND_OP_COND. */
 
-    sel4cp_dbg_puts("\n Trying to power up...\n");
+    sel4cp_dbg_puts("\nTrying to power up...\n");
 
 
     size_t retries = 7;
@@ -137,30 +137,30 @@ result_t sdhci_card_init_and_id(
 
 
         if (result_is_err(res)) {
-            sel4cp_dbg_puts("\n Result error when sending command to power up. \n");
+            sel4cp_dbg_puts("\nResult error when sending command to power up. \n");
 
             // return result_err_chain(res, "Failed to send `IDX_APP_SEND_OP_COND` in sdhci_card_init_and_id().");
         }
         res = sdcard_has_powered_up(sdcard, &has_powered_up);
         if (result_is_err(res)) {
             puthex32(has_powered_up);
-            sel4cp_dbg_puts("\n Result error when powering up. \n");
+            sel4cp_dbg_puts("\nResult error when powering up. \n");
 
             return result_err_chain(res, "Failed to check if card has powered up in sdhci_card_init_and_id().");
         }
     } while (!has_powered_up && (retries-- > 0));
 
-    // sel4cp_dbg_puts("\n Finished setting IF_COND");
+    // sel4cp_dbg_puts("\nFinished setting IF_COND");
 
     /* If the card still hasn't powered up, we timeout. */
     if (!has_powered_up) {
-        sel4cp_dbg_puts("\n Timeout, could not power up \n");
+        sel4cp_dbg_puts("\nTimeout, could not power up \n");
 
         *sdhci_result = SD_TIMEOUT;
         return result_err("EMMC card did not power up in sdhci_card_init_and_id().");
     }
 
-    sel4cp_dbg_puts("\n SD Card powered up. \n");
+    sel4cp_dbg_puts("\nSD Card powered up. \n");
 
 
     /* Check voltage */
@@ -175,7 +175,7 @@ result_t sdhci_card_init_and_id(
         return result_err("EMMC card does not have correct voltage in sdhci_card_init_and_id().");
     }
     sel4cp_dbg_puts("Voltage good.");
-    sel4cp_dbg_puts("\n Voltage good. \n");
+    sel4cp_dbg_puts("\nVoltage good. \n");
 
 
     /* Check card capacity. */
@@ -256,7 +256,7 @@ result_t sdhci_card_init_and_id(
         return result_err_chain(res, "Failed to get card's RCA in sdhci_card_init_and_id().");
     }
 
-    sel4cp_dbg_puts("\n Obtained the RCA, it has value: ");
+    sel4cp_dbg_puts("\nObtained the RCA, it has value: ");
     puthex32(rca);
     sel4cp_dbg_puts("\n");
 
@@ -274,11 +274,18 @@ result_t sdhci_card_init_and_id(
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to send `SEND_STATUS` in sdhci_card_init_and_id().");
     }
-    uint32_t curr_status = res & GENMASK_UNSAFE(12, 9);
-    if (curr_status != MMC_STATUS_STBY) {
-        sel4cp_dbg_puts("Card is not in the correct mode (stby mode)...\n");
-        return result_err_chain(res, "`SEND_STATUS` in sdhci_card_init_and_id() is not in stby mode, the expected mode.");
-    } 
+
+    sel4cp_dbg_puts("\nStatus should be equal to 0x00000700 (stby status).\n");
+
+    // TODO: Embed programmatic checking for send_status in the future.
+    // uint32_t curr_status = res & GENMASK_UNSAFE(12, 9);
+    // if (curr_status != MMC_STATUS_STBY) {
+    //     puthex32(curr_status);
+    //     puthex32(MMC_STATUS_STBY);
+    //     puthex32(res);
+    //     sel4cp_dbg_puts("Card is not in the correct mode (stby mode)...\n");
+    //     return result_err_chain(res, "`SEND_STATUS` in sdhci_card_init_and_id() is not in stby mode, the expected mode.");
+    // } 
 
     sel4cp_dbg_puts("Sending SEND_CSD (CMD9)...");
     res = sdhci_send_cmd(
@@ -293,6 +300,23 @@ result_t sdhci_card_init_and_id(
         return result_err_chain(res, "Failed to send `IDX_CARD_SELECT` in sdhci_card_init_and_id().");
     }
     sel4cp_dbg_puts("\nSent the CSD successfully.\n");
+
+    /* Send (CMD13). */
+    /* TODO: In theory, loop back to SEND_IF_COND to find additional cards. */
+    sel4cp_dbg_puts("Sending SEND_STATUS (CMD13) command...\n");
+    res = sdhci_send_cmd(
+            NULL,
+            sdhci_regs,
+            IDX_SEND_STATUS,
+            rca,
+            sdcard,
+            sdhci_result
+    );
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to send `SEND_STATUS` in sdhci_card_init_and_id().");
+    }
+
+    sel4cp_dbg_puts("\nStatus should be equal to 0x00000700 (stby status).\n");
 
     //! CAUTION: Do NOT reverse the order of commands. This order of commands is strictly necessary.
 
@@ -332,11 +356,7 @@ result_t sdhci_card_init_and_id(
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to send `SEND_STATUS` in sdhci_card_init_and_id().");
     }
-    curr_status = res & GENMASK_UNSAFE(12, 9);
-    if (curr_status != MMC_STATUS_TRAN) {
-        sel4cp_dbg_puts("Card is not in the correct mode (tran mode)...\n");
-        return result_err_chain(res, "`SEND_STATUS` in sdhci_card_init_and_id() is not in tran mode, the expected mode.");
-    } 
+    sel4cp_dbg_puts("\nStatus should be equal to 0x00000900 (tran status + ready for data).\n");
 
     // Now we need to start reading the SCR
 
@@ -372,11 +392,8 @@ result_t sdhci_card_init_and_id(
     // /* Set BLKSIZECNT to 1 block of 8 bytes. */
     // sel4cp_dbg_puts("\nSetting BLKSIZECNT to 1 block of 8 bytes...\n");
 
-    sel4cp_dbg_puts("\n Finished, now we need to send SCR. \n");
+    sel4cp_dbg_puts("\nFinished, now we need to send SCR. \n");
     
-    //! We do not appear to be in the right mode at this time.
-
-
     /* Get the SCR by sending the `SEND_SCR` command. We need the SCR to figure
      * out what the allowed bus widths are. */
     sel4cp_dbg_puts("Sending SEND_SCR (CMD51) command...");
@@ -410,7 +427,7 @@ result_t sdhci_card_init_and_id(
     //? The following may not work, we just want to test it out.
     /* Save low portion of SCR register to sdcard. */
     res = sdcard_set_scr_raw32_lo(sdcard, buffer[0]);
-    sel4cp_dbg_puts("SCR LO is \n");
+    sel4cp_dbg_puts("\n\nSCR LO is: \n");
     // puthex32(data);
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to set SCR raw32 lo in sdhci_card_init_and_id().");
@@ -418,7 +435,7 @@ result_t sdhci_card_init_and_id(
 
     /* Save high portion of SCR register to sdcard. */
     res = sdcard_set_scr_raw32_hi(sdcard, buffer[32]);
-    sel4cp_dbg_puts("SCR HI is \n");
+    sel4cp_dbg_puts("\n\nSCR HI is: \n");
     // puthex32(data);
 
     if (result_is_err(res)) {
@@ -678,7 +695,7 @@ result_t sdhci_transfer_blocks(
         return result_err("NULL `sdhci_result` passed to sdhci_transfer_blocks().");
     }
     *sdhci_result = SD_ERROR;
-    sel4cp_dbg_puts("\n SDHCI transfer blocks check complete\n");
+    sel4cp_dbg_puts("\nSDHCI transfer blocks check complete\n");
 
     /* All buffers must be word-aligned i.e. multiples of 4 bytes (32 bits)
      * since we'll be transferring to/from the 32 bit EMMC "data" register in 32
@@ -933,7 +950,7 @@ result_t sdhci_transfer_blocks(
     //         return result_err_chain(res, "Failed to wait for data done interrupt in sdhci_transfer_blocks().");
     //     }
     // }
-    // sel4cp_dbg_puts("\n Data done interrupt correctly set\n");
+    // sel4cp_dbg_puts("\nData done interrupt correctly set\n");
 
     /* For a multi-block operation, if SET_BLOCKCNT is not supported, we need to indicate
      * that there are no more blocks to be transferred. */
@@ -950,7 +967,7 @@ result_t sdhci_transfer_blocks(
             return result_err_chain(res, "Failed to send STOP_TRANSMISSION command in sdhci_transfer_blocks().");
         }
     }
-    sel4cp_dbg_puts("\n Transmission stopped successfully. \n");
+    sel4cp_dbg_puts("\nTransmission stopped successfully. \n");
 
     *sdhci_result = SD_OK;
     return result_ok();
@@ -1479,7 +1496,7 @@ result_t sdhci_send_cmd(
     if (is_app_cmd) {
         /* Check if Relative Card Address (RCA) has been saved yet. */
 
-        sel4cp_dbg_puts("\n In an app command. \n");
+        sel4cp_dbg_puts("\nIn an app command. \n");
         
         bool has_rca = false;
         res = sdcard_has_rca(sdcard, &has_rca);
@@ -1507,12 +1524,12 @@ result_t sdhci_send_cmd(
                 sdhci_result
         );
         if (result_is_err(res)) {
-            sel4cp_dbg_puts("\n Error in app recursion. \n");
+            sel4cp_dbg_puts("\nError in app recursion. \n");
 
             return result_err_chain(res, "Failed to send app command in sdhci_send_cmd().");
         }
 
-        sel4cp_dbg_puts("\n App recursion executed fine. \n");
+        sel4cp_dbg_puts("\nApp recursion executed fine. \n");
 
         /* When there is an RCA, we should check the status indicates APP_CMD accepted. */
         if (app_cmd_index == IDX_APP_CMD_RCA) {
@@ -1523,7 +1540,7 @@ result_t sdhci_send_cmd(
             }
             if (!is_app_cmd_accepted) {
                 *sdhci_result = SD_ERROR;
-                sel4cp_dbg_puts("\n App command not accepted... \n");
+                sel4cp_dbg_puts("\nApp command not accepted... \n");
 
                 return result_err("App command was not accepted in sdhci_send_cmd().");
             }
@@ -1665,7 +1682,7 @@ result_t sdhci_send_cmd(
     sel4cp_dbg_puts("\n========================================================\n");
 
 
-    sel4cp_dbg_puts("\n CMD index is:\n");
+    sel4cp_dbg_puts("\nCMD index is:\n");
     puthex32(cmdtm.CMD_INDEX);
 
     /* Get the SDHCI command's response type. */
@@ -1678,13 +1695,13 @@ result_t sdhci_send_cmd(
         return result_err_chain(res, "Failed to get cmd_rspns_type in sdhci_send_cmd().");
     }
 
-    sel4cp_dbg_puts("\n CMD response type:\n");
+    sel4cp_dbg_puts("\nCMD response type:\n");
     puthex32(cmd_rspns_type);
 
     uint32_t meson_mmc_cmd = 0;
     uint32_t meson_mmc_dat = 0;
 
-    sel4cp_dbg_puts("\n Pre CMD Status:\n");
+    sel4cp_dbg_puts("\nPre CMD Status:\n");
     // puthex32(sdhci_regs->regs->sd_emmc_status);
     puthex32(sdhci_regs->regs->sd_emmc_status);
     sel4cp_dbg_puts("\n\n");
@@ -1831,7 +1848,7 @@ result_t sdhci_send_cmd(
         usleep(delay_us);
     }
 
-    sel4cp_dbg_puts("\n Finished delaying. \n");
+    sel4cp_dbg_puts("\nFinished delaying. \n");
 
     /* Wait until command complete interrupt */
     res = sdhci_wait_for_interrupt(
@@ -1923,16 +1940,12 @@ result_t sdhci_send_cmd(
 
     /* Reset status bits */
     sdhci_regs->regs->sd_emmc_status = STATUS_MASK;
-    sdhci_regs->regs->sd_emmc_status = STATUS_MASK;
-    sdhci_regs->regs->sd_emmc_status = STATUS_MASK;
-    sdhci_regs->regs->sd_emmc_status = STATUS_MASK;
 
     /* Get the response from `resp0`. */
     uint32_t resp0 = 0;
     resp0 = sdhci_regs->regs->sd_emmc_cmd_rsp;
 
     sel4cp_dbg_puts("Resp0:\n\n");
-    puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp);
     puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp);
     sel4cp_dbg_puts("\n\n");
 
@@ -1983,11 +1996,11 @@ result_t sdhci_send_cmd(
                     &cmd_index
             );
             
-            sel4cp_dbg_puts("\n The command index is: ");
+            sel4cp_dbg_puts("\nThe command index is: ");
             
             puthex32(cmd_index);
             if (result_is_err(result_ok())) {
-                sel4cp_dbg_puts("\n uhoh, couldn't get cmd index \n");
+                sel4cp_dbg_puts("\nuhoh, couldn't get cmd index \n");
                 return result_err_chain(res_get_cmd_index, "Failed to get cmd_index in sdhci_send_cmd().");
             }
             switch (cmd_index) {
