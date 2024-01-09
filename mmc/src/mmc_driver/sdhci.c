@@ -260,6 +260,21 @@ result_t sdhci_card_init_and_id(
     puthex32(rca);
     sel4cp_dbg_puts("\n");
 
+    /* Send (CMD13). */
+    /* TODO: In theory, loop back to SEND_IF_COND to find additional cards. */
+    sel4cp_dbg_puts("Sending SEND_STATUS (CMD13) command...");
+    res = sdhci_send_cmd(
+            NULL,
+            sdhci_regs,
+            IDX_SEND_STATUS,
+            rca,
+            sdcard,
+            sdhci_result
+    );
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to send `SEND_STATUS` in sdhci_card_init_and_id().");
+    }
+
     // Currently, we should be in standby mode. How do we check this?
     sel4cp_dbg_puts("Sending SEND_CSD (CMD9)...");
     res = sdhci_send_cmd(
@@ -1696,7 +1711,7 @@ result_t sdhci_send_cmd(
 		cfg |= ilog2(data->blocksize) << CFG_BL_LEN_SHIFT;
 
         // puthex32(ilog2(data->blocksize));
-        // sel4cp_dbg_puts("ajdshflkadsjhf");
+        sel4cp_dbg_puts("In handle data code...");
 
         sdhci_regs->regs->sd_emmc_cfg = cfg;
 
