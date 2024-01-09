@@ -137,6 +137,7 @@ void init(void) {
 
     /* Initialise and identify the SD card. */
     sdhci_result_t sdhci_result;
+    //TODO: Fix this.
     res = sdhci_card_init_and_id(
             &global_sdhci_regs,
             &global_sdcard,

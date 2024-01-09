@@ -1495,7 +1495,7 @@ result_t sdhci_send_cmd(
 
     // print_cmd_registers(sdhci_regs);
 
-    sel4cp_dbg_puts("getting status: NOT checking if it's complete");
+    sel4cp_dbg_puts("getting status: NOT checking if it's complete\n");
 
     // sel4cp_dbg_puts(itoa(sdhci_regs->regs->sd_emmc_status, _num, 16));
     puthex32(sdhci_regs->regs->sd_emmc_status);
