@@ -262,7 +262,7 @@ result_t sdhci_card_init_and_id(
 
     /* Send (CMD13). */
     /* TODO: In theory, loop back to SEND_IF_COND to find additional cards. */
-    sel4cp_dbg_puts("Sending SEND_STATUS (CMD13) command...");
+    sel4cp_dbg_puts("Sending SEND_STATUS (CMD13) command...\n");
     res = sdhci_send_cmd(
             NULL,
             sdhci_regs,
@@ -274,8 +274,12 @@ result_t sdhci_card_init_and_id(
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to send `SEND_STATUS` in sdhci_card_init_and_id().");
     }
+    uint32_t curr_status = res & GENMASK_UNSAFE(12, 9);
+    if (curr_status != MMC_STATUS_STBY) {
+        sel4cp_dbg_puts("Card is not in the correct mode (stby mode)...\n");
+        return result_err_chain(res, "`SEND_STATUS` in sdhci_card_init_and_id() is not in stby mode, the expected mode.");
+    } 
 
-    ifasdfjaklsdfhjalksdjfhaljskdfhlaksjdhflaskdjhflkajdhs
 
     // Currently, we should be in standby mode. How do we check this?
     sel4cp_dbg_puts("Sending SEND_CSD (CMD9)...");
@@ -1831,7 +1835,7 @@ result_t sdhci_send_cmd(
     // }
 
     // sel4cp_dbg_puts("\nGotten interrupt\n");
-    sel4cp_dbg_puts("\n\n Waiting for CMD to finish...\n\n");
+    sel4cp_dbg_puts("\n\nWaiting for CMD to finish...\n\n");
 
     /* Wait for command in progress (this is actually the interrupt we are waiting for). */
     sel4cp_dbg_puts("Status before waiting for command:\n");

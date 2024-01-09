@@ -167,21 +167,21 @@ result_t oc4_emmc_init(
     // puthex32(sdhci_regs->regs->sd_emmc_cfg);	        // 0x44 CFG
 	// sel4cp_dbg_puts("\n\n");
 
-    log_trace("\n\n Test log trace statement.\n\n");
-    sel4cp_dbg_puts("\n\n Test sel4cp_dbg_puts statement.\n\n");
-    printf("\n\n Test printf statement.\n\n");
+    log_trace("\n\nTest log trace statement.\n\n");
+    sel4cp_dbg_puts("\n\nTest sel4cp_dbg_puts statement.\n\n");
+    printf("\n\nTest printf statement.\n\n");
 
     uint32_t val;
 
     oc4_emmc_regs_t *oc4_emmc_regs = sdhci_regs->regs;
     
     if (sdhci_regs == NULL) {
-        sel4cp_dbg_puts("\n\n sdhci regs are null.");
+        sel4cp_dbg_puts("\n\nsdhci regs are null.");
 
         return result_err("NULL `sdhci_regs` passed to oc4_emmc_init().");
     }
 
-    sel4cp_dbg_puts("\n\n Called OC4 EMMC.3");
+    sel4cp_dbg_puts("\n\nCalled OC4 EMMC.3");
 
     // TODO: Fix this gpio reg stuff
     //? Apparently U-Boot code will do this already
@@ -200,33 +200,33 @@ result_t oc4_emmc_init(
 
     // log_trace("Resetting Clock.");
     // // oc4_emmc_regs_write_unsafe(oc4_emmc_regs, (uint32_t) 0, SD_EMMC_CLOCK);
-    // // sel4cp_dbg_puts("\n\n Finished clock reset1");
+    // // sel4cp_dbg_puts("\n\nFinished clock reset1");
     // // oc4_emmc_regs->sd_emmc_clock = (uint32_t) 0;
-    // // sel4cp_dbg_puts("\n\n Finished clock reset2");
+    // // sel4cp_dbg_puts("\n\nFinished clock reset2");
 
     // log_trace("Resetting Delay.");
     // // oc4_emmc_regs_write_unsafe(oc4_emmc_regs, (uint32_t) 0, SD_EMMC_DELAY1);
-    // sel4cp_dbg_puts("\n\n Finished clock 1e3");
+    // sel4cp_dbg_puts("\n\nFinished clock 1e3");
     // oc4_emmc_regs->sd_emmc_delay1 = (uint32_t) 0;
-    // sel4cp_dbg_puts("\n\n Finished clock delay");
+    // sel4cp_dbg_puts("\n\nFinished clock delay");
 
 
     // log_trace("Resetting Adjust.");
     // // oc4_emmc_regs_write_unsafe(oc4_emmc_regs, (uint32_t) 0, SD_EMMC_ADJUST);
     // oc4_emmc_regs->sd_emmc_adjust = (uint32_t) 0;
-    // sel4cp_dbg_puts("\n\n Finished clock adjust");
+    // sel4cp_dbg_puts("\n\nFinished clock adjust");
 
 
     // log_trace("Resetting Start.");
     // // oc4_emmc_regs_write_unsafe(oc4_emmc_regs, (uint32_t) 0, SD_EMMC_START);
     // oc4_emmc_regs->sd_emmc_start = (uint32_t) 0;
-    // sel4cp_dbg_puts("\n\n Finished clock start");
+    // sel4cp_dbg_puts("\n\nFinished clock start");
 
 
     // log_trace("Resetting Config.");
     // // oc4_emmc_regs_write_unsafe(oc4_emmc_regs, (uint32_t) 0, SD_EMMC_CFG);
     // oc4_emmc_regs->sd_emmc_cfg = (uint32_t) 0;
-    // sel4cp_dbg_puts("\n\n Finished clock config");
+    // sel4cp_dbg_puts("\n\nFinished clock config");
 
     /* ============================
      * Initialising the SDHCI SD card controller on the Pi.
@@ -242,13 +242,13 @@ result_t oc4_emmc_init(
     /* reset all status bits */
     log_trace("Resetting Status.");
     oc4_emmc_regs->sd_emmc_status = STATUS_MASK;
-    sel4cp_dbg_puts("\n\n Finished resetting status");
+    sel4cp_dbg_puts("\n\nFinished resetting status");
 
     /* disable interrupts */
     log_trace("Disabling interrupts.");
     // oc4_emmc_regs_write_unsafe(oc4_emmc_regs, (uint32_t) 0, SD_EMMC_IRQ_EN);
     oc4_emmc_regs->sd_emmc_irq_en = (uint32_t) 0;
-    sel4cp_dbg_puts("\n\n Finished resetting interrupts, config, start, adjust, delay and clock");
+    sel4cp_dbg_puts("\n\nFinished resetting interrupts, config, start, adjust, delay and clock");
 
     /* enable auto clock mode */
     log_trace("Enabling Auto Clock Mode.");
@@ -264,7 +264,7 @@ result_t oc4_emmc_init(
     // puthex32(sdhci_regs->regs->sd_emmc_cfg);	        // 0x44 CFG
 	// sel4cp_dbg_puts("\n\n");
     
-    sel4cp_dbg_puts("\n\n Finished enabling clock, auto clock and setting I/Os.\n\n");
+    sel4cp_dbg_puts("\n\nFinished enabling clock, auto clock and setting I/Os.\n\n");
 
 
 
@@ -276,7 +276,7 @@ result_t oc4_emmc_init(
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to set max data timeout in oc4_emmc_init().");
     }
-    sel4cp_dbg_puts("\n\n Finished setting max data timeout.\n\n");
+    sel4cp_dbg_puts("\n\nFinished setting max data timeout.\n\n");
     
 
     // /* Enable the Internal Clock. */
@@ -289,7 +289,7 @@ result_t oc4_emmc_init(
 
     /* Set clock to low-speed setup frequency (400KHz). */
     //? Not a sdhci regs function!
-    sel4cp_dbg_puts("\n\n Finished sleeping.\n\n");
+    sel4cp_dbg_puts("\n\nFinished sleeping.\n\n");
 
     // log_trace("Setting clock to low-speed setup frequency (400KHz).");
     // res = sdhci_set_sd_clock(sdhci_regs, 400000);
@@ -297,22 +297,22 @@ result_t oc4_emmc_init(
     //     return result_err_chain(res, "Failed to set clock to low-speed setup frequency in oc4_emmc_init().");
     // }
     //TODO: fix the sdhci set sd clock stuff
-    sel4cp_dbg_puts("\n\n Finished setting sd clock.\n\n");
+    sel4cp_dbg_puts("\n\nFinished setting sd clock.\n\n");
 
     // /* enable interrupts */
     // log_trace("Disabling interrupts.");
     // // oc4_emmc_regs_write_unsafe(oc4_emmc_regs, 0, SD_EMMC_IRQ_EN);
     // oc4_emmc_regs->sd_emmc_irq_en = 0;
-    // sel4cp_dbg_puts("\n\n Finished Disabling interrupts");
+    // sel4cp_dbg_puts("\n\nFinished Disabling interrupts");
 
     /* enable interrupts */
     // log_trace("Enabling interrupts.");
     // // oc4_emmc_regs_write_unsafe(oc4_emmc_regs, (uint32_t) 0, SD_EMMC_IRQ_EN);
     // oc4_emmc_regs->sd_emmc_irq_en = (uint32_t) IRQ_EN_MASK;
 
-    sel4cp_dbg_puts("\n\n Finished setting up OC4 emmc. Now printing registers...\n\n");
+    sel4cp_dbg_puts("\n\nFinished setting up OC4 emmc. Now printing registers...\n\n");
 
-    sel4cp_dbg_puts("\n\n CLK: sd_emmc_cfg:\n\n");
+    sel4cp_dbg_puts("\n\nCLK: sd_emmc_cfg:\n\n");
     puthex32(sdhci_regs->regs->sd_emmc_cfg);	        // 0x44 CFG
 	sel4cp_dbg_puts("\n\n");
     
