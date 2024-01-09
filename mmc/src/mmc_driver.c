@@ -103,9 +103,6 @@ void init(void) {
     sel4cp_dbg_puts("\n\nFinished testing E2E sleep");
     //! Don't know if the above code actually works?
 
-
-    // printf("\n\n\n\n\n\n\n\n\n\nGoodbye World\n\n\n\n\n\n\n\n\n\n\n\n");
-
     /* Initialise SDHCI registers. */
     res = sdhci_regs_init(
             &global_sdhci_regs,
@@ -118,7 +115,7 @@ void init(void) {
     if (global_sdhci_regs.regs == NULL) {
         sel4cp_dbg_puts("\n\nwuhoh1..");
     }
-    sel4cp_dbg_puts("\n\nFinished initialising SDHCI regs");
+    sel4cp_dbg_puts("\n\nFinished initialising SDHCI regs.\n\n");
 
     /* Initialise and reset the Odroid C4's SD card Host Controller. */
     res = oc4_emmc_init(
@@ -129,7 +126,7 @@ void init(void) {
         result_printf(res);
         return;
     }
-    sel4cp_dbg_puts("\n\nFinished initialising SD Host Controller.");
+    sel4cp_dbg_puts("\n\nFinished initialising SD Host Controller.\n\n");
 
     if (global_sdhci_regs.regs == NULL) {
         sel4cp_dbg_puts("\n\nwuhoh2..");
@@ -147,7 +144,7 @@ void init(void) {
         result_printf(res);
         return;
     }
-    sel4cp_dbg_puts("\n\nFinished initialising and identifying the SD card.");
+    sel4cp_dbg_puts("\n\nFinished initialising and identifying the SD card.\n\n");
 
     /* Setting Bus Width to maximum possible value. */
     res = sdhci_set_max_bus_width(
@@ -159,7 +156,7 @@ void init(void) {
         result_printf(res);
         return;
     }
-    sel4cp_dbg_puts("\n\nFinished setting SD bus width to maximum possible value.");
+    sel4cp_dbg_puts("\n\nFinished setting SD bus width to maximum possible value.\n\n");
 
     sel4cp_dbg_puts("\n\nBeginning Tests:\n\n");
 

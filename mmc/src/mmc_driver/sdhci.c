@@ -67,7 +67,7 @@ result_t sdhci_card_init_and_id(
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to send `IDX_GO_IDLE_STATE` in sdhci_card_init_and_id().");
     }
-    sel4cp_dbg_puts("\n Finished setting GO_IDLE");
+    sel4cp_dbg_puts("\n Finished setting GO_IDLE.\n");
 
 
     // // Sending Test command: send_CSD
@@ -100,7 +100,7 @@ result_t sdhci_card_init_and_id(
 
     /* Sending SEND_IF_COND,0x000001AA (CMD8) voltage range 0x1 check pattern 0xAA.
      * TODO: If voltage range and check pattern don't match, look for older card. */
-    sel4cp_dbg_puts("Sending IF_COND (CMD8) command...");
+    sel4cp_dbg_puts("\nSending IF_COND (CMD8) command...\n");
     sdhci_result_t sdhci_res_if_cond;
     res = sdhci_send_cmd(
             NULL,
@@ -113,7 +113,7 @@ result_t sdhci_card_init_and_id(
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to send `IDX_SEND_IF_COND` in sdhci_card_init_and_id().");
     }
-    sel4cp_dbg_puts("\n Finished setting IF_COND");
+    sel4cp_dbg_puts("\n Finished sending IF_COND. \n");
 
 
     /* If card responded with voltage and check pattern, resolve voltage and
@@ -274,6 +274,8 @@ result_t sdhci_card_init_and_id(
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to send `SEND_STATUS` in sdhci_card_init_and_id().");
     }
+
+    ifasdfjaklsdfhjalksdjfhaljskdfhlaksjdhflaskdjhflkajdhs
 
     // Currently, we should be in standby mode. How do we check this?
     sel4cp_dbg_puts("Sending SEND_CSD (CMD9)...");
@@ -1439,7 +1441,7 @@ result_t sdhci_send_cmd(
             return result_err("Illegal Argument Exception: Command requires RCA, but RCA passed to sdhci_send_cmd() is not the RCA of the sdcard.");
         }
     }
-    sel4cp_dbg_puts("\nRCA checks done for commands that might or might not need RCA\n");
+    sel4cp_dbg_puts("\nRCA checks done. \n");
 
 
     /* Check whether command is an APP Command. */
@@ -1510,7 +1512,7 @@ result_t sdhci_send_cmd(
 
     // print_cmd_registers(sdhci_regs);
 
-    sel4cp_dbg_puts("getting status: NOT checking if it's complete\n");
+    sel4cp_dbg_puts("\nGetting status: before checking completion.\n");
 
     // sel4cp_dbg_puts(itoa(sdhci_regs->regs->sd_emmc_status, _num, 16));
     puthex32(sdhci_regs->regs->sd_emmc_status);
@@ -1534,7 +1536,7 @@ result_t sdhci_send_cmd(
     sel4cp_dbg_puts("\nReady to get SDHCI commands\n");
 
     // char _num[16];
-    sel4cp_dbg_puts("getting command argument: ");
+    sel4cp_dbg_puts("Getting command argument: \n");
 
     // sel4cp_dbg_puts(itoa(sdhci_regs->regs->sd_emmc_cmd_arg, _num, 16));
 
@@ -1641,9 +1643,8 @@ result_t sdhci_send_cmd(
     sel4cp_dbg_puts("\n========================================================\n");
 
 
-    sel4cp_dbg_puts("\n The command index is: \n");
+    sel4cp_dbg_puts("\n CMD index is:\n");
     puthex32(cmdtm.CMD_INDEX);
-
 
     /* Get the SDHCI command's response type. */
     cmd_rspns_type_t cmd_rspns_type;
@@ -1655,19 +1656,16 @@ result_t sdhci_send_cmd(
         return result_err_chain(res, "Failed to get cmd_rspns_type in sdhci_send_cmd().");
     }
 
-    sel4cp_dbg_puts("\nGotten cmd response type\n");
+    sel4cp_dbg_puts("\n CMD response type:\n");
     puthex32(cmd_rspns_type);
-
 
     uint32_t meson_mmc_cmd = 0;
     uint32_t meson_mmc_dat = 0;
 
-    sel4cp_dbg_puts("Pre CMD Status:\n\n");
+    sel4cp_dbg_puts("\n Pre CMD Status:\n");
     // puthex32(sdhci_regs->regs->sd_emmc_status);
     puthex32(sdhci_regs->regs->sd_emmc_status);
     sel4cp_dbg_puts("\n\n");
-
-    // cmdtm
 
 	meson_mmc_cmd |= cmdtm.CMD_INDEX << CMD_CFG_CMD_INDEX_SHIFT;
 
@@ -1740,8 +1738,8 @@ result_t sdhci_send_cmd(
         ...write...
         data->src =====> buff
     */
-
     sel4cp_dbg_puts("hello!\n\n");
+
 	if (data) {
 		// uint32_t data_size = data->blocks * data->blocksize;
 
@@ -1811,7 +1809,7 @@ result_t sdhci_send_cmd(
         usleep(delay_us);
     }
 
-    sel4cp_dbg_puts("\nGotten delay\n");
+    sel4cp_dbg_puts("\n Finished delaying. \n");
 
     /* Wait until command complete interrupt */
     res = sdhci_wait_for_interrupt(
@@ -1833,15 +1831,15 @@ result_t sdhci_send_cmd(
     // }
 
     // sel4cp_dbg_puts("\nGotten interrupt\n");
-    sel4cp_dbg_puts("\nWaiting for CMD to finish...\n");
+    sel4cp_dbg_puts("\n\n Waiting for CMD to finish...\n\n");
 
     /* Wait for command in progress (this is actually the interrupt we are waiting for). */
-    sel4cp_dbg_puts("Status before waiting for command:\n\n");
+    sel4cp_dbg_puts("Status before waiting for command:\n");
     puthex32(sdhci_regs->regs->sd_emmc_status);
     sel4cp_dbg_puts("\n\n");
 
         /* Wait for command in progress (this is actually the interrupt we are waiting for). */
-    sel4cp_dbg_puts("Data before waiting for command:\n\n");
+    sel4cp_dbg_puts("Data before waiting for command:\n");
     puthex32(sdhci_regs->regs->sd_emmc_cmd_dat);
     sel4cp_dbg_puts("\n\n");
 
@@ -1849,12 +1847,11 @@ result_t sdhci_send_cmd(
     res = sdhci_wait_for_cmd_in_progress(sdhci_regs, sdhci_result);
 
 
-    sel4cp_dbg_puts("Status after waiting for command:\n\n");
+    sel4cp_dbg_puts("Status after waiting for command:\n");
     puthex32(sdhci_regs->regs->sd_emmc_status);
     sel4cp_dbg_puts("\n\n");
 
     // puthex32(sdhci_regs->regs->sd_emmc_cmd_dat);
-
 
     // sel4cp_dbg_puts("Resp:\n\n");
     // puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp);
@@ -1869,17 +1866,15 @@ result_t sdhci_send_cmd(
 
     sel4cp_dbg_puts("\nCMD finished successfully. The current status is\n");
 
-    sel4cp_dbg_puts("Status:\n\n");
-    puthex32(sdhci_regs->regs->sd_emmc_status);
+    sel4cp_dbg_puts("Status:\n");
     puthex32(sdhci_regs->regs->sd_emmc_status);
     sel4cp_dbg_puts("\n\n");
 
-    sel4cp_dbg_puts("Data:\n\n");
-    puthex32(sdhci_regs->regs->sd_emmc_cmd_dat);
+    sel4cp_dbg_puts("Data:\n");
     puthex32(sdhci_regs->regs->sd_emmc_cmd_dat);
     sel4cp_dbg_puts("\n\n");
 
-    //     sel4cp_dbg_puts("Resp0:\n\n");
+    // sel4cp_dbg_puts("Resp0:\n\n");
     // puthex32(sdhci_regs->regs->sd_emmc_cmd_dat);
     // puthex32(sdhci_regs->regs->sd_emmc_cmd_dat);
     // sel4cp_dbg_puts("\n\n");

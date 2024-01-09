@@ -61,6 +61,18 @@
 #define MMC_DATA_DAT_TAG	BIT(13)		/* Tag request */
 #define MMC_DATA_FORCED_PRG	BIT(14)		/* Forced programming */
 
+typedef enum {
+        MMC_STATUS_IDLE         = 0,
+        MMC_STATUS_READY        = 1,
+        MMC_STATUS_IDENT        = 2,
+        MMC_STATUS_STBY         = 3,
+        MMC_STATUS_TRAN         = 4,
+        MMC_STATUS_DATA         = 5,
+        MMC_STATUS_RCV          = 6,
+        MMC_STATUS_PRG          = 7,
+        MMC_STATUS_DIS          = 8,
+} MMC_STATUS;
+
 /**
  * Initialises an SD card.
  * @param sdhci_regs
