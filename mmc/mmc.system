@@ -73,6 +73,7 @@
             name="shared_dma"
             size="0x200_000"
             page_size="0x200_000"/>
+
     <!-- This is a 2MB memory region with a 2MB page size. An explanation of the
     purpose of this memory region is provided in `serial_client.c`. The SDDF
     does not require this memory region to be mapped to a specific virtual
@@ -131,6 +132,11 @@
     `fatfs`. -->
     <memory_region
             name="mmc_driver_response_queue"
+            size="0x200_000"
+            page_size="0x200_000"/>
+
+    <memory_region
+            name="test_dma"
             size="0x200_000"
             page_size="0x200_000"/>
     <!-- The `serial_driver` PD must have a higher priority than the
@@ -399,6 +405,15 @@
                 perms="rw"
                 cached="true"
                 setvar_vaddr="mmc_driver_shared_data" />
+
+        <!-- A shared memory region for passing data between `mmc_driver` and
+        `driver`. -->
+        <map
+                mr="test_dma"
+                vaddr="0x4_600_000"
+                perms="rw"
+                cached="true"
+                setvar_vaddr="test_dma" />
     </protection_domain>
     <!-- Channel between `mmc_driver` and `serial_client` for printf()
     calls by `mmc_driver`. -->

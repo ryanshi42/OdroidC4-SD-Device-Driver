@@ -8,6 +8,9 @@
 // 	uint response[4];
 // };
 
+/* Shared memory region for passing data between `mmc_driver` and `SD card`. */
+uintptr_t test_dma;
+
 static char
 hexchar(unsigned int v)
 {
@@ -373,8 +376,7 @@ result_t sdhci_card_init_and_id(
 
     sdhci_data_ptr->flags = MMC_DATA_READ;
 
-    char buffer[512] = {0};
-    sdhci_data_ptr->dest = buffer;
+    sdhci_data_ptr->dest = (char *) test_dma;
 
     // puthex32(sdhci_data_ptr->blocksize);
 
@@ -420,13 +422,13 @@ result_t sdhci_card_init_and_id(
 
     sel4cp_dbg_puts("SEND_SCR Buffer is:");
     for (int i = 0; i < 512; i++) {
-        sel4cp_dbg_putc(buffer[i]);
+        sel4cp_dbg_putc(((char *) test_dma)[i]);
     }
 
 
     //? The following may not work, we just want to test it out.
     /* Save low portion of SCR register to sdcard. */
-    res = sdcard_set_scr_raw32_lo(sdcard, buffer[0]);
+    res = sdcard_set_scr_raw32_lo(sdcard, ((uint32_t *) test_dma)[0]);
     sel4cp_dbg_puts("\n\nSCR LO is: \n");
     // puthex32(data);
     if (result_is_err(res)) {
@@ -434,7 +436,7 @@ result_t sdhci_card_init_and_id(
     }
 
     /* Save high portion of SCR register to sdcard. */
-    res = sdcard_set_scr_raw32_hi(sdcard, buffer[32]);
+    res = sdcard_set_scr_raw32_hi(sdcard, ((uint32_t *) test_dma)[1]);
     sel4cp_dbg_puts("\n\nSCR HI is: \n");
     // puthex32(data);
 
@@ -1574,15 +1576,7 @@ result_t sdhci_send_cmd(
 
     sel4cp_dbg_puts("\nReady to get SDHCI commands\n");
 
-    // char _num[16];
     sel4cp_dbg_puts("Getting command argument: \n");
-
-    // sel4cp_dbg_puts(itoa(sdhci_regs->regs->sd_emmc_cmd_arg, _num, 16));
-
-    // sel4cp_dbg_puts("getting command cfg INITIALLY: ");
-
-    // sel4cp_dbg_puts(itoa(sdhci_regs->regs->sd_emmc_cmd_cfg, _num, 16));
-    // puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
 
     // /* Set the argument register first. */
     // res = sdhci_regs_set_arg1(
@@ -1606,18 +1600,6 @@ result_t sdhci_send_cmd(
 
     // //! Raspberry Pi specific, but still need!
 
-    // char xxnum[16];
-    // sel4cp_dbg_puts("\nTHIS IS WHAT THE CMDTM IS RN\n");
-    // sel4cp_dbg_puts(itoa(cmdtm.raw32, xxnum, 16));
-    // puthex32(cmdtm.raw32);
-    // sel4cp_dbg_puts("\nTHIS IS WHAT THE CMDTM IS RN\n");
-
-    // sel4cp_dbg_puts("\nTHIS IS WHAT THE dat IS RN\n");
-    // puthex32(sdhci_regs->regs->sd_emmc_cmd_dat);
-    // sel4cp_dbg_puts("\nTHIS IS WHAT THE resp IS RN\n");
-    // puthex32(sdhci_regs->regs->sd_emmc_cmd_rsp);
-
-
     /* Set the command register to the value obtained from `sdhci_cmd`. */
     // res = sdhci_regs_set_cmdtm(
     //         sdhci_regs,
@@ -1628,14 +1610,6 @@ result_t sdhci_send_cmd(
     // }
 
     // oc4_emmc_regs_mmc_setup_cmd(mmc, data, cmd);
-    //     //! These won't work rn
-	// 	// sdhci_regs->regs->sd_emmc_cfg |= ilog2(data->blocksize) << CFG_BL_LEN_SHIFT;
-
-	// 	// if (sdhci_regs->regs->sd_emmc_cmd_dat == MMC_DATA_WRITE)
-	// 	// 	meson_mmc_cmd |= CMD_CFG_DATA_WR;
-
-	// 	sdhci_regs->regs->sd_emmc_cmd_cfg |= CMD_CFG_DATA_IO | CMD_CFG_BLOCK_MODE;
-    // }
 
     // char snumpp[16];
 
@@ -1653,29 +1627,6 @@ result_t sdhci_send_cmd(
     // sel4cp_dbg_puts("getting cmd cfg pro: ");
 
     // sel4cp_dbg_puts(itoa(sdhci_regs->regs->sd_emmc_cmd_cfg, snumppp, 16));
-
-    // //! This won't work rn
-	// // oc4_emmc_regs_mmc_setup_addr(mmc, data);
-
-
-    // //TODO Refactor into a function later: Read response
-
-    // sel4cp_dbg_puts("getting arg: ");
-
-    // sel4cp_dbg_puts(itoa(arg, snum, 16));
-
-    // sel4cp_dbg_puts("getting stored arg: ");
-
-    // sel4cp_dbg_puts(itoa(sdhci_regs->regs->sd_emmc_cmd_arg, snum, 16));
-
-    // sdhci_regs->regs->sd_emmc_cmd_arg = 79;
-    // oc4_emmc_regs_set_arg1(sdhci_regs->regs, 2);
-
-    // sel4cp_dbg_puts("getting new stored arg: ");
-
-    // sel4cp_dbg_puts(itoa(sdhci_regs->regs->sd_emmc_cmd_arg, snum, 16));
-
-    //     // sdhci_regs->regs->sd_emmc_cmd_arg = 1;
 
     sel4cp_dbg_puts("\n========================================================\n");
     sel4cp_dbg_puts("\nBeginning send command\n");
@@ -1748,9 +1699,10 @@ result_t sdhci_send_cmd(
 		cfg |= ilog2(data->blocksize) << CFG_BL_LEN_SHIFT;
 
         // puthex32(ilog2(data->blocksize));
-        sel4cp_dbg_puts("In handle data code...");
 
         sdhci_regs->regs->sd_emmc_cfg = cfg;
+
+        sel4cp_dbg_puts("In handle data code..., just wrote cfg to sdhci_regs->regs->sd_emmc_cfg\n");
 
 		if (data->flags == MMC_DATA_WRITE) 
             meson_mmc_cmd |= CMD_CFG_DATA_WR;
@@ -1767,9 +1719,10 @@ result_t sdhci_send_cmd(
 
     // puthex32(sdhci_regs->regs->sd_emmc_cmd_cfg);
 
+    sdhci_regs->regs->sd_emmc_cmd_cfg = meson_mmc_cmd;
+
     //? Following U-Boot spec here
     uint32_t data_addr = 0;
-
 
     /*
         ...read...                
@@ -1821,7 +1774,6 @@ result_t sdhci_send_cmd(
 
 
     //? Following Linux spec here
-    sdhci_regs->regs->sd_emmc_cmd_cfg = meson_mmc_cmd;
     sdhci_regs->regs->sd_emmc_cmd_dat = meson_mmc_dat;
     // sdhci_regs->regs->sd_emmc_cmd_dat = 1;
     sel4cp_dbg_puts("\n\nData is: \n");
