@@ -1720,7 +1720,7 @@ result_t sdhci_send_cmd(
 		if (data->flags == MMC_DATA_WRITE) 
             meson_mmc_cmd |= CMD_CFG_DATA_WR;
 
-		meson_mmc_cmd |= CMD_CFG_DATA_IO | CMD_CFG_BLOCK_MODE | data->blocks | CMD_CFG_DATA_NUM;
+		meson_mmc_cmd |= CMD_CFG_DATA_IO | CMD_CFG_BLOCK_MODE | data->blocks;
 		// meson_mmc_cmd |= BIT(23);
 
         
