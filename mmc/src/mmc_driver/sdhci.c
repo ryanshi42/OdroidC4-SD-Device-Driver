@@ -420,6 +420,19 @@ result_t sdhci_card_init_and_id(
         return result_err_chain(res, "Failed to wait for `INT_READ_RDY` in sdhci_card_init_and_id().");
     }
 
+    // sel4cp_dbg_puts("Sending READ_SINGLE_BLOCK (CMD17) command...");
+    // res = sdhci_send_cmd(
+    //         NULL,
+    //         sdhci_regs,
+    //         IDX_READ_SINGLE,
+    //         test_dma,
+    //         sdcard,
+    //         sdhci_result
+    // );
+    // if (result_is_err(res)) {
+    //     return result_err_chain(res, "Failed to send `READ_SINGLE_BLOCK` in sdhci_card_init_and_id().");
+    // } 
+
     sel4cp_dbg_puts("SEND_SCR Buffer is:");
     for (int i = 0; i < 512; i++) {
         sel4cp_dbg_putc(((char *) test_dma)[i]);
@@ -430,7 +443,7 @@ result_t sdhci_card_init_and_id(
     /* Save low portion of SCR register to sdcard. */
     res = sdcard_set_scr_raw32_lo(sdcard, ((uint32_t *) test_dma)[0]);
     sel4cp_dbg_puts("\n\nSCR LO is: \n");
-    // puthex32(data);
+    puthex32(((uint32_t *) test_dma)[0]);
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to set SCR raw32 lo in sdhci_card_init_and_id().");
     }
@@ -438,7 +451,7 @@ result_t sdhci_card_init_and_id(
     /* Save high portion of SCR register to sdcard. */
     res = sdcard_set_scr_raw32_hi(sdcard, ((uint32_t *) test_dma)[1]);
     sel4cp_dbg_puts("\n\nSCR HI is: \n");
-    // puthex32(data);
+    puthex32(((uint32_t *) test_dma)[1]);
 
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to set SCR raw32 hi in sdhci_card_init_and_id().");
@@ -1707,7 +1720,7 @@ result_t sdhci_send_cmd(
 		if (data->flags == MMC_DATA_WRITE) 
             meson_mmc_cmd |= CMD_CFG_DATA_WR;
 
-		meson_mmc_cmd |= CMD_CFG_DATA_IO | CMD_CFG_BLOCK_MODE | data->blocks;
+		meson_mmc_cmd |= CMD_CFG_DATA_IO | CMD_CFG_BLOCK_MODE | data->blocks | CMD_CFG_DATA_NUM;
 		// meson_mmc_cmd |= BIT(23);
 
         
@@ -1771,10 +1784,9 @@ result_t sdhci_send_cmd(
 
     meson_mmc_dat = data_addr;
 
-
-
     //? Following Linux spec here
     sdhci_regs->regs->sd_emmc_cmd_dat = meson_mmc_dat;
+    sdhci_regs->regs->sd_emmc_cmd_rsp = 0;
     // sdhci_regs->regs->sd_emmc_cmd_dat = 1;
     sel4cp_dbg_puts("\n\nData is: \n");
     // sdhci_regs->regs->sd_emmc_cmd_dat = meson_mmc_dat;
@@ -1786,8 +1798,9 @@ result_t sdhci_send_cmd(
     puthex32(sdhci_regs->regs->sd_emmc_cmd_dat);
     sel4cp_dbg_puts("\n");
 
-    sdhci_regs->regs->sd_emmc_cmd_rsp = 0;
     sdhci_regs->regs->sd_emmc_cmd_arg = arg;
+
+    print_cmd_registers(sdhci_regs);
 
     //TODO Refactor into a function later
 

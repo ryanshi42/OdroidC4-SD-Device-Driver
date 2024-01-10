@@ -137,8 +137,8 @@
 
     <memory_region
             name="test_dma"
-            size="0x200_000"
-            page_size="0x200_000"/>
+            size="0x1_000"
+            page_size="0x1_000"/>
     <!-- The `serial_driver` PD must have a higher priority than the
     `serial_client` PD so that it doesn't get preempted by `serial_client` when
     it is busy writing to the UART device. -->
@@ -410,7 +410,7 @@
         `driver`. -->
         <map
                 mr="test_dma"
-                vaddr="0x4_600_000"
+                vaddr="0x0_600_000"
                 perms="rw"
                 cached="true"
                 setvar_vaddr="test_dma" />

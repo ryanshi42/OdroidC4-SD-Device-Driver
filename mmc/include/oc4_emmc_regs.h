@@ -346,6 +346,7 @@ enum meson_gx_mmc_compatible {
 #define   CMD_CFG_DATA_WR		    BIT(19)
 #define   CMD_CFG_RESP_NOCRC	    BIT(20)
 #define   CMD_CFG_RESP_128		    BIT(21)
+#define   CMD_CFG_DATA_NUM		    BIT(23)
 #define   CMD_CFG_CMD_INDEX			GENMASK_UNSAFE(29, 24)
 #define   CMD_CFG_CMD_INDEX_SHIFT	24
 #define   CMD_CFG_ERROR			    BIT(30)
