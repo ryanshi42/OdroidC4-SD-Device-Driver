@@ -420,18 +420,20 @@ result_t sdhci_card_init_and_id(
         return result_err_chain(res, "Failed to wait for `INT_READ_RDY` in sdhci_card_init_and_id().");
     }
 
-    // sel4cp_dbg_puts("Sending READ_SINGLE_BLOCK (CMD17) command...");
-    // res = sdhci_send_cmd(
-    //         NULL,
-    //         sdhci_regs,
-    //         IDX_READ_SINGLE,
-    //         test_dma,
-    //         sdcard,
-    //         sdhci_result
-    // );
-    // if (result_is_err(res)) {
-    //     return result_err_chain(res, "Failed to send `READ_SINGLE_BLOCK` in sdhci_card_init_and_id().");
-    // } 
+    sel4cp_dbg_puts("Sending READ_SINGLE_BLOCK (CMD17) command...");
+    res = sdhci_send_cmd(
+            NULL,
+            sdhci_regs,
+            IDX_READ_SINGLE,
+            test_dma,
+            sdcard,
+            sdhci_result
+    );
+    if (result_is_err(res)) {
+        return result_err_chain(res, "Failed to send `READ_SINGLE_BLOCK` in sdhci_card_init_and_id().");
+    } 
+
+    ((char *) test_dma)[0] = 'a';
 
     sel4cp_dbg_puts("SEND_SCR Buffer is:");
     for (int i = 0; i < 512; i++) {
@@ -456,21 +458,6 @@ result_t sdhci_card_init_and_id(
     if (result_is_err(res)) {
         return result_err_chain(res, "Failed to set SCR raw32 hi in sdhci_card_init_and_id().");
     }
-
-    //     sel4cp_dbg_puts("Sending CARD_SELECT (CMD7)...");
-    // res = sdhci_send_cmd(
-    //         NULL,
-    //         sdhci_regs,
-    //         IDX_CARD_SELECT,
-    //         0,
-    //         sdcard,
-    //         sdhci_result
-    // );
-    // if (result_is_err(res)) {
-    //     return result_err_chain(res, "Failed to send `IDX_CARD_SELECT` in sdhci_card_init_and_id().");
-    // }
-
-
 
 
     // /* Start reading SCR from EMMC. */

@@ -103,7 +103,7 @@ sdhci_cmd_t sdhci_cmds[IDX_SEND_SCR + 1] = {
                 .delay = 0
         },
         [IDX_READ_SINGLE] = {
-                "READ_SINGLE",
+                "",
                 .cmdtm.CMD_INDEX = 0x11,
                 .cmdtm.CMD_RSPNS_TYPE = CMD_48BIT_RESP,
                 .cmdtm.CMD_ISDATA = 1,
