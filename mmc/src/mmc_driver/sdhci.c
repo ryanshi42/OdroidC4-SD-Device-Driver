@@ -180,6 +180,9 @@ result_t sdhci_card_init_and_id(
     sel4cp_dbg_puts("Voltage good.");
     sel4cp_dbg_puts("\nVoltage good. \n");
 
+    // Following Peter's advice to set the bus width to 4
+    oc4_emmc_regs_set_bus_width_4(sdhci_regs->regs);
+
 
     /* Check card capacity. */
     sel4cp_dbg_puts("Checking card type...");

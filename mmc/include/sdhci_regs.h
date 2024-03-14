@@ -12,7 +12,7 @@
 
 typedef struct sdhci_regs sdhci_regs_t;
 struct sdhci_regs {
-    oc4_emmc_regs_t *regs;
+    volatile oc4_emmc_regs_t *regs;
 };
 
 /**

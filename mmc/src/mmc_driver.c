@@ -11,6 +11,7 @@ uintptr_t timer_driver_to_mmc_driver_numticks_buf;
 uintptr_t gpio_base_vaddr;
 
 /* Base virtual address for the EMMC registers. */
+// volatile struct oc4_mmc_regs * const emmc_base_vaddr;
 uintptr_t emmc_base_vaddr;
 
 /* Shared memory region for passing requests from `fatfs` to `mmc_driver`. */

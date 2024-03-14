@@ -120,12 +120,13 @@ static int oc4_emmc_regs_mmc_set_ios(struct oc4_emmc_regs *mmc)
 	// oc4_emmc_regs_mmc_cfg = oc4_emmc_regs_read_unsafe(mmc, SD_EMMC_CFG);
 	oc4_emmc_regs_mmc_cfg = mmc->sd_emmc_cfg;
 
-
     // Get the bus width from the registers
     // Does this mean it is automatically instantiated??? // TODO: check this!
 	oc4_emmc_regs_mmc_cfg &= ~CFG_BUS_WIDTH_MASK;
 
-    oc4_emmc_regs_set_bus_width_4(mmc);
+    // oc4_emmc_regs_set_bus_width_1(mmc);
+	oc4_emmc_regs_mmc_cfg |= CFG_BUS_WIDTH_1;
+    // oc4_emmc_regs_set_bus_width_4(mmc);
     // oc4_emmc_regs_mmc_cfg |= CFG_BUS_WIDTH_8;
 	// if (mmc->bus_width == 1)
 	// 	oc4_emmc_regs_mmc_cfg |= CFG_BUS_WIDTH_1;

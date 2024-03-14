@@ -45,7 +45,7 @@
 #define   IRQ_SDIO BIT(15)
 #define   IRQ_EN_MASK (IRQ_CRC_ERR | IRQ_TIMEOUTS | IRQ_END_OF_CHAIN)
 
-typedef struct oc4_emmc_regs oc4_emmc_regs_t;
+typedef volatile struct oc4_emmc_regs oc4_emmc_regs_t;
 
 /**
  * A descriptor struct that stores key information about transfers between SD Card and SD Controller
